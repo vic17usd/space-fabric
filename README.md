@@ -1,5 +1,12 @@
 # Space Fabric — Minecraft Java 26.1
 
+Descarga del prototipo compilado: [space-fabric-0.1.0.jar](dist/space-fabric-0.1.0.jar)
+(en GitHub, pulsa **Download raw file**).
+[Checksum SHA-256](dist/space-fabric-0.1.0.jar.sha256).
+Requiere Minecraft **26.1**, Java **25**, Fabric Loader y Fabric API **0.145.1+26.1**.
+Coloca el JAR y Fabric API en la carpeta `mods/`. Es el prototipo descrito abajo;
+todavía falta su validación dentro del juego.
+
 Base modular en Java 25 para ocho dimensiones independientes: Mercurio, Venus,
 Tierra, Marte, Júpiter, Saturno, Urano y Neptuno. Usa los nombres oficiales de
 Minecraft 26.1, sin Yarn ni remapeo de versiones anteriores.
