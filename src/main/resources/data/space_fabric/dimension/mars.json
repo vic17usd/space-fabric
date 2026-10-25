@@ -4,8 +4,8 @@
     "type": "minecraft:noise",
     "biome_source": {
       "type": "minecraft:fixed",
-      "biome": "minecraft:eroded_badlands"
+      "biome": "space_fabric:mars"
     },
-    "settings": "minecraft:overworld"
+    "settings": "space_fabric:mars"
   }
 }

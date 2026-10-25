@@ -1,0 +1,30 @@
+{
+  "has_precipitation": true,
+  "temperature": 2.0,
+  "downfall": 1.0,
+  "attributes": {
+    "minecraft:visual/sky_color": "#cf8b40",
+    "minecraft:visual/fog_color": "#b48236"
+  },
+  "effects": {
+    "water_color": "#a4b63b"
+  },
+  "spawners": {},
+  "spawn_costs": {},
+  "carvers": [],
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "space_fabric:volcanic_magma"
+    ],
+    [],
+    [],
+    [],
+    []
+  ]
+}

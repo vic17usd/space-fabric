@@ -4,8 +4,8 @@
     "type": "minecraft:noise",
     "biome_source": {
       "type": "minecraft:fixed",
-      "biome": "minecraft:stony_peaks"
+      "biome": "space_fabric:moon"
     },
-    "settings": "minecraft:overworld"
+    "settings": "space_fabric:moon"
   }
 }

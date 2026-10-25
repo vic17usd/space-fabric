@@ -6,7 +6,8 @@
   "description": "Ocho dimensiones planetarias con gravedad y atmósferas independientes.",
   "environment": "*",
   "entrypoints": {
-    "main": ["dev.vic17usd.spacefabric.SpaceFabric"]
+    "main": ["dev.vic17usd.spacefabric.SpaceFabric"],
+    "client": ["dev.vic17usd.spacefabric.client.SpaceFabricClient"]
   },
   "depends": {
     "fabricloader": ">=0.20.1",

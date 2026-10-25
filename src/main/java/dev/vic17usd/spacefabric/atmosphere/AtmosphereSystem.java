@@ -6,6 +6,8 @@ import dev.vic17usd.spacefabric.planet.PlanetDimensions;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 
 public final class AtmosphereSystem {
     private static final int DAMAGE_INTERVAL_TICKS = 20;
@@ -32,7 +34,16 @@ public final class AtmosphereSystem {
             return;
         }
         boolean immune = player.isCreative() || player.isSpectator();
-        Exposure.hazard(planet.atmosphere(), SuitProtection.isSealed(player), immune)
+        boolean sealed = SuitProtection.isSealed(player);
+        if (!immune && PlanetHazards.isDenseGas(planet, player.getY())) {
+            // La escafandra básica no resiste la zona profunda de un gigante.
+            player.hurtServer(level, PlanetDamageTypes.source(level, Exposure.Hazard.CRUSHING_PRESSURE), 4.0F);
+            return;
+        }
+        if (PlanetHazards.acidExposure(planet, level.isRainingAt(player.blockPosition().above()), sealed, immune)) {
+            player.addEffect(new MobEffectInstance(MobEffects.POISON, 60, 0));
+        }
+        Exposure.hazard(planet.atmosphere(), sealed, immune)
                 .ifPresent(hazard -> player.hurtServer(
                         level, PlanetDamageTypes.source(level, hazard), DAMAGE_PER_INTERVAL));
     }

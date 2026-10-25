@@ -3,24 +3,37 @@ package dev.vic17usd.spacefabric.planet;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.mojang.serialization.JsonOps;
-import com.mojang.serialization.Lifecycle;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.stream.Stream;
+import dev.vic17usd.spacefabric.fluid.PlanetFluids;
+import dev.vic17usd.spacefabric.worldgen.PlanetFeatures;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Optional;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.WritableRegistry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.RegistryDataLoader;
+import net.minecraft.server.packs.PackLocationInfo;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.PathPackResources;
+import net.minecraft.server.packs.repository.PackSource;
+import net.minecraft.server.packs.repository.ServerPacksSource;
+import net.minecraft.server.packs.resources.MultiPackResourceManager;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.tags.TagLoader;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.MappedRegistry;
-import net.minecraft.core.RegistrationInfo;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.registries.VanillaRegistries;
-import net.minecraft.resources.Identifier;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.Bootstrap;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.dimension.LevelStem;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -31,27 +44,37 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** Usa los codecs reales de 26.1 sin abrir un servidor ni aceptar su EULA. */
 class WorldgenCodecTest {
-    private static HolderLookup.Provider vanilla;
-    private static HolderLookup.Provider withPlanetTypes;
+    private static HolderLookup.Provider registries;
 
     @BeforeAll
     static void initializeRegistries() throws IOException {
         SharedConstants.tryDetectVersion();
         Bootstrap.bootStrap();
-        vanilla = VanillaRegistries.createLookup();
-        var types = new MappedRegistry<DimensionType>(Registries.DIMENSION_TYPE, Lifecycle.stable());
-        vanilla.lookupOrThrow(Registries.DIMENSION_TYPE).listElements().forEach(holder ->
-                types.register(holder.key(), holder.value(), RegistrationInfo.BUILT_IN));
-        for (Planet planet : Planet.values()) {
-            DimensionType type = decodeType(planet);
-            types.register(ResourceKey.create(Registries.DIMENSION_TYPE,
-                    Identifier.fromNamespaceAndPath("space_fabric", planet.path())),
-                    type, RegistrationInfo.BUILT_IN);
+        PlanetFeatures.initialize();
+        PlanetFluids.initialize();
+        var pack = new PathPackResources(
+                new PackLocationInfo("space_fabric_test",
+                        Component.literal("Planet worldgen test"),
+                        PackSource.DEFAULT, Optional.empty()),
+                Path.of("src/main/resources"));
+        try (var resources = new MultiPackResourceManager(
+                PackType.SERVER_DATA, List.of(
+                        ServerPacksSource.createVanillaPackSource(), pack))) {
+            var builtins = RegistryAccess.fromRegistryOfRegistries(
+                    BuiltInRegistries.REGISTRY);
+            BuiltInRegistries.REGISTRY.forEach(registry -> {
+                if (registry instanceof WritableRegistry<?> writable) {
+                    TagLoader.loadTagsForRegistry(resources, writable);
+                }
+                registry.freeze();
+            });
+            var loaded = RegistryDataLoader.load(resources,
+                    builtins.listRegistries().toList(),
+                    RegistryDataLoader.WORLDGEN_REGISTRIES, Runnable::run).join();
+            registries = HolderLookup.Provider.create(Stream.concat(
+                    builtins.listRegistries(), loaded.listRegistries()));
+            // Incluye biomas, features, ruido, carvers y dimension_type propios.
         }
-        types.freeze();
-        withPlanetTypes = HolderLookup.Provider.create(Stream.concat(
-                vanilla.listRegistries().filter(registry -> !registry.key().equals(Registries.DIMENSION_TYPE)),
-                Stream.of(types)));
     }
 
     @ParameterizedTest
@@ -69,7 +92,7 @@ class WorldgenCodecTest {
     @ParameterizedTest
     @EnumSource(Planet.class)
     void dimensionAndGeneratorResolveAgainstRealRegistries(Planet planet) throws IOException {
-        LevelStem stem = LevelStem.CODEC.parse(withPlanetTypes.createSerializationContext(JsonOps.INSTANCE),
+        LevelStem stem = LevelStem.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),
                 resource("dimension/" + planet.path())).getOrThrow();
         assertNotNull(stem.generator());
         assertTrue(stem.generator().getMinY() >= planet.minY());
@@ -87,8 +110,27 @@ class WorldgenCodecTest {
     }
 
     private static DimensionType decodeType(Planet planet) throws IOException {
-        return DimensionType.DIRECT_CODEC.parse(vanilla.createSerializationContext(JsonOps.INSTANCE),
+        return DimensionType.DIRECT_CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),
                 resource("dimension_type/" + planet.path())).getOrThrow();
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = Planet.class, names = {"JUPITER", "SATURN", "URANUS", "NEPTUNE"})
+    void giantsHaveNoSolidLayersOrDecoration(Planet planet) throws IOException {
+        var generator = resource("dimension/" + planet.path()).getAsJsonObject().getAsJsonObject("generator");
+        assertEquals("minecraft:flat", generator.get("type").getAsString());
+        assertTrue(generator.getAsJsonObject("settings").getAsJsonArray("layers").isEmpty());
+        assertEquals(false, generator.getAsJsonObject("settings").get("features").getAsBoolean());
+    }
+
+    @Test
+    void viscousLavaUsesItsOwnBlockAndLavaTag() {
+        var fluid = PlanetFluids.VISCOUS_LAVA;
+        var state = fluid.defaultFluidState();
+        assertEquals(80, fluid.getTickDelay(null));
+        assertEquals(PlanetFluids.VISCOUS_LAVA_BLOCK,
+                state.createLegacyBlock().getBlock());
+        assertTrue(state.is(FluidTags.LAVA));
     }
 
     private static JsonElement resource(String path) throws IOException {

@@ -1,5 +1,6 @@
 {
   "death.attack.space_fabric.decompression": "%1$s suffered decompression",
   "death.attack.space_fabric.crushing_pressure": "%1$s was crushed by atmospheric pressure",
-  "death.attack.space_fabric.hypoxia": "%1$s ran out of oxygen"
+  "death.attack.space_fabric.hypoxia": "%1$s ran out of oxygen",
+  "item.space_fabric.viscous_lava_bucket": "Viscous Lava Bucket"
 }

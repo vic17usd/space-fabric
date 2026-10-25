@@ -17,7 +17,7 @@ def main():
         dimension = documents[data / "dimension" / f"{planet}.json"]
         if dimension["type"] != f"space_fabric:{planet}":
             raise ValueError(f"Referencia de dimension_type incorrecta: {planet}")
-        if dimension["generator"]["type"] != "minecraft:noise":
+        if dimension["generator"]["type"] != ("minecraft:flat" if planet in {"jupiter", "saturn", "uranus", "neptune"} else "minecraft:noise"):
             raise ValueError(f"Generador incorrecto: {planet}")
         dimension_type = documents[data / "dimension_type" / f"{planet}.json"]
         if dimension_type["height"] % 16 or dimension_type["min_y"] % 16:

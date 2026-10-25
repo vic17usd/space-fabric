@@ -4,8 +4,8 @@
     "type": "minecraft:noise",
     "biome_source": {
       "type": "minecraft:fixed",
-      "biome": "minecraft:desert"
+      "biome": "space_fabric:venus"
     },
-    "settings": "minecraft:overworld"
+    "settings": "space_fabric:venus"
   }
 }

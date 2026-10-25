@@ -1,5 +1,6 @@
 {
   "death.attack.space_fabric.decompression": "%1$s sufrió descompresión",
   "death.attack.space_fabric.crushing_pressure": "%1$s fue aplastado por la presión atmosférica",
-  "death.attack.space_fabric.hypoxia": "%1$s se quedó sin oxígeno"
+  "death.attack.space_fabric.hypoxia": "%1$s se quedó sin oxígeno",
+  "item.space_fabric.viscous_lava_bucket": "Cubo de lava viscosa"
 }

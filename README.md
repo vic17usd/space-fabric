@@ -1,11 +1,12 @@
 # Space Fabric — Minecraft Java 26.1
 
-La versión 0.2.0 añade la Luna y límites verticales por destino.
+La versión 0.3.0 añade biomas propios, cráteres, lava viscosa, lluvia ácida y gigantes sin suelo.
+Consulta la [guía de terreno y registro de biomas](docs/terrain.md).
 Consulta la [tabla de dimensiones y claves Java](docs/dimensions.md).
 
-Descarga del prototipo compilado: [space-fabric-0.2.0.jar](dist/space-fabric-0.2.0.jar)
+Descarga del prototipo compilado: [space-fabric-0.3.0.jar](dist/space-fabric-0.3.0.jar)
 (en GitHub, pulsa **Download raw file**).
-[Checksum SHA-256](dist/space-fabric-0.2.0.jar.sha256).
+[Checksum SHA-256](dist/space-fabric-0.3.0.jar.sha256).
 Requiere Minecraft **26.1**, Java **25**, Fabric Loader y Fabric API **0.145.1+26.1**.
 Coloca el JAR y Fabric API en la carpeta `mods/`. Es el prototipo descrito abajo;
 todavía falta su validación dentro del juego.
@@ -15,7 +16,7 @@ Tierra, Luna, Marte, Júpiter, Saturno, Urano y Neptuno. Usa los nombres oficial
 Minecraft 26.1, sin Yarn ni remapeo de versiones anteriores.
 
 Implementa dimensiones por datos, gravedad para entidades vivas y daño atmosférico
-para jugadores. El terreno es provisional: faltan biomas propios, cohetes,
+para jugadores. El terreno tiene biomas propios y rasgos planetarios; faltan cohetes,
 portales y simulación astronómica. La Luna se incluye como satélite explorable.
 
 ## Versiones y uso
@@ -37,7 +38,7 @@ python3 tools/validate_resources.py
 ./gradlew runClient
 ```
 
-El artefacto será `build/libs/space-fabric-0.2.0.jar`. Instala el mod y Fabric API
+El artefacto será `build/libs/space-fabric-0.3.0.jar`. Instala el mod y Fabric API
 en cliente y servidor. No se declara compatibilidad con 1.21.x ni con otras
 revisiones de 26.1 sin validarlas por separado.
 
@@ -62,6 +63,9 @@ src/main/java/dev/vic17usd/spacefabric/
 │   ├── Exposure.java                # Regla pura de exposición, probada con JUnit
 │   ├── AtmosphereSystem.java        # Tick de servidor y aplicación de daño
 │   └── PlanetDamageTypes.java       # Claves de los DamageType del datapack
+├── worldgen/                        # Biomas, registro de features y cráteres
+├── fluid/                           # Lava viscosa, bloque y cubo
+├── client/                          # Renderizado del fluido en Fabric 26.1
 └── command/
     └── PlanetCommands.java          # /planetinfo, diagnóstico de lectura
 
@@ -77,7 +81,8 @@ src/main/resources/
 ```
 
 `fabric.mod.json` declara `SpaceFabric` como entrada `main` y `environment: "*"`.
-Esta fase no necesita entrada de cliente ni Mixins: los eventos Fabric gestionan
+La entrada de cliente registra el renderizado de la lava viscosa. No hay Mixins:
+los eventos Fabric gestionan
 el ciclo de vida y Minecraft sincroniza el atributo vanilla de gravedad. Las
 decisiones de daño se toman exclusivamente en el servidor.
 
@@ -93,9 +98,9 @@ Fabric monta los recursos `data/` del mod como un datapack integrado. Por ejempl
     "type": "minecraft:noise",
     "biome_source": {
       "type": "minecraft:fixed",
-      "biome": "minecraft:eroded_badlands"
+      "biome": "space_fabric:mars"
     },
-    "settings": "minecraft:overworld"
+    "settings": "space_fabric:mars"
   }
 }
 ```
@@ -128,11 +133,10 @@ no reemplaza `minecraft:overworld`.
 Son terrenos abiertos que se generan al explorar dentro de los límites normales
 de Minecraft. No son esferas ni réplicas geográficas. Comparten semilla y algunos
 generadores vanilla, pero sus chunks y modificaciones se guardan por separado.
-Mercurio, Venus y Marte usan biomas vanilla provisionales y heredan agua,
-estructuras y reglas de esos generadores. Tierra usa el generador del Overworld.
-Los cuatro gigantes usan ruido del End para representar islas explorables sin
-combate del dragón. Sus plataformas son una abstracción jugable: los gigantes
-gaseosos y helados no tienen una superficie sólida de tipo terrestre.
+Mercurio, Venus, Luna y Marte usan biomas y ajustes de ruido propios, sin océanos
+de agua ni estructuras vanilla. Tierra conserva el Overworld. Los gigantes usan
+un generador vacío, niebla densa y presión mortal por debajo de Y=160, incluso con
+la escafandra básica. No generan una superficie sólida ni plataformas automáticas.
 
 ## Gravedad con eventos
 
@@ -184,7 +188,7 @@ se aplica hipoxia. No hay período de gracia al entrar en un planeta.
 
 Los JSON registran los daños `space_fabric:decompression`,
 `space_fabric:crushing_pressure` y `space_fabric:hypoxia`. Sus tags evitan que una
-armadura ordinaria o un escudo absorban el peligro. La invulnerabilidad y el resto
+armadura ordinaria o un escudo absorban el peligro. En los gigantes la zona profunda ignora el traje básico. La invulnerabilidad y el resto
 del sistema de daño conservan sus reglas vanilla.
 
 **El conjunto completo de hierro funciona como traje provisional.** Las cuatro
@@ -200,7 +204,7 @@ tanque en `SuitProtection` y guarda su estado en componentes de ítem o attachme
 `./gradlew test` prueba Tierra segura, planetas hostiles, protección del traje,
 inmunidad, prioridad de presión e hipoxia a presión normal.
 También usa Fabric Loader JUnit y los codecs reales de Minecraft para interpretar
-los nueve tipos de dimensión, sus generadores y los tres tipos de daño: **50 casos**
+los nueve tipos de dimensión, sus generadores y los tres tipos de daño: **65 casos**
 en total. `tools/validate_resources.py` comprueba además JSON y referencias internas.
 Estas pruebas no arrancan un mundo ni comprueban la sincronización del cliente.
 
@@ -217,8 +221,8 @@ En un mundo nuevo con comandos habilitados:
    cambios de dimensión, muerte/respawn y reconexión.
 6. Compara saltos en Marte y Tierra. Al regresar a `minecraft:overworld`, verifica
    con `/planetinfo` que se retiró nuestro modificador.
-7. Visita las nueve dimensiones en espectador. En los gigantes localiza una isla
-   o construye una plataforma antes de dejar el vuelo.
+7. Visita las nueve dimensiones en espectador. En los gigantes construye una plataforma
+   por encima de Y=160 antes de dejar el vuelo y lleva la escafandra completa.
 
 Los comandos vanilla de viaje requieren permisos de operador. `/planetinfo` es
 de lectura y está disponible para jugadores normales. Consulta

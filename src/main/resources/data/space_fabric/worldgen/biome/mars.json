@@ -1,0 +1,33 @@
+{
+  "has_precipitation": false,
+  "temperature": 0.8,
+  "downfall": 0.0,
+  "attributes": {
+    "minecraft:visual/sky_color": "#b96540",
+    "minecraft:visual/fog_color": "#a35d40"
+  },
+  "effects": {
+    "water_color": "#3f76e4"
+  },
+  "spawners": {},
+  "spawn_costs": {},
+  "carvers": [
+    "space_fabric:cave",
+    "space_fabric:canyon"
+  ],
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "space_fabric:oxide_iron"
+    ],
+    [],
+    [],
+    [],
+    []
+  ]
+}

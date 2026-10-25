@@ -4,6 +4,8 @@ import dev.vic17usd.spacefabric.atmosphere.AtmosphereSystem;
 import dev.vic17usd.spacefabric.command.PlanetCommands;
 import dev.vic17usd.spacefabric.gravity.PlanetGravity;
 import dev.vic17usd.spacefabric.planet.PlanetDimensions;
+import dev.vic17usd.spacefabric.worldgen.PlanetFeatures;
+import dev.vic17usd.spacefabric.fluid.PlanetFluids;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
@@ -19,6 +21,8 @@ public final class SpaceFabric implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        PlanetFeatures.initialize();
+        PlanetFluids.initialize();
         PlanetDimensions.initialize();
         PlanetGravity.initialize();
         AtmosphereSystem.initialize();

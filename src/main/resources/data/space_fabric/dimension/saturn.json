@@ -1,11 +1,13 @@
 {
   "type": "space_fabric:saturn",
   "generator": {
-    "type": "minecraft:noise",
-    "biome_source": {
-      "type": "minecraft:fixed",
-      "biome": "minecraft:end_highlands"
-    },
-    "settings": "minecraft:end"
+    "type": "minecraft:flat",
+    "settings": {
+      "biome": "space_fabric:saturn",
+      "layers": [],
+      "lakes": false,
+      "features": false,
+      "structure_overrides": []
+    }
   }
 }
