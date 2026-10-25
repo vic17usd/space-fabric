@@ -1,0 +1,11 @@
+{
+  "type": "space_fabric:mars",
+  "generator": {
+    "type": "minecraft:noise",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "minecraft:eroded_badlands"
+    },
+    "settings": "minecraft:overworld"
+  }
+}

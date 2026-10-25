@@ -1,0 +1,11 @@
+{
+  "type": "space_fabric:saturn",
+  "generator": {
+    "type": "minecraft:noise",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "minecraft:end_highlands"
+    },
+    "settings": "minecraft:end"
+  }
+}

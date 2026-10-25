@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "space_fabric:decompression",
+    "space_fabric:crushing_pressure",
+    "space_fabric:hypoxia"
+  ]
+}

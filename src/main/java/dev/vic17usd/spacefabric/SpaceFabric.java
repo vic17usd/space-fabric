@@ -1,0 +1,28 @@
+package dev.vic17usd.spacefabric;
+
+import dev.vic17usd.spacefabric.atmosphere.AtmosphereSystem;
+import dev.vic17usd.spacefabric.command.PlanetCommands;
+import dev.vic17usd.spacefabric.gravity.PlanetGravity;
+import dev.vic17usd.spacefabric.planet.PlanetDimensions;
+import net.fabricmc.api.ModInitializer;
+import net.minecraft.resources.Identifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public final class SpaceFabric implements ModInitializer {
+    public static final String MOD_ID = "space_fabric";
+    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+
+    public static Identifier id(String path) {
+        return Identifier.fromNamespaceAndPath(MOD_ID, path);
+    }
+
+    @Override
+    public void onInitialize() {
+        PlanetDimensions.initialize();
+        PlanetGravity.initialize();
+        AtmosphereSystem.initialize();
+        PlanetCommands.initialize();
+        LOGGER.info("Space Fabric: sistemas planetarios inicializados para Minecraft 26.1");
+    }
+}
