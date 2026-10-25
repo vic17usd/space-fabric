@@ -27,6 +27,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** Usa los codecs reales de 26.1 sin abrir un servidor ni aceptar su EULA. */
 class WorldgenCodecTest {
@@ -57,8 +58,12 @@ class WorldgenCodecTest {
     @EnumSource(Planet.class)
     void dimensionTypeIsAcceptedByMinecraft(Planet planet) throws IOException {
         DimensionType type = decodeType(planet);
-        assertEquals(384, type.height());
-        assertEquals(-64, type.minY());
+        assertEquals(planet.height(), type.height());
+        assertEquals(planet.minY(), type.minY());
+        JsonElement data = resource("dimension_type/" + planet.path());
+        var attributes = data.getAsJsonObject().getAsJsonObject("attributes");
+        assertEquals(planet.skyColor(), attributes.get("minecraft:visual/sky_color").getAsString());
+        assertEquals(planet.fogColor(), attributes.get("minecraft:visual/fog_color").getAsString());
     }
 
     @ParameterizedTest
@@ -67,6 +72,9 @@ class WorldgenCodecTest {
         LevelStem stem = LevelStem.CODEC.parse(withPlanetTypes.createSerializationContext(JsonOps.INSTANCE),
                 resource("dimension/" + planet.path())).getOrThrow();
         assertNotNull(stem.generator());
+        assertTrue(stem.generator().getMinY() >= planet.minY());
+        assertTrue(stem.generator().getMinY() + stem.generator().getGenDepth()
+                <= planet.minY() + planet.height());
         assertEquals("space_fabric:" + planet.path(), stem.type().unwrapKey().orElseThrow().identifier().toString());
     }
 

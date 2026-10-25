@@ -1,19 +1,22 @@
 # Space Fabric — Minecraft Java 26.1
 
-Descarga del prototipo compilado: [space-fabric-0.1.0.jar](dist/space-fabric-0.1.0.jar)
+La versión 0.2.0 añade la Luna y límites verticales por destino.
+Consulta la [tabla de dimensiones y claves Java](docs/dimensions.md).
+
+Descarga del prototipo compilado: [space-fabric-0.2.0.jar](dist/space-fabric-0.2.0.jar)
 (en GitHub, pulsa **Download raw file**).
-[Checksum SHA-256](dist/space-fabric-0.1.0.jar.sha256).
+[Checksum SHA-256](dist/space-fabric-0.2.0.jar.sha256).
 Requiere Minecraft **26.1**, Java **25**, Fabric Loader y Fabric API **0.145.1+26.1**.
 Coloca el JAR y Fabric API en la carpeta `mods/`. Es el prototipo descrito abajo;
 todavía falta su validación dentro del juego.
 
-Base modular en Java 25 para ocho dimensiones independientes: Mercurio, Venus,
-Tierra, Marte, Júpiter, Saturno, Urano y Neptuno. Usa los nombres oficiales de
+Base modular en Java 25 para nueve dimensiones independientes: Mercurio, Venus,
+Tierra, Luna, Marte, Júpiter, Saturno, Urano y Neptuno. Usa los nombres oficiales de
 Minecraft 26.1, sin Yarn ni remapeo de versiones anteriores.
 
 Implementa dimensiones por datos, gravedad para entidades vivas y daño atmosférico
 para jugadores. El terreno es provisional: faltan biomas propios, cohetes,
-portales y simulación astronómica. La Luna no está incluida entre estos ocho mundos.
+portales y simulación astronómica. La Luna se incluye como satélite explorable.
 
 ## Versiones y uso
 
@@ -34,7 +37,7 @@ python3 tools/validate_resources.py
 ./gradlew runClient
 ```
 
-El artefacto será `build/libs/space-fabric-0.1.0.jar`. Instala el mod y Fabric API
+El artefacto será `build/libs/space-fabric-0.2.0.jar`. Instala el mod y Fabric API
 en cliente y servidor. No se declara compatibilidad con 1.21.x ni con otras
 revisiones de 26.1 sin validarlas por separado.
 
@@ -48,7 +51,7 @@ de acuerdo. El proyecto no la acepta automáticamente. Usa un mundo de pruebas n
 src/main/java/dev/vic17usd/spacefabric/
 ├── SpaceFabric.java                 # Entrada común y registro de sistemas
 ├── planet/
-│   ├── Planet.java                  # Ocho perfiles, independientes de Minecraft
+│   ├── Planet.java                  # Nueve perfiles, independientes de Minecraft
 │   ├── Atmosphere.java              # Respirabilidad y categoría de presión
 │   └── PlanetDimensions.java        # Claves y comprobación de mundos al arrancar
 ├── gravity/
@@ -114,7 +117,7 @@ ServerLevel marsLevel = server.getLevel(mars);
 
 Crear el `ResourceKey` **no registra ni crea un mundo**. Estos registros son
 dinámicos: Minecraft carga sus JSON al abrir el mundo. No uses `Registry.register`
-para añadir dimensiones en el inicializador. El servidor comprueba que las ocho
+para añadir dimensiones en el inicializador. El servidor comprueba que las nueve
 existan al arrancar y falla con un mensaje concreto si falta alguna.
 
 Tras cambiar worldgen, cierra y vuelve a abrir el mundo; `/reload` no garantiza
@@ -138,6 +141,7 @@ gaseosos y helados no tienen una superficie sólida de tipo terrestre.
 | Mercurio | 0.38 | Vacío, no respirable |
 | Venus | 0.90 | Presión extrema, no respirable |
 | Tierra | 1.00 | Normal, respirable |
+| Luna | 0.165 | Vacío, no respirable |
 | Marte | 0.38 | Tenue, no respirable |
 | Júpiter | 2.53 | Presión extrema, no respirable |
 | Saturno | 1.07 | Presión extrema, no respirable |
@@ -196,13 +200,13 @@ tanque en `SuitProtection` y guarda su estado en componentes de ítem o attachme
 `./gradlew test` prueba Tierra segura, planetas hostiles, protección del traje,
 inmunidad, prioridad de presión e hipoxia a presión normal.
 También usa Fabric Loader JUnit y los codecs reales de Minecraft para interpretar
-los ocho tipos de dimensión, sus generadores y los tres tipos de daño: **45 casos**
+los nueve tipos de dimensión, sus generadores y los tres tipos de daño: **50 casos**
 en total. `tools/validate_resources.py` comprueba además JSON y referencias internas.
 Estas pruebas no arrancan un mundo ni comprueban la sincronización del cliente.
 
 En un mundo nuevo con comandos habilitados:
 
-1. Arranca el cliente y confirma en el log que se cargaron las ocho dimensiones.
+1. Arranca el cliente y confirma en el log que se cargaron las nueve dimensiones.
 2. Usa `/gamemode spectator` y
    `/execute in space_fabric:mars run tp @s 0 180 0`. Inspecciona el terreno antes
    de salir de espectador. `/planetinfo` muestra el perfil y el atributo de gravedad.
@@ -213,7 +217,7 @@ En un mundo nuevo con comandos habilitados:
    cambios de dimensión, muerte/respawn y reconexión.
 6. Compara saltos en Marte y Tierra. Al regresar a `minecraft:overworld`, verifica
    con `/planetinfo` que se retiró nuestro modificador.
-7. Visita las ocho dimensiones en espectador. En los gigantes localiza una isla
+7. Visita las nueve dimensiones en espectador. En los gigantes localiza una isla
    o construye una plataforma antes de dejar el vuelo.
 
 Los comandos vanilla de viaje requieren permisos de operador. `/planetinfo` es

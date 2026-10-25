@@ -8,7 +8,7 @@ def main():
     root = Path(__file__).resolve().parents[1] / "src/main/resources"
     documents = {path: json.loads(path.read_text()) for path in root.rglob("*.json")}
     data = root / "data/space_fabric"
-    expected = {"mercury", "venus", "earth", "mars", "jupiter", "saturn", "uranus", "neptune"}
+    expected = {"mercury", "venus", "earth", "moon", "mars", "jupiter", "saturn", "uranus", "neptune"}
     for directory in ("dimension", "dimension_type"):
         actual = {path.stem for path in (data / directory).glob("*.json")}
         if actual != expected:
@@ -40,7 +40,7 @@ def main():
     for part in ("helmets", "chestplates", "leggings", "boots"):
         if not documents[data / "tags/item/space_suit" / f"{part}.json"]["values"]:
             raise ValueError(f"Etiqueta del traje vacía: {part}")
-    print(f"OK: {len(documents)} JSON; ocho dimensiones y referencias internas coherentes.")
+    print(f"OK: {len(documents)} JSON; nueve dimensiones y referencias internas coherentes.")
     print("Los codecs se prueban con ./gradlew test; la comprobación en el juego es independiente.")
 
 

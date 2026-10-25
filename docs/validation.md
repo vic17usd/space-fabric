@@ -4,15 +4,15 @@ Verificado con JDK 25, Gradle 9.8.2, Loom 1.19.3, Minecraft 26.1,
 Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
 
 - `./gradlew build --console=plain`: compilación Java, recursos, JAR y pruebas correctos.
-- JUnit: **45 ejecutadas, 45 aprobadas, 0 omitidas**.
-- `ExposureTest`: 26 casos de atmósfera, inmunidad y protección por sellado.
-- `WorldgenCodecTest`: 19 casos con los codecs reales de Minecraft; ocho tipos
-  de dimensión, ocho mundos con sus generadores y tres tipos de daño aceptados.
-- `python3 tools/validate_resources.py`: 28 JSON y referencias internas coherentes.
+- JUnit: **50 ejecutadas, 50 aprobadas, 0 omitidas**.
+- `ExposureTest`: 29 casos de atmósfera, inmunidad y protección por sellado.
+- `WorldgenCodecTest`: 21 casos con los codecs reales de Minecraft; nueve tipos
+  de dimensión, nueve mundos con sus generadores y tres tipos de daño aceptados.
+- `python3 tools/validate_resources.py`: 30 JSON y referencias internas coherentes.
 - Gradle Wrapper y distribución: SHA-256 verificado con los checksums oficiales.
 - JDK descargado para este entorno: SHA-256 verificado con el checksum oficial.
 
-Artefacto generado: `build/libs/space-fabric-0.1.0.jar`.
+Artefacto generado: `build/libs/space-fabric-0.2.0.jar`.
 Los informes de la ejecución están en `build/test-results/test/` y
 `build/reports/tests/test/`; son salidas locales ignoradas por Git.
 
