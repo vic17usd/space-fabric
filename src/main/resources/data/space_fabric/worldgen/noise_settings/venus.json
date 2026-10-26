@@ -1,7 +1,7 @@
 {
   "aquifers_enabled": false,
   "default_block": {
-    "Name": "minecraft:basalt"
+    "Name": "space_fabric:vulcanized_basalt"
   },
   "default_fluid": {
     "Name": "space_fabric:viscous_lava",
@@ -481,7 +481,7 @@
       {
         "type": "minecraft:block",
         "result_state": {
-          "Name": "minecraft:basalt"
+          "Name": "space_fabric:vulcanized_basalt"
         }
       }
     ]

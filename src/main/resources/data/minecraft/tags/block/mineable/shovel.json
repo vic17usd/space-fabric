@@ -2,6 +2,7 @@
   "replace": false,
   "values": [
     "space_fabric:mercury_regolith",
-    "space_fabric:lunar_regolith"
+    "space_fabric:lunar_regolith",
+    "space_fabric:iron_oxide_regolith"
   ]
 }

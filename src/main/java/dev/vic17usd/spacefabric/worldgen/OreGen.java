@@ -16,6 +16,7 @@ public final class OreGen {
         Registry.register(BuiltInRegistries.CHUNK_GENERATOR, SpaceFabric.id("orbital"), OrbitalChunkGenerator.CODEC);
         Registry.register(BuiltInRegistries.FEATURE, SpaceFabric.id("orbital_material"), new OrbitalMaterialFeature());
         Registry.register(BuiltInRegistries.FEATURE, SpaceFabric.id("terrestrial_basalt"), new TerrestrialBasaltFeature());
+        Registry.register(BuiltInRegistries.FEATURE, SpaceFabric.id("shadow_crater_ice"), new ShadowCraterIceFeature());
     }
 
     public static final ResourceKey<PlacedFeature> MERCURY_REGOLITH = placed("mercury_regolith");
@@ -28,6 +29,15 @@ public final class OreGen {
     public static final ResourceKey<PlacedFeature> SATURN_RING_ICE = placed("saturn_ring_ice");
     public static final ResourceKey<PlacedFeature> URANIAN_METHANE_ICE = placed("uranian_methane_ice");
     public static final ResourceKey<PlacedFeature> NEPTUNIAN_METHANE_ICE = placed("neptunian_methane_ice");
+    public static final ResourceKey<PlacedFeature> DENSE_IRON = placed("dense_iron");
+    public static final ResourceKey<PlacedFeature> CRATER_ICE = placed("crater_ice");
+    public static final ResourceKey<PlacedFeature> VENUSIAN_OLIVINE = placed("venusian_olivine");
+    public static final ResourceKey<PlacedFeature> PYROXENE = placed("pyroxene");
+    public static final ResourceKey<PlacedFeature> SULFUR = placed("sulfur");
+    public static final ResourceKey<PlacedFeature> CONDENSED_ACID = placed("condensed_acid");
+    public static final ResourceKey<PlacedFeature> IRON_OXIDE = placed("iron_oxide");
+    public static final ResourceKey<PlacedFeature> MARTIAN_OLIVINE = placed("martian_olivine");
+    public static final ResourceKey<PlacedFeature> MARTIAN_SULFATE = placed("martian_sulfate");
     private static boolean initialized;
 
     private OreGen() { }
@@ -49,6 +59,15 @@ public final class OreGen {
         add(Planet.SATURN, SATURN_RING_ICE, GenerationStep.Decoration.TOP_LAYER_MODIFICATION);
         add(Planet.URANUS, URANIAN_METHANE_ICE, GenerationStep.Decoration.TOP_LAYER_MODIFICATION);
         add(Planet.NEPTUNE, NEPTUNIAN_METHANE_ICE, GenerationStep.Decoration.TOP_LAYER_MODIFICATION);
+        add(Planet.MERCURY, DENSE_IRON, GenerationStep.Decoration.UNDERGROUND_ORES);
+        add(Planet.MERCURY, CRATER_ICE, GenerationStep.Decoration.TOP_LAYER_MODIFICATION);
+        add(Planet.VENUS, VENUSIAN_OLIVINE, GenerationStep.Decoration.UNDERGROUND_ORES);
+        add(Planet.VENUS, PYROXENE, GenerationStep.Decoration.UNDERGROUND_ORES);
+        add(Planet.VENUS, SULFUR, GenerationStep.Decoration.UNDERGROUND_ORES);
+        add(Planet.VENUS, CONDENSED_ACID, GenerationStep.Decoration.UNDERGROUND_ORES);
+        add(Planet.MARS, IRON_OXIDE, GenerationStep.Decoration.UNDERGROUND_ORES);
+        add(Planet.MARS, MARTIAN_OLIVINE, GenerationStep.Decoration.UNDERGROUND_ORES);
+        add(Planet.MARS, MARTIAN_SULFATE, GenerationStep.Decoration.UNDERGROUND_ORES);
     }
 
     private static void add(Planet planet, ResourceKey<PlacedFeature> feature, GenerationStep.Decoration step) {

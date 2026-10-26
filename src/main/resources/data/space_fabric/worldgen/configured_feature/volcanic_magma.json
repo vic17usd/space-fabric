@@ -6,8 +6,8 @@
     "targets": [
       {
         "target": {
-          "predicate_type": "minecraft:block_match",
-          "block": "minecraft:basalt"
+          "predicate_type": "minecraft:tag_match",
+          "tag": "space_fabric:venus_host_rocks"
         },
         "state": {
           "Name": "minecraft:magma_block"

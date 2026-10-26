@@ -25,6 +25,8 @@ public final class ModBlocks {
         Registry.register(BuiltInRegistries.BLOCK_TYPE, SpaceFabric.id("hot_volcanic_rock"), HotVolcanicRockBlock.CODEC);
         Registry.register(BuiltInRegistries.BLOCK_TYPE, SpaceFabric.id("planet_ore"), PlanetOreBlock.CODEC);
         Registry.register(BuiltInRegistries.BLOCK_TYPE, SpaceFabric.id("methane_ice"), MethaneIceBlock.CODEC);
+        Registry.register(BuiltInRegistries.BLOCK_TYPE, SpaceFabric.id("crater_ice"), CraterIceBlock.CODEC);
+        Registry.register(BuiltInRegistries.BLOCK_TYPE, SpaceFabric.id("condensed_acid"), CondensedAcidBlock.CODEC);
     }
 
     public static final Block MERCURY_REGOLITH = register("mercury_regolith", PlanetRegolithBlock::new,
@@ -49,6 +51,33 @@ public final class ModBlocks {
             stoneProperties().strength(4.0F, 10.0F));
     public static final Block SATURN_RING_ICE = register("saturn_ring_ice", Block::new,
             BlockBehaviour.Properties.ofFullCopy(Blocks.BLUE_ICE).strength(0.8F));
+
+    // Geología de Mercurio: la corteza y las vetas son abstracciones del terreno de Minecraft.
+    public static final Block MERCURY_SILICATE = register("mercury_silicate", Block::new,
+            stoneProperties().strength(3.5F, 8.0F));
+    public static final Block DENSE_IRON_ORE = register("dense_iron_ore",
+            properties -> new PlanetOreBlock(UniformInt.of(2, 5), properties), stoneProperties().strength(10.0F, 18.0F));
+    public static final Block CRATER_ICE = register("crater_ice", CraterIceBlock::new,
+            BlockBehaviour.Properties.ofFullCopy(Blocks.BLUE_ICE).sound(SoundType.GLASS));
+
+    // Venus: silicatos plausibles; azufre/ácido condensado son materiales de jugabilidad.
+    public static final Block VULCANIZED_BASALT = register("vulcanized_basalt", HotVolcanicRockBlock::new,
+            stoneProperties().strength(4.0F, 9.0F).lightLevel(state -> 3));
+    public static final Block VENUSIAN_OLIVINE_ORE = register("venusian_olivine_ore",
+            properties -> new PlanetOreBlock(UniformInt.of(1, 3), properties), stoneProperties().strength(4.0F, 7.0F));
+    public static final Block PYROXENE_ORE = register("pyroxene_ore",
+            properties -> new PlanetOreBlock(UniformInt.of(1, 3), properties), stoneProperties().strength(3.5F, 7.0F));
+    public static final Block SULFUR_DEPOSIT = register("sulfur_deposit", HotVolcanicRockBlock::new,
+            stoneProperties().strength(1.5F, 3.0F).lightLevel(state -> 2));
+    public static final Block CONDENSED_SULFURIC_ACID = register("condensed_sulfuric_acid", CondensedAcidBlock::new,
+            stoneProperties().strength(1.0F, 2.0F));
+
+    public static final Block IRON_OXIDE_REGOLITH = register("iron_oxide_regolith", PlanetRegolithBlock::new,
+            BlockBehaviour.Properties.ofFullCopy(Blocks.RED_SAND).strength(0.6F));
+    public static final Block MARTIAN_OLIVINE_STONE = register("martian_olivine_stone",
+            properties -> new PlanetOreBlock(UniformInt.of(1, 3), properties), stoneProperties().strength(3.5F, 7.0F));
+    public static final Block MARTIAN_SULFATE_DEPOSIT = register("martian_sulfate_deposit",
+            properties -> new PlanetOreBlock(UniformInt.of(0, 2), properties), stoneProperties().strength(2.0F, 4.0F));
 
     private ModBlocks() { }
 

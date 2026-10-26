@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "space_fabric:vulcanized_basalt",
+    "space_fabric:venus_hot_rock",
+    "minecraft:basalt"
+  ]
+}

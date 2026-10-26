@@ -17,9 +17,7 @@ public final class ModCreativeTabs {
                     .icon(() -> new ItemStack(ModBlocks.MARTIAN_STONE))
                     .displayItems((parameters, output) -> {
                         ModBlocks.all().values().forEach(output::accept);
-                        output.accept(ModItems.ARES_CRYSTAL);
-                        output.accept(ModItems.RAW_PHOBOSITE);
-                        output.accept(ModItems.THERMAL_BOOTS);
+                        ModItems.all().values().forEach(output::accept);
                         output.accept(PlanetFluids.VISCOUS_LAVA_BUCKET);
                     }).build());
 

@@ -330,6 +330,104 @@ class WorldgenCodecTest {
         }
     }
 
+    @Test
+    void denseIronReallyRequiresNetheriteAndCraterIceDoesNotTickMelt() {
+        var state = ModBlocks.DENSE_IRON_ORE.defaultBlockState();
+        assertFalse(new ItemStack(Items.IRON_PICKAXE).isCorrectToolForDrops(state));
+        assertFalse(new ItemStack(Items.DIAMOND_PICKAXE).isCorrectToolForDrops(state));
+        assertTrue(new ItemStack(Items.NETHERITE_PICKAXE).isCorrectToolForDrops(state));
+        assertInstanceOf(dev.vic17usd.spacefabric.block.CraterIceBlock.class, ModBlocks.CRATER_ICE);
+        assertFalse(ModBlocks.CRATER_ICE.defaultBlockState().isRandomlyTicking());
+        assertInstanceOf(PlanetRegolithBlock.class, ModBlocks.IRON_OXIDE_REGOLITH);
+    }
+
+    @Test
+    void venusianGeologyUsesFunctionalContactHazardClasses() {
+        assertInstanceOf(HotVolcanicRockBlock.class, ModBlocks.VULCANIZED_BASALT);
+        assertInstanceOf(HotVolcanicRockBlock.class, ModBlocks.SULFUR_DEPOSIT);
+        assertInstanceOf(dev.vic17usd.spacefabric.block.CondensedAcidBlock.class, ModBlocks.CONDENSED_SULFURIC_ACID);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"dense_iron_chunk", "crater_ice_shard", "venusian_olivine", "pyroxene", "sulfur_crystal",
+            "acid_condensate", "iron_oxide_dust", "martian_olivine", "sulfate_dust"})
+    void geologyMaterialsAreRegisteredAndHaveNamesAndInventoryModels(String name) throws IOException {
+        assertEquals(ModItems.all().get(name), BuiltInRegistries.ITEM.getValue(SpaceFabric.id(name)));
+        for (String locale : new String[] {"es_es", "en_us"}) {
+            try (var input = WorldgenCodecTest.class.getResourceAsStream("/assets/space_fabric/lang/" + locale + ".json")) {
+                assertNotNull(input);
+                assertTrue(JsonParser.parseReader(new InputStreamReader(input, StandardCharsets.UTF_8)).getAsJsonObject()
+                        .has("item.space_fabric." + name));
+            }
+        }
+        assertNotNull(WorldgenCodecTest.class.getResource("/assets/space_fabric/items/" + name + ".json"));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"dense_iron_chunk_smelting", "dense_iron_chunk_blasting", "iron_oxide_dust_smelting", "iron_oxide_dust_blasting"})
+    void refiningRecipesActuallyMatchAndProduceIron(String name) throws IOException {
+        var recipe = assertInstanceOf(net.minecraft.world.item.crafting.AbstractCookingRecipe.class,
+                Recipe.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE), resource("recipe/" + name)).getOrThrow());
+        boolean dense = name.startsWith("dense");
+        var input = new net.minecraft.world.item.crafting.SingleRecipeInput(new ItemStack(dense ? ModItems.DENSE_IRON_CHUNK : ModItems.IRON_OXIDE_DUST));
+        assertTrue(recipe.matches(input, null));
+        assertEquals(dense ? Items.IRON_INGOT : Items.IRON_NUGGET, recipe.assemble(input).getItem());
+    }
+
+    @Test
+    void ironOxideCanBeCraftedIntoRedPigment() throws IOException {
+        var recipe = assertInstanceOf(net.minecraft.world.item.crafting.ShapelessRecipe.class,
+                Recipe.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE), resource("recipe/iron_oxide_red_dye")).getOrThrow());
+        var input = net.minecraft.world.item.crafting.CraftingInput.of(1, 1, List.of(new ItemStack(ModItems.IRON_OXIDE_DUST)));
+        assertTrue(recipe.matches(input, null));
+        assertEquals(Items.RED_DYE, recipe.assemble(input).getItem());
+    }
+
+    @Test
+    void geologicalDepositsAreRestrictedToTheirSelectedPlanetBiomes() {
+        var expected = java.util.Map.of(
+                OreGen.DENSE_IRON, Planet.MERCURY, OreGen.CRATER_ICE, Planet.MERCURY,
+                OreGen.VENUSIAN_OLIVINE, Planet.VENUS, OreGen.PYROXENE, Planet.VENUS,
+                OreGen.SULFUR, Planet.VENUS, OreGen.CONDENSED_ACID, Planet.VENUS,
+                OreGen.IRON_OXIDE, Planet.MARS, OreGen.MARTIAN_OLIVINE, Planet.MARS, OreGen.MARTIAN_SULFATE, Planet.MARS);
+        for (var entry : expected.entrySet()) for (var planet : Planet.values()) {
+            if (planet == Planet.EARTH) continue;
+            var biome = registries.lookupOrThrow(Registries.BIOME).getOrThrow(
+                    dev.vic17usd.spacefabric.worldgen.PlanetBiomes.key(planet));
+            boolean present = biome.value().getGenerationSettings().features().stream()
+                    .flatMap(net.minecraft.core.HolderSet::stream).anyMatch(feature -> feature.is(entry.getKey()));
+            assertEquals(entry.getValue() == planet, present, entry.getKey() + " en " + planet);
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {-257, 256})
+    void craterIceIsGeneratedWithAnOpaqueRoofInBothPolarBands(int chunkZ) {
+        var world = new VoxelWorld(0, chunkZ, 60);
+        var origin = new net.minecraft.core.BlockPos(0, -64, chunkZ << 4);
+        var context = new net.minecraft.world.level.levelgen.feature.FeaturePlaceContext<>(Optional.empty(), world.level, null,
+                net.minecraft.util.RandomSource.create(42), origin,
+                new net.minecraft.world.level.levelgen.feature.configurations.BlockStateConfiguration(ModBlocks.CRATER_ICE.defaultBlockState()));
+        assertTrue(new dev.vic17usd.spacefabric.worldgen.ShadowCraterIceFeature().place(context));
+        var ice = world.blocks.entrySet().stream().filter(entry -> entry.getValue().is(ModBlocks.CRATER_ICE)).toList();
+        assertFalse(ice.isEmpty());
+        for (var entry : ice) {
+            assertTrue(world.state(entry.getKey().above(3)).is(ModBlocks.MERCURY_SILICATE));
+            assertTrue(world.state(entry.getKey().above()).isAir());
+            assertFalse(world.level.canSeeSky(entry.getKey().above()));
+        }
+    }
+
+    @Test
+    void noColdTrapIsPlacedInTheEquatorialBand() {
+        var world = new VoxelWorld(0, 0, 60);
+        assertFalse(new dev.vic17usd.spacefabric.worldgen.ShadowCraterIceFeature().place(
+                new net.minecraft.world.level.levelgen.feature.FeaturePlaceContext<>(Optional.empty(), world.level, null,
+                        net.minecraft.util.RandomSource.create(42), new net.minecraft.core.BlockPos(0, -64, 0),
+                        new net.minecraft.world.level.levelgen.feature.configurations.BlockStateConfiguration(ModBlocks.CRATER_ICE.defaultBlockState()))));
+        assertTrue(world.blocks.isEmpty());
+    }
+
     private static void assertClientTarget(String owner, String name, String descriptor) throws IOException {
         try (var stream = WorldgenCodecTest.class.getResourceAsStream("/" + owner + ".class")) {
             assertNotNull(stream);

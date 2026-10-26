@@ -9,6 +9,16 @@
     "space_fabric:neptunian_methane_ice",
     "space_fabric:terrestrial_basalt",
     "space_fabric:jovian_meteorite",
-    "space_fabric:saturn_ring_ice"
+    "space_fabric:saturn_ring_ice",
+    "space_fabric:mercury_silicate",
+    "space_fabric:dense_iron_ore",
+    "space_fabric:vulcanized_basalt",
+    "space_fabric:venusian_olivine_ore",
+    "space_fabric:pyroxene_ore",
+    "space_fabric:sulfur_deposit",
+    "space_fabric:condensed_sulfuric_acid",
+    "space_fabric:martian_olivine_stone",
+    "space_fabric:martian_sulfate_deposit",
+    "space_fabric:crater_ice"
   ]
 }

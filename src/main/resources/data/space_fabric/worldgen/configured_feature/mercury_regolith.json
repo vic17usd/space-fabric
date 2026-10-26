@@ -6,8 +6,8 @@
     "targets": [
       {
         "target": {
-          "predicate_type": "minecraft:block_match",
-          "block": "minecraft:smooth_basalt"
+          "predicate_type": "minecraft:tag_match",
+          "tag": "space_fabric:mercury_host_rocks"
         },
         "state": {
           "Name": "space_fabric:mercury_regolith"

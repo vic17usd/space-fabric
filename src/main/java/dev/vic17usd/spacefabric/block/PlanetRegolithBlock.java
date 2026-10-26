@@ -15,6 +15,6 @@ public final class PlanetRegolithBlock extends FallingBlock {
     @Override protected MapCodec<PlanetRegolithBlock> codec() { return CODEC; }
 
     @Override public int getDustColor(BlockState state, BlockGetter level, BlockPos pos) {
-        return 0xA6A4A0;
+        return state.getMapColor(level, pos).col;
     }
 }

@@ -7,6 +7,9 @@
     "minecraft:iron_ore",
     "space_fabric:martian_stone",
     "space_fabric:ares_crystal_ore",
-    "space_fabric:phobosite_ore"
+    "space_fabric:phobosite_ore",
+    "space_fabric:iron_oxide_regolith",
+    "space_fabric:martian_olivine_stone",
+    "space_fabric:martian_sulfate_deposit"
   ]
 }
