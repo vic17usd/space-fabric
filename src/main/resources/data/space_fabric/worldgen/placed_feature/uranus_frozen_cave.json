@@ -1,0 +1,12 @@
+{
+  "feature": "space_fabric:uranus_frozen_cave",
+  "placement": [
+    {
+      "type": "minecraft:rarity_filter",
+      "chance": 16
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

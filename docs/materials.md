@@ -1,4 +1,4 @@
-# Bloques y materiales — versión 0.4.0, Minecraft 26.1
+# Bloques y materiales — versión 0.5.0, Minecraft 26.1
 
 El mod registra 11 bloques con BlockItem, tres ítems adicionales, una pestaña
 creativa, texturas originales de 16×16, modelos, traducciones, recetas y loot.
@@ -186,3 +186,6 @@ En un mundo de pruebas nuevo:
 
 La compilación y pruebas automatizadas están documentadas en `validation.md`.
 No sustituyen la prueba física y visual en cliente ni una sesión multijugador.
+
+La versión 0.5.0 añade corrosión de armadura y cavernas dentro de cuerpos de hielo;
+consulta [environments.md](environments.md) para los riesgos y efectos visuales.

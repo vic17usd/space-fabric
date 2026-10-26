@@ -10,6 +10,12 @@ import dev.vic17usd.spacefabric.block.ModBlocks;
 import dev.vic17usd.spacefabric.item.ModItems;
 import dev.vic17usd.spacefabric.item.ModCreativeTabs;
 import dev.vic17usd.spacefabric.worldgen.OreGen;
+import dev.vic17usd.spacefabric.environment.PlanetRotation;
+import dev.vic17usd.spacefabric.environment.VenusAcidSystem;
+import dev.vic17usd.spacefabric.environment.MeteorSystem;
+import dev.vic17usd.spacefabric.environment.StormParticles;
+import dev.vic17usd.spacefabric.worldgen.EnvironmentWorldgen;
+import dev.vic17usd.spacefabric.command.EnvironmentCommands;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
@@ -31,10 +37,16 @@ public final class SpaceFabric implements ModInitializer {
         ModBlocks.initialize();
         ModCreativeTabs.initialize();
         OreGen.initialize();
+        EnvironmentWorldgen.initialize();
         PlanetDimensions.initialize();
         PlanetGravity.initialize();
         AtmosphereSystem.initialize();
+        PlanetRotation.initialize();
+        VenusAcidSystem.initialize();
+        MeteorSystem.initialize();
+        StormParticles.initialize();
         PlanetCommands.initialize();
+        EnvironmentCommands.initialize();
         LOGGER.info("Space Fabric: sistemas planetarios inicializados para Minecraft 26.1");
     }
 }

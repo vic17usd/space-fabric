@@ -1,0 +1,8 @@
+{
+  "type": "space_fabric:frozen_cave",
+  "config": {
+    "state": {
+      "Name": "space_fabric:neptunian_methane_ice"
+    }
+  }
+}

@@ -4,9 +4,9 @@
   "downfall": 0.0,
   "attributes": {
     "minecraft:visual/sky_color": "#000000",
-    "minecraft:visual/fog_color": "#676b73",
-    "minecraft:visual/fog_start_distance": 1024.0,
-    "minecraft:visual/fog_end_distance": 4096.0
+    "minecraft:visual/fog_color": "#000000",
+    "minecraft:visual/fog_start_distance": 1024,
+    "minecraft:visual/fog_end_distance": 4096
   },
   "effects": {
     "water_color": "#3f76e4"

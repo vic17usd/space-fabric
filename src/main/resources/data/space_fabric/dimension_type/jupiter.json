@@ -11,10 +11,14 @@
       "error_message": {
         "translate": "block.minecraft.bed.no_sleep"
       }
-    }
+    },
+    "minecraft:visual/fog_start_distance": 0,
+    "minecraft:visual/fog_end_distance": 32,
+    "minecraft:visual/sky_light_factor": 0.35,
+    "minecraft:visual/star_brightness": 0.0
   },
   "coordinate_scale": 1.0,
-  "default_clock": "minecraft:overworld",
+  "default_clock": "space_fabric:jupiter",
   "has_ceiling": false,
   "has_ender_dragon_fight": false,
   "has_skylight": true,
@@ -28,5 +32,7 @@
     "min_inclusive": 0,
     "max_inclusive": 7
   },
-  "timelines": "#minecraft:in_overworld"
+  "timelines": [
+    "space_fabric:jupiter_day"
+  ]
 }

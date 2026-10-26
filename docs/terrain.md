@@ -107,13 +107,14 @@ Venus tiene `has_precipitation: true`, `temperature: 2.0` y `downfall: 1.0`.
 `downfall` no significa lluvia permanente: el clima debe estar activo. Para probar:
 
 ```mcfunction
-execute in space_fabric:venus run weather thunder 300
+planetenvironment storm
 ```
 
-Cada 20 ticks, si llueve a la altura de la cabeza, el jugador está sin escafandra
-completa y no es creativo/espectador, se aplica `POISON` durante 60 ticks.
+Cada 20 ticks, la exposición a la lluvia aumenta la corrosión: veneno I–III si
+falta sellado y desgaste de armadura mojada. Véase `environments.md`.
 Un techo o entrar en una zona sin lluvia impide renovar el veneno; el efecto ya
-aplicado puede durar tres segundos más. La presión atmosférica continúa siendo
+aplicado puede durar tres segundos más. El comando se ejecuta estando en Venus y evita cambiar el clima de otros mundos.
+La presión atmosférica continúa siendo
 un peligro independiente: un techo normal no es una habitación presurizada.
 
 La lluvia conserva las partículas y el sonido vanilla. La composición sulfúrica

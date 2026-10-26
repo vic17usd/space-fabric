@@ -2,7 +2,7 @@
   "ambient_light": 0.0,
   "attributes": {
     "minecraft:visual/sky_color": "#000000",
-    "minecraft:visual/fog_color": "#272727",
+    "minecraft:visual/fog_color": "#000000",
     "minecraft:visual/cloud_color": "#00000000",
     "minecraft:gameplay/respawn_anchor_works": false,
     "minecraft:gameplay/bed_rule": {
@@ -11,10 +11,15 @@
       "error_message": {
         "translate": "block.minecraft.bed.no_sleep"
       }
-    }
+    },
+    "minecraft:visual/fog_start_distance": 1024,
+    "minecraft:visual/fog_end_distance": 4096,
+    "minecraft:visual/sky_light_factor": 1.0,
+    "minecraft:visual/star_brightness": 0.8,
+    "minecraft:visual/sunrise_sunset_color": "#00000000"
   },
   "coordinate_scale": 1.0,
-  "default_clock": "minecraft:overworld",
+  "default_clock": "space_fabric:mercury",
   "has_ceiling": false,
   "has_ender_dragon_fight": false,
   "has_skylight": true,
@@ -28,5 +33,7 @@
     "min_inclusive": 0,
     "max_inclusive": 7
   },
-  "timelines": "#minecraft:in_overworld"
+  "timelines": [
+    "space_fabric:mercury_day"
+  ]
 }

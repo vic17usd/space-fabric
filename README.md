@@ -1,13 +1,14 @@
 # Space Fabric — Minecraft Java 26.1
 
-La versión 0.4.0 añade 11 bloques, minerales con XP, botas térmicas y depósitos orbitales.
+La versión 0.5.0 añade relojes solares, cielos y clima independientes, corrosión,
+meteoritos y cavernas heladas orbitales. Consulta la [guía de ambientes](docs/environments.md).
 Consulta la [guía completa de bloques y materiales](docs/materials.md).
 Consulta la [guía de terreno y registro de biomas](docs/terrain.md).
 Consulta la [tabla de dimensiones y claves Java](docs/dimensions.md).
 
-Descarga del prototipo compilado: [space-fabric-0.4.0.jar](dist/space-fabric-0.4.0.jar)
+Descarga del prototipo compilado: [space-fabric-0.5.0.jar](dist/space-fabric-0.5.0.jar)
 (en GitHub, pulsa **Download raw file**).
-[Checksum SHA-256](dist/space-fabric-0.4.0.jar.sha256).
+[Checksum SHA-256](dist/space-fabric-0.5.0.jar.sha256).
 Requiere Minecraft **26.1**, Java **25**, Fabric Loader y Fabric API **0.145.1+26.1**.
 Coloca el JAR y Fabric API en la carpeta `mods/`. Es el prototipo descrito abajo;
 todavía falta su validación dentro del juego.
@@ -39,7 +40,7 @@ python3 tools/validate_resources.py
 ./gradlew runClient
 ```
 
-El artefacto será `build/libs/space-fabric-0.4.0.jar`. Instala el mod y Fabric API
+El artefacto será `build/libs/space-fabric-0.5.0.jar`. Instala el mod y Fabric API
 en cliente y servidor. No se declara compatibilidad con 1.21.x ni con otras
 revisiones de 26.1 sin validarlas por separado.
 
@@ -60,6 +61,8 @@ src/main/java/dev/vic17usd/spacefabric/
 │   └── PlanetGravity.java           # Modificador sincronizado de gravedad
 ├── equipment/
 │   └── SuitProtection.java          # Sellado mediante cuatro tags de ítems
+├── environment/                     # Relojes, clima, corrosión y meteoritos
+├── mixin/                           # Clima separado y renderizado de cielo/niebla
 ├── atmosphere/
 │   ├── Exposure.java                # Regla pura de exposición, probada con JUnit
 │   ├── AtmosphereSystem.java        # Tick de servidor y aplicación de daño
@@ -84,8 +87,9 @@ src/main/resources/
 ```
 
 `fabric.mod.json` declara `SpaceFabric` como entrada `main` y `environment: "*"`.
-La entrada de cliente registra el renderizado de la lava viscosa. No hay Mixins:
-los eventos Fabric gestionan el ciclo de vida y Minecraft sincroniza el atributo vanilla de gravedad. Las
+La entrada de cliente registra el renderizado de lava viscosa. Los Mixins separan
+el clima y ajustan cielo/niebla; los eventos gestionan el resto. Minecraft sincroniza
+el atributo vanilla de gravedad. Las
 decisiones de daño se toman exclusivamente en el servidor.
 
 ## Registro de dimensiones
@@ -199,7 +203,9 @@ pueden reemplazar las de hierro para caminar sobre roca caliente. Las cuatro
 etiquetas `space_suit/*` permiten reemplazarlo por futuros ítems del mod o equipo
 de otro mod mediante datapack. Un casco aislado no protege. Esta fase considera
 el traje sellado y con oxígeno ilimitado: faltan tanques, consumo, fugas,
-temperatura, radiación, hábitats y protección de mobs. Tampoco sustituye el
+temperatura, radiación, hábitats y protección de mobs. La lluvia ácida de Venus
+aumenta progresivamente el veneno y desgasta la armadura, incluso con traje sellado;
+consulta la guía de ambientes. Tampoco sustituye el
 ahogamiento vanilla bajo el agua. Para añadir oxígeno, incorpora la carga del
 tanque en `SuitProtection` y guarda su estado en componentes de ítem o attachments.
 
@@ -208,7 +214,7 @@ tanque en `SuitProtection` y guarda su estado en componentes de ítem o attachme
 `./gradlew test` prueba Tierra segura, planetas hostiles, protección del traje,
 inmunidad, prioridad de presión e hipoxia a presión normal.
 También usa Fabric Loader JUnit y los codecs reales de Minecraft para interpretar
-los nueve tipos de dimensión, sus generadores y los tres tipos de daño: **81 casos**
+los nueve tipos de dimensión, sus generadores y los tres tipos de daño: **109 casos**
 en total. `tools/validate_resources.py` comprueba además JSON y referencias internas.
 Estas pruebas no arrancan un mundo ni comprueban la sincronización del cliente.
 

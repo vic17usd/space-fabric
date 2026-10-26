@@ -2,10 +2,10 @@ package dev.vic17usd.spacefabric.planet;
 
 /** Datos independientes de Minecraft: gravedad relativa a la Tierra y atmósfera. */
 public enum Planet {
-    MERCURY("mercury", 0.38, false, Atmosphere.Pressure.VACUUM, -64, 384, "#000000", "#272727"),
+    MERCURY("mercury", 0.38, false, Atmosphere.Pressure.VACUUM, -64, 384, "#000000", "#000000"),
     VENUS("venus", 0.90, false, Atmosphere.Pressure.CRUSHING, -64, 512, "#cf8b40", "#b48236"),
     EARTH("earth", 1.00, true, Atmosphere.Pressure.NORMAL, -64, 384, "#78a7ff", "#c0d8ff"),
-    MOON("moon", 0.165, false, Atmosphere.Pressure.VACUUM, -64, 384, "#000000", "#676b73"),
+    MOON("moon", 0.165, false, Atmosphere.Pressure.VACUUM, -64, 384, "#000000", "#000000"),
     MARS("mars", 0.38, false, Atmosphere.Pressure.THIN, -64, 384, "#b96540", "#a35d40"),
     JUPITER("jupiter", 2.53, false, Atmosphere.Pressure.CRUSHING, -64, 768, "#cba27a", "#9e7758"),
     SATURN("saturn", 1.07, false, Atmosphere.Pressure.CRUSHING, -64, 640, "#dfc38d", "#bca776"),

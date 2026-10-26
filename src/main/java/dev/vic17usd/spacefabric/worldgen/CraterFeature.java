@@ -6,6 +6,9 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
+import dev.vic17usd.spacefabric.block.ModBlocks;
+import dev.vic17usd.spacefabric.planet.Planet;
+import dev.vic17usd.spacefabric.planet.PlanetDimensions;
 
 /** Cráteres pequeños, deterministas y contenidos en el chunk de decoración. */
 public final class CraterFeature extends Feature<NoneFeatureConfiguration> {
@@ -20,6 +23,8 @@ public final class CraterFeature extends Feature<NoneFeatureConfiguration> {
         int cz = (context.origin().getZ() & ~15) + 8;
         int radius = 4 + context.random().nextInt(3);
         int centerY = level.getHeight(Heightmap.Types.WORLD_SURFACE_WG, cx, cz) - 1;
+        var floorMaterial = level.getLevel().dimension().equals(PlanetDimensions.key(Planet.MARS))
+                ? ModBlocks.MARTIAN_STONE.defaultBlockState() : Blocks.TUFF.defaultBlockState();
         boolean changed = false;
         for (int dx = -radius; dx <= radius; dx++) {
             for (int dz = -radius; dz <= radius; dz++) {
@@ -34,7 +39,7 @@ public final class CraterFeature extends Feature<NoneFeatureConfiguration> {
                 for (int y = floor + 1; y <= top; y++) {
                     level.setBlock(new BlockPos(x, y, z), Blocks.AIR.defaultBlockState(), 2);
                 }
-                level.setBlock(new BlockPos(x, floor, z), Blocks.TUFF.defaultBlockState(), 2);
+                level.setBlock(new BlockPos(x, floor, z), floorMaterial, 2);
                 changed = true;
             }
         }

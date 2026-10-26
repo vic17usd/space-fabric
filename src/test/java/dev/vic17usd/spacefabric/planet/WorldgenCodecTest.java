@@ -236,6 +236,114 @@ class WorldgenCodecTest {
         assertTrue(ores.stream().anyMatch(feature -> feature.is(OreGen.PHOBOSITE)));
     }
 
+    @ParameterizedTest
+    @EnumSource(Planet.class)
+    void independentClockAndTimelineDriveActualEnvironmentAttributes(Planet planet) throws IOException {
+        var type = decodeType(planet);
+        var key = dev.vic17usd.spacefabric.environment.PlanetRotation.key(planet);
+        assertEquals(key, type.defaultClock().orElseThrow().unwrapKey().orElseThrow());
+        var timeline = registries.lookupOrThrow(Registries.TIMELINE).getOrThrow(
+                net.minecraft.resources.ResourceKey.create(Registries.TIMELINE, SpaceFabric.id(planet.path() + "_day")));
+        assertEquals(key, timeline.value().clock().unwrapKey().orElseThrow());
+        assertEquals(24000, timeline.value().periodTicks().orElseThrow());
+        var day = net.minecraft.world.attribute.EnvironmentAttributeSystem.builder().addConstantLayer(type.attributes())
+                .addTimelineLayer(timeline, clock -> 6000).build();
+        var night = net.minecraft.world.attribute.EnvironmentAttributeSystem.builder().addConstantLayer(type.attributes())
+                .addTimelineLayer(timeline, clock -> 18000).build();
+        assertTrue(day.getDimensionValue(net.minecraft.world.attribute.EnvironmentAttributes.SKY_LIGHT_FACTOR)
+                > night.getDimensionValue(net.minecraft.world.attribute.EnvironmentAttributes.SKY_LIGHT_FACTOR));
+        if (dev.vic17usd.spacefabric.environment.PlanetEnvironment.airless(planet)) {
+            assertEquals(0, day.getDimensionValue(net.minecraft.world.attribute.EnvironmentAttributes.SKY_COLOR) & 0xFFFFFF);
+            assertEquals(0, night.getDimensionValue(net.minecraft.world.attribute.EnvironmentAttributes.SKY_COLOR) & 0xFFFFFF);
+            assertTrue(day.getDimensionValue(net.minecraft.world.attribute.EnvironmentAttributes.STAR_BRIGHTNESS) > 0);
+        }
+    }
+
+    @Test
+    void weatherStateSurvivesCodecRoundTrip() {
+        var original = new net.minecraft.world.level.saveddata.WeatherData();
+        original.setRaining(true);
+        original.setRainTime(2400);
+        original.setClearWeatherTime(0);
+        var codec = net.minecraft.world.level.saveddata.WeatherData.CODEC;
+        var restored = codec.parse(JsonOps.INSTANCE, codec.encodeStart(JsonOps.INSTANCE, original).getOrThrow()).getOrThrow();
+        assertTrue(restored.isRaining());
+        assertEquals(2400, restored.getRainTime());
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = Planet.class, names = {"URANUS", "NEPTUNE"})
+    void frozenCaveActuallyBuildsAnIceShellWithChamberAndEntrance(Planet planet) {
+        var world = new VoxelWorld(37, 0);
+        var ice = planet == Planet.URANUS ? ModBlocks.URANIAN_METHANE_ICE : ModBlocks.NEPTUNIAN_METHANE_ICE;
+        var feature = new dev.vic17usd.spacefabric.worldgen.FrozenCaveFeature();
+        boolean placed = feature.place(new net.minecraft.world.level.levelgen.feature.FeaturePlaceContext<>(
+                Optional.empty(), world.level, null, net.minecraft.util.RandomSource.create(42),
+                new net.minecraft.core.BlockPos(592, -64, 0),
+                new net.minecraft.world.level.levelgen.feature.configurations.BlockStateConfiguration(ice.defaultBlockState())));
+        assertTrue(placed);
+        assertTrue(world.blocks.size() > 1000);
+        assertTrue(world.state(new net.minecraft.core.BlockPos(600, 208, 8)).isAir());
+        assertTrue(world.state(new net.minecraft.core.BlockPos(600, 203, 8)).is(ice));
+        assertTrue(world.state(new net.minecraft.core.BlockPos(600, 213, 8)).is(ice));
+        assertTrue(world.state(new net.minecraft.core.BlockPos(600, 211, 14)).isAir());
+    }
+
+    @Test
+    void frozenCaveDoesNotGenerateOutsideTheOrbitalBand() {
+        var world = new VoxelWorld(0, 0);
+        assertFalse(new dev.vic17usd.spacefabric.worldgen.FrozenCaveFeature().place(
+                new net.minecraft.world.level.levelgen.feature.FeaturePlaceContext<>(Optional.empty(), world.level, null,
+                        net.minecraft.util.RandomSource.create(42), new net.minecraft.core.BlockPos(0, -64, 0),
+                        new net.minecraft.world.level.levelgen.feature.configurations.BlockStateConfiguration(
+                                ModBlocks.URANIAN_METHANE_ICE.defaultBlockState()))));
+        assertTrue(world.blocks.isEmpty());
+    }
+
+    @Test
+    void weatherMixinIsAppliedToTheRealServerClass() {
+        var methods = java.util.Arrays.stream(net.minecraft.server.level.ServerLevel.class.getDeclaredMethods())
+                .map(java.lang.reflect.Method::getName).toList();
+        assertTrue(methods.stream().anyMatch(name -> name.contains("spaceFabric$weather")));
+        assertTrue(methods.stream().anyMatch(name -> name.contains("keepVanillaWeatherOutOfPlanets")));
+    }
+
+    @Test
+    void clientMixinTargetsMatchTheActual26_1DescriptorsWithoutLoadingGraphics() throws IOException {
+        assertClientTarget("net/minecraft/client/renderer/fog/FogRenderer", "setupFog",
+                "(Lnet/minecraft/client/Camera;ILnet/minecraft/client/DeltaTracker;FLnet/minecraft/client/multiplayer/ClientLevel;)Lnet/minecraft/client/renderer/fog/FogData;");
+        assertClientTarget("net/minecraft/client/renderer/SkyRenderer", "extractRenderState",
+                "(Lnet/minecraft/client/multiplayer/ClientLevel;FLnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/state/level/SkyRenderState;)V");
+        assertClientTarget("net/minecraft/client/renderer/SkyRenderer", "renderSun", "(FLcom/mojang/blaze3d/vertex/PoseStack;)V");
+        assertClientTarget("net/minecraft/client/renderer/SkyRenderer", "renderMoon", "(Lnet/minecraft/world/level/MoonPhase;FLcom/mojang/blaze3d/vertex/PoseStack;)V");
+    }
+
+    @Test
+    void environmentalFeaturesAreWiredIntoTheRightBiomes() {
+        for (var planet : new Planet[] {Planet.MARS, Planet.URANUS, Planet.NEPTUNE}) {
+            String name = planet == Planet.MARS ? "mars_crater" : planet.path() + "_frozen_cave";
+            var key = net.minecraft.resources.ResourceKey.create(Registries.PLACED_FEATURE, SpaceFabric.id(name));
+            var biome = registries.lookupOrThrow(Registries.BIOME).getOrThrow(
+                    dev.vic17usd.spacefabric.worldgen.PlanetBiomes.key(planet));
+            assertTrue(biome.value().getGenerationSettings().features().stream()
+                    .flatMap(net.minecraft.core.HolderSet::stream).anyMatch(feature -> feature.is(key)));
+        }
+    }
+
+    private static void assertClientTarget(String owner, String name, String descriptor) throws IOException {
+        try (var stream = WorldgenCodecTest.class.getResourceAsStream("/" + owner + ".class")) {
+            assertNotNull(stream);
+            var methods = new java.util.HashSet<String>();
+            new org.objectweb.asm.ClassReader(stream).accept(new org.objectweb.asm.ClassVisitor(org.objectweb.asm.Opcodes.ASM9) {
+                @Override public org.objectweb.asm.MethodVisitor visitMethod(int access, String method, String desc, String signature, String[] exceptions) {
+                    methods.add(method + desc);
+                    return null;
+                }
+            }, org.objectweb.asm.ClassReader.SKIP_CODE);
+            assertTrue(methods.contains(name + descriptor), owner + "." + name);
+        }
+    }
+
     private static JsonElement resource(String path) throws IOException {
         String location = "/data/space_fabric/" + path + ".json";
         var stream = WorldgenCodecTest.class.getResourceAsStream(location);

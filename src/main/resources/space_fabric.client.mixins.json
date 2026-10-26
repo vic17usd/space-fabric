@@ -1,0 +1,7 @@
+{
+  "required": true,
+  "package": "dev.vic17usd.spacefabric.mixin.client",
+  "compatibilityLevel": "JAVA_25",
+  "client": ["PlanetFogMixin", "PlanetSkyMixin"],
+  "injectors": {"defaultRequire": 1}
+}

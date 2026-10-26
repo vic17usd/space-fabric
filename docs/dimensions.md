@@ -6,10 +6,10 @@ Este proyecto usa exclusivamente los nombres oficiales.
 
 | ID (`space_fabric:`) | Cielo base | Niebla base | min_y | height | Y máximo incluido |
 | --- | --- | --- | ---: | ---: | ---: |
-| mercury | #000000 | #272727 | -64 | 384 | 319 |
+| mercury | #000000 | #000000 | -64 | 384 | 319 |
 | venus | #cf8b40 | #b48236 | -64 | 512 | 447 |
 | earth | #78a7ff | #c0d8ff | -64 | 384 | 319 |
-| moon | #000000 | #676b73 | -64 | 384 | 319 |
+| moon | #000000 | #000000 | -64 | 384 | 319 |
 | mars | #b96540 | #a35d40 | -64 | 384 | 319 |
 | jupiter | #cba27a | #9e7758 | -64 | 768 | 703 |
 | saturn | #dfc38d | #bca776 | -64 | 640 | 575 |
@@ -82,4 +82,7 @@ execute in space_fabric:moon run tp @s 0 180 0
 
 Reinicia el mundo después de editar los registros dinámicos. Cambiar los límites
 de dimensiones en partidas existentes puede requerir migración: prueba la versión
-0.4.0 en un mundo nuevo. `/reload` no regenera terreno ni es un registro de mundos.
+0.5.0 en un mundo nuevo. `/reload` no regenera terreno ni es un registro de mundos.
+
+Los relojes, perfiles de iluminación y clima independientes se documentan en
+[environments.md](environments.md).

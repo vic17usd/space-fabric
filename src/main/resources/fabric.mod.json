@@ -14,5 +14,9 @@
     "minecraft": "26.1",
     "java": ">=25",
     "fabric-api": ">=0.145.1"
-  }
+  },
+  "mixins": [
+    "space_fabric.mixins.json",
+    {"config": "space_fabric.client.mixins.json", "environment": "client"}
+  ]
 }
