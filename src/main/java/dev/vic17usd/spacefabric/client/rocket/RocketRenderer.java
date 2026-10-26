@@ -5,6 +5,7 @@ import com.mojang.math.Axis;
 import dev.vic17usd.spacefabric.SpaceFabric;
 import dev.vic17usd.spacefabric.space.RocketEntity;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -16,7 +17,7 @@ import net.minecraft.resources.Identifier;
 public final class RocketRenderer extends EntityRenderer<RocketEntity, RocketRenderer.State> {
     private static final Identifier TEXTURE = SpaceFabric.id("textures/entity/rocket.png");
     private final RocketModel model;
-    public static final class State extends EntityRenderState { float yaw; }
+    public static final class State extends EntityRenderState { float yaw; boolean hideExterior; }
     public RocketRenderer(EntityRendererProvider.Context context) {
         super(context); shadowRadius = 0.9F;
         model = new RocketModel();
@@ -24,8 +25,14 @@ public final class RocketRenderer extends EntityRenderer<RocketEntity, RocketRen
     @Override public State createRenderState() { return new State(); }
     @Override public void extractRenderState(RocketEntity entity, State state, float delta) {
         super.extractRenderState(entity, state, delta); state.yaw = entity.getYRot();
+        var client = Minecraft.getInstance();
+        var viewer = client.getCameraEntity();
+        state.hideExterior = client.options.getCameraType().isFirstPerson()
+                && viewer != null && viewer.getVehicle() == entity;
     }
     @Override public void submit(State state, PoseStack poses, SubmitNodeCollector collector, CameraRenderState camera) {
+        // El modelo importado es macizo: su exterior no debe tapar la vista del ocupante.
+        if (state.hideExterior) { super.submit(state, poses, collector, camera); return; }
         poses.pushPose(); poses.mulPose(Axis.YP.rotationDegrees(180 - state.yaw)); poses.scale(1, -1, -1);
         // Las UV libres de Blockbench no siguen el despliegue UV del cubo vanilla.
         // Enviar los vértices evita que Sodium reutilice las UV del constructor Cube.

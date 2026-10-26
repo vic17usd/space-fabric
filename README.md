@@ -1,5 +1,7 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión 0.13.1 evita que la carcasa tape la cámara al pilotar en primera
+persona y oculta el cuerpo y la armadura del ocupante dentro de la cabina cerrada.
 La versión 0.13.0 añade **Soulfire Netherite Sanctum** bajo Marte: Basalt Ember
 Golem en el altar y cuatro Basalt Bosswarden, con una estructura por región de
 20.000 × 20.000 bloques y centros separados 20.000 bloques. Incluye la corrección
@@ -18,9 +20,9 @@ Consulta la [guía completa de bloques y materiales](docs/materials.md).
 Consulta la [guía de terreno y registro de biomas](docs/terrain.md).
 Consulta la [tabla de dimensiones y claves Java](docs/dimensions.md).
 
-Descarga del prototipo compilado: [space-fabric-0.13.0.jar](dist/space-fabric-0.13.0.jar)
+Descarga del prototipo compilado: [space-fabric-0.13.1.jar](dist/space-fabric-0.13.1.jar)
 (en GitHub, pulsa **Download raw file**).
-[Checksum SHA-256](dist/space-fabric-0.13.0.jar.sha256).
+[Checksum SHA-256](dist/space-fabric-0.13.1.jar.sha256).
 Fauna original: **17usdd using [CreativeMode.net](https://creativemode.net)**;
 [páginas oficiales y atribución](third_party/martian_fauna/README.md),
 [licencia de sus recursos](https://creativemode.net/mod-license).
@@ -56,7 +58,7 @@ python3 tools/validate_resources.py
 ./gradlew runClient
 ```
 
-El artefacto será `build/libs/space-fabric-0.13.0.jar`. Instala el mod y Fabric API
+El artefacto será `build/libs/space-fabric-0.13.1.jar`. Instala el mod y Fabric API
 en cliente y servidor. No se declara compatibilidad con 1.21.x ni con otras
 revisiones de 26.1 sin validarlas por separado.
 

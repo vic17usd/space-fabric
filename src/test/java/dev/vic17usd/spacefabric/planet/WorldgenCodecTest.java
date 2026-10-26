@@ -310,6 +310,10 @@ class WorldgenCodecTest {
 
     @Test
     void clientMixinTargetsMatchTheActual26_1DescriptorsWithoutLoadingGraphics() throws IOException {
+        assertClientTarget("net/minecraft/client/renderer/entity/EntityRenderDispatcher", "extractEntity",
+                "(Lnet/minecraft/world/entity/Entity;F)Lnet/minecraft/client/renderer/entity/state/EntityRenderState;");
+        assertClientTarget("net/minecraft/client/renderer/entity/EntityRenderDispatcher", "submit",
+                "(Lnet/minecraft/client/renderer/entity/state/EntityRenderState;Lnet/minecraft/client/renderer/state/level/CameraRenderState;DDDLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;)V");
         assertClientTarget("net/minecraft/client/renderer/fog/FogRenderer", "setupFog",
                 "(Lnet/minecraft/client/Camera;ILnet/minecraft/client/DeltaTracker;FLnet/minecraft/client/multiplayer/ClientLevel;)Lnet/minecraft/client/renderer/fog/FogData;");
         assertClientTarget("net/minecraft/client/renderer/SkyRenderer", "extractRenderState",

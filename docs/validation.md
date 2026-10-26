@@ -60,7 +60,7 @@ Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
 - Gradle Wrapper y distribución: SHA-256 verificado con los checksums oficiales.
 - JDK descargado para este entorno: SHA-256 verificado con el checksum oficial.
 
-Artefacto generado: `build/libs/space-fabric-0.13.0.jar`.
+Artefacto generado: `build/libs/space-fabric-0.13.1.jar`.
 Los informes de la ejecución están en `build/test-results/test/` y
 `build/reports/tests/test/`; son salidas locales ignoradas por Git.
 
@@ -165,3 +165,16 @@ Comprobaciones añadidas en 0.13.0:
 
 La colocación de entidades en una partida, el combate, la barra de jefe y la
 inspección visual con el optimizador del usuario siguen pendientes de prueba en juego.
+
+Correcciones visuales de 0.13.1:
+
+- El snapshot del cohete distingue primera persona dentro de su propia cabina
+  del resto de observadores y modos de cámara. Solo en ese caso omite el exterior.
+- Dos Mixins cliente marcan el snapshot del jugador montado y omiten su envío
+  completo al renderizador: cuerpo, armadura y capas no sobresalen de la cabina.
+  La marca vuelve a false cuando el jugador ya no ocupa un cohete.
+- Los puntos de inyección `EntityRenderDispatcher.extractEntity` y `submit` se
+  comprueban contra el bytecode real de Minecraft 26.1 en la prueba existente de
+  descriptores. No equivale a ejecutar los Mixins ni a comprobar la cámara en juego.
+- Se conservan las 226 pruebas JUnit y la verificación de 1.152 vértices del cohete;
+  la inspección visual en primera/tercera persona y multijugador sigue pendiente.

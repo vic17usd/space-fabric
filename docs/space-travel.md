@@ -201,3 +201,22 @@ Desde 0.13.0 la entidad usa `submitCustomGeometry` y emite las UV por vértice,
 para evitar las cachés de cubos vanilla de los optimizadores gráficos. La
 geometría y textura del ítem no cambian. Esta ruta no añade un contorno de
 resaltado al cohete si se le aplica el efecto de brillo.
+
+## Vista del piloto desde 0.13.1
+
+En primera persona no se dibuja el exterior del cohete que contiene a la entidad
+de cámara, para que el modelo macizo no obstruya la vista. Al cambiar a tercera
+persona, el cohete completo vuelve a dibujarse; los otros cohetes siguen visibles.
+No se fuerza un cambio de modo de cámara ni se añade un interior de cabina ficticio.
+
+El cuerpo, armadura y capas visuales de los jugadores que viajan en un cohete se
+ocultan dentro de la cabina cerrada, evitando que sobresalgan por el fuselaje.
+La marca se recalcula en cada extracción y se restablece al desmontar. Es una
+regla del renderizador del cliente, sin aplicar invisibilidad ni cambiar el
+asiento, las colisiones o la física del servidor.
+
+Prueba manual: montar, cerrar el mapa estelar, mirar alrededor en primera persona,
+cambiar entre ambos modos de tercera persona con F5, desmontar y comprobar que
+el jugador reaparece. Revisar también otro jugador con armadura entrando y saliendo.
+La compilación y los descriptores de los Mixins se verifican automáticamente;
+estas comprobaciones visuales en partida siguen pendientes.

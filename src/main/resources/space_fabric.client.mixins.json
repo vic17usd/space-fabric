@@ -2,6 +2,13 @@
   "required": true,
   "package": "dev.vic17usd.spacefabric.mixin.client",
   "compatibilityLevel": "JAVA_25",
-  "client": ["PlanetFogMixin", "PlanetSkyMixin"],
-  "injectors": {"defaultRequire": 1}
+  "client": [
+    "PlanetFogMixin",
+    "PlanetSkyMixin",
+    "RocketPilotStateMixin",
+    "RocketPilotRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
 }
