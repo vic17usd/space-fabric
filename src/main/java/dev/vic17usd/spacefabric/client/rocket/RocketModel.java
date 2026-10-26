@@ -3,18 +3,18 @@ package dev.vic17usd.spacefabric.client.rocket;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Map;
-import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.geom.ModelPart;
+import com.mojang.blaze3d.vertex.PoseStack.Pose;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import org.joml.Vector3f;
 import net.minecraft.client.model.geom.ModelPart.Cube;
 import net.minecraft.client.model.geom.ModelPart.Vertex;
 import net.minecraft.client.model.geom.ModelPart.Polygon;
 import net.minecraft.core.Direction;
 
 /** Generado por tools/import_rocket_model.py desde el archivo del usuario. */
-public final class RocketModel extends EntityModel<RocketRenderer.State> {
-    public RocketModel() { super(createRoot()); }
-    private static ModelPart createRoot() {
+public final class RocketModel {
+    private final List<Cube> cubes = createCubes();
+    private static List<Cube> createCubes() {
         List<Cube> cubes = new ArrayList<>();
         cubes.add(cube(-3.2336842F, -6.7368421F, -3.2336842F, 6.4673684F, 1.0778947F, 6.4673684F, new float[]{440.0000000F, 128.0000000F, 450.0000000F, 138.0000000F, 420.0000000F, 128.0000000F, 430.0000000F, 138.0000000F, 413.0000000F, 199.0000000F, 423.0000000F, 201.0000000F, 401.0000000F, 199.0000000F, 411.0000000F, 201.0000000F, 377.0000000F, 199.0000000F, 387.0000000F, 201.0000000F, 389.0000000F, 199.0000000F, 399.0000000F, 201.0000000F}));
         cubes.add(cube(-3.2336842F, -7.4105263F, 3.2336842F, 6.4673684F, 6.7368421F, 1.6168421F, new float[]{437.0000000F, 199.0000000F, 447.0000000F, 201.0000000F, 425.0000000F, 199.0000000F, 435.0000000F, 201.0000000F, 54.0000000F, 164.0000000F, 56.0000000F, 174.0000000F, 480.0000000F, 128.0000000F, 490.0000000F, 138.0000000F, 50.0000000F, 164.0000000F, 52.0000000F, 174.0000000F, 460.0000000F, 128.0000000F, 470.0000000F, 138.0000000F}));
@@ -64,7 +64,22 @@ public final class RocketModel extends EntityModel<RocketRenderer.State> {
         cubes.add(cube(-1.1587368F, -52.5473684F, -0.2317474F, 2.3174737F, 2.6947368F, 0.4634947F, new float[]{139.0000000F, 205.0000000F, 142.0000000F, 206.0000000F, 134.0000000F, 205.0000000F, 137.0000000F, 206.0000000F, 110.0000000F, 192.0000000F, 111.0000000F, 196.0000000F, 498.0000000F, 184.0000000F, 501.0000000F, 188.0000000F, 107.0000000F, 192.0000000F, 108.0000000F, 196.0000000F, 492.0000000F, 184.0000000F, 495.0000000F, 188.0000000F}));
         cubes.add(cube(-1.0619958F, -52.5473684F, -0.6952421F, 2.1239916F, 2.6947368F, 0.4634947F, new float[]{149.0000000F, 205.0000000F, 152.0000000F, 206.0000000F, 144.0000000F, 205.0000000F, 147.0000000F, 206.0000000F, 116.0000000F, 192.0000000F, 117.0000000F, 196.0000000F, 3.0000000F, 192.0000000F, 6.0000000F, 196.0000000F, 113.0000000F, 192.0000000F, 114.0000000F, 196.0000000F, 504.0000000F, 184.0000000F, 507.0000000F, 188.0000000F}));
         cubes.add(cube(-0.6952421F, -52.5473684F, -1.1587368F, 1.3904842F, 2.6947368F, 0.4634947F, new float[]{166.0000000F, 205.0000000F, 168.0000000F, 206.0000000F, 162.0000000F, 205.0000000F, 164.0000000F, 206.0000000F, 122.0000000F, 192.0000000F, 123.0000000F, 196.0000000F, 61.0000000F, 192.0000000F, 63.0000000F, 196.0000000F, 119.0000000F, 192.0000000F, 120.0000000F, 196.0000000F, 57.0000000F, 192.0000000F, 59.0000000F, 196.0000000F}));
-        return new ModelPart(cubes, Map.of());
+        return List.copyOf(cubes);
+    }
+    /** Emite las UV de cada cara; evita la caché de cubo estándar de los optimizadores. */
+    public void renderGeometry(Pose pose, VertexConsumer output, int light, int overlay, int color) {
+        Vector3f normal = new Vector3f();
+        Vector3f position = new Vector3f();
+        for (Cube cube : cubes) {
+            for (Polygon face : cube.polygons) {
+                pose.transformNormal(face.normal(), normal);
+                for (Vertex vertex : face.vertices()) {
+                    pose.pose().transformPosition(vertex.worldX(), vertex.worldY(), vertex.worldZ(), position);
+                    output.addVertex(position.x(), position.y(), position.z(), color, vertex.u(), vertex.v(),
+                            overlay, light, normal.x(), normal.y(), normal.z());
+                }
+            }
+        }
     }
     private static Cube cube(float x, float y, float z, float w, float h, float d, float[] uv) {
         Cube cube = new Cube(0, 0, x, y, z, w, h, d, 0, 0, 0, false, 512, 512, EnumSet.allOf(Direction.class));

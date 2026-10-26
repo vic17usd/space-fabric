@@ -11,6 +11,10 @@ public final class MarsSurfaceStructures {
             BuiltInRegistries.STRUCTURE_TYPE, SpaceFabric.id("martian_surface"), () -> MarsSurfaceStructure.CODEC);
     public static final StructurePieceType PIECE = Registry.register(BuiltInRegistries.STRUCTURE_PIECE,
             SpaceFabric.id("martian_surface_piece"), MarsSurfacePiece::new);
+    public static final StructureType<MarsSanctumStructure> SANCTUM = Registry.register(
+            BuiltInRegistries.STRUCTURE_TYPE, SpaceFabric.id("martian_sanctum"), () -> MarsSanctumStructure.CODEC);
+    public static final StructurePieceType SANCTUM_PIECE = Registry.register(BuiltInRegistries.STRUCTURE_PIECE,
+            SpaceFabric.id("martian_sanctum_piece"), MarsSanctumPiece::new);
     private MarsSurfaceStructures() { }
     public static void initialize() { }
 }

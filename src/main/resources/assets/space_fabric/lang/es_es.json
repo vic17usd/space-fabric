@@ -77,5 +77,10 @@
   "item.space_fabric.energy_crystal_shard": "Fragmento de cristal de energía",
   "item.space_fabric.condensed_stardust": "Polvo estelar condensado",
   "item.space_fabric.vibration_sensor": "Sensor de vibración",
-  "item.space_fabric.crushed_iron_ore": "Mineral de hierro triturado"
+  "item.space_fabric.crushed_iron_ore": "Mineral de hierro triturado",
+  "entity.space_fabric.basalt_ember_golem": "Basalt Ember Golem",
+  "entity.space_fabric.basalt_bosswarden": "Basalt Bosswarden",
+  "item.space_fabric.obsidian_core": "Núcleo de obsidiana",
+  "item.space_fabric.basalt_ember_golem_spawn_egg": "Huevo de Basalt Ember Golem",
+  "item.space_fabric.basalt_bosswarden_spawn_egg": "Huevo de Basalt Bosswarden"
 }

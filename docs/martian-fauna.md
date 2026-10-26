@@ -145,6 +145,6 @@ Las estructuras sin pedestal de [la guía de parcelas](martian-surface-plots.md)
 requieren chunks nuevos; no se reconstruyen edificios ya guardados.
 
 Validación automatizada: registros, atributos, huevos, recursos originales,
-tablas de bioma y rechazos de hábitats incorrectos. Compilación y **214 pruebas**
+tablas de bioma y rechazos de hábitats incorrectos. Compilación y **226 pruebas**
 correctas; la inspección de modelos, IA y aparición natural en una partida gráfica
 sigue pendiente. Véase [el informe de validación](validation.md).

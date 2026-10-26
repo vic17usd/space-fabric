@@ -1,11 +1,11 @@
 # Space Fabric — Minecraft Java 26.1
 
-La versión 0.12.1 corrige el contorno blanco del cohete y la textura faltante del
-ítem 3D. La versión 0.12.0 incorpora el modelo 3D y el atlas de `space-rocket.bbmodel`
-en el cohete y en su ítem de inventario. La versión 0.11.0 integra Crystal Hum Crawler, Golden Eye Sandwraith y Red Dune
-Ironmaw con sus modelos, texturas y animaciones, adaptados a la superficie de Marte.
-Breathforge y Haven eliminan sus pedestales inferiores y apoyan sus pisos al nivel
-del suelo marciano sobre parcelas planas con relleno y despeje.
+La versión 0.13.0 añade **Soulfire Netherite Sanctum** bajo Marte: Basalt Ember
+Golem en el altar y cuatro Basalt Bosswarden, con una estructura por región de
+20.000 × 20.000 bloques y centros separados 20.000 bloques. Incluye la corrección
+de UV del cohete para instalaciones con optimizadores gráficos.
+Consulta la [guía del santuario, jefe y distribución](docs/martian-sanctum.md).
+La fauna de superficie de 0.11.0 y las parcelas sin pedestal se conservan.
 Consulta la [tabla de aparición, IA y archivos de la fauna marciana](docs/martian-fauna.md).
 El comerciante conserva el modelo, saludo e intercambios de `Aldeano Marciano.jar`.
 Consulta la [guía de parcelas de Marte](docs/martian-surface-plots.md), la
@@ -18,12 +18,13 @@ Consulta la [guía completa de bloques y materiales](docs/materials.md).
 Consulta la [guía de terreno y registro de biomas](docs/terrain.md).
 Consulta la [tabla de dimensiones y claves Java](docs/dimensions.md).
 
-Descarga del prototipo compilado: [space-fabric-0.12.1.jar](dist/space-fabric-0.12.1.jar)
+Descarga del prototipo compilado: [space-fabric-0.13.0.jar](dist/space-fabric-0.13.0.jar)
 (en GitHub, pulsa **Download raw file**).
-[Checksum SHA-256](dist/space-fabric-0.12.1.jar.sha256).
+[Checksum SHA-256](dist/space-fabric-0.13.0.jar.sha256).
 Fauna original: **17usdd using [CreativeMode.net](https://creativemode.net)**;
 [páginas oficiales y atribución](third_party/martian_fauna/README.md),
 [licencia de sus recursos](https://creativemode.net/mod-license).
+Santuario y jefe: [procedencia de los tres JAR originales](third_party/martian_sanctum/README.md).
 Requiere Minecraft **26.1**, Java **25**, Fabric Loader y Fabric API **0.145.1+26.1**.
 Coloca el JAR y Fabric API en la carpeta `mods/`. Es el prototipo descrito abajo;
 todavía falta su validación dentro del juego.
@@ -55,7 +56,7 @@ python3 tools/validate_resources.py
 ./gradlew runClient
 ```
 
-El artefacto será `build/libs/space-fabric-0.12.1.jar`. Instala el mod y Fabric API
+El artefacto será `build/libs/space-fabric-0.13.0.jar`. Instala el mod y Fabric API
 en cliente y servidor. No se declara compatibilidad con 1.21.x ni con otras
 revisiones de 26.1 sin validarlas por separado.
 
@@ -238,7 +239,7 @@ tanque en `SuitProtection` y guarda su estado en componentes de ítem o attachme
 inmunidad, prioridad de presión e hipoxia a presión normal.
 También usa Fabric Loader JUnit y los codecs reales de Minecraft para interpretar
 los nueve tipos de dimensión, sus generadores y los tres tipos de daño; también
-comprueba refinería, persistencia del combustible, recetas, llegadas, estructuras, comerciantes y fauna: **214 casos**
+comprueba refinería, persistencia del combustible, recetas, llegadas, estructuras, comerciantes y fauna: **226 casos**
 en total. `tools/validate_resources.py` comprueba además JSON y referencias internas.
 Estas pruebas no arrancan un mundo ni comprueban la sincronización del cliente.
 

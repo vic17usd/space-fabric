@@ -1,0 +1,40 @@
+package dev.vic17usd.spacefabric.entity.sanctum;
+
+public final class BasaltEmberGolemRigProfile {
+   public static final float WIDTH = 0.825125F;
+   public static final float HEIGHT = 3.5F;
+   public static final float EYE_HEIGHT = 3.04F;
+   public static final String MEDIUM = "grounded";
+   private static final String[] KEYS = new String[]{"primary_attack"};
+   private static final long[] LENGTHS = new long[]{1600L};
+   private static final long[] STARTS = new long[]{1000L};
+   private static final long[] ENDS = new long[]{1000L};
+
+   private BasaltEmberGolemRigProfile() {
+   }
+
+   public static int actionIndex(String key) {
+      for (int i = 0; i < KEYS.length; i++) {
+         if (KEYS[i].equals(key)) {
+            return i;
+         }
+      }
+
+      return -1;
+   }
+
+   public static long actionDurationMillis(String key) {
+      int index = actionIndex(key);
+      return index < 0 ? -1L : LENGTHS[index];
+   }
+
+   public static long effectStartMillis(String key) {
+      int index = actionIndex(key);
+      return index < 0 ? -1L : STARTS[index];
+   }
+
+   public static long effectEndMillis(String key) {
+      int index = actionIndex(key);
+      return index < 0 ? -1L : ENDS[index];
+   }
+}

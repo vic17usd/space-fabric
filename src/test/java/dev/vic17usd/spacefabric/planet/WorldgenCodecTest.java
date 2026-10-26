@@ -986,6 +986,148 @@ class WorldgenCodecTest {
         assertFalse(settings.disableMobGeneration());
     }
 
+    @ParameterizedTest @ValueSource(longs = {0L, 42L, 8675309L})
+    void sanctumGridHasExactlyOneCandidatePerTwentyThousandBlocksWithoutJitter(long seed) {
+        var set = registries.lookupOrThrow(Registries.STRUCTURE_SET).getOrThrow(net.minecraft.resources.ResourceKey.create(
+                Registries.STRUCTURE_SET, SpaceFabric.id("soulfire_netherite_sanctum"))).value();
+        var placement = assertInstanceOf(net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement.class, set.placement());
+        assertEquals(1250, placement.spacing()); assertEquals(1249, placement.separation());
+        for (int x = -2; x <= 2; x++) for (int z = -2; z <= 2; z++) {
+            for (int offset : new int[]{0, 624, 1249}) {
+                var candidate = placement.getPotentialStructureChunk(seed, x * 1250 + offset, z * 1250 + offset);
+                assertEquals(new net.minecraft.world.level.ChunkPos(x * 1250, z * 1250), candidate);
+                var next = placement.getPotentialStructureChunk(seed, (x + 1) * 1250, z * 1250);
+                assertEquals(20000, next.getMinBlockX() - candidate.getMinBlockX());
+            }
+        }
+        var structure = set.structures().getFirst().structure().value();
+        assertInstanceOf(dev.vic17usd.spacefabric.worldgen.structure.MarsSanctumStructure.class, structure);
+        assertEquals(1, structure.biomes().size());
+        assertTrue(structure.biomes().contains(registries.lookupOrThrow(Registries.BIOME).getOrThrow(
+                dev.vic17usd.spacefabric.worldgen.PlanetBiomes.key(Planet.MARS))));
+        assertEquals(net.minecraft.world.level.levelgen.GenerationStep.Decoration.UNDERGROUND_STRUCTURES, structure.step());
+    }
+
+    @ParameterizedTest @ValueSource(strings = {"golem", "guard"})
+    void sanctumEntitiesHaveNativeAttributesAndUsableEggsButNoWildSpawns(String role) {
+        var type = role.equals("golem") ? dev.vic17usd.spacefabric.entity.sanctum.ModSanctumEntities.GOLEM
+                : dev.vic17usd.spacefabric.entity.sanctum.ModSanctumEntities.GUARD;
+        var attributes = net.minecraft.world.entity.ai.attributes.DefaultAttributes.getSupplier(type);
+        assertEquals(role.equals("golem") ? 1200 : 80, attributes.getBaseValue(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH));
+        double height = role.equals("golem") ? 3.5 : 3.3;
+        assertEquals(role.equals("golem") ? 8.1 : 3.0,
+                height * attributes.getBaseValue(net.minecraft.world.entity.ai.attributes.Attributes.SCALE), 0.00001);
+        var egg = role.equals("golem") ? ModItems.BASALT_EMBER_GOLEM_SPAWN_EGG : ModItems.BASALT_BOSSWARDEN_SPAWN_EGG;
+        assertTrue(net.minecraft.world.item.SpawnEggItem.spawnsEntity(new ItemStack(egg), type));
+        for (var biome : registries.lookupOrThrow(Registries.BIOME).listElements().toList())
+            for (var category : net.minecraft.world.entity.MobCategory.values())
+                assertTrue(biome.value().getMobSettings().getMobs(category).unwrap().stream().noneMatch(entry -> entry.value().type() == type));
+    }
+
+    private static net.minecraft.nbt.CompoundTag sanctumNbt() throws IOException {
+        try (var input = WorldgenCodecTest.class.getResourceAsStream("/data/space_fabric/structure/soulfire_netherite_sanctum.nbt")) {
+            assertNotNull(input); return net.minecraft.nbt.NbtIo.readCompressed(input, net.minecraft.nbt.NbtAccounter.unlimitedHeap());
+        }
+    }
+
+    @Test void sanctumExplicitlyExcavatesItsRoomAndLeavesFullSizeResidentsUnobstructed() throws IOException {
+        var nbt = sanctumNbt(); var palette = nbt.getListOrEmpty("palette");
+        var blocks = new java.util.HashMap<net.minecraft.core.BlockPos, String>();
+        for (var tag : nbt.getListOrEmpty("blocks")) {
+            var block = (net.minecraft.nbt.CompoundTag) tag; var pos = block.getListOrEmpty("pos");
+            blocks.put(new net.minecraft.core.BlockPos(pos.getIntOr(0, -1), pos.getIntOr(1, -1), pos.getIntOr(2, -1)),
+                    palette.getCompoundOrEmpty(block.getIntOr("state", -1)).getStringOr("Name", ""));
+        }
+        assertEquals(53 * 32 * 53, blocks.size());
+        assertTrue(blocks.values().stream().filter("minecraft:air"::equals).count() > 20000);
+        var residents = nbt.getListOrEmpty("entities"); assertEquals(5, residents.size());
+        int bosses = 0;
+        for (var tag : residents) {
+            var entry = (net.minecraft.nbt.CompoundTag) tag; var entity = entry.getCompoundOrEmpty("nbt");
+            assertTrue(entity.getBooleanOr("PersistenceRequired", false)); assertFalse(entity.keySet().contains("UUID"));
+            var pos = entry.getListOrEmpty("blockPos"); int x = pos.getIntOr(0, -1), y = pos.getIntOr(1, -1), z = pos.getIntOr(2, -1);
+            boolean boss = entity.getStringOr("id", "").equals("space_fabric:basalt_ember_golem");
+            if (boss) { bosses++; assertEquals(new net.minecraft.core.BlockPos(26,9,26), new net.minecraft.core.BlockPos(x,y,z)); }
+            else assertEquals("space_fabric:basalt_bosswarden", entity.getStringOr("id", ""));
+            for (int dx = -1; dx <= 1; dx++) for (int dz = -1; dz <= 1; dz++) {
+                assertFalse(blocks.get(new net.minecraft.core.BlockPos(x+dx,y-1,z+dz)).endsWith(":air"));
+                for (int dy = 0; dy < (boss ? 9 : 3); dy++)
+                    assertEquals("minecraft:air", blocks.get(new net.minecraft.core.BlockPos(x+dx,y+dy,z+dz)));
+            }
+        }
+        assertEquals(1, bosses);
+        for (int x = 0; x < 53; x++) for (int z = 0; z < 53; z++) {
+            assertFalse(blocks.get(new net.minecraft.core.BlockPos(x,0,z)).endsWith(":air"));
+            assertFalse(blocks.get(new net.minecraft.core.BlockPos(x,31,z)).endsWith(":air"));
+        }
+    }
+
+    @ParameterizedTest @ValueSource(longs = {0L, 42L, 8675309L})
+    void sanctumGeneratesDeepValidStartsAndPersistsItsRotatedLocator(long seed,
+            @org.junit.jupiter.api.io.TempDir Path temporaryWorlds) throws IOException {
+        var access = (RegistryAccess) registries;
+        var holder = access.lookupOrThrow(Registries.STRUCTURE).getOrThrow(net.minecraft.resources.ResourceKey.create(
+                Registries.STRUCTURE, SpaceFabric.id("soulfire_netherite_sanctum")));
+        var stem = LevelStem.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE), resource("dimension/mars")).getOrThrow();
+        var generator = (net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator) stem.generator();
+        var random = net.minecraft.world.level.levelgen.RandomState.create(generator.generatorSettings().value(), access.lookupOrThrow(Registries.NOISE), seed);
+        var pack = new PathPackResources(new PackLocationInfo("sanctum_test", Component.literal("Sanctum generation"), PackSource.DEFAULT, Optional.empty()), Path.of("src/main/resources"));
+        var storage = net.minecraft.world.level.storage.LevelStorageSource.createDefault(temporaryWorlds);
+        try (var world = storage.createAccess("sanctum-test"); var resources = new MultiPackResourceManager(PackType.SERVER_DATA,
+                List.of(ServerPacksSource.createVanillaPackSource(), pack))) {
+            var templates = new net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager(resources, world,
+                    net.minecraft.util.datafix.DataFixers.getDataFixer(), access.lookupOrThrow(Registries.BLOCK));
+            var height = net.minecraft.world.level.LevelHeightAccessor.create(Planet.MARS.minY(), Planet.MARS.height());
+            for (int cell : new int[]{-1,0,1}) {
+                var chunk = new net.minecraft.world.level.ChunkPos(cell * 1250, 0);
+                var start = holder.value().generate(holder, PlanetDimensions.key(Planet.MARS), access, generator, generator.getBiomeSource(),
+                        random, templates, seed, chunk, 0, height, biome -> biome.is(dev.vic17usd.spacefabric.worldgen.PlanetBiomes.key(Planet.MARS)));
+                assertTrue(start.isValid()); assertEquals(1, start.getPieces().size());
+                var piece = assertInstanceOf(dev.vic17usd.spacefabric.worldgen.structure.MarsSanctumPiece.class, start.getPieces().getFirst());
+                var bounds = piece.getBoundingBox(); assertEquals(-60, bounds.minY()); assertEquals(-13, bounds.maxY());
+                assertEquals(53, bounds.getXSpan()); assertEquals(53, bounds.getZSpan());
+                assertEquals(new net.minecraft.core.BlockPos(chunk.getMinBlockX()+8, -51, 8), piece.getLocatorPosition());
+                var context = new net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext(resources, access, templates);
+                var restored = (dev.vic17usd.spacefabric.worldgen.structure.MarsSanctumPiece)
+                        dev.vic17usd.spacefabric.worldgen.structure.MarsSurfaceStructures.SANCTUM_PIECE.load(context, piece.createTag(context));
+                assertEquals(piece.templateOrigin(), restored.templateOrigin()); assertEquals(bounds, restored.getBoundingBox());
+                assertEquals(piece.getLocatorPosition(), restored.getLocatorPosition());
+                restored.move(16, 3, -16); assertEquals(piece.getLocatorPosition().offset(16,3,-16), restored.getLocatorPosition());
+            }
+        }
+    }
+
+    @ParameterizedTest @ValueSource(ints = {-64, 40})
+    void actualSanctumPieceExcavatesOnlyItsChunkAndKeepsARockCoverOverDeepCanyons(int ground) throws IOException {
+        var nbt = sanctumNbt();
+        // Los residentes se verifican arriba; esta prueba aísla la escritura de bloques.
+        nbt.remove("entities");
+        var template = new net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate();
+        template.load(registries.lookupOrThrow(Registries.BLOCK), nbt);
+        var world = new VoxelWorld(0,0,ground);
+        var piece = new dev.vic17usd.spacefabric.worldgen.structure.MarsSanctumPiece(SpaceFabric.id("soulfire_netherite_sanctum"),
+                template, new net.minecraft.core.BlockPos(-18,-60,-18), net.minecraft.world.level.block.Rotation.NONE);
+        piece.postProcess(world.level, null, null, net.minecraft.util.RandomSource.create(42),
+                new net.minecraft.world.level.levelgen.structure.BoundingBox(0,-64,0,15,319,15),
+                new net.minecraft.world.level.ChunkPos(0,0), net.minecraft.core.BlockPos.ZERO);
+        assertTrue(world.state(new net.minecraft.core.BlockPos(8,-51,8)).isAir());
+        assertEquals(Blocks.OBSIDIAN, world.state(new net.minecraft.core.BlockPos(8,-52,8)).getBlock());
+        assertEquals(ground < 40, world.state(new net.minecraft.core.BlockPos(8,40,8)).isAir());
+        for (int x=0; x<16; x++) for(int z=0; z<16; z++) for(int y=-28; y<=-13; y++)
+            assertFalse(world.state(new net.minecraft.core.BlockPos(x,y,z)).isAir());
+        assertTrue(world.blocks.keySet().stream().allMatch(pos -> pos.getY() >= -60 && pos.getY() <= -13));
+    }
+
+    @Test void sanctumImportedResourcesMatchTheThreeSourceJars() throws Exception {
+        var manifest = JsonParser.parseString(java.nio.file.Files.readString(Path.of("third_party/martian_sanctum/manifest.json"))).getAsJsonObject();
+        assertEquals(3, manifest.size());
+        for (var source : manifest.entrySet()) for (var asset : source.getValue().getAsJsonObject().getAsJsonObject("assets").entrySet()) {
+            var sha = java.security.MessageDigest.getInstance("SHA-256");
+            assertEquals(asset.getValue().getAsJsonObject().get("sha256").getAsString(),
+                    java.util.HexFormat.of().formatHex(sha.digest(java.nio.file.Files.readAllBytes(Path.of(asset.getKey())))));
+        }
+    }
+
     private static JsonElement resource(String path) throws IOException {
         String location = "/data/space_fabric/" + path + ".json";
         var stream = WorldgenCodecTest.class.getResourceAsStream(location);

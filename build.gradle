@@ -19,6 +19,11 @@ java {
 }
 
 jar {
+    from('third_party/martian_sanctum') {
+        include '**/LICENSE.txt'
+        include 'README.md'
+        into 'META-INF/licenses/martian_sanctum'
+    }
     from('third_party/martian_fauna') {
         include '**/LICENSE.txt'
         include 'README.md'
@@ -45,3 +50,18 @@ processResources {
 test {
     useJUnitPlatform()
 }
+
+// Verifica el emisor de UV real con las clases de cliente, sin arrancar Minecraft ni una GPU.
+sourceSets {
+    renderCheck {
+        compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
+        runtimeClasspath += output + compileClasspath
+    }
+}
+tasks.named('compileRenderCheckJava') { dependsOn tasks.named('classes') }
+tasks.register('verifyRocketMesh', JavaExec) {
+    dependsOn tasks.named('renderCheckClasses')
+    classpath = sourceSets.renderCheck.runtimeClasspath
+    mainClass = 'dev.vic17usd.spacefabric.client.rocket.RocketMeshCheck'
+}
+tasks.named('check') { dependsOn tasks.named('verifyRocketMesh') }

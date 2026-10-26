@@ -16,6 +16,11 @@ import java.util.function.Function;
 
 public final class ModItems {
     private static final Map<String, Item> ITEMS = new LinkedHashMap<>();
+    public static final Item OBSIDIAN_CORE = register("obsidian_core", new Item.Properties().fireResistant());
+    public static final Item BASALT_EMBER_GOLEM_SPAWN_EGG = register("basalt_ember_golem_spawn_egg", net.minecraft.world.item.SpawnEggItem::new,
+            new Item.Properties().spawnEgg(dev.vic17usd.spacefabric.entity.sanctum.ModSanctumEntities.GOLEM));
+    public static final Item BASALT_BOSSWARDEN_SPAWN_EGG = register("basalt_bosswarden_spawn_egg", net.minecraft.world.item.SpawnEggItem::new,
+            new Item.Properties().spawnEgg(dev.vic17usd.spacefabric.entity.sanctum.ModSanctumEntities.GUARD));
     public static final Item ENERGY_CRYSTAL_SHARD = register("energy_crystal_shard", new Item.Properties());
     public static final Item CONDENSED_STARDUST = register("condensed_stardust", new Item.Properties());
     public static final Item VIBRATION_SENSOR = register("vibration_sensor", new Item.Properties());

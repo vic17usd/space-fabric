@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import dev.vic17usd.spacefabric.SpaceFabric;
 import dev.vic17usd.spacefabric.space.RocketEntity;
-import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -15,7 +15,7 @@ import net.minecraft.resources.Identifier;
 
 public final class RocketRenderer extends EntityRenderer<RocketEntity, RocketRenderer.State> {
     private static final Identifier TEXTURE = SpaceFabric.id("textures/entity/rocket.png");
-    private final EntityModel<State> model;
+    private final RocketModel model;
     public static final class State extends EntityRenderState { float yaw; }
     public RocketRenderer(EntityRendererProvider.Context context) {
         super(context); shadowRadius = 0.9F;
@@ -27,8 +27,11 @@ public final class RocketRenderer extends EntityRenderer<RocketEntity, RocketRen
     }
     @Override public void submit(State state, PoseStack poses, SubmitNodeCollector collector, CameraRenderState camera) {
         poses.pushPose(); poses.mulPose(Axis.YP.rotationDegrees(180 - state.yaw)); poses.scale(1, -1, -1);
-        // Sobrecarga explícita: tinte blanco (-1), contorno solo si el estado lo solicita.
-        collector.submitModel(model, state, poses, model.renderType(TEXTURE), state.lightCoords, OverlayTexture.NO_OVERLAY, -1, null, state.outlineColor, null);
+        // Las UV libres de Blockbench no siguen el despliegue UV del cubo vanilla.
+        // Enviar los vértices evita que Sodium reutilice las UV del constructor Cube.
+        int light = state.lightCoords;
+        collector.submitCustomGeometry(poses, RenderTypes.entityCutout(TEXTURE),
+                (pose, vertices) -> model.renderGeometry(pose, vertices, light, OverlayTexture.NO_OVERLAY, -1));
         poses.popPose(); super.submit(state, poses, collector, camera);
     }
 }

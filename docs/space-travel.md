@@ -196,3 +196,8 @@ falta revisar la apariencia y la posición del piloto en una sesión gráfica.
 Desde 0.12.1 se evita el contorno blanco forzado en `submitModel`. El atlas original
 se copia también a `textures/item/rocket.png` para su inclusión en el atlas vanilla
 de objetos; el JSON del ítem referencia `space_fabric:item/rocket`.
+
+Desde 0.13.0 la entidad usa `submitCustomGeometry` y emite las UV por vértice,
+para evitar las cachés de cubos vanilla de los optimizadores gráficos. La
+geometría y textura del ítem no cambian. Esta ruta no añade un contorno de
+resaltado al cohete si se le aplica el efecto de brillo.

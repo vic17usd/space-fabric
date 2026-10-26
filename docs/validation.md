@@ -4,9 +4,9 @@ Verificado con JDK 25, Gradle 9.8.2, Loom 1.19.3, Minecraft 26.1,
 Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
 
 - `./gradlew build --console=plain`: compilación Java, recursos, JAR y pruebas correctos.
-- JUnit: **214 ejecutadas, 214 aprobadas, 0 omitidas**.
+- JUnit: **226 ejecutadas, 226 aprobadas, 0 omitidas**.
 - `ExposureTest`: 29 casos de atmósfera, inmunidad y protección por sellado.
-- `WorldgenCodecTest`: 149 casos con los codecs reales de Minecraft; nueve tipos
+- `WorldgenCodecTest`: 161 casos con los codecs reales de Minecraft; nueve tipos
   de dimensión, nueve mundos con sus generadores y tres tipos de daño aceptados.
 - `EnvironmentRulesTest`: 12 casos de velocidades solares, niebla y corrosión.
 - Cielos y ciclos: las nueve timelines nativas producen distinta luz de día/noche
@@ -18,12 +18,12 @@ Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
 - `PlanetHazardsTest`: 10 casos de presión por altitud y exposición a lluvia ácida.
 - La carga conjunta usa `RegistryDataLoader` con los recursos vanilla y del mod,
   incluidos biomas, features, carvers, tags, fluidos y ruido.
-- `python3 tools/validate_resources.py`: 292 JSON y referencias internas coherentes.
+- `python3 tools/validate_resources.py`: 303 JSON y referencias internas coherentes.
 - Comprobaciones de materiales: 24 loot tables y recetas aceptadas por los codecs;
   etiquetas de botas térmicas, componentes de armadura y requisitos de herramientas.
 - Modificaciones reales de Fabric: vetas marcianas presentes y decoración orbital
   conservada por el generador vacío.
-- Assets: modelos e inventario, traducciones y CRC/contenido de 47 texturas PNG validados,
+- Assets: modelos e inventario, traducciones y CRC/contenido de 52 texturas PNG validados,
   incluido el atlas de 512×512 importado de `space-rocket.bbmodel`.
   También se comprueban las rutas de texturas declaradas con `Identifier.fromNamespaceAndPath`
   en los renderers Java para detectar referencias al namespace de los mods fuente.
@@ -60,7 +60,7 @@ Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
 - Gradle Wrapper y distribución: SHA-256 verificado con los checksums oficiales.
 - JDK descargado para este entorno: SHA-256 verificado con el checksum oficial.
 
-Artefacto generado: `build/libs/space-fabric-0.12.1.jar`.
+Artefacto generado: `build/libs/space-fabric-0.13.0.jar`.
 Los informes de la ejecución están en `build/test-results/test/` y
 `build/reports/tests/test/`; son salidas locales ignoradas por Git.
 
@@ -134,3 +134,34 @@ Corrección 0.12.1 tras la captura del usuario:
   de entidad. La validación comprueba que ambos PNG coincidan con el original y
   que las referencias del modelo de ítem pertenezcan a las carpetas del atlas.
 - El resultado gráfico de esta corrección aún requiere prueba dentro del juego.
+
+Corrección del cohete incluida en 0.13.0, tras confirmar el uso de un optimizador gráfico:
+
+- El modelo colocado emite directamente las 288 caras con sus UV por vértice
+  mediante `submitCustomGeometry`. No usa el renderizado de cubos de `ModelPart`
+  ni `Cube.compile`, que puede sustituirse por una caché con UV estándar.
+- Conserva geometría, escala, atlas, luz y orientación. El ítem mantiene su JSON
+  y textura, confirmados visualmente por el usuario en 0.12.1.
+- Compilación y recursos validados; la corrección del cohete colocado aún requiere
+  confirmación en la instalación del usuario con su optimizador gráfico.
+
+Comprobaciones añadidas en 0.13.0:
+
+- La carga conjunta acepta el santuario y restringe su único bioma a Marte.
+- `RandomSpreadStructurePlacement` nativo: 25 regiones positivas/negativas y tres
+  puntos por región, con tres semillas, devuelven exactamente un candidato y
+  20.000 bloques entre centros vecinos; separación 1249 elimina el desplazamiento aleatorio.
+- Nueve inicios reales válidos: tres regiones por semilla, base Y=-60 y límites
+  hasta Y=-13 con la cubierta. Guardado, carga, rotación y movimiento conservan el localizador.
+- NBT nativo de 53×32×53: 89.888 posiciones explícitas, incluido aire; un jefe
+  central y cuatro guardias persistentes, con volumen libre para sus cuerpos.
+- Colocación real sobre roca y sobre un cañón vacío: interior excavado, cubierta
+  sólida de 16 capas, sin escrituras fuera del chunk ni por encima de Y=-13.
+- Registro de ambos mobs, atributos y huevos; ausencia de apariciones salvajes
+  en todos los biomas. Recursos importados comparados por SHA-256.
+- `./gradlew verifyRocketMesh`: emisor real de 1.152 vértices, 288 caras con UV
+  comparadas con Blockbench, escala, color y luz. Usa las clases cliente de Minecraft
+  sin GPU ni sesión de juego; no simula la ejecución de Sodium. Se ejecuta también con `build`.
+
+La colocación de entidades en una partida, el combate, la barra de jefe y la
+inspección visual con el optimizador del usuario siguen pendientes de prueba en juego.

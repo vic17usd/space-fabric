@@ -77,5 +77,10 @@
   "item.space_fabric.energy_crystal_shard": "Energy Crystal Shard",
   "item.space_fabric.condensed_stardust": "Condensed Stardust",
   "item.space_fabric.vibration_sensor": "Vibration Sensor",
-  "item.space_fabric.crushed_iron_ore": "Crushed Iron Ore"
+  "item.space_fabric.crushed_iron_ore": "Crushed Iron Ore",
+  "entity.space_fabric.basalt_ember_golem": "Basalt Ember Golem",
+  "entity.space_fabric.basalt_bosswarden": "Basalt Bosswarden",
+  "item.space_fabric.obsidian_core": "Obsidian Core",
+  "item.space_fabric.basalt_ember_golem_spawn_egg": "Basalt Ember Golem Spawn Egg",
+  "item.space_fabric.basalt_bosswarden_spawn_egg": "Basalt Bosswarden Spawn Egg"
 }

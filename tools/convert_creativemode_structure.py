@@ -41,10 +41,10 @@ def entity_entry(specification, dimensions, block_map, implicit_ground=None):
     if any(type(v) is not int or not 0 <= v < dimensions[i] for i, v in enumerate(position)):
         raise ValueError("Posición de entidad fuera de la plantilla")
     x, y, z = position
-    if ((x, y - 1, z) not in block_map and y - 1 != implicit_ground) or any((x, y + dy, z) in block_map for dy in (0, 1, 2)):
+    if ((x, y - 1, z) not in block_map and y - 1 != implicit_ground) or any(block_map.get((x, y + dy, z), "minecraft:air") not in {"minecraft:air", "minecraft:cave_air", "minecraft:void_air"} for dy in (0, 1, 2)):
         raise ValueError("La entidad necesita suelo y tres bloques libres")
     floor = block_map.get((x, y - 1, z), "space_fabric:iron_oxide_regolith")
-    if floor in {"minecraft:water", "minecraft:lava", "minecraft:packed_ice", "minecraft:air"}:
+    if floor in {"minecraft:water", "minecraft:lava", "minecraft:packed_ice", "minecraft:air", "minecraft:cave_air", "minecraft:void_air"}:
         raise ValueError("Suelo de entidad no seguro")
     coordinates = tag_list(6, [struct.pack(">d", v) for v in (x + 0.5, y, z + 0.5)])
     rotation = tag_list(5, [struct.pack(">f", 0), struct.pack(">f", 0)])

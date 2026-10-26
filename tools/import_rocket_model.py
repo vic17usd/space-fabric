@@ -38,21 +38,36 @@ def generate():
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Map;
-import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.geom.ModelPart;
+import com.mojang.blaze3d.vertex.PoseStack.Pose;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import org.joml.Vector3f;
 import net.minecraft.client.model.geom.ModelPart.Cube;
 import net.minecraft.client.model.geom.ModelPart.Vertex;
 import net.minecraft.client.model.geom.ModelPart.Polygon;
 import net.minecraft.core.Direction;
 
 /** Generado por tools/import_rocket_model.py desde el archivo del usuario. */
-public final class RocketModel extends EntityModel<RocketRenderer.State> {
-    public RocketModel() { super(createRoot()); }
-    private static ModelPart createRoot() {
+public final class RocketModel {
+    private final List<Cube> cubes = createCubes();
+    private static List<Cube> createCubes() {
         List<Cube> cubes = new ArrayList<>();
 ''' + '\n'.join(lines) + '''
-        return new ModelPart(cubes, Map.of());
+        return List.copyOf(cubes);
+    }
+    /** Emite las UV de cada cara; evita la caché de cubo estándar de los optimizadores. */
+    public void renderGeometry(Pose pose, VertexConsumer output, int light, int overlay, int color) {
+        Vector3f normal = new Vector3f();
+        Vector3f position = new Vector3f();
+        for (Cube cube : cubes) {
+            for (Polygon face : cube.polygons) {
+                pose.transformNormal(face.normal(), normal);
+                for (Vertex vertex : face.vertices()) {
+                    pose.pose().transformPosition(vertex.worldX(), vertex.worldY(), vertex.worldZ(), position);
+                    output.addVertex(position.x(), position.y(), position.z(), color, vertex.u(), vertex.v(),
+                            overlay, light, normal.x(), normal.y(), normal.z());
+                }
+            }
+        }
     }
     private static Cube cube(float x, float y, float z, float w, float h, float d, float[] uv) {
         Cube cube = new Cube(0, 0, x, y, z, w, h, d, 0, 0, 0, false, 512, 512, EnumSet.allOf(Direction.class));
