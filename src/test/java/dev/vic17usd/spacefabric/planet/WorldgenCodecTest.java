@@ -637,6 +637,48 @@ class WorldgenCodecTest {
                 .stream().anyMatch(feature -> feature.is(crater)));
     }
 
+    @ParameterizedTest
+    @ValueSource(longs = {0L, 42L, 8675309L})
+    void breathforgeGeneratesARealStartAndZeroDepthReproducesTheLocateFailure(long seed,
+            @org.junit.jupiter.api.io.TempDir Path temporaryWorlds) throws IOException {
+        var access = (RegistryAccess) registries;
+        var holder = access.lookupOrThrow(Registries.STRUCTURE).getOrThrow(
+                net.minecraft.resources.ResourceKey.create(Registries.STRUCTURE, SpaceFabric.id("martian_breathforge")));
+        var stem = LevelStem.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE), resource("dimension/mars")).getOrThrow();
+        var generator = assertInstanceOf(net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator.class, stem.generator());
+        var randomState = net.minecraft.world.level.levelgen.RandomState.create(generator.generatorSettings().value(),
+                access.lookupOrThrow(Registries.NOISE), seed);
+        var pack = new PathPackResources(new PackLocationInfo("breathforge_generation_test",
+                Component.literal("Real structure generation"), PackSource.DEFAULT, Optional.empty()), Path.of("src/main/resources"));
+        var storage = net.minecraft.world.level.storage.LevelStorageSource.createDefault(temporaryWorlds);
+        try (var world = storage.createAccess("structure-test");
+                var resources = new MultiPackResourceManager(PackType.SERVER_DATA,
+                        List.of(ServerPacksSource.createVanillaPackSource(), pack))) {
+            var templates = new net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager(
+                    resources, world, net.minecraft.util.datafix.DataFixers.getDataFixer(), access.lookupOrThrow(Registries.BLOCK));
+            assertTrue(templates.get(SpaceFabric.id("martian_breathforge")).isPresent());
+            var chunk = new net.minecraft.world.level.ChunkPos(2, -3);
+            var height = net.minecraft.world.level.LevelHeightAccessor.create(Planet.MARS.minY(), Planet.MARS.height());
+            java.util.function.Predicate<net.minecraft.core.Holder<net.minecraft.world.level.biome.Biome>> martianBiome =
+                    biome -> biome.is(dev.vic17usd.spacefabric.worldgen.PlanetBiomes.key(Planet.MARS));
+            // Ejecuta Structure.generate y JigsawPlacement; aceptar el codec no basta.
+            var valid = holder.value().generate(holder, PlanetDimensions.key(Planet.MARS), access, generator,
+                    generator.getBiomeSource(), randomState, templates, seed, chunk, 0, height, martianBiome);
+            assertTrue(valid.isValid(), "La estructura debe ser localizable con semilla " + seed);
+            assertEquals(1, valid.getPieces().size(), "Sin conectores solo debe generarse el edificio inicial");
+            assertEquals(89, valid.getPieces().getFirst().getBoundingBox().getXSpan());
+            assertEquals(73, valid.getPieces().getFirst().getBoundingBox().getYSpan());
+            var previous = resource("worldgen/structure/martian_breathforge").getAsJsonObject().deepCopy();
+            previous.addProperty("size", 0);
+            var broken = net.minecraft.world.level.levelgen.structure.Structure.DIRECT_CODEC.parse(
+                    registries.createSerializationContext(JsonOps.INSTANCE), previous).getOrThrow();
+            var invalid = broken.generate(holder, PlanetDimensions.key(Planet.MARS), access, generator,
+                    generator.getBiomeSource(), randomState, templates, seed, chunk, 0, height, martianBiome);
+            assertFalse(invalid.isValid(), "26.1 no añade la pieza inicial con size=0");
+            assertTrue(invalid.getPieces().isEmpty());
+        }
+    }
+
     private static JsonElement resource(String path) throws IOException {
         String location = "/data/space_fabric/" + path + ".json";
         var stream = WorldgenCodecTest.class.getResourceAsStream(location);

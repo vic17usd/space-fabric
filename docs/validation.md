@@ -4,9 +4,9 @@ Verificado con JDK 25, Gradle 9.8.2, Loom 1.19.3, Minecraft 26.1,
 Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
 
 - `./gradlew build --console=plain`: compilación Java, recursos, JAR y pruebas correctos.
-- JUnit: **178 ejecutadas, 178 aprobadas, 0 omitidas**.
+- JUnit: **181 ejecutadas, 181 aprobadas, 0 omitidas**.
 - `ExposureTest`: 29 casos de atmósfera, inmunidad y protección por sellado.
-- `WorldgenCodecTest`: 113 casos con los codecs reales de Minecraft; nueve tipos
+- `WorldgenCodecTest`: 116 casos con los codecs reales de Minecraft; nueve tipos
   de dimensión, nueve mundos con sus generadores y tres tipos de daño aceptados.
 - `EnvironmentRulesTest`: 12 casos de velocidades solares, niebla y corrosión.
 - Cielos y ciclos: las nueve timelines nativas producen distinta luz de día/noche
@@ -41,10 +41,15 @@ Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
 - Plantilla NBT: `NbtIo` y `StructureTemplate` cargan 89 × 73 × 89, 22 materiales y
   30.608 bloques, comparados posición e índice de paleta con el archivo original.
 - Los cráteres marcianos aparecen en la fase anterior a las estructuras de superficie.
+- Regresión de `/locate`: `Structure.generate` real con tres semillas reproduce
+  el inicio inválido de `size: 0` y obtiene una pieza válida con `size: 1`, usando
+  el generador de ruido de Marte y la plantilla cargada por `StructureTemplateManager`.
+  Esto comprueba generación de inicios, sin arrancar una partida ni ejecutar una
+  búsqueda completa de `/locate` en un servidor de juego.
 - Gradle Wrapper y distribución: SHA-256 verificado con los checksums oficiales.
 - JDK descargado para este entorno: SHA-256 verificado con el checksum oficial.
 
-Artefacto generado: `build/libs/space-fabric-0.8.0.jar`.
+Artefacto generado: `build/libs/space-fabric-0.8.1.jar`.
 Los informes de la ejecución están en `build/test-results/test/` y
 `build/reports/tests/test/`; son salidas locales ignoradas por Git.
 

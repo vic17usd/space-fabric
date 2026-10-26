@@ -38,8 +38,10 @@ este edificio. La dimensión ya usa un generador de ruido con estructuras.
 ## Decisiones de generación
 
 - `type: minecraft:jigsaw` permite usar el motor de estructuras de vanilla.
-- `size: 0` coloca solo la pieza inicial. Es la profundidad de expansión, no
-  las dimensiones del edificio. El adjunto no tiene conectores para piezas hijas.
+- `size: 1` permite que Minecraft 26.1 añada la pieza inicial al resultado.
+  El adjunto no tiene conectores y, por tanto, no se añaden piezas hijas.
+  Aunque el codec acepta cero, en esta versión `size: 0` deja el resultado vacío:
+  no sirve para colocar este edificio y hace que `/locate` busque sin encontrarlo.
 - No se establece `start_jigsaw_name`: exigiría un conector inexistente.
 - `start_height: {absolute: 0}` se combina con `WORLD_SURFACE_WG`: el cero es
   un desplazamiento sobre la altura calculada del terreno, no una colocación fija en Y=0.
@@ -54,7 +56,9 @@ este edificio. La dimensión ya usa un generador de ruido con estructuras.
 - `spacing: 40` y `separation: 16` se miden en **chunks**. Se intenta un
   candidato por región de 40 × 40 chunks, aproximadamente 640 × 640 bloques.
   No significa exactamente un edificio cada 640 bloques ni garantiza cada intento.
-- `salt: 836172105` proporciona una distribución propia a partir de la semilla.
+- `salt: 836172106` proporciona una distribución propia a partir de la semilla.
+  Se cambió respecto a 0.8.0 para evitar reutilizar los mismos candidatos en los
+  que la versión anterior pudo guardar inicios de estructura vacíos.
 
 Las estructuras se restringen por **bioma**, no por una clave de dimensión en
 el JSON. En este mod el bioma marciano es exclusivo de Marte. Si otro datapack
@@ -108,3 +112,21 @@ mundo nuevo o chunks nuevos; estos archivos no añaden edificios retroactivament
 a chunks ya generados. Activa la generación de estructuras al crear el mundo.
 El verificado de codecs/NBT no equivale a una inspección visual de terreno real;
 esa comprobación queda pendiente.
+
+## Corrección de `/locate` en 0.8.1
+
+La versión 0.8.0 usaba `size: 0`. La prueba inicial de codecs no detectaba que
+`JigsawPlacement` devuelve cero piezas con ese valor en Minecraft 26.1. Un inicio
+vacío no es localizable; `/locate` puede inspeccionar una gran cantidad de chunks
+en el hilo del servidor y detener temporalmente el avance de la partida.
+
+La versión 0.8.1 cambia a `size: 1`. Se comprueba la generación real mediante
+`Structure.generate`, el generador de Marte y la plantilla cargada por
+`StructureTemplateManager`, con tres semillas. Cada caso reproduce el resultado
+inválido con cero y obtiene exactamente una pieza válida con la configuración corregida.
+
+Cierra Minecraft, sustituye el JAR 0.8.0 por 0.8.1 (no dejes ambas versiones en
+`mods/`) y vuelve a abrir el mundo. El comando debe ejecutarse en Marte, como
+muestra el ejemplo de arriba. La corrección no reconstruye estructuras en chunks
+ya generados: la comprobación natural debe realizarse en chunks nuevos. El comando
+vanilla sigue siendo síncrono y puede tardar si debe recorrer muchos chunks antiguos.

@@ -1,7 +1,7 @@
 # Space Fabric — Minecraft Java 26.1
 
-La versión 0.8.0 incorpora Martian Breathforge como estructura procedural de la
-superficie de Marte, convertida desde el archivo JSON proporcionado.
+La versión 0.8.1 corrige la generación de Martian Breathforge y la búsqueda sin
+resultados de `/locate` causada por el tamaño jigsaw cero de 0.8.0.
 Consulta la [guía de configuración de la estructura](docs/martian-breathforge.md).
 Puedes descargar [solo los JSON y la plantilla NBT](dist/martian-breathforge-fabric-26.1.zip)
 para integrarlos en otro proyecto Fabric con el bioma `space_fabric:mars`.
@@ -13,9 +13,9 @@ Consulta la [guía completa de bloques y materiales](docs/materials.md).
 Consulta la [guía de terreno y registro de biomas](docs/terrain.md).
 Consulta la [tabla de dimensiones y claves Java](docs/dimensions.md).
 
-Descarga del prototipo compilado: [space-fabric-0.8.0.jar](dist/space-fabric-0.8.0.jar)
+Descarga del prototipo compilado: [space-fabric-0.8.1.jar](dist/space-fabric-0.8.1.jar)
 (en GitHub, pulsa **Download raw file**).
-[Checksum SHA-256](dist/space-fabric-0.8.0.jar.sha256).
+[Checksum SHA-256](dist/space-fabric-0.8.1.jar.sha256).
 Requiere Minecraft **26.1**, Java **25**, Fabric Loader y Fabric API **0.145.1+26.1**.
 Coloca el JAR y Fabric API en la carpeta `mods/`. Es el prototipo descrito abajo;
 todavía falta su validación dentro del juego.
@@ -47,7 +47,7 @@ python3 tools/validate_resources.py
 ./gradlew runClient
 ```
 
-El artefacto será `build/libs/space-fabric-0.8.0.jar`. Instala el mod y Fabric API
+El artefacto será `build/libs/space-fabric-0.8.1.jar`. Instala el mod y Fabric API
 en cliente y servidor. No se declara compatibilidad con 1.21.x ni con otras
 revisiones de 26.1 sin validarlas por separado.
 
@@ -228,7 +228,7 @@ tanque en `SuitProtection` y guarda su estado en componentes de ítem o attachme
 inmunidad, prioridad de presión e hipoxia a presión normal.
 También usa Fabric Loader JUnit y los codecs reales de Minecraft para interpretar
 los nueve tipos de dimensión, sus generadores y los tres tipos de daño; también
-comprueba refinería, persistencia del combustible, recetas, llegadas y estructuras: **178 casos**
+comprueba refinería, persistencia del combustible, recetas, llegadas y estructuras: **181 casos**
 en total. `tools/validate_resources.py` comprueba además JSON y referencias internas.
 Estas pruebas no arrancan un mundo ni comprueban la sincronización del cliente.
 
