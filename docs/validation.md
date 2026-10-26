@@ -24,7 +24,7 @@ Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
 - Modificaciones reales de Fabric: vetas marcianas presentes y decoración orbital
   conservada por el generador vacío.
 - Assets: modelos e inventario, traducciones y CRC/contenido de 47 texturas PNG validados,
-  incluido el atlas original de 128×128 del cohete.
+  incluido el atlas de 512×512 importado de `space-rocket.bbmodel`.
   También se comprueban las rutas de texturas declaradas con `Identifier.fromNamespaceAndPath`
   en los renderers Java para detectar referencias al namespace de los mods fuente.
 - Geología: extracción con netherita; recetas ensambladas de hierro y pigmentos;
@@ -60,7 +60,7 @@ Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
 - Gradle Wrapper y distribución: SHA-256 verificado con los checksums oficiales.
 - JDK descargado para este entorno: SHA-256 verificado con el checksum oficial.
 
-Artefacto generado: `build/libs/space-fabric-0.11.0.jar`.
+Artefacto generado: `build/libs/space-fabric-0.12.0.jar`.
 Los informes de la ejecución están en `build/test-results/test/` y
 `build/reports/tests/test/`; son salidas locales ignoradas por Git.
 
@@ -114,3 +114,12 @@ Comprobaciones añadidas en 0.11.0:
   Guardado/carga conserva la alineación nueva y la de piezas antiguas sin `FloorAligned`.
 - `MarsSurfacePiece.postProcess` coloca ambas plantillas recortadas sobre roca en
   VoxelWorld, verificando pisos, huecos con regolito y habitaciones despejadas.
+
+Cambios visuales de 0.12.0:
+
+- Cohete: 48 cubos y 288 caras importados del archivo Blockbench del usuario.
+- Atlas PNG 512×512 extraído sin modificaciones; UV por cara conservadas.
+- Modelo de entidad ajustado uniformemente a 1,6 bloques de ancho y unos 3,28 de
+  alto, apoyado en Y=0 dentro de la colisión existente de 1,6 × 3,5.
+- El ítem de inventario usa las mismas 48 piezas y el mismo atlas mediante JSON vanilla.
+- Compilación y validación de recursos correctas; renderizado en partida pendiente.

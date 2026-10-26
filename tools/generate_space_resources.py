@@ -96,3 +96,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+    from import_rocket_model import generate
+    generate()

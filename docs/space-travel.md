@@ -175,3 +175,20 @@ Queda pendiente la prueba en un cliente y servidor de juego. Para realizarla:
    un ascenso. Comprueba conservación de recursos y reposo al volver a cargar.
 
 No se afirma una sesión multijugador ni una validación visual ya realizadas.
+
+## Modelo del cohete desde 0.12.0
+
+Se usa `space-rocket.bbmodel`, aportado por el usuario, con sus 48 piezas y atlas
+512×512. Aparece tanto en el cohete colocado como en el ítem 3D del inventario.
+La escala es uniforme, con 1,6 bloques de anchura máxima y 3,28 de altura visible;
+el origen inferior queda a ras del suelo. El renderer conserva el giro del cohete.
+La colisión y el asiento mantienen las medidas del sistema de transporte.
+
+El archivo fuente se conserva en `tools/import_sources/space-rocket.bbmodel`.
+`python3 tools/import_rocket_model.py` reproduce `RocketModel.java`,
+`textures/entity/rocket.png` y `models/item/rocket.json`. El generador general
+de recursos de transporte vuelve a aplicar esta importación al terminar. No
+hacen falta Blockbench ni bibliotecas de animación al jugar.
+
+La compilación y las referencias de los recursos se verifican automáticamente;
+falta revisar la apariencia y la posición del piloto en una sesión gráfica.
