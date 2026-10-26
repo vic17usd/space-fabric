@@ -34,7 +34,7 @@ def png(relative, pixels):
     def chunk(kind, body):
         return struct.pack(">I", len(body)) + kind + body + struct.pack(">I", zlib.crc32(kind + body))
     raw = b"".join(b"\0" + bytes(sum(row, ())) for row in pixels)
-    contents = b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", 16, 16, 8, 6, 0, 0, 0))
+    contents = b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", len(pixels[0]), len(pixels), 8, 6, 0, 0, 0))
     contents += chunk(b"IDAT", zlib.compress(raw)) + chunk(b"IEND", b"")
     path = ROOT / relative
     path.parent.mkdir(parents=True, exist_ok=True)

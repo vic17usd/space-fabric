@@ -11,9 +11,14 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.equipment.ArmorMaterials;
 import net.minecraft.world.item.equipment.ArmorType;
+import dev.vic17usd.spacefabric.space.RocketItem;
+import java.util.function.Function;
 
 public final class ModItems {
     private static final Map<String, Item> ITEMS = new LinkedHashMap<>();
+    public static final Item ROCKET = register("rocket", RocketItem::new, new Item.Properties().stacksTo(1).fireResistant());
+    public static final Item EMPTY_FUEL_CELL = register("empty_fuel_cell", new Item.Properties());
+    public static final Item ROCKET_FUEL_CELL = register("rocket_fuel_cell", new Item.Properties().stacksTo(16));
     public static final Item ARES_CRYSTAL = register("ares_crystal", new Item.Properties());
     public static final Item RAW_PHOBOSITE = register("raw_phobosite", new Item.Properties());
     public static final Item THERMAL_BOOTS = register("thermal_boots", new Item.Properties()
@@ -32,9 +37,13 @@ public final class ModItems {
     private ModItems() { }
 
     private static Item register(String path, Item.Properties properties) {
+        return register(path, Item::new, properties);
+    }
+
+    private static Item register(String path, Function<Item.Properties, Item> factory, Item.Properties properties) {
         var id = SpaceFabric.id(path);
         var item = Registry.register(BuiltInRegistries.ITEM, id,
-                new Item(properties.setId(ResourceKey.create(Registries.ITEM, id))));
+                factory.apply(properties.setId(ResourceKey.create(Registries.ITEM, id))));
         ITEMS.put(path, item);
         return item;
     }

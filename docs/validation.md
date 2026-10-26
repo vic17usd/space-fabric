@@ -4,9 +4,9 @@ Verificado con JDK 25, Gradle 9.8.2, Loom 1.19.3, Minecraft 26.1,
 Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
 
 - `./gradlew build --console=plain`: compilación Java, recursos, JAR y pruebas correctos.
-- JUnit: **140 ejecutadas, 140 aprobadas, 0 omitidas**.
+- JUnit: **174 ejecutadas, 174 aprobadas, 0 omitidas**.
 - `ExposureTest`: 29 casos de atmósfera, inmunidad y protección por sellado.
-- `WorldgenCodecTest`: 89 casos con los codecs reales de Minecraft; nueve tipos
+- `WorldgenCodecTest`: 109 casos con los codecs reales de Minecraft; nueve tipos
   de dimensión, nueve mundos con sus generadores y tres tipos de daño aceptados.
 - `EnvironmentRulesTest`: 12 casos de velocidades solares, niebla y corrosión.
 - Cielos y ciclos: las nueve timelines nativas producen distinta luz de día/noche
@@ -18,25 +18,38 @@ Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
 - `PlanetHazardsTest`: 10 casos de presión por altitud y exposición a lluvia ácida.
 - La carga conjunta usa `RegistryDataLoader` con los recursos vanilla y del mod,
   incluidos biomas, features, carvers, tags, fluidos y ruido.
-- `python3 tools/validate_resources.py`: 244 JSON y referencias internas coherentes.
-- Comprobaciones de materiales: 22 loot tables y receta aceptadas por los codecs;
+- `python3 tools/validate_resources.py`: 262 JSON y referencias internas coherentes.
+- Comprobaciones de materiales: 24 loot tables y recetas aceptadas por los codecs;
   etiquetas de botas térmicas, componentes de armadura y requisitos de herramientas.
 - Modificaciones reales de Fabric: vetas marcianas presentes y decoración orbital
   conservada por el generador vacío.
-- Assets: modelos e inventario, traducciones y CRC/contenido de 33 texturas PNG validados.
+- Assets: modelos e inventario, traducciones y CRC/contenido de 39 texturas PNG validados,
+  incluido el atlas original de 128×128 del cohete.
 - Geología: extracción con netherita; recetas ensambladas de hierro y pigmentos;
   nueve features restringidas a sus biomas y hielo con techo opaco en ambas bandas polares.
+- Transporte: 8 casos de reglas de vuelo y 6 de llegada: ocupación, obstáculos,
+  borde, plataformas reutilizables, presión profunda y límite de búsqueda.
+- Refinería: fórmulas inicial/planetaria con pilas reales, consumo al terminar,
+  pausa de salida bloqueada, cambio de fórmula y filtrado de automatización.
+- Persistencia: se guarda y restaura una BlockEntity real con inventario y progreso;
+  tanque, destino y carga del cohete restaurados con sus métodos reales de NBT;
+  combustible parcial del ítem empaquetado validado con `ItemStack.CODEC`.
+- Recetas de cohete, refinería, celda vacía y plataforma realmente ensambladas
+  desde sus JSON usando ingredientes vanilla.
 - Gradle Wrapper y distribución: SHA-256 verificado con los checksums oficiales.
 - JDK descargado para este entorno: SHA-256 verificado con el checksum oficial.
 
-Artefacto generado: `build/libs/space-fabric-0.6.0.jar`.
+Artefacto generado: `build/libs/space-fabric-0.7.0.jar`.
 Los informes de la ejecución están en `build/test-results/test/` y
 `build/reports/tests/test/`; son salidas locales ignoradas por Git.
 
 No se ejecutó un cliente gráfico, un servidor de juego ni una sesión multijugador.
 Los codecs no demuestran que el terreno se genere correctamente durante una
 exploración ni que el movimiento se sincronice en un cliente. El procedimiento
-manual del README cubre esos puntos y queda pendiente.
+manual del README y de `docs/space-travel.md` cubre esos puntos y queda pendiente.
+Tampoco se ha ejecutado un vuelo real ni un traslado con pasajeros en una sesión
+de juego. La compilación comprueba el uso de las firmas 26.1; las pruebas del
+planificador y de combustible no sustituyen esa verificación multijugador.
 
 El entorno utiliza un JDK local en `/workspace/.space-fabric-tools/jdk` y caché
 Gradle fuera del checkout. Los scripts reutilizables del entorno activan esas

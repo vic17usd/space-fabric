@@ -34,6 +34,7 @@ public final class AtmosphereSystem {
         }
         boolean immune = player.isCreative() || player.isSpectator();
         VenusAcidSystem.tick(level, player, planet);
+        if (dev.vic17usd.spacefabric.space.RocketCabin.protects(player)) return;
         boolean sealed = SuitProtection.isSealed(player);
         if (!immune && PlanetHazards.isDenseGas(planet, player.getY())) {
             // La escafandra básica no resiste la zona profunda de un gigante.

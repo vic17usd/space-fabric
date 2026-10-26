@@ -17,10 +17,12 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
+import dev.vic17usd.spacefabric.machine.FuelRefineryBlock;
 
 public final class ModBlocks {
     private static final Map<String, Block> BLOCKS = new LinkedHashMap<>();
     static {
+        Registry.register(BuiltInRegistries.BLOCK_TYPE, SpaceFabric.id("fuel_refinery"), FuelRefineryBlock.CODEC);
         Registry.register(BuiltInRegistries.BLOCK_TYPE, SpaceFabric.id("regolith"), PlanetRegolithBlock.CODEC);
         Registry.register(BuiltInRegistries.BLOCK_TYPE, SpaceFabric.id("hot_volcanic_rock"), HotVolcanicRockBlock.CODEC);
         Registry.register(BuiltInRegistries.BLOCK_TYPE, SpaceFabric.id("planet_ore"), PlanetOreBlock.CODEC);
@@ -28,6 +30,11 @@ public final class ModBlocks {
         Registry.register(BuiltInRegistries.BLOCK_TYPE, SpaceFabric.id("crater_ice"), CraterIceBlock.CODEC);
         Registry.register(BuiltInRegistries.BLOCK_TYPE, SpaceFabric.id("condensed_acid"), CondensedAcidBlock.CODEC);
     }
+
+    public static final Block FUEL_REFINERY = register("fuel_refinery", FuelRefineryBlock::new,
+            stoneProperties().strength(4.0F, 10.0F).sound(SoundType.METAL));
+    public static final Block LANDING_PAD = register("landing_pad", Block::new,
+            stoneProperties().strength(5.0F, 1200.0F).sound(SoundType.METAL));
 
     public static final Block MERCURY_REGOLITH = register("mercury_regolith", PlanetRegolithBlock::new,
             BlockBehaviour.Properties.ofFullCopy(Blocks.SAND).mapColor(MapColor.STONE).strength(0.6F));

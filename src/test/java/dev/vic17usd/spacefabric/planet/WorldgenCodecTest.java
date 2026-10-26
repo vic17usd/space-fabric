@@ -442,6 +442,134 @@ class WorldgenCodecTest {
         }
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = {"rocket", "fuel_refinery", "empty_fuel_cell", "landing_pad"})
+    void spaceEquipmentCanActuallyBeCraftedWithVanillaIngredients(String name) throws IOException {
+        var recipe = assertInstanceOf(net.minecraft.world.item.crafting.ShapedRecipe.class,
+                Recipe.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE), resource("recipe/" + name)).getOrThrow());
+        var empty = ItemStack.EMPTY;
+        java.util.function.Function<net.minecraft.world.item.Item, ItemStack> stack = ItemStack::new;
+        List<ItemStack> ingredients = switch (name) {
+            case "rocket" -> List.of(empty, stack.apply(Items.IRON_BLOCK), empty,
+                    stack.apply(Items.IRON_BLOCK), stack.apply(Items.COPPER_BLOCK), stack.apply(Items.IRON_BLOCK),
+                    stack.apply(Items.REDSTONE_BLOCK), stack.apply(Items.FURNACE), stack.apply(Items.REDSTONE_BLOCK));
+            case "fuel_refinery" -> List.of(stack.apply(Items.IRON_INGOT), stack.apply(Items.IRON_INGOT), stack.apply(Items.IRON_INGOT),
+                    stack.apply(Items.IRON_INGOT), stack.apply(Items.FURNACE), stack.apply(Items.IRON_INGOT),
+                    stack.apply(Items.IRON_INGOT), stack.apply(Items.REDSTONE), stack.apply(Items.IRON_INGOT));
+            case "empty_fuel_cell" -> List.of(empty, stack.apply(Items.IRON_INGOT), empty,
+                    stack.apply(Items.IRON_INGOT), stack.apply(Items.GLASS), stack.apply(Items.IRON_INGOT), empty, stack.apply(Items.IRON_INGOT), empty);
+            default -> List.of(stack.apply(Items.IRON_INGOT), stack.apply(Items.IRON_INGOT), stack.apply(Items.IRON_INGOT),
+                    stack.apply(Items.STONE), stack.apply(Items.STONE), stack.apply(Items.STONE));
+        };
+        var input = net.minecraft.world.item.crafting.CraftingInput.of(3, name.equals("landing_pad") ? 2 : 3, ingredients);
+        assertTrue(recipe.matches(input, null));
+        assertEquals(SpaceFabric.id(name), BuiltInRegistries.ITEM.getKey(recipe.assemble(input).getItem()));
+    }
+
+    private static net.minecraft.world.SimpleContainer refineryInput(net.minecraft.world.item.Item base, net.minecraft.world.item.Item reagent) {
+        return new net.minecraft.world.SimpleContainer(new ItemStack(base, 2), new ItemStack(reagent, 2),
+                new ItemStack(ModItems.EMPTY_FUEL_CELL, 2), ItemStack.EMPTY);
+    }
+
+    @Test void refineryConsumesOnlyAtCompletionAndReturnsExactlyOneFilledCell() {
+        var process = new dev.vic17usd.spacefabric.machine.RefineryProcess();
+        var inventory = refineryInput(Items.COAL, Items.BLAZE_POWDER);
+        for (int tick = 0; tick < 199; tick++) process.tick(inventory);
+        assertTrue(inventory.getItem(3).isEmpty()); assertEquals(2, inventory.getItem(0).getCount());
+        process.tick(inventory);
+        for (int slot = 0; slot < 3; slot++) assertEquals(1, inventory.getItem(slot).getCount());
+        assertTrue(inventory.getItem(3).is(ModItems.ROCKET_FUEL_CELL)); assertEquals(1, inventory.getItem(3).getCount());
+        assertEquals(0, process.progress());
+    }
+
+    @ParameterizedTest @ValueSource(booleans = {false, true})
+    void planetaryFuelUsesEitherAcidOrSulfate(boolean acid) {
+        var process = new dev.vic17usd.spacefabric.machine.RefineryProcess();
+        var inventory = refineryInput(ModItems.SULFUR_CRYSTAL, acid ? ModItems.ACID_CONDENSATE : ModItems.SULFATE_DUST);
+        for (int tick = 0; tick < 160; tick++) process.tick(inventory);
+        assertEquals(1, inventory.getItem(3).getCount()); assertEquals(1, inventory.getItem(0).getCount());
+        assertEquals(160, process.duration());
+    }
+
+    @ParameterizedTest @ValueSource(booleans = {false, true})
+    void refineryPausesWhenOutputIsFullOrContainsAnotherItem(boolean full) {
+        var process = new dev.vic17usd.spacefabric.machine.RefineryProcess();
+        var inventory = refineryInput(Items.CHARCOAL, Items.BLAZE_POWDER);
+        for (int tick = 0; tick < 100; tick++) process.tick(inventory);
+        inventory.setItem(3, new ItemStack(full ? ModItems.ROCKET_FUEL_CELL : Items.DIAMOND, full ? 16 : 1));
+        for (int tick = 0; tick < 400; tick++) process.tick(inventory);
+        assertEquals(100, process.progress()); assertEquals(2, inventory.getItem(2).getCount());
+        inventory.setItem(3, ItemStack.EMPTY);
+        for (int tick = 0; tick < 100; tick++) process.tick(inventory);
+        assertTrue(inventory.getItem(3).is(ModItems.ROCKET_FUEL_CELL));
+    }
+
+    @Test void switchingFuelRecipesResetsProgressAndWrongMixturesDoNothing() {
+        var process = new dev.vic17usd.spacefabric.machine.RefineryProcess();
+        var inventory = refineryInput(Items.COAL, Items.BLAZE_POWDER);
+        for (int tick = 0; tick < 199; tick++) process.tick(inventory);
+        inventory.setItem(0, new ItemStack(ModItems.SULFUR_CRYSTAL));
+        inventory.setItem(1, new ItemStack(ModItems.SULFATE_DUST));
+        process.tick(inventory); assertEquals(1, process.progress()); assertTrue(inventory.getItem(3).isEmpty());
+        inventory.setItem(1, new ItemStack(Items.BLAZE_POWDER));
+        process.tick(inventory); assertEquals(0, process.progress()); assertTrue(inventory.getItem(3).isEmpty());
+        assertEquals(1, inventory.getItem(0).getCount());
+    }
+
+    @Test void refineryRestoresRealBlockEntityInventoryAndPartialProgressFromNbt() {
+        var pos = net.minecraft.core.BlockPos.ZERO;
+        var state = ModBlocks.FUEL_REFINERY.defaultBlockState();
+        var original = new dev.vic17usd.spacefabric.machine.FuelRefineryBlockEntity(pos, state);
+        original.setItem(0, new ItemStack(Items.COAL)); original.setItem(1, new ItemStack(Items.BLAZE_POWDER));
+        original.setItem(2, new ItemStack(ModItems.EMPTY_FUEL_CELL));
+        for (int tick = 0; tick < 100; tick++) dev.vic17usd.spacefabric.machine.FuelRefineryBlockEntity.tick(null, pos, state, original);
+        var restored = assertInstanceOf(dev.vic17usd.spacefabric.machine.FuelRefineryBlockEntity.class,
+                net.minecraft.world.level.block.entity.BlockEntity.loadStatic(pos, state, original.saveWithFullMetadata(registries), registries));
+        assertEquals(100, restored.data.get(0));
+        for (int tick = 0; tick < 100; tick++) dev.vic17usd.spacefabric.machine.FuelRefineryBlockEntity.tick(null, pos, state, restored);
+        assertTrue(restored.getItem(3).is(ModItems.ROCKET_FUEL_CELL));
+        assertTrue(restored.getItem(0).isEmpty()); assertTrue(restored.getItem(2).isEmpty());
+    }
+
+    @Test void refineryRejectsHopperInsertionIntoOutputAndOnlyExtractsFinishedFuel() {
+        var refinery = new dev.vic17usd.spacefabric.machine.FuelRefineryBlockEntity(net.minecraft.core.BlockPos.ZERO, ModBlocks.FUEL_REFINERY.defaultBlockState());
+        assertFalse(refinery.canPlaceItem(3, new ItemStack(ModItems.ROCKET_FUEL_CELL)));
+        assertTrue(refinery.canPlaceItem(2, new ItemStack(ModItems.EMPTY_FUEL_CELL)));
+        assertFalse(refinery.canTakeItemThroughFace(0, new ItemStack(Items.COAL), net.minecraft.core.Direction.DOWN));
+        assertTrue(refinery.canTakeItemThroughFace(3, new ItemStack(ModItems.ROCKET_FUEL_CELL), net.minecraft.core.Direction.DOWN));
+    }
+
+    @ParameterizedTest @ValueSource(ints = {-1, 0, 751, 3000, Integer.MAX_VALUE})
+    void packedRocketKeepsFractionalFuelThroughNativeItemSerialization(int fuel) {
+        var stack = dev.vic17usd.spacefabric.space.RocketItem.packed(fuel);
+        var ops = registries.createSerializationContext(JsonOps.INSTANCE);
+        var serialized = ItemStack.CODEC.encodeStart(ops, stack).getOrThrow();
+        var restored = ItemStack.CODEC.parse(ops, serialized).getOrThrow();
+        assertEquals(Math.clamp(fuel, 0, 3000), dev.vic17usd.spacefabric.space.RocketItem.storedFuel(restored));
+    }
+
+    @Test void rocketCustomNbtRestoresTankDestinationAndCargoWithoutStaleSlots() throws Exception {
+        var rocket = new dev.vic17usd.spacefabric.space.RocketEntity(dev.vic17usd.spacefabric.space.ModSpaceEntities.ROCKET, null);
+        var write = rocket.getClass().getDeclaredMethod("addAdditionalSaveData", net.minecraft.world.level.storage.ValueOutput.class);
+        var read = rocket.getClass().getDeclaredMethod("readAdditionalSaveData", net.minecraft.world.level.storage.ValueInput.class);
+        write.setAccessible(true); read.setAccessible(true);
+        var input = new net.minecraft.nbt.CompoundTag(); input.putInt("Fuel", 751); input.putInt("Destination", 5);
+        read.invoke(rocket, net.minecraft.world.level.storage.TagValueInput.create(net.minecraft.util.ProblemReporter.DISCARDING, registries, input));
+        rocket.inventory().setItem(2, new ItemStack(ModItems.ARES_CRYSTAL, 7));
+        var output = net.minecraft.world.level.storage.TagValueOutput.createWithContext(net.minecraft.util.ProblemReporter.DISCARDING, registries);
+        write.invoke(rocket, output);
+        var restored = new dev.vic17usd.spacefabric.space.RocketEntity(dev.vic17usd.spacefabric.space.ModSpaceEntities.ROCKET, null);
+        restored.inventory().setItem(10, new ItemStack(Items.DIAMOND));
+        read.invoke(restored, net.minecraft.world.level.storage.TagValueInput.create(net.minecraft.util.ProblemReporter.DISCARDING, registries, output.buildResult()));
+        assertEquals(751, restored.fuel()); assertEquals(5, restored.destinationIndex());
+        assertEquals(7, restored.inventory().getItem(2).getCount()); assertTrue(restored.inventory().getItem(2).is(ModItems.ARES_CRYSTAL));
+        assertTrue(restored.inventory().getItem(10).isEmpty()); assertEquals(0, restored.flightState());
+        assertTrue(restored.isNoGravity()); assertTrue(restored.getControllingPassenger() == null);
+        input.putInt("Fuel", Integer.MAX_VALUE); input.putInt("Destination", -5);
+        read.invoke(restored, net.minecraft.world.level.storage.TagValueInput.create(net.minecraft.util.ProblemReporter.DISCARDING, registries, input));
+        assertEquals(3000, restored.fuel()); assertEquals(0, restored.destinationIndex()); assertTrue(restored.inventory().isEmpty());
+    }
+
     private static JsonElement resource(String path) throws IOException {
         String location = "/data/space_fabric/" + path + ".json";
         var stream = WorldgenCodecTest.class.getResourceAsStream(location);

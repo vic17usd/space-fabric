@@ -10,6 +10,12 @@ import net.minecraft.resources.Identifier;
 public final class SpaceFabricClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
+        net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry.register(
+                dev.vic17usd.spacefabric.space.ModSpaceEntities.ROCKET, dev.vic17usd.spacefabric.client.rocket.RocketRenderer::new);
+        net.minecraft.client.gui.screens.MenuScreens.register(dev.vic17usd.spacefabric.menu.ModMenus.ROCKET,
+                dev.vic17usd.spacefabric.client.menu.RocketScreen::new);
+        net.minecraft.client.gui.screens.MenuScreens.register(dev.vic17usd.spacefabric.menu.ModMenus.REFINERY,
+                dev.vic17usd.spacefabric.client.menu.RefineryScreen::new);
         var model = new FluidModel.Unbaked(
                 new Material(Identifier.withDefaultNamespace("block/lava_still")),
                 new Material(Identifier.withDefaultNamespace("block/lava_flow")), null, null);

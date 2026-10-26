@@ -1,14 +1,16 @@
 # Space Fabric — Minecraft Java 26.1
 
-La versión 0.6.0 añade silicatos, hierro denso, hielo de cráter y minerales de
-Mercurio, Venus y Marte. Consulta la [guía de geología y refinado](docs/geology.md). Consulta la [guía de ambientes](docs/environments.md).
+La versión 0.7.0 añade cohetes pilotables, refinerías de combustible y un mapa
+estelar para viajar entre el Overworld y los nueve cuerpos celestes.
+Consulta la [guía de cohetes, recetas y viajes](docs/space-travel.md).
+Consulta la [guía de geología y refinado](docs/geology.md) y la [guía de ambientes](docs/environments.md).
 Consulta la [guía completa de bloques y materiales](docs/materials.md).
 Consulta la [guía de terreno y registro de biomas](docs/terrain.md).
 Consulta la [tabla de dimensiones y claves Java](docs/dimensions.md).
 
-Descarga del prototipo compilado: [space-fabric-0.6.0.jar](dist/space-fabric-0.6.0.jar)
+Descarga del prototipo compilado: [space-fabric-0.7.0.jar](dist/space-fabric-0.7.0.jar)
 (en GitHub, pulsa **Download raw file**).
-[Checksum SHA-256](dist/space-fabric-0.6.0.jar.sha256).
+[Checksum SHA-256](dist/space-fabric-0.7.0.jar.sha256).
 Requiere Minecraft **26.1**, Java **25**, Fabric Loader y Fabric API **0.145.1+26.1**.
 Coloca el JAR y Fabric API en la carpeta `mods/`. Es el prototipo descrito abajo;
 todavía falta su validación dentro del juego.
@@ -18,8 +20,8 @@ Tierra, Luna, Marte, Júpiter, Saturno, Urano y Neptuno. Usa los nombres oficial
 Minecraft 26.1, sin Yarn ni remapeo de versiones anteriores.
 
 Implementa dimensiones por datos, gravedad para entidades vivas y daño atmosférico
-para jugadores. El terreno tiene biomas propios y rasgos planetarios; faltan cohetes,
-portales y simulación astronómica. La Luna se incluye como satélite explorable.
+para jugadores. El terreno tiene biomas propios y rasgos planetarios; los viajes
+usan un cohete con un ocupante, tanque e inventario persistentes. La Luna se incluye como satélite explorable.
 
 ## Versiones y uso
 
@@ -40,7 +42,7 @@ python3 tools/validate_resources.py
 ./gradlew runClient
 ```
 
-El artefacto será `build/libs/space-fabric-0.6.0.jar`. Instala el mod y Fabric API
+El artefacto será `build/libs/space-fabric-0.7.0.jar`. Instala el mod y Fabric API
 en cliente y servidor. No se declara compatibilidad con 1.21.x ni con otras
 revisiones de 26.1 sin validarlas por separado.
 
@@ -71,7 +73,10 @@ src/main/java/dev/vic17usd/spacefabric/
 ├── item/                            # Materiales, botas térmicas y pestaña creativa
 ├── worldgen/                        # Biomas, registro de features y cráteres
 ├── fluid/                           # Lava viscosa, bloque y cubo
-├── client/                          # Renderizado del fluido en Fabric 26.1
+├── space/                           # Cohete, destinos, reglas y llegada segura
+├── machine/                         # Refinería, BlockEntity y motor de procesamiento
+├── menu/                            # Menús de servidor e inventarios sincronizados
+├── client/                          # Modelo del cohete, pantallas, fluido y atmósferas
 └── command/
     └── PlanetCommands.java          # /planetinfo, diagnóstico de lectura
 
@@ -87,7 +92,8 @@ src/main/resources/
 ```
 
 `fabric.mod.json` declara `SpaceFabric` como entrada `main` y `environment: "*"`.
-La entrada de cliente registra el renderizado de lava viscosa. Los Mixins separan
+La entrada de cliente registra el renderizado de lava viscosa, el modelo del cohete
+y sus pantallas. Los Mixins separan
 el clima y ajustan cielo/niebla; los eventos gestionan el resto. Minecraft sincroniza
 el atributo vanilla de gravedad. Las
 decisiones de daño se toman exclusivamente en el servidor.
@@ -142,8 +148,9 @@ generadores vanilla, pero sus chunks y modificaciones se guardan por separado.
 Mercurio, Venus, Luna y Marte usan biomas y ajustes de ruido propios, sin océanos
 de agua ni estructuras vanilla. Tierra conserva el Overworld. Los gigantes usan
 un generador vacío, niebla densa y presión mortal por debajo de Y=160, incluso con
-la escafandra básica. No generan una superficie sólida ni plataformas automáticas;
-hay pequeños depósitos de hielo y meteoritos entre 512 y 768 bloques del origen.
+la escafandra básica. No generan una superficie sólida. Al llegar en cohete se
+prepara una plataforma a Y=239; hay pequeños depósitos de hielo y meteoritos
+entre 512 y 768 bloques del origen.
 
 ## Gravedad con eventos
 
@@ -189,7 +196,8 @@ de gravedad. No hace falta para la gravedad vertical de estas entidades vivas.
 
 Cada 20 ticks del mundo, `AtmosphereSystem` inflige **2 puntos de salud, un corazón**
 a jugadores expuestos. El tiempo se mide en ticks de simulación. Creativo y
-espectador quedan exentos. Se prioriza descompresión o presión extrema sobre
+espectador quedan exentos; el ocupante del cohete tiene protección atmosférica
+y contra lluvia ácida mientras permanece en la cabina. Se prioriza descompresión o presión extrema sobre
 hipoxia para no aplicar dos golpes juntos. En aire no respirable a presión normal
 se aplica hipoxia. No hay período de gracia al entrar en un planeta.
 
@@ -214,7 +222,8 @@ tanque en `SuitProtection` y guarda su estado en componentes de ítem o attachme
 `./gradlew test` prueba Tierra segura, planetas hostiles, protección del traje,
 inmunidad, prioridad de presión e hipoxia a presión normal.
 También usa Fabric Loader JUnit y los codecs reales de Minecraft para interpretar
-los nueve tipos de dimensión, sus generadores y los tres tipos de daño: **140 casos**
+los nueve tipos de dimensión, sus generadores y los tres tipos de daño; también
+comprueba refinería, persistencia del combustible, recetas y llegadas: **174 casos**
 en total. `tools/validate_resources.py` comprueba además JSON y referencias internas.
 Estas pruebas no arrancan un mundo ni comprueban la sincronización del cliente.
 

@@ -29,6 +29,7 @@ public final class VenusAcidSystem {
     public static void tick(ServerLevel level, ServerPlayer player, Planet planet) {
         var target = (AttachmentTarget) player;
         boolean exposed = planet == Planet.VENUS && player.isAlive() && !player.isCreative() && !player.isSpectator()
+                && !dev.vic17usd.spacefabric.space.RocketCabin.protects(player)
                 && level.isRainingAt(player.blockPosition().above());
         int seconds = AcidExposure.nextSeconds(target.getAttachedOrCreate(EXPOSURE), exposed);
         if (seconds == 0) { target.removeAttached(EXPOSURE); return; }
