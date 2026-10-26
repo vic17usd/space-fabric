@@ -4,9 +4,9 @@ Verificado con JDK 25, Gradle 9.8.2, Loom 1.19.3, Minecraft 26.1,
 Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
 
 - `./gradlew build --console=plain`: compilación Java, recursos, JAR y pruebas correctos.
-- JUnit: **174 ejecutadas, 174 aprobadas, 0 omitidas**.
+- JUnit: **178 ejecutadas, 178 aprobadas, 0 omitidas**.
 - `ExposureTest`: 29 casos de atmósfera, inmunidad y protección por sellado.
-- `WorldgenCodecTest`: 109 casos con los codecs reales de Minecraft; nueve tipos
+- `WorldgenCodecTest`: 113 casos con los codecs reales de Minecraft; nueve tipos
   de dimensión, nueve mundos con sus generadores y tres tipos de daño aceptados.
 - `EnvironmentRulesTest`: 12 casos de velocidades solares, niebla y corrosión.
 - Cielos y ciclos: las nueve timelines nativas producen distinta luz de día/noche
@@ -18,7 +18,7 @@ Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
 - `PlanetHazardsTest`: 10 casos de presión por altitud y exposición a lluvia ácida.
 - La carga conjunta usa `RegistryDataLoader` con los recursos vanilla y del mod,
   incluidos biomas, features, carvers, tags, fluidos y ruido.
-- `python3 tools/validate_resources.py`: 262 JSON y referencias internas coherentes.
+- `python3 tools/validate_resources.py`: 266 JSON y referencias internas coherentes.
 - Comprobaciones de materiales: 24 loot tables y recetas aceptadas por los codecs;
   etiquetas de botas térmicas, componentes de armadura y requisitos de herramientas.
 - Modificaciones reales de Fabric: vetas marcianas presentes y decoración orbital
@@ -36,10 +36,15 @@ Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
   combustible parcial del ítem empaquetado validado con `ItemStack.CODEC`.
 - Recetas de cohete, refinería, celda vacía y plataforma realmente ensambladas
   desde sus JSON usando ingredientes vanilla.
+- Martian Breathforge: `structure`, `template_pool`, `structure_set` y tag de bioma
+  aceptados en la carga conjunta; el único bioma válido es Marte.
+- Plantilla NBT: `NbtIo` y `StructureTemplate` cargan 89 × 73 × 89, 22 materiales y
+  30.608 bloques, comparados posición e índice de paleta con el archivo original.
+- Los cráteres marcianos aparecen en la fase anterior a las estructuras de superficie.
 - Gradle Wrapper y distribución: SHA-256 verificado con los checksums oficiales.
 - JDK descargado para este entorno: SHA-256 verificado con el checksum oficial.
 
-Artefacto generado: `build/libs/space-fabric-0.7.0.jar`.
+Artefacto generado: `build/libs/space-fabric-0.8.0.jar`.
 Los informes de la ejecución están en `build/test-results/test/` y
 `build/reports/tests/test/`; son salidas locales ignoradas por Git.
 
@@ -50,6 +55,8 @@ manual del README y de `docs/space-travel.md` cubre esos puntos y queda pendient
 Tampoco se ha ejecutado un vuelo real ni un traslado con pasajeros en una sesión
 de juego. La compilación comprueba el uso de las firmas 26.1; las pruebas del
 planificador y de combustible no sustituyen esa verificación multijugador.
+La adaptación visual del edificio al relieve marciano también queda pendiente;
+la plantilla conserva los vacíos implícitos del formato de origen sin excavar aire.
 
 El entorno utiliza un JDK local en `/workspace/.space-fabric-tools/jdk` y caché
 Gradle fuera del checkout. Los scripts reutilizables del entorno activan esas

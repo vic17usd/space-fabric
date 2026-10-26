@@ -570,6 +570,73 @@ class WorldgenCodecTest {
         assertEquals(3000, restored.fuel()); assertEquals(0, restored.destinationIndex()); assertTrue(restored.inventory().isEmpty());
     }
 
+    @Test void breathforgeStructureIsLoadedAndRestrictedToTheMartianBiome() {
+        var structure = registries.lookupOrThrow(Registries.STRUCTURE).getOrThrow(
+                net.minecraft.resources.ResourceKey.create(Registries.STRUCTURE, SpaceFabric.id("martian_breathforge"))).value();
+        assertInstanceOf(net.minecraft.world.level.levelgen.structure.structures.JigsawStructure.class, structure);
+        assertEquals(net.minecraft.world.level.levelgen.GenerationStep.Decoration.SURFACE_STRUCTURES, structure.step());
+        assertEquals(1, structure.biomes().size());
+        assertTrue(structure.biomes().contains(registries.lookupOrThrow(Registries.BIOME).getOrThrow(
+                dev.vic17usd.spacefabric.worldgen.PlanetBiomes.key(Planet.MARS))));
+    }
+
+    @Test void breathforgePoolAndPlacementSetResolveAgainstRealRegistries() {
+        var pool = registries.lookupOrThrow(Registries.TEMPLATE_POOL).getOrThrow(net.minecraft.resources.ResourceKey.create(
+                Registries.TEMPLATE_POOL, SpaceFabric.id("martian_breathforge/start"))).value();
+        assertEquals(1, pool.getTemplates().size());
+        var element = pool.getTemplates().getFirst().getFirst();
+        assertInstanceOf(net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement.class, element);
+        assertEquals(net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool.Projection.RIGID, element.getProjection());
+        var set = registries.lookupOrThrow(Registries.STRUCTURE_SET).getOrThrow(net.minecraft.resources.ResourceKey.create(
+                Registries.STRUCTURE_SET, SpaceFabric.id("martian_breathforge"))).value();
+        assertInstanceOf(net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement.class, set.placement());
+        assertEquals(1, set.structures().size());
+        assertTrue(set.structures().getFirst().structure().is(net.minecraft.resources.ResourceKey.create(
+                Registries.STRUCTURE, SpaceFabric.id("martian_breathforge"))));
+    }
+
+    @Test void convertedBreathforgeMatchesEveryOriginalBlockAndLoadsWithTheNativeTemplateReader() throws IOException {
+        var source = JsonParser.parseString(java.nio.file.Files.readString(Path.of("tools/structure_sources/martian_breathforge.json"))).getAsJsonObject();
+        net.minecraft.nbt.CompoundTag nbt;
+        try (var input = WorldgenCodecTest.class.getResourceAsStream("/data/space_fabric/structure/martian_breathforge.nbt")) {
+            assertNotNull(input);
+            nbt = net.minecraft.nbt.NbtIo.readCompressed(input, net.minecraft.nbt.NbtAccounter.unlimitedHeap());
+        }
+        assertEquals(4786, nbt.getIntOr("DataVersion", 0));
+        var blocks = nbt.getListOrEmpty("blocks"); var original = source.getAsJsonArray("blocks");
+        assertEquals(30608, blocks.size()); assertEquals(original.size(), blocks.size());
+        var palette = nbt.getListOrEmpty("palette");
+        assertEquals(22, palette.size());
+        for (int i = 0; i < palette.size(); i++) {
+            String name = palette.getCompoundOrEmpty(i).getStringOr("Name", "");
+            assertEquals(source.getAsJsonArray("palette").get(i).getAsString(), name);
+            assertTrue(BuiltInRegistries.BLOCK.containsKey(net.minecraft.resources.Identifier.parse(name)));
+        }
+        for (int i = 0; i < blocks.size(); i++) {
+            var block = blocks.getCompoundOrEmpty(i); var entry = original.get(i).getAsJsonArray();
+            var position = block.getListOrEmpty("pos");
+            for (int axis = 0; axis < 3; axis++) assertEquals(entry.get(axis).getAsInt(), position.getIntOr(axis, -1));
+            assertEquals(entry.get(3).getAsInt(), block.getIntOr("state", -1));
+        }
+        var template = new net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate();
+        template.load(registries.lookupOrThrow(Registries.BLOCK), nbt);
+        assertEquals(new net.minecraft.core.Vec3i(89, 73, 89), template.getSize());
+        assertEquals(30608, template.save(new net.minecraft.nbt.CompoundTag()).getListOrEmpty("blocks").size());
+        assertEquals(8478, template.filterBlocks(net.minecraft.core.BlockPos.ZERO,
+                new net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings(), Blocks.RED_SANDSTONE).size());
+        assertTrue(template.getJigsaws(net.minecraft.core.BlockPos.ZERO, net.minecraft.world.level.block.Rotation.NONE).isEmpty());
+    }
+
+    @Test void martianCratersAreExcavatedBeforeSurfaceBuildings() {
+        var features = registries.lookupOrThrow(Registries.BIOME).getOrThrow(
+                dev.vic17usd.spacefabric.worldgen.PlanetBiomes.key(Planet.MARS)).value().getGenerationSettings().features();
+        var crater = net.minecraft.resources.ResourceKey.create(Registries.PLACED_FEATURE, SpaceFabric.id("mars_crater"));
+        int step = net.minecraft.world.level.levelgen.GenerationStep.Decoration.LOCAL_MODIFICATIONS.ordinal();
+        assertTrue(features.get(step).stream().anyMatch(feature -> feature.is(crater)));
+        assertFalse(features.get(net.minecraft.world.level.levelgen.GenerationStep.Decoration.TOP_LAYER_MODIFICATION.ordinal())
+                .stream().anyMatch(feature -> feature.is(crater)));
+    }
+
     private static JsonElement resource(String path) throws IOException {
         String location = "/data/space_fabric/" + path + ".json";
         var stream = WorldgenCodecTest.class.getResourceAsStream(location);

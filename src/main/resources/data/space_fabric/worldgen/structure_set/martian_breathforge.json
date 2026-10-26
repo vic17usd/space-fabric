@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "space_fabric:martian_breathforge",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 40,
+    "separation": 16,
+    "salt": 836172105
+  }
+}
