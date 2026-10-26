@@ -28,7 +28,7 @@ def main():
         if dimension_type["has_ender_dragon_fight"]:
             raise ValueError(f"Pelea del dragón inesperada: {planet}")
     damage_ids = {f"space_fabric:{path.stem}" for path in (data / "damage_type").glob("*.json")}
-    if damage_ids != {"space_fabric:decompression", "space_fabric:crushing_pressure", "space_fabric:hypoxia"}:
+    if damage_ids != {"space_fabric:decompression", "space_fabric:crushing_pressure", "space_fabric:hypoxia", "space_fabric:thermal_exposure"}:
         raise ValueError("Tipos de daño incorrectos")
     for tag in ("bypasses_armor", "bypasses_shield"):
         path = root / "data/minecraft/tags/damage_type" / f"{tag}.json"

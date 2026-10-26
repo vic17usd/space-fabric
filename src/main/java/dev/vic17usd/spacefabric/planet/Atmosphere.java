@@ -1,6 +1,6 @@
 package dev.vic17usd.spacefabric.planet;
 
-/** Modelo de jugabilidad global; no simula temperatura, altitud ni composición química. */
+/** Categorías heredadas. La exposición del jugador utiliza AtmosphereProfile y PressureExposure. */
 public record Atmosphere(boolean breathable, Pressure pressure) {
     public enum Pressure {
         VACUUM, THIN, NORMAL, CRUSHING;

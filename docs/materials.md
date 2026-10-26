@@ -1,3 +1,6 @@
+Desde 0.16.0, las botas térmicas solas no forman un traje: se necesitan las cuatro
+piezas correspondientes de un conjunto especial. [Guía actual de presión y trajes](pressure-and-suits.md).
+
 # Bloques y materiales — versión 0.6.0, Minecraft 26.1
 
 El mod registra 11 bloques con BlockItem, tres ítems adicionales, una pestaña
@@ -152,7 +155,8 @@ No cubren todo el mundo ni crean una plataforma automática de llegada.
 - Urano: `uranian_methane_ice`.
 - Neptuno: `neptunian_methane_ice`.
 
-La presión mortal bajo Y=160 permanece. Para recolectar en órbita se necesita
+Desde 0.16.0, la presión y temperatura dependen de la profundidad y los límites
+del traje; consulta [Presión y trajes](pressure-and-suits.md). Para recolectar en órbita se necesita
 escafandra y una forma segura de desplazamiento. No hay subsuelo donde generar
 menas ordinarias en estos gigantes.
 

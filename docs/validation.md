@@ -4,10 +4,10 @@ Verificado con JDK 25, Gradle 9.8.2, Loom 1.19.3, Minecraft 26.1,
 Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
 
 - `./gradlew build --console=plain`: compilación Java, recursos, JAR y pruebas correctos.
-- JUnit: **230 ejecutadas, 230 aprobadas, 0 omitidas**.
+- JUnit: **248 ejecutadas, 248 aprobadas, 0 omitidas**.
 - `ExposureTest`: 29 casos de atmósfera, inmunidad y protección por sellado.
-- `WorldgenCodecTest`: 165 casos con los codecs reales de Minecraft; nueve tipos
-  de dimensión, nueve mundos con sus generadores y tres tipos de daño aceptados.
+- `WorldgenCodecTest`: 171 casos con los codecs reales de Minecraft; nueve tipos
+  de dimensión, nueve mundos con sus generadores y cuatro tipos de daño aceptados.
 - `EnvironmentRulesTest`: 12 casos de velocidades solares, niebla y corrosión.
 - Cielos y ciclos: las nueve timelines nativas producen distinta luz de día/noche
   y los cielos sin atmósfera conservan RGB negro.
@@ -18,12 +18,12 @@ Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
 - `PlanetHazardsTest`: 10 casos de presión por altitud y exposición a lluvia ácida.
 - La carga conjunta usa `RegistryDataLoader` con los recursos vanilla y del mod,
   incluidos biomas, features, carvers, tags, fluidos y ruido.
-- `python3 tools/validate_resources.py`: 303 JSON y referencias internas coherentes.
+- `python3 tools/validate_resources.py`: 389 JSON y referencias internas coherentes.
 - Comprobaciones de materiales: 24 loot tables y recetas aceptadas por los codecs;
   etiquetas de botas térmicas, componentes de armadura y requisitos de herramientas.
 - Modificaciones reales de Fabric: vetas marcianas presentes y decoración orbital
   conservada por el generador vacío.
-- Assets: modelos e inventario, traducciones y CRC/contenido de 52 texturas PNG validados,
+- Assets: modelos e inventario, traducciones y CRC/contenido de 60 texturas PNG validados,
   incluido el atlas de 512×512 importado de `space-rocket.bbmodel`.
   También se comprueban las rutas de texturas declaradas con `Identifier.fromNamespaceAndPath`
   en los renderers Java para detectar referencias al namespace de los mods fuente.
@@ -60,7 +60,7 @@ Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
 - Gradle Wrapper y distribución: SHA-256 verificado con los checksums oficiales.
 - JDK descargado para este entorno: SHA-256 verificado con el checksum oficial.
 
-Artefacto generado: `build/libs/space-fabric-0.15.0.jar`.
+Artefacto generado: `build/libs/space-fabric-0.16.0.jar`.
 Los informes de la ejecución están en `build/test-results/test/` y
 `build/reports/tests/test/`; son salidas locales ignoradas por Git.
 
@@ -204,3 +204,19 @@ Fauna de Venus, versión 0.15.0:
 - Frecuencia efectiva, movimiento y renderizado dentro del juego siguen pendientes.
 
 Recursos actuales: 320 JSON y 60 PNG, validados con el comprobador de recursos.
+
+Presión y equipo de 0.16.0:
+
+- Nueve perfiles: presión, O₂ y rangos térmicos; 1 bar de referencia en gigantes.
+- Presión y temperatura crecientes al descender; la cabina no protege por encima de 100 bar.
+- Doce casos puros de referencia, tiempos 1:72, dosis acumulada y fallos de trajes.
+- Dieciséis piezas de equipo: componentes, lore, tags, conjuntos completos, incompletos
+  y mezclados; las 16 recetas se ensamblan con los ingredientes reales de sus JSON.
+- Los cuatro DamageType cargan; se verifica que sus tags atraviesen armadura,
+  escudo, resistencia, encantamientos, cooldown e invulnerabilidad temporal.
+- Venus carga sin precipitación de superficie. El equipo apropiado resiste ácido.
+- 248 pruebas JUnit aprobadas; se conservan las dos comprobaciones de mallas del cohete.
+- Pendiente: observación del daño, interfaz, protección y sincronización en partida real.
+
+Las cifras físicas son aproximadas; los tiempos letales y las capacidades de los
+trajes son calibración de juego y equipo futurista, no resultados clínicos.

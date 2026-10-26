@@ -19,7 +19,11 @@ public final class PlanetCommands {
                     String message = planet.map(value -> "Planeta: " + value.path()
                                     + " | gravedad relativa: " + value.gravityScale()
                                     + " | respirable: " + value.atmosphere().breathable()
-                                    + " | presión: " + value.atmosphere().pressure())
+                                    + " | presión: " + dev.vic17usd.spacefabric.atmosphere.AtmosphereProfile.of(value).pressureAt(player.getY()) + " kPa"
+                                    + " | composición: " + dev.vic17usd.spacefabric.atmosphere.AtmosphereProfile.of(value).composition()
+                                    + " | rango térmico ref.: " + dev.vic17usd.spacefabric.atmosphere.AtmosphereProfile.of(value).minTemperatureAt(player.getY()) + ".."
+                                    + dev.vic17usd.spacefabric.atmosphere.AtmosphereProfile.of(value).maxTemperatureAt(player.getY()) + " °C"
+                                    + " | traje: " + dev.vic17usd.spacefabric.equipment.SuitProtection.tier(player).path)
                             .orElse("Dimensión no planetaria: física y atmósfera vanilla");
                     double gravity = player.getAttributeValue(Attributes.GRAVITY);
                     command.getSource().sendSuccess(

@@ -130,7 +130,7 @@ class WorldgenCodecTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"decompression", "crushing_pressure", "hypoxia"})
+    @ValueSource(strings = {"decompression", "crushing_pressure", "hypoxia", "thermal_exposure"})
     void damageTypeIsAcceptedByMinecraft(String path) throws IOException {
         DamageType type = DamageType.DIRECT_CODEC.parse(JsonOps.INSTANCE,
                 resource("damage_type/" + path)).getOrThrow();
@@ -1160,6 +1160,44 @@ class WorldgenCodecTest {
             for(var category:net.minecraft.world.entity.MobCategory.values())
                 found |= biome.value().getMobSettings().getMobs(category).unwrap().stream().anyMatch(entry->entry.value().type()==type);
             assertEquals(biome.is(dev.vic17usd.spacefabric.worldgen.PlanetBiomes.key(Planet.VENUS)),found);
+        }
+    }
+
+    @ParameterizedTest @ValueSource(strings={"vacuum","venus","cryo","abyssal"})
+    void ratedSuitsRequireCompleteMatchingEquipmentAndHaveCraftableNativeRecipes(String tier) throws IOException {
+        String[] parts={"helmet","chestplate","leggings","boots"};
+        var stacks=new ItemStack[4];
+        for(int n=0;n<4;n++) {
+            String name=tier+"_suit_"+parts[n];
+            stacks[n]=new ItemStack(BuiltInRegistries.ITEM.getValue(SpaceFabric.id(name)));
+            assertFalse(stacks[n].isEmpty());
+            assertTrue(stacks[n].has(net.minecraft.core.component.DataComponents.EQUIPPABLE));
+            assertEquals(2,stacks[n].get(net.minecraft.core.component.DataComponents.LORE).lines().size());
+            var recipe=assertInstanceOf(net.minecraft.world.item.crafting.ShapelessRecipe.class,Recipe.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("recipe/"+name)).getOrThrow());
+            var inputItems=new java.util.ArrayList<ItemStack>();
+            for(var ingredient:resource("recipe/"+name).getAsJsonObject().getAsJsonArray("ingredients"))
+                inputItems.add(new ItemStack(BuiltInRegistries.ITEM.getValue(net.minecraft.resources.Identifier.parse(ingredient.getAsString()))));
+            var input=net.minecraft.world.item.crafting.CraftingInput.of(3,3,java.util.stream.IntStream.range(0,9)
+                    .mapToObj(index->index<inputItems.size()?inputItems.get(index):ItemStack.EMPTY).toList());
+            assertTrue(recipe.matches(input,null)); assertEquals(stacks[n].getItem(),recipe.assemble(input).getItem());
+        }
+        assertEquals(tier,dev.vic17usd.spacefabric.equipment.SuitProtection.tier(stacks[0],stacks[1],stacks[2],stacks[3]).path);
+        assertEquals(dev.vic17usd.spacefabric.equipment.SuitTier.NONE,
+                dev.vic17usd.spacefabric.equipment.SuitProtection.tier(stacks[0],stacks[1],stacks[2],ItemStack.EMPTY));
+        assertEquals(dev.vic17usd.spacefabric.equipment.SuitTier.NONE,
+                dev.vic17usd.spacefabric.equipment.SuitProtection.tier(new ItemStack(Items.IRON_HELMET),new ItemStack(Items.IRON_CHESTPLATE),new ItemStack(Items.IRON_LEGGINGS),new ItemStack(Items.IRON_BOOTS)));
+        String other=tier.equals("vacuum")?"venus":"vacuum";
+        assertEquals(dev.vic17usd.spacefabric.equipment.SuitTier.NONE,
+                dev.vic17usd.spacefabric.equipment.SuitProtection.tier(stacks[0],stacks[1],stacks[2],
+                    new ItemStack(BuiltInRegistries.ITEM.getValue(SpaceFabric.id(other+"_suit_boots")))));
+    }
+
+    @Test void planetaryExposureDamageBypassesArmorResistanceAndDamageCooldown() {
+        for(String id:new String[]{"decompression","crushing_pressure","hypoxia","thermal_exposure"}) {
+            var source=new net.minecraft.world.damagesource.DamageSource(registries.lookupOrThrow(Registries.DAMAGE_TYPE)
+                    .getOrThrow(net.minecraft.resources.ResourceKey.create(Registries.DAMAGE_TYPE,SpaceFabric.id(id))));
+            for(String tag:new String[]{"bypasses_armor","bypasses_shield","bypasses_resistance","bypasses_enchantments","bypasses_cooldown","bypasses_invulnerability"})
+                assertTrue(source.is(net.minecraft.tags.TagKey.create(Registries.DAMAGE_TYPE,net.minecraft.resources.Identifier.withDefaultNamespace(tag))),id+" / "+tag);
         }
     }
 

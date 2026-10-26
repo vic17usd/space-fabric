@@ -1,3 +1,7 @@
+Desde 0.16.0, la exposición, los trajes y la precipitación de Venus se actualizan en
+[Presión y trajes](pressure-and-suits.md). La descripción de lluvia ácida de esta guía
+corresponde al sistema anterior, conservado para datapacks que lo reactiven.
+
 # Ambientes, ciclos solares y riesgos — Minecraft 26.1, versión 0.5.0
 
 La implementación usa `EnvironmentAttribute`, `WorldClock` y `Timeline` de

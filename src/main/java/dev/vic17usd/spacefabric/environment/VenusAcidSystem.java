@@ -29,6 +29,7 @@ public final class VenusAcidSystem {
     public static void tick(ServerLevel level, ServerPlayer player, Planet planet) {
         var target = (AttachmentTarget) player;
         boolean exposed = planet == Planet.VENUS && player.isAlive() && !player.isCreative() && !player.isSpectator()
+                && !SuitProtection.resistsAcid(player)
                 && !dev.vic17usd.spacefabric.space.RocketCabin.protects(player)
                 && level.isRainingAt(player.blockPosition().above());
         int seconds = AcidExposure.nextSeconds(target.getAttachedOrCreate(EXPOSURE), exposed);
@@ -39,7 +40,7 @@ public final class VenusAcidSystem {
             var stack = player.getItemBySlot(slot);
             if (stack.isDamageableItem()) stack.hurtAndBreak(wear, player, slot);
         }
-        if (!SuitProtection.isSealed(player)) {
+        if (!SuitProtection.resistsAcid(player)) {
             player.addEffect(new MobEffectInstance(MobEffects.POISON, 60, AcidExposure.stage(seconds)));
         }
     }

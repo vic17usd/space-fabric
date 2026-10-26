@@ -1,5 +1,9 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión 0.16.0 añade presión y composición atmosférica de referencia, exposición
+muy rápida a escala 1:72 y cuatro conjuntos de traje con límites distintos.
+**El hierro común ya no protege.** Consulta la [guía de presión, tiempos y trajes](docs/pressure-and-suits.md)
+antes de actualizar una partida con el personaje en otro planeta.
 La versión 0.15.0 integra cuatro habitantes de Venus adaptados al ambiente y su
 gravedad: Acidstone Slime, Obsidian Lavafang, Ashplume Emberwalker y Sulfurwing
 Copper Harbinger, que patrulla volando. [Guía de fauna venusiana](docs/venus-fauna.md).
@@ -24,9 +28,9 @@ Consulta la [guía completa de bloques y materiales](docs/materials.md).
 Consulta la [guía de terreno y registro de biomas](docs/terrain.md).
 Consulta la [tabla de dimensiones y claves Java](docs/dimensions.md).
 
-Descarga del prototipo compilado: [space-fabric-0.15.0.jar](dist/space-fabric-0.15.0.jar)
+Descarga del prototipo compilado: [space-fabric-0.16.0.jar](dist/space-fabric-0.16.0.jar)
 (en GitHub, pulsa **Download raw file**).
-[Checksum SHA-256](dist/space-fabric-0.15.0.jar.sha256).
+[Checksum SHA-256](dist/space-fabric-0.16.0.jar.sha256).
 Fauna original: **17usdd using [CreativeMode.net](https://creativemode.net)**;
 [páginas oficiales y atribución](third_party/martian_fauna/README.md),
 [licencia de sus recursos](https://creativemode.net/mod-license).
@@ -63,7 +67,7 @@ python3 tools/validate_resources.py
 ./gradlew runClient
 ```
 
-El artefacto será `build/libs/space-fabric-0.15.0.jar`. Instala el mod y Fabric API
+El artefacto será `build/libs/space-fabric-0.16.0.jar`. Instala el mod y Fabric API
 en cliente y servidor. No se declara compatibilidad con 1.21.x ni con otras
 revisiones de 26.1 sin validarlas por separado.
 
@@ -169,8 +173,8 @@ de Minecraft. No son esferas ni réplicas geográficas. Comparten semilla y algu
 generadores vanilla, pero sus chunks y modificaciones se guardan por separado.
 Mercurio, Venus, Luna y Marte usan biomas y ajustes de ruido propios, sin océanos
 de agua ni estructuras vanilla. Tierra conserva el Overworld. Los gigantes usan
-un generador vacío, niebla densa y presión mortal por debajo de Y=160, incluso con
-la escafandra básica. No generan una superficie sólida. Al llegar en cohete se
+un generador vacío, niebla densa y presión que aumenta al descender. Un traje
+solo protege dentro de sus límites de presión y temperatura. No generan una superficie sólida. Al llegar en cohete se
 prepara una plataforma a Y=239; hay pequeños depósitos de hielo y meteoritos
 entre 512 y 768 bloques del origen.
 
@@ -183,13 +187,13 @@ entre 512 y 768 bloques del origen.
 | Tierra | 1.00 | Normal, respirable |
 | Luna | 0.165 | Vacío, no respirable |
 | Marte | 0.38 | Tenue, no respirable |
-| Júpiter | 2.53 | Presión extrema, no respirable |
-| Saturno | 1.07 | Presión extrema, no respirable |
-| Urano | 0.89 | Presión extrema, no respirable |
-| Neptuno | 1.14 | Presión extrema, no respirable |
+| Júpiter | 2.53 | H₂/He, presión variable, no respirable |
+| Saturno | 1.07 | H₂/He, presión variable, no respirable |
+| Urano | 0.89 | H₂/He/CH₄, presión variable, no respirable |
+| Neptuno | 1.14 | H₂/He/CH₄, presión variable, no respirable |
 
-Las razones de gravedad son aproximadas. Las categorías de presión de los gigantes
-son peligros de jugabilidad, no mediciones a una altitud física definida.
+Las razones de gravedad son aproximadas. Los gigantes usan el nivel de 1 bar a
+Y=240 como referencia; sus capas inferiores siguen una aproximación barométrica.
 
 `PlanetGravity` usa el atributo vanilla `Attributes.GRAVITY`:
 
@@ -216,37 +220,29 @@ de gravedad. No hace falta para la gravedad vertical de estas entidades vivas.
 
 ## Atmósfera y escafandra
 
-Cada 20 ticks del mundo, `AtmosphereSystem` inflige **2 puntos de salud, un corazón**
-a jugadores expuestos. El tiempo se mide en ticks de simulación. Creativo y
-espectador quedan exentos; el ocupante del cohete tiene protección atmosférica
-y contra lluvia ácida mientras permanece en la cabina. Se prioriza descompresión o presión extrema sobre
-hipoxia para no aplicar dos golpes juntos. En aire no respirable a presión normal
-se aplica hipoxia. No hay período de gracia al entrar en un planeta.
+El servidor evalúa la exposición cada tick con `AtmosphereProfile` y `PressureExposure`.
+A escala 1:72, un presupuesto nominal de 120 segundos se convierte en 34 ticks de
+juego (~1,7 s); Venus o una presión excesiva pueden matar en tres ticks (~0,15 s).
+Son tiempos calibrados de juego, no tiempos médicos de supervivencia real.
 
-Los JSON registran los daños `space_fabric:decompression`,
-`space_fabric:crushing_pressure` y `space_fabric:hypoxia`. Sus tags evitan que una
-armadura ordinaria o un escudo absorban el peligro. En los gigantes la zona profunda ignora el traje básico. La invulnerabilidad y el resto
-del sistema de daño conservan sus reglas vanilla.
+Los conjuntos `vacuum_suit_*`, `venus_suit_*`, `cryo_suit_*` y `abyssal_suit_*`
+requieren sus cuatro piezas correspondientes y tienen límites de presión y temperatura.
+La armadura común y los conjuntos mezclados no protegen. Los trajes llevan soporte
+de O₂ ilimitado y tienen recetas; el de vacío se fabrica con recursos del Overworld.
+La cabina del cohete protege hasta 100 bar. Creativo y espectador están exentos.
 
-**El conjunto completo de hierro funciona como traje provisional.** Las botas térmicas
-pueden reemplazar las de hierro para caminar sobre roca caliente. Las cuatro
-etiquetas `space_suit/*` permiten reemplazarlo por futuros ítems del mod o equipo
-de otro mod mediante datapack. Un casco aislado no protege. Esta fase considera
-el traje sellado y con oxígeno ilimitado: faltan tanques, consumo, fugas,
-temperatura, radiación y hábitats. El comerciante y la fauna marciana tienen soporte
-vital propio; los demás mobs conservan sus reglas. La lluvia ácida de Venus
-aumenta progresivamente el veneno y desgasta la armadura, incluso con traje sellado;
-consulta la guía de ambientes. Tampoco sustituye el
-ahogamiento vanilla bajo el agua. Para añadir oxígeno, incorpora la carga del
-tanque en `SuitProtection` y guarda su estado en componentes de ítem o attachments.
+La [guía de presión y trajes](docs/pressure-and-suits.md) incluye los valores de todos
+los planetas, composición, recetas, etiquetas, límites, configuración y actualización.
+Venus deja de tener lluvia ácida a nivel del suelo; sus nubes y depósitos conservan
+el carácter químico del entorno. Los trajes venusiano y abisal resisten la corrosión.
 
 ## Validación y prueba manual
 
 `./gradlew test` prueba Tierra segura, planetas hostiles, protección del traje,
 inmunidad, prioridad de presión e hipoxia a presión normal.
 También usa Fabric Loader JUnit y los codecs reales de Minecraft para interpretar
-los nueve tipos de dimensión, sus generadores y los tres tipos de daño; también
-comprueba refinería, persistencia del combustible, recetas, llegadas, estructuras, comerciantes y fauna: **230 casos**
+los nueve tipos de dimensión, sus generadores y los cuatro tipos de daño; también
+comprueba refinería, persistencia del combustible, recetas, llegadas, estructuras, comerciantes y fauna: **248 casos**
 en total. `tools/validate_resources.py` comprueba además JSON y referencias internas.
 Estas pruebas no arrancan un mundo ni comprueban la sincronización del cliente.
 
@@ -258,13 +254,14 @@ En un mundo nuevo con comandos habilitados:
    de salir de espectador. `/planetinfo` muestra el perfil y el atributo de gravedad.
 3. En suelo seguro o una plataforma creada en creativo, pasa a supervivencia sin
    equipo: debe llegar un golpe por intervalo. Evita agua, mobs y caídas al probar.
-4. Equipa las cuatro piezas de hierro: cesa el daño atmosférico. Retira una: vuelve.
+4. Equipa el conjunto de vacío para Marte o el venusiano para Venus antes de pasar
+   a supervivencia. Retirar una pieza inicia inmediatamente la exposición.
 5. Repite en Venus para presión extrema y en Tierra para ausencia de daño. Prueba
    cambios de dimensión, muerte/respawn y reconexión.
 6. Compara saltos en Marte y Tierra. Al regresar a `minecraft:overworld`, verifica
    con `/planetinfo` que se retiró nuestro modificador.
 7. Visita las nueve dimensiones en espectador. En los gigantes construye una plataforma
-   por encima de Y=160 antes de dejar el vuelo y lleva la escafandra completa.
+   a Y=240 antes de dejar el vuelo y lleva el traje completo adecuado para la profundidad.
 
 Los comandos vanilla de viaje requieren permisos de operador. `/planetinfo` es
 de lectura y está disponible para jugadores normales. Consulta

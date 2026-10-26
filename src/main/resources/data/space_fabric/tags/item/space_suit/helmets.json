@@ -1,6 +1,9 @@
 {
   "replace": false,
   "values": [
-    "minecraft:iron_helmet"
+    "space_fabric:vacuum_suit_helmet",
+    "space_fabric:venus_suit_helmet",
+    "space_fabric:cryo_suit_helmet",
+    "space_fabric:abyssal_suit_helmet"
   ]
 }

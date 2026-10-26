@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    "minecraft:iron_chestplate",
+    "minecraft:glass",
+    "space_fabric:empty_fuel_cell"
+  ],
+  "result": {
+    "id": "space_fabric:vacuum_suit_chestplate",
+    "count": 1
+  }
+}

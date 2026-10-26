@@ -11,6 +11,7 @@ import net.minecraft.world.damagesource.DamageType;
 public final class PlanetDamageTypes {
     private static final ResourceKey<DamageType> DECOMPRESSION = key("decompression");
     private static final ResourceKey<DamageType> CRUSHING_PRESSURE = key("crushing_pressure");
+    private static final ResourceKey<DamageType> THERMAL_EXPOSURE = key("thermal_exposure");
     private static final ResourceKey<DamageType> HYPOXIA = key("hypoxia");
 
     private PlanetDamageTypes() {
@@ -25,6 +26,7 @@ public final class PlanetDamageTypes {
             case DECOMPRESSION -> DECOMPRESSION;
             case CRUSHING_PRESSURE -> CRUSHING_PRESSURE;
             case HYPOXIA -> HYPOXIA;
+            case THERMAL_EXPOSURE -> THERMAL_EXPOSURE;
         };
         return new DamageSource(level.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(type));
     }

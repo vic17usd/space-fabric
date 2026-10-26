@@ -144,7 +144,8 @@ su tipo registrado, copia su estado y vuelve a montar al jugador. Se usa el
 objeto devuelto: la instancia antigua queda retirada. No se crean pasajeros ni
 cohetes adicionales manualmente.
 
-La cabina protege al ocupante de hipoxia, descompresión, presión planetaria y
+Desde 0.16.0 la cabina protege hasta 100 bar, no a cualquier profundidad.
+Consulta [los nuevos trajes y exposición](pressure-and-suits.md). Protege de hipoxia, descompresión, presión y
 lluvia ácida de este mod. Al salir vuelven las reglas del traje y del ambiente.
 No elimina daños externos como impactos de meteoritos ni sustituye reglas de otros mods.
 

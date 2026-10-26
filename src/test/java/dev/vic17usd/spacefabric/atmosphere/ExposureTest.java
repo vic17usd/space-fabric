@@ -24,7 +24,7 @@ class ExposureTest {
 
     @ParameterizedTest
     @EnumSource(Planet.class)
-    void sealedSuitProtectsOnEveryPlanet(Planet planet) {
+    void legacyFullyProtectedFlagSuppressesCoarseHazards(Planet planet) {
         assertTrue(Exposure.hazard(planet.atmosphere(), true, false).isEmpty());
     }
 

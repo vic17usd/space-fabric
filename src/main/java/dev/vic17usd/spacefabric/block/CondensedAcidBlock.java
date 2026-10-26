@@ -28,7 +28,7 @@ public final class CondensedAcidBlock extends Block {
             if (player.isCreative() || player.isSpectator()) return;
             var boots = player.getItemBySlot(EquipmentSlot.FEET);
             if (boots.isDamageableItem()) boots.hurtAndBreak(1, player, EquipmentSlot.FEET);
-            if (SuitProtection.isSealed(player)) return;
+            if (SuitProtection.resistsAcid(player)) return;
         }
         living.addEffect(new MobEffectInstance(MobEffects.POISON, 60, 0));
     }

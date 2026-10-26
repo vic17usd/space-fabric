@@ -8,3 +8,5 @@ logs/
 .project
 .settings/
 __pycache__/
+
+/config/space-fabric-atmosphere.json
