@@ -4,9 +4,9 @@ Verificado con JDK 25, Gradle 9.8.2, Loom 1.19.3, Minecraft 26.1,
 Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
 
 - `./gradlew build --console=plain`: compilación Java, recursos, JAR y pruebas correctos.
-- JUnit: **226 ejecutadas, 226 aprobadas, 0 omitidas**.
+- JUnit: **230 ejecutadas, 230 aprobadas, 0 omitidas**.
 - `ExposureTest`: 29 casos de atmósfera, inmunidad y protección por sellado.
-- `WorldgenCodecTest`: 161 casos con los codecs reales de Minecraft; nueve tipos
+- `WorldgenCodecTest`: 165 casos con los codecs reales de Minecraft; nueve tipos
   de dimensión, nueve mundos con sus generadores y tres tipos de daño aceptados.
 - `EnvironmentRulesTest`: 12 casos de velocidades solares, niebla y corrosión.
 - Cielos y ciclos: las nueve timelines nativas producen distinta luz de día/noche
@@ -60,7 +60,7 @@ Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
 - Gradle Wrapper y distribución: SHA-256 verificado con los checksums oficiales.
 - JDK descargado para este entorno: SHA-256 verificado con el checksum oficial.
 
-Artefacto generado: `build/libs/space-fabric-0.14.0.jar`.
+Artefacto generado: `build/libs/space-fabric-0.15.0.jar`.
 Los informes de la ejecución están en `build/test-results/test/` y
 `build/reports/tests/test/`; son salidas locales ignoradas por Git.
 
@@ -191,3 +191,16 @@ Cabina interior de 0.14.0:
   montar y el resultado visual durante el vuelo requieren prueba en partida.
 - El interior reutiliza el atlas importado: no se añaden texturas ni cambia el
   modelo del ítem. La validación sigue cubriendo 303 JSON y 52 PNG.
+
+Fauna de Venus, versión 0.15.0:
+
+- Cuatro mobs y sus huevos cargados en el bootstrap nativo; pruebas de presencia
+  exclusiva en el bioma de Venus. Modelos y animaciones importados compilan.
+- Base VenusMob para presión, hipoxia, veneno y calor; roca caliente sin lentitud.
+- Acidstone cambia de WaterAnimal a navegación terrestre; Sulfurwing obtiene
+  FlyingPathNavigation, FlyingMoveControl, sustentación y protección contra caídas.
+- Pesos/grupos: Acidstone 18/1–3, Lavafang 10/1–2, Emberwalker 16/1–3,
+  Sulfurwing 4/1. Se habilita generación inicial de criaturas en Venus.
+- Frecuencia efectiva, movimiento y renderizado dentro del juego siguen pendientes.
+
+Recursos actuales: 320 JSON y 60 PNG, validados con el comprobador de recursos.

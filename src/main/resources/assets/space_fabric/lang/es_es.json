@@ -82,5 +82,15 @@
   "entity.space_fabric.basalt_bosswarden": "Basalt Bosswarden",
   "item.space_fabric.obsidian_core": "Núcleo de obsidiana",
   "item.space_fabric.basalt_ember_golem_spawn_egg": "Huevo de Basalt Ember Golem",
-  "item.space_fabric.basalt_bosswarden_spawn_egg": "Huevo de Basalt Bosswarden"
+  "item.space_fabric.basalt_bosswarden_spawn_egg": "Huevo de Basalt Bosswarden",
+  "entity.space_fabric.acidstone_slime": "Acidstone Slime",
+  "item.space_fabric.acidstone_slime_spawn_egg": "Huevo de Acidstone Slime",
+  "entity.space_fabric.obsidian_lavafang": "Obsidian Lavafang",
+  "item.space_fabric.obsidian_lavafang_spawn_egg": "Huevo de Obsidian Lavafang",
+  "entity.space_fabric.ashplume_emberwalker": "Ashplume Emberwalker",
+  "item.space_fabric.ashplume_emberwalker_spawn_egg": "Huevo de Ashplume Emberwalker",
+  "entity.space_fabric.sulfurwing_copper_harbinger": "Sulfurwing Copper Harbinger",
+  "item.space_fabric.sulfurwing_copper_harbinger_spawn_egg": "Huevo de Sulfurwing Copper Harbinger",
+  "item.space_fabric.venus_acid_bottle": "Botella de ácido venusiano",
+  "item.space_fabric.sulfur_core": "Núcleo de azufre"
 }

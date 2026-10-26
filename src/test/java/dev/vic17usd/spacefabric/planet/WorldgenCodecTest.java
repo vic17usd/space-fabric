@@ -1132,6 +1132,37 @@ class WorldgenCodecTest {
         }
     }
 
+    @ParameterizedTest @ValueSource(strings={"acidstone_slime","obsidian_lavafang","ashplume_emberwalker","sulfurwing_copper_harbinger"})
+    void venusFaunaHaveAttributesEggsAndVenusOnlyHabitat(String name) {
+        var livingType=switch(name){
+            case "acidstone_slime" -> dev.vic17usd.spacefabric.entity.venus.ModVenusEntities.ACIDSTONE_SLIME;
+            case "obsidian_lavafang" -> dev.vic17usd.spacefabric.entity.venus.ModVenusEntities.OBSIDIAN_LAVAFANG;
+            case "ashplume_emberwalker" -> dev.vic17usd.spacefabric.entity.venus.ModVenusEntities.ASHPLUME_EMBERWALKER;
+            default -> dev.vic17usd.spacefabric.entity.venus.ModVenusEntities.SULFURWING_COPPER_HARBINGER;
+        };
+        var gravity=net.minecraft.world.entity.ai.attributes.DefaultAttributes.getSupplier(livingType)
+                .createInstance(ignored->{},net.minecraft.world.entity.ai.attributes.Attributes.GRAVITY);
+        dev.vic17usd.spacefabric.gravity.PlanetGravity.applyToAttribute(gravity,Planet.VENUS.gravityScale());
+        assertEquals(0.072,gravity.getValue(),0.000001);
+        var type=BuiltInRegistries.ENTITY_TYPE.getValue(SpaceFabric.id(name));
+        assertNotNull(type);
+        assertTrue(dev.vic17usd.spacefabric.entity.venus.VenusMob.class.isAssignableFrom(
+                switch(name) {
+                    case "acidstone_slime" -> dev.vic17usd.spacefabric.entity.venus.AcidstoneSlimeEntity.class;
+                    case "obsidian_lavafang" -> dev.vic17usd.spacefabric.entity.venus.ObsidianLavafangEntity.class;
+                    case "ashplume_emberwalker" -> dev.vic17usd.spacefabric.entity.venus.AshplumeEmberwalkerEntity.class;
+                    default -> dev.vic17usd.spacefabric.entity.venus.SulfurwingCopperHarbingerEntity.class;
+                }));
+        var egg=BuiltInRegistries.ITEM.getValue(SpaceFabric.id(name+"_spawn_egg"));
+        assertTrue(net.minecraft.world.item.SpawnEggItem.spawnsEntity(new ItemStack(egg),type));
+        for(var biome:registries.lookupOrThrow(Registries.BIOME).listElements().toList()) {
+            boolean found=false;
+            for(var category:net.minecraft.world.entity.MobCategory.values())
+                found |= biome.value().getMobSettings().getMobs(category).unwrap().stream().anyMatch(entry->entry.value().type()==type);
+            assertEquals(biome.is(dev.vic17usd.spacefabric.worldgen.PlanetBiomes.key(Planet.VENUS)),found);
+        }
+    }
+
     private static JsonElement resource(String path) throws IOException {
         String location = "/data/space_fabric/" + path + ".json";
         var stream = WorldgenCodecTest.class.getResourceAsStream(location);

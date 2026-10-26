@@ -16,6 +16,12 @@ import java.util.function.Function;
 
 public final class ModItems {
     private static final Map<String, Item> ITEMS = new LinkedHashMap<>();
+    public static final Item VENUS_ACID_BOTTLE=register("venus_acid_bottle",new Item.Properties().stacksTo(16));
+    public static final Item SULFUR_CORE=register("sulfur_core",new Item.Properties().fireResistant());
+public static final Item ACIDSTONE_SLIME_SPAWN_EGG=register("acidstone_slime_spawn_egg",net.minecraft.world.item.SpawnEggItem::new,new Item.Properties().spawnEgg(dev.vic17usd.spacefabric.entity.venus.ModVenusEntities.ACIDSTONE_SLIME));
+public static final Item OBSIDIAN_LAVAFANG_SPAWN_EGG=register("obsidian_lavafang_spawn_egg",net.minecraft.world.item.SpawnEggItem::new,new Item.Properties().spawnEgg(dev.vic17usd.spacefabric.entity.venus.ModVenusEntities.OBSIDIAN_LAVAFANG));
+public static final Item ASHPLUME_EMBERWALKER_SPAWN_EGG=register("ashplume_emberwalker_spawn_egg",net.minecraft.world.item.SpawnEggItem::new,new Item.Properties().spawnEgg(dev.vic17usd.spacefabric.entity.venus.ModVenusEntities.ASHPLUME_EMBERWALKER));
+public static final Item SULFURWING_COPPER_HARBINGER_SPAWN_EGG=register("sulfurwing_copper_harbinger_spawn_egg",net.minecraft.world.item.SpawnEggItem::new,new Item.Properties().spawnEgg(dev.vic17usd.spacefabric.entity.venus.ModVenusEntities.SULFURWING_COPPER_HARBINGER));
     public static final Item OBSIDIAN_CORE = register("obsidian_core", new Item.Properties().fireResistant());
     public static final Item BASALT_EMBER_GOLEM_SPAWN_EGG = register("basalt_ember_golem_spawn_egg", net.minecraft.world.item.SpawnEggItem::new,
             new Item.Properties().spawnEgg(dev.vic17usd.spacefabric.entity.sanctum.ModSanctumEntities.GOLEM));

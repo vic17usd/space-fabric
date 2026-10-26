@@ -34,6 +34,7 @@ public final class HotVolcanicRockBlock extends Block {
         super.stepOn(level, pos, state, entity);
         if (!(level instanceof ServerLevel server) || !(entity instanceof LivingEntity living)) return;
         if (living instanceof Player player && (player.isCreative() || player.isSpectator())) return;
+        if (living instanceof dev.vic17usd.spacefabric.entity.venus.VenusMob) return;
         if (!living.isAlive() || protectsFromHeat(living.getItemBySlot(EquipmentSlot.FEET))) return;
         // Respeta la inmunidad al fuego y los invulnerability frames de Minecraft.
         if (living.tickCount % 10 == 0) {

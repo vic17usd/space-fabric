@@ -19,6 +19,7 @@ java {
 }
 
 jar {
+    from("third_party/venus_fauna") { include "**/LICENSE.txt"; include "README.md"; into "META-INF/licenses/venus_fauna" }
     from('third_party/martian_sanctum') {
         include '**/LICENSE.txt'
         include 'README.md'

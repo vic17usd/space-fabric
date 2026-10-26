@@ -1,0 +1,46 @@
+{
+  "acidstone-slime-mj3r5dpi": {
+    "sha256": "5285f7f0599fb477b8fe7f49547e5fae1976d57b8c6f1123ec0cf3f54b664733",
+    "source_page": "https://creativemode.net/mod/acidstone-slime-mj3r5dpi",
+    "authors": [
+      "17usdd using CreativeMode.net"
+    ],
+    "assets": {
+      "src/main/resources/assets/space_fabric/textures/entity/acidstone_slime.png": "5c4c9edf4be414ccd8322c5c9eaa0a7f59a6116e11d4fd38a8acecc7bfb38569",
+      "src/main/resources/assets/space_fabric/textures/item/acidstone_slime_spawn_egg.png": "09524c9ef91aeca41cae48984862f02e8ee87dc5342d05b3490d66f3fcd15f01"
+    }
+  },
+  "obsidian-lavafang-5xyvrtfk": {
+    "sha256": "2c50d617a1dee261c050752471148866d39d14ca379fa69a429268881a309d74",
+    "source_page": "https://creativemode.net/mod/obsidian-lavafang-5xyvrtfk",
+    "authors": [
+      "17usdd using CreativeMode.net"
+    ],
+    "assets": {
+      "src/main/resources/assets/space_fabric/textures/entity/obsidian_lavafang.png": "136b0c405b036e0e849bfaef2a3508b5ea75dedba4dfa7b361b9d811ce9a69d5",
+      "src/main/resources/assets/space_fabric/textures/item/obsidian_lavafang_spawn_egg.png": "d55bc0b761bab1f61cac28fc09eaf01f2f5011630fd0277ebc491128db926c33"
+    }
+  },
+  "ashplume-emberwalker-ni3lasej": {
+    "sha256": "e2b0bf4ea174f42278d04a9142f563d46d1af02d50085c9d623050f473577093",
+    "source_page": "https://creativemode.net/mod/ashplume-emberwalker-ni3lasej",
+    "authors": [
+      "17usdd using CreativeMode.net"
+    ],
+    "assets": {
+      "src/main/resources/assets/space_fabric/textures/entity/ashplume_emberwalker.png": "b26b83bcf1fc1d621edff0dd1f8e23f626ec52e67edc5d0933b896fe8dbe62c7",
+      "src/main/resources/assets/space_fabric/textures/item/ashplume_emberwalker_spawn_egg.png": "d5cb9f0f84ae009d7da710b5a314d835ec085a9a621b1aca33122d167bef96c9"
+    }
+  },
+  "sulfurwing-copper-harbinger-6d52v7z6": {
+    "sha256": "19deda36dee62370f937ef472436c63c87b9826f712e03aa51104764d82025e0",
+    "source_page": "https://creativemode.net/mod/sulfurwing-copper-harbinger-6d52v7z6",
+    "authors": [
+      "17usdd using CreativeMode.net"
+    ],
+    "assets": {
+      "src/main/resources/assets/space_fabric/textures/entity/sulfurwing_copper_harbinger.png": "fc0e7c9b5b258b29e890f95ecfb76490e26496a133d55bf5353b669fed70defe",
+      "src/main/resources/assets/space_fabric/textures/item/sulfurwing_copper_harbinger_spawn_egg.png": "0bcd6386da0fbc96ec670c315f5988497f59b2693371b42ad9bf487723297735"
+    }
+  }
+}

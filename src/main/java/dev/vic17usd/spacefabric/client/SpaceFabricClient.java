@@ -10,6 +10,10 @@ import net.minecraft.resources.Identifier;
 public final class SpaceFabricClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
+net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry.register(dev.vic17usd.spacefabric.entity.venus.ModVenusEntities.ACIDSTONE_SLIME,dev.vic17usd.spacefabric.client.venus.AcidstoneSlimeEntityRenderer::new);
+net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry.register(dev.vic17usd.spacefabric.entity.venus.ModVenusEntities.OBSIDIAN_LAVAFANG,dev.vic17usd.spacefabric.client.venus.ObsidianLavafangEntityRenderer::new);
+net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry.register(dev.vic17usd.spacefabric.entity.venus.ModVenusEntities.ASHPLUME_EMBERWALKER,dev.vic17usd.spacefabric.client.venus.AshplumeEmberwalkerEntityRenderer::new);
+net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry.register(dev.vic17usd.spacefabric.entity.venus.ModVenusEntities.SULFURWING_COPPER_HARBINGER,dev.vic17usd.spacefabric.client.venus.SulfurwingCopperHarbingerEntityRenderer::new);
         dev.vic17usd.spacefabric.client.rocket.RocketCockpitView.initialize();
         net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry.register(
                 dev.vic17usd.spacefabric.entity.sanctum.ModSanctumEntities.GOLEM,
