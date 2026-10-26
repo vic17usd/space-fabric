@@ -1,6 +1,7 @@
 # Space Fabric — Minecraft Java 26.1
 
-La versión 0.12.0 incorpora el modelo 3D y el atlas de `space-rocket.bbmodel`
+La versión 0.12.1 corrige el contorno blanco del cohete y la textura faltante del
+ítem 3D. La versión 0.12.0 incorpora el modelo 3D y el atlas de `space-rocket.bbmodel`
 en el cohete y en su ítem de inventario. La versión 0.11.0 integra Crystal Hum Crawler, Golden Eye Sandwraith y Red Dune
 Ironmaw con sus modelos, texturas y animaciones, adaptados a la superficie de Marte.
 Breathforge y Haven eliminan sus pedestales inferiores y apoyan sus pisos al nivel
@@ -17,9 +18,9 @@ Consulta la [guía completa de bloques y materiales](docs/materials.md).
 Consulta la [guía de terreno y registro de biomas](docs/terrain.md).
 Consulta la [tabla de dimensiones y claves Java](docs/dimensions.md).
 
-Descarga del prototipo compilado: [space-fabric-0.12.0.jar](dist/space-fabric-0.12.0.jar)
+Descarga del prototipo compilado: [space-fabric-0.12.1.jar](dist/space-fabric-0.12.1.jar)
 (en GitHub, pulsa **Download raw file**).
-[Checksum SHA-256](dist/space-fabric-0.12.0.jar.sha256).
+[Checksum SHA-256](dist/space-fabric-0.12.1.jar.sha256).
 Fauna original: **17usdd using [CreativeMode.net](https://creativemode.net)**;
 [páginas oficiales y atribución](third_party/martian_fauna/README.md),
 [licencia de sus recursos](https://creativemode.net/mod-license).
@@ -54,7 +55,7 @@ python3 tools/validate_resources.py
 ./gradlew runClient
 ```
 
-El artefacto será `build/libs/space-fabric-0.12.0.jar`. Instala el mod y Fabric API
+El artefacto será `build/libs/space-fabric-0.12.1.jar`. Instala el mod y Fabric API
 en cliente y servidor. No se declara compatibilidad con 1.21.x ni con otras
 revisiones de 26.1 sin validarlas por separado.
 

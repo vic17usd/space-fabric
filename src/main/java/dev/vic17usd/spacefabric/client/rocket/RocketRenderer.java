@@ -27,7 +27,8 @@ public final class RocketRenderer extends EntityRenderer<RocketEntity, RocketRen
     }
     @Override public void submit(State state, PoseStack poses, SubmitNodeCollector collector, CameraRenderState camera) {
         poses.pushPose(); poses.mulPose(Axis.YP.rotationDegrees(180 - state.yaw)); poses.scale(1, -1, -1);
-        collector.submitModel(model, state, poses, model.renderType(TEXTURE), state.lightCoords, OverlayTexture.NO_OVERLAY, -1, null);
+        // Sobrecarga explícita: tinte blanco (-1), contorno solo si el estado lo solicita.
+        collector.submitModel(model, state, poses, model.renderType(TEXTURE), state.lightCoords, OverlayTexture.NO_OVERLAY, -1, null, state.outlineColor, null);
         poses.popPose(); super.submit(state, poses, collector, camera);
     }
 }

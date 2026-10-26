@@ -1,7 +1,7 @@
 {
   "textures": {
-    "0": "space_fabric:entity/rocket",
-    "particle": "space_fabric:entity/rocket"
+    "0": "space_fabric:item/rocket",
+    "particle": "space_fabric:item/rocket"
   },
   "elements": [
     {

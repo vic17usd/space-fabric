@@ -16,6 +16,8 @@ def generate():
     texture = doc['textures'][0]
     png = base64.b64decode(texture['source'].split(',', 1)[1], validate=True)
     (ROOT / 'src/main/resources/assets/space_fabric/textures/entity/rocket.png').write_bytes(png)
+    # El atlas vanilla de ítems solo descubre las carpetas item/ y block/.
+    (ROOT / 'src/main/resources/assets/space_fabric/textures/item/rocket.png').write_bytes(png)
     def f(n): return f'{n:.7f}F'
     # Modelo de entidad: Y/Z invertidos para el espacio de ModelPart; escala uniforme.
     scale = 25.6 / 19
@@ -72,7 +74,7 @@ public final class RocketModel extends EntityModel<RocketRenderer.State> {
 '''
     (ROOT / 'src/main/java/dev/vic17usd/spacefabric/client/rocket/RocketModel.java').write_text(java)
     # El ítem usa geometría vanilla con coordenadas y UV en unidades de 16.
-    item = {'textures': {'0': 'space_fabric:entity/rocket', 'particle': 'space_fabric:entity/rocket'}, 'elements': []}
+    item = {'textures': {'0': 'space_fabric:item/rocket', 'particle': 'space_fabric:item/rocket'}, 'elements': []}
     for e in elements:
         item['elements'].append({'from': [e['from'][0]*16/39+8, e['from'][1]*16/39, e['from'][2]*16/39+8],
             'to': [e['to'][0]*16/39+8, e['to'][1]*16/39, e['to'][2]*16/39+8],

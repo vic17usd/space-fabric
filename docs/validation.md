@@ -60,7 +60,7 @@ Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
 - Gradle Wrapper y distribución: SHA-256 verificado con los checksums oficiales.
 - JDK descargado para este entorno: SHA-256 verificado con el checksum oficial.
 
-Artefacto generado: `build/libs/space-fabric-0.12.0.jar`.
+Artefacto generado: `build/libs/space-fabric-0.12.1.jar`.
 Los informes de la ejecución están en `build/test-results/test/` y
 `build/reports/tests/test/`; son salidas locales ignoradas por Git.
 
@@ -123,3 +123,14 @@ Cambios visuales de 0.12.0:
   alto, apoyado en Y=0 dentro de la colisión existente de 1,6 × 3,5.
 - El ítem de inventario usa las mismas 48 piezas y el mismo atlas mediante JSON vanilla.
 - Compilación y validación de recursos correctas; renderizado en partida pendiente.
+
+Corrección 0.12.1 tras la captura del usuario:
+
+- Se elimina el contorno blanco forzado: en la sobrecarga corta de `submitModel`,
+  el último entero representa `outlineColor`, no el tinte. Se usa la sobrecarga
+  explícita con tinte -1 y contorno de `EntityRenderState`.
+- El ítem utiliza `item/rocket`, descubierto por el atlas vanilla. El PNG se copia
+  sin modificar a `textures/item/rocket.png`; el modelo colocado conserva su textura
+  de entidad. La validación comprueba que ambos PNG coincidan con el original y
+  que las referencias del modelo de ítem pertenezcan a las carpetas del atlas.
+- El resultado gráfico de esta corrección aún requiere prueba dentro del juego.

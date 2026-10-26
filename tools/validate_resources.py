@@ -70,6 +70,19 @@ def main():
             for child in value: references(child)
     for path, value in documents.items():
         if assets in path.parents: references(value)
+    # El atlas vanilla de objetos descubre item/ y block/, no textures/entity/.
+    for model in (assets / "models/item").glob("*.json"):
+        for texture in documents[model].get("textures", {}).values():
+            if texture.startswith("space_fabric:") and not texture.split(":", 1)[1].startswith(("item/", "block/")):
+                raise ValueError(f"Textura fuera del atlas vanilla de ítems: {model.name}: {texture}")
+    # Ambos usos del modelo importado deben mantener el PNG original de Blockbench.
+    import base64
+    source = root.parents[2] / "tools/import_sources/space-rocket.bbmodel"
+    rocket = json.loads(source.read_text())
+    expected_texture = base64.b64decode(rocket["textures"][0]["source"].split(",", 1)[1], validate=True)
+    for folder in ("entity", "item"):
+        if (assets / "textures" / folder / "rocket.png").read_bytes() != expected_texture:
+            raise ValueError(f"Atlas del cohete distinto al original: {folder}")
     # Los renderers de entidad declaran sus texturas en Java, fuera de los modelos JSON.
     client = root.parent / "java/dev/vic17usd/spacefabric/client"
     for source in client.rglob("*.java"):

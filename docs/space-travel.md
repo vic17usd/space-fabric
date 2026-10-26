@@ -192,3 +192,7 @@ hacen falta Blockbench ni bibliotecas de animación al jugar.
 
 La compilación y las referencias de los recursos se verifican automáticamente;
 falta revisar la apariencia y la posición del piloto en una sesión gráfica.
+
+Desde 0.12.1 se evita el contorno blanco forzado en `submitModel`. El atlas original
+se copia también a `textures/item/rocket.png` para su inclusión en el atlas vanilla
+de objetos; el JSON del ítem referencia `space_fabric:item/rocket`.
