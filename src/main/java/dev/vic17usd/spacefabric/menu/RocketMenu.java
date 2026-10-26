@@ -18,16 +18,18 @@ public final class RocketMenu extends AbstractContainerMenu {
     public static final int LAUNCH = 100, BOARD = 101;
     private final RocketEntity rocket;
     private final ContainerData data;
-    public RocketMenu(int id, Inventory inventory) { this(id, inventory, null, new SimpleContainer(11), new SimpleContainerData(6)); }
+    public RocketMenu(int id, Inventory inventory) { this(id, inventory, null, new SimpleContainer(11), new SimpleContainerData(9)); }
     public RocketMenu(int id, Inventory inventory, RocketEntity rocket) {
         this(id, inventory, rocket, rocket.inventory(), new ContainerData() {
             @Override public int get(int index) { return switch (index) {
                 case 0 -> rocket.fuel(); case 1 -> rocket.destinationIndex(); case 2 -> rocket.flightState();
                 case 3 -> rocket.requiredFuel(); case 4 -> rocket.isPilot(inventory.player) ? 1 : 0;
-                case 5 -> TravelDestination.indexOf(rocket.level().dimension()); default -> 0;
+                case 5 -> TravelDestination.indexOf(rocket.level().dimension());
+                case 6 -> rocket.variant().ordinal(); case 7 -> rocket.hull();
+                case 8 -> dev.vic17usd.spacefabric.space.RocketFlightConfig.exclusive()?1:0; default -> 0;
             }; }
             @Override public void set(int index, int value) { }
-            @Override public int getCount() { return 6; }
+            @Override public int getCount() { return 9; }
         });
     }
     private RocketMenu(int id, Inventory inventory, RocketEntity rocket, Container storage, ContainerData data) {

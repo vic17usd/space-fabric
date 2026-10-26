@@ -12,6 +12,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.equipment.ArmorMaterials;
 import net.minecraft.world.item.equipment.ArmorType;
 import dev.vic17usd.spacefabric.space.RocketItem;
+import dev.vic17usd.spacefabric.space.RocketVariant;
+import dev.vic17usd.spacefabric.space.RocketUpgradeItem;
 import java.util.function.Function;
 
 public final class ModItems {
@@ -57,6 +59,24 @@ public static final Item SULFURWING_COPPER_HARBINGER_SPAWN_EGG=register("sulfurw
             net.minecraft.world.item.SpawnEggItem::new, new Item.Properties().spawnEgg(
                     dev.vic17usd.spacefabric.entity.ModMarsEntities.COPPER_TRADER));
     public static final Item ROCKET = register("rocket", RocketItem::new, new Item.Properties().stacksTo(1).fireResistant());
+    public static final Item MERCURY_ROCKET = register("mercury_rocket", p -> new RocketItem(p, RocketVariant.MERCURY), rocketProperties(RocketVariant.MERCURY, false));
+    public static final Item MERCURY_ROCKET_KIT = register("mercury_rocket_kit", p -> new RocketUpgradeItem(p, RocketVariant.MERCURY), rocketProperties(RocketVariant.MERCURY, true));
+    public static final Item VENUS_ROCKET = register("venus_rocket", p -> new RocketItem(p, RocketVariant.VENUS), rocketProperties(RocketVariant.VENUS, false));
+    public static final Item VENUS_ROCKET_KIT = register("venus_rocket_kit", p -> new RocketUpgradeItem(p, RocketVariant.VENUS), rocketProperties(RocketVariant.VENUS, true));
+    public static final Item EARTH_ROCKET = register("earth_rocket", p -> new RocketItem(p, RocketVariant.EARTH), rocketProperties(RocketVariant.EARTH, false));
+    public static final Item EARTH_ROCKET_KIT = register("earth_rocket_kit", p -> new RocketUpgradeItem(p, RocketVariant.EARTH), rocketProperties(RocketVariant.EARTH, true));
+    public static final Item MOON_ROCKET = register("moon_rocket", p -> new RocketItem(p, RocketVariant.MOON), rocketProperties(RocketVariant.MOON, false));
+    public static final Item MOON_ROCKET_KIT = register("moon_rocket_kit", p -> new RocketUpgradeItem(p, RocketVariant.MOON), rocketProperties(RocketVariant.MOON, true));
+    public static final Item MARS_ROCKET = register("mars_rocket", p -> new RocketItem(p, RocketVariant.MARS), rocketProperties(RocketVariant.MARS, false));
+    public static final Item MARS_ROCKET_KIT = register("mars_rocket_kit", p -> new RocketUpgradeItem(p, RocketVariant.MARS), rocketProperties(RocketVariant.MARS, true));
+    public static final Item JUPITER_ROCKET = register("jupiter_rocket", p -> new RocketItem(p, RocketVariant.JUPITER), rocketProperties(RocketVariant.JUPITER, false));
+    public static final Item JUPITER_ROCKET_KIT = register("jupiter_rocket_kit", p -> new RocketUpgradeItem(p, RocketVariant.JUPITER), rocketProperties(RocketVariant.JUPITER, true));
+    public static final Item SATURN_ROCKET = register("saturn_rocket", p -> new RocketItem(p, RocketVariant.SATURN), rocketProperties(RocketVariant.SATURN, false));
+    public static final Item SATURN_ROCKET_KIT = register("saturn_rocket_kit", p -> new RocketUpgradeItem(p, RocketVariant.SATURN), rocketProperties(RocketVariant.SATURN, true));
+    public static final Item URANUS_ROCKET = register("uranus_rocket", p -> new RocketItem(p, RocketVariant.URANUS), rocketProperties(RocketVariant.URANUS, false));
+    public static final Item URANUS_ROCKET_KIT = register("uranus_rocket_kit", p -> new RocketUpgradeItem(p, RocketVariant.URANUS), rocketProperties(RocketVariant.URANUS, true));
+    public static final Item NEPTUNE_ROCKET = register("neptune_rocket", p -> new RocketItem(p, RocketVariant.NEPTUNE), rocketProperties(RocketVariant.NEPTUNE, false));
+    public static final Item NEPTUNE_ROCKET_KIT = register("neptune_rocket_kit", p -> new RocketUpgradeItem(p, RocketVariant.NEPTUNE), rocketProperties(RocketVariant.NEPTUNE, true));
     public static final Item EMPTY_FUEL_CELL = register("empty_fuel_cell", new Item.Properties());
     public static final Item ROCKET_FUEL_CELL = register("rocket_fuel_cell", new Item.Properties().stacksTo(16));
     public static final Item ARES_CRYSTAL = register("ares_crystal", new Item.Properties());
@@ -73,6 +93,15 @@ public static final Item SULFURWING_COPPER_HARBINGER_SPAWN_EGG=register("sulfurw
     public static final Item IRON_OXIDE_DUST = register("iron_oxide_dust", new Item.Properties());
     public static final Item MARTIAN_OLIVINE = register("martian_olivine", new Item.Properties());
     public static final Item SULFATE_DUST = register("sulfate_dust", new Item.Properties());
+
+    private static Item.Properties rocketProperties(RocketVariant variant, boolean kit) {
+        var lore = new java.util.ArrayList<net.minecraft.network.chat.Component>();
+        lore.add(net.minecraft.network.chat.Component.translatable("item.space_fabric.rocket_rating",
+                (int)(variant.maxKpa/100), (int)variant.minCelsius, (int)variant.maxCelsius));
+        if(kit) lore.add(net.minecraft.network.chat.Component.translatable("item.space_fabric.rocket_kit_help"));
+        return new Item.Properties().fireResistant().component(net.minecraft.core.component.DataComponents.LORE,
+                new net.minecraft.world.item.component.ItemLore(lore));
+    }
 
     private ModItems() { }
 

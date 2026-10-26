@@ -1,5 +1,8 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión 0.17.0 añade **nueve cohetes planetarios** basados en el modelo 3D actual,
+con módulos exteriores distintos, kits de conversión y protección ambiental por
+capacidades. Consulta la [guía de cohetes planetarios, recetas y destinos](docs/planet-rockets.md).
 La versión 0.16.0 añade presión y composición atmosférica de referencia, exposición
 muy rápida a escala 1:72 y cuatro conjuntos de traje con límites distintos.
 **El hierro común ya no protege.** Consulta la [guía de presión, tiempos y trajes](docs/pressure-and-suits.md)
@@ -28,9 +31,9 @@ Consulta la [guía completa de bloques y materiales](docs/materials.md).
 Consulta la [guía de terreno y registro de biomas](docs/terrain.md).
 Consulta la [tabla de dimensiones y claves Java](docs/dimensions.md).
 
-Descarga del prototipo compilado: [space-fabric-0.16.0.jar](dist/space-fabric-0.16.0.jar)
+Descarga del prototipo compilado: [space-fabric-0.17.0.jar](dist/space-fabric-0.17.0.jar)
 (en GitHub, pulsa **Download raw file**).
-[Checksum SHA-256](dist/space-fabric-0.16.0.jar.sha256).
+[Checksum SHA-256](dist/space-fabric-0.17.0.jar.sha256).
 Fauna original: **17usdd using [CreativeMode.net](https://creativemode.net)**;
 [páginas oficiales y atribución](third_party/martian_fauna/README.md),
 [licencia de sus recursos](https://creativemode.net/mod-license).

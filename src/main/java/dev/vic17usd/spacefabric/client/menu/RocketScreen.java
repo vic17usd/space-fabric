@@ -2,11 +2,13 @@ package dev.vic17usd.spacefabric.client.menu;
 
 import dev.vic17usd.spacefabric.menu.RocketMenu;
 import dev.vic17usd.spacefabric.space.RocketRules;
+import dev.vic17usd.spacefabric.space.RocketVariant;
 import dev.vic17usd.spacefabric.space.TravelDestination;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -35,10 +37,11 @@ public final class RocketScreen extends SpaceContainerScreen<RocketMenu> {
         boolean idle = menu.value(2) == RocketRules.IDLE, pilot = menu.value(4) == 1;
         for (int i = 0; i < destinations.size(); i++) {
             var button = destinations.get(i);
-            button.active = idle && pilot && i != menu.value(5);
+            button.active = idle && pilot && i != menu.value(5) && RocketVariant.byId(menu.value(6)).permits(TravelDestination.at(i).planet(),menu.value(8)==1);
+            button.setTooltip(Tooltip.create(Component.translatable(RocketVariant.byId(menu.value(6)).permits(TravelDestination.at(i).planet(),menu.value(8)==1) ? "gui.space_fabric.route_safe" : "gui.space_fabric.route_unsafe")));
             button.setMessage(Component.literal(i == menu.value(1) ? "> " : "").append(TravelDestination.at(i).label()));
         }
-        launch.active = idle && pilot && menu.value(3) > 0 && menu.value(0) >= menu.value(3);
+        launch.active = idle && pilot && menu.value(7)>0 && RocketVariant.byId(menu.value(6)).permits(TravelDestination.at(menu.value(1)).planet(),menu.value(8)==1) && menu.value(3) > 0 && menu.value(0) >= menu.value(3);
         board.active = idle && !pilot;
     }
     @Override protected void containerTick() { super.containerTick(); updateButtons(); }
@@ -75,6 +78,9 @@ public final class RocketScreen extends SpaceContainerScreen<RocketMenu> {
     }
     @Override protected void extractLabels(GuiGraphicsExtractor gui, int mouseX, int mouseY) {
         gui.text(font, title, 8, 7, 0xFFE5F5FF);
+        var variant=RocketVariant.byId(menu.value(6));
+        gui.text(font, Component.translatable("rocket.space_fabric.variant."+variant.path),164,7,variant.color);
+        gui.text(font, Component.translatable("gui.space_fabric.hull",menu.value(7)),164,89,menu.value(7)>25?0xFF45D5B0:0xFFFF7555);
         gui.text(font, Component.translatable("gui.space_fabric.fuel", menu.value(0), menu.value(3)), 8, 104, 0xFFB5D6E5);
         gui.text(font, Component.translatable("gui.space_fabric.cargo"), 8, 127, 0xFFB5D6E5);
         gui.text(font, Component.translatable("gui.space_fabric.cells"), 190, 127, 0xFFB5D6E5);

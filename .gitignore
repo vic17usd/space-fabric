@@ -10,3 +10,5 @@ logs/
 __pycache__/
 
 /config/space-fabric-atmosphere.json
+
+/config/space-fabric-rockets.json

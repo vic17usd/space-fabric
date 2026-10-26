@@ -14,5 +14,5 @@ public final class ModSpaceEntities {
                     .sized(1.6F, 3.5F).passengerAttachments(1.15F).clientTrackingRange(10).updateInterval(1)
                     .fireImmune().build(ResourceKey.create(Registries.ENTITY_TYPE, SpaceFabric.id("rocket"))));
     private ModSpaceEntities() { }
-    public static void initialize() { }
+    public static void initialize() { RocketFlightConfig.initialize(); }
 }

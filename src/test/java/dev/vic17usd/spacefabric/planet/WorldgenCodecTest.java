@@ -1209,4 +1209,45 @@ class WorldgenCodecTest {
             return JsonParser.parseReader(reader);
         }
     }
+
+    @ParameterizedTest
+    @org.junit.jupiter.params.provider.EnumSource(value=dev.vic17usd.spacefabric.space.RocketVariant.class,names="BASE",mode=org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE)
+    void planetaryRocketKitsCraftAndUpgradeWithoutLosingTankOrCargo(dev.vic17usd.spacefabric.space.RocketVariant variant) throws Exception {
+        var recipeJson=resource("recipe/"+variant.path+"_rocket_kit").getAsJsonObject();
+        var recipe=assertInstanceOf(net.minecraft.world.item.crafting.ShapedRecipe.class,
+                Recipe.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),recipeJson).getOrThrow());
+        var ingredients=net.minecraft.core.NonNullList.withSize(9,ItemStack.EMPTY);
+        var pattern=recipeJson.getAsJsonArray("pattern");var key=recipeJson.getAsJsonObject("key");
+        for(int row=0;row<3;row++) for(int col=0;col<3;col++)
+            ingredients.set(row*3+col,new ItemStack(BuiltInRegistries.ITEM.getValue(net.minecraft.resources.Identifier.parse(
+                    key.get(String.valueOf(pattern.get(row).getAsString().charAt(col))).getAsString()))));
+        var crafting=net.minecraft.world.item.crafting.CraftingInput.of(3,3,ingredients);
+        assertTrue(recipe.matches(crafting,null));
+        var kit=assertInstanceOf(dev.vic17usd.spacefabric.space.RocketUpgradeItem.class,recipe.assemble(crafting).getItem());
+        assertEquals(variant,kit.variant());
+        var rocket=new dev.vic17usd.spacefabric.space.RocketEntity(dev.vic17usd.spacefabric.space.ModSpaceEntities.ROCKET,null);
+        var read=rocket.getClass().getDeclaredMethod("readAdditionalSaveData",net.minecraft.world.level.storage.ValueInput.class);
+        var write=rocket.getClass().getDeclaredMethod("addAdditionalSaveData",net.minecraft.world.level.storage.ValueOutput.class);
+        read.setAccessible(true);write.setAccessible(true);
+        var input=new net.minecraft.nbt.CompoundTag();input.putInt("Fuel",751);input.putInt("Hull",19);
+        read.invoke(rocket,net.minecraft.world.level.storage.TagValueInput.create(net.minecraft.util.ProblemReporter.DISCARDING,registries,input));
+        rocket.inventory().setItem(4,new ItemStack(ModItems.ARES_CRYSTAL,7));
+        assertTrue(rocket.install(kit.variant()));
+        assertEquals(variant,rocket.variant());assertEquals(751,rocket.fuel());assertEquals(100,rocket.hull());
+        assertEquals(7,rocket.inventory().getItem(4).getCount());
+        rocket.restoreHull(63);
+        var output=net.minecraft.world.level.storage.TagValueOutput.createWithContext(net.minecraft.util.ProblemReporter.DISCARDING,registries);
+        write.invoke(rocket,output);
+        var restored=new dev.vic17usd.spacefabric.space.RocketEntity(dev.vic17usd.spacefabric.space.ModSpaceEntities.ROCKET,null);
+        read.invoke(restored,net.minecraft.world.level.storage.TagValueInput.create(net.minecraft.util.ProblemReporter.DISCARDING,registries,output.buildResult()));
+        assertEquals(variant,restored.variant());assertEquals(63,restored.hull());assertEquals(751,restored.fuel());
+        assertEquals(rocket.destinationIndex(),restored.destinationIndex());assertEquals(7,restored.inventory().getItem(4).getCount());
+        var packed=dev.vic17usd.spacefabric.space.RocketItem.packed(restored.fuel(),restored.variant(),restored.hull());
+        var ops=registries.createSerializationContext(JsonOps.INSTANCE);
+        var item=ItemStack.CODEC.parse(ops,ItemStack.CODEC.encodeStart(ops,packed).getOrThrow()).getOrThrow();
+        assertEquals(variant,assertInstanceOf(dev.vic17usd.spacefabric.space.RocketItem.class,item.getItem()).variant());
+        assertEquals(751,dev.vic17usd.spacefabric.space.RocketItem.storedFuel(item));
+        assertEquals(63,item.get(net.minecraft.core.component.DataComponents.CUSTOM_DATA).copyTag().getIntOr("RocketHull",-1));
+        restored.restoreHull(-1);assertEquals(0,restored.hull());restored.restoreHull(101);assertEquals(100,restored.hull());
+    }
 }

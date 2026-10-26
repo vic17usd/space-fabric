@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import dev.vic17usd.spacefabric.SpaceFabric;
 import dev.vic17usd.spacefabric.space.RocketEntity;
+import dev.vic17usd.spacefabric.space.RocketVariant;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -18,14 +19,14 @@ public final class RocketRenderer extends EntityRenderer<RocketEntity, RocketRen
     private static final Identifier TEXTURE = SpaceFabric.id("textures/entity/rocket.png");
     private final RocketModel model;
     private final RocketCockpitModel cockpit = new RocketCockpitModel();
-    public static final class State extends EntityRenderState { float yaw; boolean cockpitView; }
+    public static final class State extends EntityRenderState { float yaw; boolean cockpitView; RocketVariant variant=RocketVariant.BASE; }
     public RocketRenderer(EntityRendererProvider.Context context) {
         super(context); shadowRadius = 0.9F;
         model = new RocketModel();
     }
     @Override public State createRenderState() { return new State(); }
     @Override public void extractRenderState(RocketEntity entity, State state, float delta) {
-        super.extractRenderState(entity, state, delta); state.yaw = entity.getYRot();
+        super.extractRenderState(entity, state, delta); state.yaw = entity.getYRot(); state.variant=entity.variant();
         var client = Minecraft.getInstance();
         var viewer = client.getCameraEntity();
         state.cockpitView = client.options.getCameraType().isFirstPerson()
@@ -51,6 +52,11 @@ public final class RocketRenderer extends EntityRenderer<RocketEntity, RocketRen
         int light = state.lightCoords;
         collector.submitCustomGeometry(poses, RenderTypes.entityCutout(TEXTURE),
                 (pose, vertices) -> model.renderGeometry(pose, vertices, light, OverlayTexture.NO_OVERLAY, -1));
+        poses.popPose();
+        var variant=state.variant;
+        poses.pushPose();poses.mulPose(Axis.YP.rotationDegrees(-state.yaw));
+        collector.submitCustomGeometry(poses, RenderTypes.entityCutout(TEXTURE),
+                (pose,vertices)->RocketModules.renderGeometry(variant,pose,vertices,light,OverlayTexture.NO_OVERLAY));
         poses.popPose(); super.submit(state, poses, collector, camera);
     }
 }

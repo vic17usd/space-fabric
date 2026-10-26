@@ -112,10 +112,12 @@ Cambia `vacuum` por `venus`, `cryo` o `abyssal` para los demás conjuntos.
 
 ## Cabina, clima y síntomas
 
-La cabina del cohete proporciona aire y aislamiento hasta su límite ficticio de
-**100 bar**. Protege en Venus y en la llegada a las plataformas de gigantes, pero
-puede fallar al bajar demasiado. Si falla, solo un traje adecuado puede proteger
-al ocupante. Al salir de la cabina se evalúa inmediatamente el equipo del jugador.
+Desde 0.17.0, la cabina proporciona aire y aislamiento dentro de los
+[límites de su variante](planet-rockets.md), siempre que el casco no esté destruido.
+Para Venus hace falta un cohete resistente al ácido y a sus condiciones de presión
+y calor; para los gigantes, la variante debe soportar el ambiente a la altura local.
+Si la cabina falla, solo un traje adecuado puede proteger al ocupante. Al salir se
+evalúa inmediatamente el equipo del jugador.
 
 La dosis avanza cada tick, con aviso de presión y riesgo, debilidad y ceguera tempranas,
 daño periódico y daño letal al alcanzar el límite. Cambiar entre planetas peligrosos
@@ -173,3 +175,7 @@ Referencias para las cifras y su contexto:
 Son referencias de consulta; la descarga automatizada de esos sitios fue bloqueada
 por la política de red del entorno durante esta tarea. Los valores aproximados
 indicados y las reglas de juego se distinguen arriba; no se afirma una verificación documental en línea.
+
+A partir de 0.17.0 la cabina se evalúa por variante y estado del casco. Consulta los
+[límites de cada cohete](planet-rockets.md): no todas las cabinas admiten Venus ni
+las mismas profundidades en gigantes gaseosos.

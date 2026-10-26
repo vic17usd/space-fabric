@@ -14,6 +14,7 @@ public final class SpaceTravel {
     public static boolean transfer(RocketEntity rocket) {
         if (!(rocket.level() instanceof ServerLevel source) || !rocket.isVehicle()) return false;
         var destination = TravelDestination.at(rocket.destinationIndex());
+        if(rocket.hull()<=0 || !rocket.permits(destination))return false;
         var target = source.getServer().getLevel(destination.world());
         if (target == null || target == source) return false;
         boolean orbital = destination.planet() == Planet.JUPITER || destination.planet() == Planet.SATURN
@@ -35,7 +36,7 @@ public final class SpaceTravel {
                 return target.getWorldBorder().isWithinBounds(box) && target.getEntities(null, box).isEmpty();
             }
         }, orbital, rocket.getUUID().hashCode()).orElse(null);
-        if (floor == null) return false;
+        if (floor == null || !rocket.variant().protects(destination.planet(),floor.getY()+1)) return false;
         for (int dx = -2; dx <= 2; dx++) for (int dz = -2; dz <= 2; dz++)
             target.setBlockAndUpdate(floor.offset(dx, 0, dz), ModBlocks.LANDING_PAD.defaultBlockState());
         // La API nativa traslada también los pasajeros y los vuelve a montar; no se duplican a mano.
