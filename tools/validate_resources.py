@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Comprueba referencias internas; no sustituye los codecs de Minecraft."""
 import json
+import re
 import struct
 import zlib
 from pathlib import Path
@@ -69,6 +70,15 @@ def main():
             for child in value: references(child)
     for path, value in documents.items():
         if assets in path.parents: references(value)
+    # Los renderers de entidad declaran sus texturas en Java, fuera de los modelos JSON.
+    client = root.parent / "java/dev/vic17usd/spacefabric/client"
+    for source in client.rglob("*.java"):
+        for namespace, texture in re.findall(
+                r'Identifier\.fromNamespaceAndPath\(\s*"([^"]+)"\s*,\s*"(textures/[^"]+)"\s*\)',
+                source.read_text()):
+            path = root / "assets" / namespace / texture
+            if not path.is_file():
+                raise ValueError(f"Textura de entidad ausente en {source.name}: {namespace}:{texture}")
     for path in (assets / "textures").rglob("*.png"):
         content = path.read_bytes()
         if content[:8] != b"\x89PNG\r\n\x1a\n": raise ValueError(f"PNG inválido: {path}")

@@ -1,0 +1,36 @@
+{
+  "martian_breathforge": {
+    "trimmed_layers": 1,
+    "original_blocks": 30608,
+    "retained_blocks": 28147,
+    "dimensions": [
+      89,
+      72,
+      89
+    ],
+    "ground_level": 0,
+    "terrain_palette_removed_at_ground": [
+      "minecraft:granite",
+      "minecraft:red_sandstone",
+      "minecraft:smooth_sandstone",
+      "minecraft:terracotta"
+    ]
+  },
+  "martian_haven_settlement": {
+    "trimmed_layers": 3,
+    "original_blocks": 45380,
+    "retained_blocks": 20406,
+    "dimensions": [
+      124,
+      81,
+      125
+    ],
+    "ground_level": 0,
+    "terrain_palette_removed_at_ground": [
+      "minecraft:granite",
+      "minecraft:red_sandstone",
+      "minecraft:smooth_sandstone",
+      "minecraft:terracotta"
+    ]
+  }
+}

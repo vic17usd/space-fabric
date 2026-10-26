@@ -11,7 +11,30 @@
   "effects": {
     "water_color": "#3f76e4"
   },
-  "spawners": {},
+  "spawners": {
+    "creature": [
+      {
+        "type": "space_fabric:crystal_hum_crawler",
+        "weight": 18,
+        "minCount": 1,
+        "maxCount": 3
+      }
+    ],
+    "monster": [
+      {
+        "type": "space_fabric:golden_eye_sandwraith",
+        "weight": 10,
+        "minCount": 1,
+        "maxCount": 2
+      },
+      {
+        "type": "space_fabric:red_dune_ironmaw",
+        "weight": 2,
+        "minCount": 1,
+        "maxCount": 1
+      }
+    ]
+  },
   "spawn_costs": {},
   "carvers": [
     "space_fabric:cave",

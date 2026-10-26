@@ -3,7 +3,7 @@
   "id": "space_fabric",
   "version": "${version}",
   "name": "Space Fabric",
-  "description": "Nueve destinos planetarios, geología, atmósferas y viajes en cohete con refinería y mapa estelar.",
+  "description": "Nueve destinos planetarios, fauna y asentamientos de Marte, geología y viajes en cohete con refinería y mapa estelar.",
   "environment": "*",
   "entrypoints": {
     "main": ["dev.vic17usd.spacefabric.SpaceFabric"],

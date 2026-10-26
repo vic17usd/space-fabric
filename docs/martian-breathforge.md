@@ -1,9 +1,11 @@
-# Martian Breathforge — Fabric 26.1, versión 0.10.0
+# Martian Breathforge — Fabric 26.1, versión 0.11.0
 
-La estructura conserva los 30.608 bloques, 22 materiales vanilla y dimensiones
-89 × 73 × 89 del archivo original `creativemode.structure`. Su JSON fuente y el
-conversor siguen en `tools/structure_sources/` y `tools/convert_creativemode_structure.py`.
-La plantilla nativa está en `data/space_fabric/structure/martian_breathforge.nbt`.
+La plantilla de superficie contiene 28.147 bloques y mide 89 × 72 × 89: retira
+la capa de pedestal inferior y el terreno importado al nivel del piso. Conserva
+la construcción sobre el suelo marciano. El JSON fuente y la plantilla original
+de 30.608 bloques, 89 × 73 × 89, siguen disponibles para compatibilidad.
+La plantilla actual es `data/space_fabric/structure/martian_breathforge_surface.nbt`;
+se reproduce con `python3 tools/prepare_martian_templates.py`.
 
 ## Colocación actual
 
@@ -20,7 +22,7 @@ para el algoritmo, límites y pruebas de interiores despejados.
   "step": "surface_structures",
   "spawn_overrides": {},
   "terrain_adaptation": "none",
-  "template": "space_fabric:martian_breathforge",
+  "template": "space_fabric:martian_breathforge_surface",
   "padding": 8
 }
 ```
@@ -60,4 +62,5 @@ vacío en 26.1 y puede hacer que `/locate` recorra una gran cantidad de candidat
 de superficie; las pruebas conservan la reproducción del fallo jigsaw anterior.
 
 También ejecutan la colocación nativa de esta plantilla sobre terreno elevado y
-comprueban sus bloques y huecos. La inspección gráfica del resultado queda pendiente.
+comprueban sus bloques, pisos a ras del regolito y huecos despejados. La inspección
+gráfica del resultado queda pendiente.

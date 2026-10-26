@@ -1,0 +1,63 @@
+CreativeMode Mods License
+Version 1.2 – Effective 2026-08-17
+
+This license governs the use, sharing, and distribution of all game modifications (“Mods”) generated using the CreativeMode platform at https://creativemode.net (“CreativeMode,” “we,” “our”). By downloading, using, or distributing a CreativeMode Mod, you agree to these terms.
+
+1. Ownership
+   All CreativeMode Mods are the exclusive property of Argon, Inc. (d/b/a CreativeMode). All rights not expressly granted in this license are reserved.
+
+2. Free Use & Hosting
+   Free Play – You may download and use the Mod free of charge for personal gameplay.
+
+Free Hosting – You may host and share the Mod file for free, provided you meet the attribution and link requirements in Section 4.
+
+3. Restrictions
+   You may not:
+   a. Claim the Mod or any derivative work as your own.
+   b. Monetize the Mod in any form, except as permitted under Section 5.
+   c. Include the Mod in any paid modpack or bundle.
+   d. Include the Mod on any premium server that requires payment, subscription, or donation for access.
+   e. Distribute the Mod behind a paywall, account registration requirement, or access gate that is not freely available to the public.
+
+4. Attribution & Link Requirements
+   Whenever the Mod is hosted, mirrored, or otherwise made available for download, you must:
+   a. Clearly attribute the Mod to CreativeMode.net in a visible location on the download page or listing.
+   b. Include a link to:
+
+The Mod’s official page on CreativeMode.net
+
+This license page: https://creativemode.net/mod-license
+c. Preserve the original filename and all embedded attribution notices, if any.
+d. Include attribution and links in any included README or description file.
+
+5. Permitted Monetization
+   You may monetize:
+
+Videos, streams, or tutorials that use the Mod, provided the Mod itself is not sold, paywalled, or otherwise restricted in violation of this license.
+Via creator payouts on modding platforms including Modrinth, CurseForge, and Nexus so long as the Mod itself is not sold, paywalled, or otherwise restricted in violation of this license, this mod license is preserved, and the link to CreativeMode.net and Mod License page is included on the mod listing page.
+
+All other monetization requires prior written permission from CreativeMode.
+
+6. Modifications for Private Use
+   You may modify the Mod solely for your own personal, private, local gameplay or private server use. You may not distribute, publish, upload, mirror, share, sell, sublicense, or otherwise make available any modified, patched, translated, decompiled, reverse-engineered, repackaged, renamed, or altered version of the Mod unless that version is created, exported, or expressly authorized through CreativeMode.
+
+7. Configuration and Compatibility
+   You may use configuration files, settings, datapacks, resource packs, compatibility patches, translations, or add-ons that interoperate with the Mod, provided they do not include or redistribute CreativeMode Mod files, code, models, textures, or other assets and do not imply endorsement by CreativeMode.
+
+8. Distribution of Original Files
+   Any public distribution of the Mod itself must use the original, unmodified file as provided by CreativeMode, with the original filename, attribution notices, and license information preserved.
+
+9. Telemetry and Privacy
+   CreativeMode Mods may include optional pseudonymous usage analytics. Not all CreativeMode Mods include these analytics. Any CreativeMode Mod that includes them provides an opt-out in its Mod settings. This telemetry is not linked to your name, Minecraft identity, or CreativeMode account. We do not collect Minecraft UUIDs, Minecraft usernames, server addresses, user IP addresses, world data, or chat information through CreativeMode Mod telemetry. For more information, see the CreativeMode Privacy Policy: https://creativemode.net/privacy
+
+10. Revocation
+   CreativeMode reserves the right to revoke this license for any user or entity who violates its terms. Upon revocation, you must immediately cease all distribution and remove all hosted copies of the Mod.
+
+11. Enforcement
+    Violation of this license may result in takedown notices, legal action, and account termination on CreativeMode.net. We actively monitor for infringement and misuse.
+
+12. Disclaimer
+    This Mod is provided “AS IS” without warranties of any kind. Use at your own risk.
+
+© 2025–2026 Argon, Inc. All Rights Reserved.
+For questions about this license or to request additional permissions, contact: support@creativemode.net

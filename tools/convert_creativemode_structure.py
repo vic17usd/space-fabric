@@ -33,7 +33,7 @@ def int_list(values):
     return tag_list(3, [integer(v) for v in values])
 
 
-def entity_entry(specification, dimensions, block_map):
+def entity_entry(specification, dimensions, block_map, implicit_ground=None):
     name = specification["id"]
     position = specification["position"]
     if not re.fullmatch(r"[a-z0-9_.-]+:[a-z0-9_./-]+", name) or len(position) != 3:
@@ -41,9 +41,9 @@ def entity_entry(specification, dimensions, block_map):
     if any(type(v) is not int or not 0 <= v < dimensions[i] for i, v in enumerate(position)):
         raise ValueError("Posición de entidad fuera de la plantilla")
     x, y, z = position
-    if (x, y - 1, z) not in block_map or any((x, y + dy, z) in block_map for dy in (0, 1, 2)):
+    if ((x, y - 1, z) not in block_map and y - 1 != implicit_ground) or any((x, y + dy, z) in block_map for dy in (0, 1, 2)):
         raise ValueError("La entidad necesita suelo y tres bloques libres")
-    floor = block_map[(x, y - 1, z)]
+    floor = block_map.get((x, y - 1, z), "space_fabric:iron_oxide_regolith")
     if floor in {"minecraft:water", "minecraft:lava", "minecraft:packed_ice", "minecraft:air"}:
         raise ValueError("Suelo de entidad no seguro")
     coordinates = tag_list(6, [struct.pack(">d", v) for v in (x + 0.5, y, z + 0.5)])
@@ -53,7 +53,7 @@ def entity_entry(specification, dimensions, block_map):
     return named(9, "pos", coordinates) + named(9, "blockPos", int_list(position)) + named(10, "nbt", nbt) + b"\0"
 
 
-def convert(document, entities=None):
+def convert(document, entities=None, implicit_ground=None):
     if document.get("format") != "creativemode.structure" or document.get("version") != 1:
         raise ValueError("Se requiere creativemode.structure versión 1")
     palette = document["palette"]
@@ -92,7 +92,7 @@ def convert(document, entities=None):
     entities = entities or []
     if len({tuple(spec["position"]) for spec in entities}) != len(entities):
         raise ValueError("Entidades con posiciones duplicadas")
-    body += named(9, "entities", tag_list(10, [entity_entry(spec, dimensions, block_map) for spec in entities]))
+    body += named(9, "entities", tag_list(10, [entity_entry(spec, dimensions, block_map, implicit_ground) for spec in entities]))
     # Se preservan exactamente los bloques del archivo; no se inventa aire ni conectores jigsaw.
     # anchor/grid_size pertenecen al editor de origen, no al formato NBT de Minecraft.
     return named(10, "", body + b"\0")

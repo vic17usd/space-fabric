@@ -21,12 +21,14 @@ public final class MarsSurfacePiece extends StructurePiece {
     private BlockPos origin;
     private final Rotation templateRotation;
     private final int padding;
+    private final boolean floorAligned;
 
     public MarsSurfacePiece(Identifier id, StructureTemplate template, BlockPos origin, Rotation rotation,
             int padding, int minY, int maxY) {
         super(MarsSurfaceStructures.PIECE, 0, plotBounds(template, origin, rotation, padding, minY, maxY));
         this.templateId = id; this.template = template; this.origin = origin;
         this.templateRotation = rotation; this.padding = padding;
+        this.floorAligned = true;
     }
     public MarsSurfacePiece(StructurePieceSerializationContext context, CompoundTag tag) {
         super(MarsSurfaceStructures.PIECE, tag);
@@ -35,6 +37,7 @@ public final class MarsSurfacePiece extends StructurePiece {
         origin = new BlockPos(tag.getIntOr("OriginX", 0), tag.getIntOr("OriginY", 0), tag.getIntOr("OriginZ", 0));
         templateRotation = Rotation.valueOf(tag.getStringOr("TemplateRotation", Rotation.NONE.name()));
         padding = Math.clamp(tag.getIntOr("Padding", 8), 0, 16);
+        floorAligned = tag.getBooleanOr("FloorAligned", false);
     }
     private static BoundingBox plotBounds(StructureTemplate template, BlockPos origin, Rotation rotation, int padding, int minY, int maxY) {
         var box = template.getBoundingBox(new StructurePlaceSettings().setRotation(rotation), origin);
@@ -42,6 +45,7 @@ public final class MarsSurfacePiece extends StructurePiece {
     }
     public BoundingBox templateBounds() { return template.getBoundingBox(new StructurePlaceSettings().setRotation(templateRotation), origin); }
     public BlockPos templateOrigin() { return origin; }
+    public int surfaceY() { return origin.getY() - (floorAligned ? 0 : 1); }
     @Override public Rotation getRotation() { return templateRotation; }
     @Override public void move(int x, int y, int z) {
         super.move(x, y, z); origin = origin.offset(x, y, z);
@@ -53,10 +57,11 @@ public final class MarsSurfacePiece extends StructurePiece {
         tag.putString("Template", templateId.toString()); tag.putString("TemplateRotation", templateRotation.name());
         tag.putInt("OriginX", origin.getX()); tag.putInt("OriginY", origin.getY()); tag.putInt("OriginZ", origin.getZ());
         tag.putInt("Padding", padding);
+        tag.putBoolean("FloorAligned", floorAligned);
     }
     @Override public void postProcess(WorldGenLevel level, StructureManager structures, ChunkGenerator generator,
             RandomSource random, BoundingBox clip, ChunkPos chunk, BlockPos pivot) {
-        SurfacePlot.prepare(level, boundingBox, origin.getY(), clip);
+        SurfacePlot.prepare(level, boundingBox, surfaceY() + 1, clip);
         // La preparación se completa antes de colocar bloques y habitantes en este chunk.
         var settings = new StructurePlaceSettings().setRotation(templateRotation).setBoundingBox(clip)
                 .setIgnoreEntities(false).setFinalizeEntities(true).setKnownShape(true);

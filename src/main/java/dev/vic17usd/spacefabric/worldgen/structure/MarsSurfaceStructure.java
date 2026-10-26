@@ -38,7 +38,7 @@ public final class MarsSurfaceStructure extends Structure {
         var bounds = building.getBoundingBox(new StructurePlaceSettings().setRotation(rotation), start);
         var plot = bounds.inflatedBy(padding, 0, padding);
         int y = SurfacePlot.sampleHighest(plot, (x, z) -> context.chunkGenerator().getFirstFreeHeight(x, z,
-                Heightmap.Types.WORLD_SURFACE_WG, context.heightAccessor(), context.randomState())) + 1;
+                Heightmap.Types.WORLD_SURFACE_WG, context.heightAccessor(), context.randomState())) - 1;
         if (y < context.heightAccessor().getMinY() + 8 || y + building.getSize().getY() + 2 > context.heightAccessor().getMaxY())
             return Optional.empty();
         var origin = new BlockPos(start.getX(), y, start.getZ());

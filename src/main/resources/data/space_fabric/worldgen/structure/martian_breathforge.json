@@ -4,6 +4,6 @@
   "step": "surface_structures",
   "spawn_overrides": {},
   "terrain_adaptation": "none",
-  "template": "space_fabric:martian_breathforge",
+  "template": "space_fabric:martian_breathforge_surface",
   "padding": 8
 }

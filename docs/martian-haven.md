@@ -1,8 +1,11 @@
-# Martian Haven y aldeano del JAR — Fabric 26.1, versión 0.10.0
+# Martian Haven y aldeano del JAR — Fabric 26.1, versión 0.11.0
 
-Haven conserva los 45.380 bloques, 36 materiales y dimensiones 124 × 84 × 125
-proporcionados. Se genera en Marte sobre una parcela plana preparada por
-`space_fabric:martian_surface`. Consulta [el generador de parcelas](martian-surface-plots.md).
+Haven retira tres capas de pedestal y el terreno importado del nuevo plano Y=0;
+la plantilla de superficie conserva 20.406 bloques, mide 124 × 81 × 125 y mantiene
+sus edificios y seis habitantes. Se genera en Marte sobre una parcela plana preparada
+por `space_fabric:martian_surface`, con los pisos al nivel del terreno. El NBT original
+de 45.380 bloques y 124 × 84 × 125 se conserva para piezas guardadas anteriormente.
+Consulta [el generador de parcelas](martian-surface-plots.md).
 
 ## Reemplazo del aldeano
 
@@ -28,8 +31,9 @@ recursos y comportamiento; el inicializador externo y su JAR de telemetría no s
 ## Aparición y persistencia
 
 Cada Haven incluye seis residentes en su plantilla NBT. Los puntos locales son
-`(30,5,30)`, `(90,4,30)`, `(30,4,90)`, `(90,5,90)`, `(30,4,62)` y `(90,4,62)`.
-El conversor comprueba suelo y tres bloques libres. El generador prepara el terreno
+`(30,2,30)`, `(90,1,30)`, `(30,1,90)`, `(90,2,90)`, `(30,1,62)` y `(90,1,62)`.
+El conversor comprueba suelo —incluido el regolito implícito— y tres bloques libres.
+El generador prepara el terreno
 antes de colocar la plantilla y Minecraft transforma las posiciones con su rotación.
 
 Son adultos persistentes que recuerdan una zona de 24 bloques alrededor de su
@@ -56,7 +60,7 @@ del mundo, unos 20 minutos a 20 TPS, esperando a terminar las transacciones acti
 
 ## Instalación y comandos
 
-Instala Space Fabric 0.10.0 en cliente y servidor con Fabric API para 26.1 y sustituye
+Instala Space Fabric 0.11.0 en cliente y servidor con Fabric API para 26.1 y sustituye
 la versión anterior; deja un solo JAR de Space Fabric en `mods/`. Las estructuras
 ya colocadas no se reconstruyen: comprueba las parcelas en un mundo de pruebas
 nuevo o en chunks nuevos.
@@ -81,6 +85,7 @@ La estructura original sigue en `tools/structure_sources/`. Para reconstruir el 
 
 ```sh
 python3 tools/convert_creativemode_structure.py tools/structure_sources/martian_haven_settlement.json src/main/resources/data/space_fabric/structure/martian_haven_settlement.nbt --entities tools/structure_sources/martian_haven_residents.json
+python3 tools/prepare_martian_templates.py
 ```
 
 Para volver a importar los recursos originales, sin ejecutar el JAR:

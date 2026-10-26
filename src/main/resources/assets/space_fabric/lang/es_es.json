@@ -67,5 +67,15 @@
   "destination.space_fabric.uranus": "Urano",
   "destination.space_fabric.neptune": "Neptuno",
   "entity.space_fabric.martian_copper_trader": "Comerciante marciano de cobre",
-  "item.space_fabric.martian_copper_trader_spawn_egg": "Generador de comerciante marciano de cobre"
+  "item.space_fabric.martian_copper_trader_spawn_egg": "Generador de comerciante marciano de cobre",
+  "entity.space_fabric.crystal_hum_crawler": "Crystal Hum Crawler",
+  "item.space_fabric.crystal_hum_crawler_spawn_egg": "Generador de Crystal Hum Crawler",
+  "entity.space_fabric.golden_eye_sandwraith": "Golden Eye Sandwraith",
+  "item.space_fabric.golden_eye_sandwraith_spawn_egg": "Generador de Golden Eye Sandwraith",
+  "entity.space_fabric.red_dune_ironmaw": "Red Dune Ironmaw",
+  "item.space_fabric.red_dune_ironmaw_spawn_egg": "Generador de Red Dune Ironmaw",
+  "item.space_fabric.energy_crystal_shard": "Fragmento de cristal de energía",
+  "item.space_fabric.condensed_stardust": "Polvo estelar condensado",
+  "item.space_fabric.vibration_sensor": "Sensor de vibración",
+  "item.space_fabric.crushed_iron_ore": "Mineral de hierro triturado"
 }

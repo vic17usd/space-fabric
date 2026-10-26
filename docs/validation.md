@@ -4,9 +4,9 @@ Verificado con JDK 25, Gradle 9.8.2, Loom 1.19.3, Minecraft 26.1,
 Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
 
 - `./gradlew build --console=plain`: compilación Java, recursos, JAR y pruebas correctos.
-- JUnit: **199 ejecutadas, 199 aprobadas, 0 omitidas**.
+- JUnit: **214 ejecutadas, 214 aprobadas, 0 omitidas**.
 - `ExposureTest`: 29 casos de atmósfera, inmunidad y protección por sellado.
-- `WorldgenCodecTest`: 134 casos con los codecs reales de Minecraft; nueve tipos
+- `WorldgenCodecTest`: 149 casos con los codecs reales de Minecraft; nueve tipos
   de dimensión, nueve mundos con sus generadores y tres tipos de daño aceptados.
 - `EnvironmentRulesTest`: 12 casos de velocidades solares, niebla y corrosión.
 - Cielos y ciclos: las nueve timelines nativas producen distinta luz de día/noche
@@ -18,13 +18,15 @@ Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
 - `PlanetHazardsTest`: 10 casos de presión por altitud y exposición a lluvia ácida.
 - La carga conjunta usa `RegistryDataLoader` con los recursos vanilla y del mod,
   incluidos biomas, features, carvers, tags, fluidos y ruido.
-- `python3 tools/validate_resources.py`: 274 JSON y referencias internas coherentes.
+- `python3 tools/validate_resources.py`: 292 JSON y referencias internas coherentes.
 - Comprobaciones de materiales: 24 loot tables y recetas aceptadas por los codecs;
   etiquetas de botas térmicas, componentes de armadura y requisitos de herramientas.
 - Modificaciones reales de Fabric: vetas marcianas presentes y decoración orbital
   conservada por el generador vacío.
-- Assets: modelos e inventario, traducciones y CRC/contenido de 41 texturas PNG validados,
+- Assets: modelos e inventario, traducciones y CRC/contenido de 47 texturas PNG validados,
   incluido el atlas original de 128×128 del cohete.
+  También se comprueban las rutas de texturas declaradas con `Identifier.fromNamespaceAndPath`
+  en los renderers Java para detectar referencias al namespace de los mods fuente.
 - Geología: extracción con netherita; recetas ensambladas de hierro y pigmentos;
   nueve features restringidas a sus biomas y hielo con techo opaco en ambas bandas polares.
 - Transporte: 8 casos de reglas de vuelo y 6 de llegada: ocupación, obstáculos,
@@ -38,7 +40,7 @@ Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
   desde sus JSON usando ingredientes vanilla.
 - Martian Breathforge: `structure`, `template_pool`, `structure_set` y tag de bioma
   aceptados en la carga conjunta; el único bioma válido es Marte.
-- Plantilla NBT: `NbtIo` y `StructureTemplate` cargan 89 × 73 × 89, 22 materiales y
+- Plantilla NBT original: `NbtIo` y `StructureTemplate` cargan 89 × 73 × 89, 22 materiales y
   30.608 bloques, comparados posición e índice de paleta con el archivo original.
 - Los cráteres marcianos aparecen en la fase anterior a las estructuras de superficie.
 - Regresión de `/locate`: `Structure.generate` real con tres semillas reproduce
@@ -48,8 +50,8 @@ Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
   búsqueda completa de `/locate` en un servidor de juego.
 - Haven: sus registros cargan correctamente; 45.380 bloques y seis entidades
   persistentes se conservan en la plantilla nativa con posiciones iniciales despejadas.
-- Haven también genera un inicio válido de una pieza con tres semillas y conserva
-  las dimensiones 124 × 84 × 125 de la plantilla bajo sus rotaciones.
+- Haven también genera un inicio válido de una pieza con tres semillas. La plantilla
+  de superficie mide 124 × 81 × 125 bajo sus rotaciones; la original conserva 124 × 84 × 125.
 - Comerciantes: tipo de entidad, atributos y huevo funcional registrados; dos ofertas originales
   probadas con consumo real de materiales y serialización nativa de existencias.
 - Gravedad del comerciante: 0.0304 en Marte sin acumulación; conservación de
@@ -58,7 +60,7 @@ Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
 - Gradle Wrapper y distribución: SHA-256 verificado con los checksums oficiales.
 - JDK descargado para este entorno: SHA-256 verificado con el checksum oficial.
 
-Artefacto generado: `build/libs/space-fabric-0.10.0.jar`.
+Artefacto generado: `build/libs/space-fabric-0.11.0.jar`.
 Los informes de la ejecución están en `build/test-results/test/` y
 `build/reports/tests/test/`; son salidas locales ignoradas por Git.
 
@@ -73,6 +75,8 @@ La adaptación visual del edificio al relieve marciano también queda pendiente;
 la preparación de parcela despeja el terreno antes de colocar los vacíos del NBT.
 La IA, la interfaz de comercio y la apariencia del comerciante requieren además
 comprobación visual en una partida real. No se simula esa sesión mediante los tests de NBT.
+Los nuevos mobs compilan con sus modelos y animaciones originales; su comportamiento,
+renderizado y frecuencia efectiva de aparición requieren también esa prueba en juego.
 
 El entorno utiliza un JDK local en `/workspace/.space-fabric-tools/jdk` y caché
 Gradle fuera del checkout. Los scripts reutilizables del entorno activan esas
@@ -93,3 +97,20 @@ Comprobaciones añadidas en 0.10.0:
 - Ambas piezas conservan plano, rotación y límites al guardar/cargar y moverse;
   sus parcelas quedan dentro del alcance de referencias de Minecraft.
 - El muestreo de altura es acotado e incluye los bordes de la parcela.
+
+Comprobaciones añadidas en 0.11.0:
+
+- Tres tipos de fauna, atributos, huevos y cuatro materiales registrados en el bootstrap real.
+- `SpawnPlacements` devuelve `ON_GROUND` y `MOTION_BLOCKING_NO_LEAVES` para cada especie;
+  el Mixin de acceso al registro privado se aplica durante las pruebas.
+- Tablas de bioma nativas: pesos y grupos exactos, presentes solo en Marte; ruido
+  marciano con generación inicial de criaturas habilitada.
+- Regla de hábitat: rechaza otra dimensión, otro bioma, suelo ajeno, agua, techo,
+  cuevas y posiciones suspendidas; acepta suelo marciano exterior a ras del heightmap.
+- PNG y OGG de los tres JAR fuente comparados por SHA-256 con el manifiesto importado.
+- Recorte reproducible de pedestales: 28.147 bloques de Breathforge y 20.406 de Haven,
+  sin alterar los bloques arquitectónicos por encima del recorte; seis residentes válidos.
+- Generación nativa con tres semillas por estructura: origen del piso en el suelo sólido.
+  Guardado/carga conserva la alineación nueva y la de piezas antiguas sin `FloorAligned`.
+- `MarsSurfacePiece.postProcess` coloca ambas plantillas recortadas sobre roca en
+  VoxelWorld, verificando pisos, huecos con regolito y habitaciones despejadas.

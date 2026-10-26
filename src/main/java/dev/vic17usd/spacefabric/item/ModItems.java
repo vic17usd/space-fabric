@@ -16,6 +16,16 @@ import java.util.function.Function;
 
 public final class ModItems {
     private static final Map<String, Item> ITEMS = new LinkedHashMap<>();
+    public static final Item ENERGY_CRYSTAL_SHARD = register("energy_crystal_shard", new Item.Properties());
+    public static final Item CONDENSED_STARDUST = register("condensed_stardust", new Item.Properties());
+    public static final Item VIBRATION_SENSOR = register("vibration_sensor", new Item.Properties());
+    public static final Item CRUSHED_IRON_ORE = register("crushed_iron_ore", new Item.Properties());
+    public static final Item CRYSTAL_HUM_CRAWLER_SPAWN_EGG = register("crystal_hum_crawler_spawn_egg", net.minecraft.world.item.SpawnEggItem::new,
+            new Item.Properties().spawnEgg(dev.vic17usd.spacefabric.entity.fauna.ModMartianFauna.CRAWLER));
+    public static final Item GOLDEN_EYE_SANDWRAITH_SPAWN_EGG = register("golden_eye_sandwraith_spawn_egg", net.minecraft.world.item.SpawnEggItem::new,
+            new Item.Properties().spawnEgg(dev.vic17usd.spacefabric.entity.fauna.ModMartianFauna.SANDWRAITH));
+    public static final Item RED_DUNE_IRONMAW_SPAWN_EGG = register("red_dune_ironmaw_spawn_egg", net.minecraft.world.item.SpawnEggItem::new,
+            new Item.Properties().spawnEgg(dev.vic17usd.spacefabric.entity.fauna.ModMartianFauna.IRONMAW));
     public static final Item MARTIAN_COPPER_TRADER_SPAWN_EGG = register("martian_copper_trader_spawn_egg",
             net.minecraft.world.item.SpawnEggItem::new, new Item.Properties().spawnEgg(
                     dev.vic17usd.spacefabric.entity.ModMarsEntities.COPPER_TRADER));

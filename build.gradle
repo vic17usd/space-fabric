@@ -19,6 +19,11 @@ java {
 }
 
 jar {
+    from('third_party/martian_fauna') {
+        include '**/LICENSE.txt'
+        include 'README.md'
+        into 'META-INF/licenses/martian_fauna'
+    }
     from('third_party/martian_copper_trader/LICENSE.txt') {
         into 'META-INF/licenses/martian_copper_trader'
     }

@@ -1,8 +1,11 @@
 # Space Fabric — Minecraft Java 26.1
 
-La versión 0.10.0 sustituye el comerciante por el modelo, textura, saludo e
-intercambios de `Aldeano Marciano.jar`. Breathforge y Haven preparan ahora parcelas
-planas con relleno y despeje antes de colocar sus edificios y habitantes.
+La versión 0.11.0 integra Crystal Hum Crawler, Golden Eye Sandwraith y Red Dune
+Ironmaw con sus modelos, texturas y animaciones, adaptados a la superficie de Marte.
+Breathforge y Haven eliminan sus pedestales inferiores y apoyan sus pisos al nivel
+del suelo marciano sobre parcelas planas con relleno y despeje.
+Consulta la [tabla de aparición, IA y archivos de la fauna marciana](docs/martian-fauna.md).
+El comerciante conserva el modelo, saludo e intercambios de `Aldeano Marciano.jar`.
 Consulta la [guía de parcelas de Marte](docs/martian-surface-plots.md), la
 [guía del asentamiento](docs/martian-haven.md) y la [guía de Breathforge](docs/martian-breathforge.md).
 Incluye cohetes pilotables, refinerías de combustible y un mapa estelar
@@ -13,9 +16,12 @@ Consulta la [guía completa de bloques y materiales](docs/materials.md).
 Consulta la [guía de terreno y registro de biomas](docs/terrain.md).
 Consulta la [tabla de dimensiones y claves Java](docs/dimensions.md).
 
-Descarga del prototipo compilado: [space-fabric-0.10.0.jar](dist/space-fabric-0.10.0.jar)
+Descarga del prototipo compilado: [space-fabric-0.11.0.jar](dist/space-fabric-0.11.0.jar)
 (en GitHub, pulsa **Download raw file**).
-[Checksum SHA-256](dist/space-fabric-0.10.0.jar.sha256).
+[Checksum SHA-256](dist/space-fabric-0.11.0.jar.sha256).
+Fauna original: **17usdd using [CreativeMode.net](https://creativemode.net)**;
+[páginas oficiales y atribución](third_party/martian_fauna/README.md),
+[licencia de sus recursos](https://creativemode.net/mod-license).
 Requiere Minecraft **26.1**, Java **25**, Fabric Loader y Fabric API **0.145.1+26.1**.
 Coloca el JAR y Fabric API en la carpeta `mods/`. Es el prototipo descrito abajo;
 todavía falta su validación dentro del juego.
@@ -47,7 +53,7 @@ python3 tools/validate_resources.py
 ./gradlew runClient
 ```
 
-El artefacto será `build/libs/space-fabric-0.10.0.jar`. Instala el mod y Fabric API
+El artefacto será `build/libs/space-fabric-0.11.0.jar`. Instala el mod y Fabric API
 en cliente y servidor. No se declara compatibilidad con 1.21.x ni con otras
 revisiones de 26.1 sin validarlas por separado.
 
@@ -79,10 +85,10 @@ src/main/java/dev/vic17usd/spacefabric/
 ├── worldgen/                        # Biomas, registro de features y cráteres
 ├── fluid/                           # Lava viscosa, bloque y cubo
 ├── space/                           # Cohete, destinos, reglas y llegada segura
-├── entity/                          # Comerciantes marcianos: IA, comercio y soporte vital
+├── entity/                          # Comerciantes y fauna marciana: IA, combate y soporte vital
 ├── machine/                         # Refinería, BlockEntity y motor de procesamiento
 ├── menu/                            # Menús de servidor e inventarios sincronizados
-├── client/                          # Modelo del cohete, pantallas, fluido y atmósferas
+├── client/                          # Modelos animados, pantallas, fluido y atmósferas
 └── command/
     └── PlanetCommands.java          # /planetinfo, diagnóstico de lectura
 
@@ -217,7 +223,8 @@ pueden reemplazar las de hierro para caminar sobre roca caliente. Las cuatro
 etiquetas `space_suit/*` permiten reemplazarlo por futuros ítems del mod o equipo
 de otro mod mediante datapack. Un casco aislado no protege. Esta fase considera
 el traje sellado y con oxígeno ilimitado: faltan tanques, consumo, fugas,
-temperatura, radiación, hábitats y protección de mobs. La lluvia ácida de Venus
+temperatura, radiación y hábitats. El comerciante y la fauna marciana tienen soporte
+vital propio; los demás mobs conservan sus reglas. La lluvia ácida de Venus
 aumenta progresivamente el veneno y desgasta la armadura, incluso con traje sellado;
 consulta la guía de ambientes. Tampoco sustituye el
 ahogamiento vanilla bajo el agua. Para añadir oxígeno, incorpora la carga del
@@ -229,7 +236,7 @@ tanque en `SuitProtection` y guarda su estado en componentes de ítem o attachme
 inmunidad, prioridad de presión e hipoxia a presión normal.
 También usa Fabric Loader JUnit y los codecs reales de Minecraft para interpretar
 los nueve tipos de dimensión, sus generadores y los tres tipos de daño; también
-comprueba refinería, persistencia del combustible, recetas, llegadas, estructuras y comerciantes: **199 casos**
+comprueba refinería, persistencia del combustible, recetas, llegadas, estructuras, comerciantes y fauna: **214 casos**
 en total. `tools/validate_resources.py` comprueba además JSON y referencias internas.
 Estas pruebas no arrancan un mundo ni comprueban la sincronización del cliente.
 

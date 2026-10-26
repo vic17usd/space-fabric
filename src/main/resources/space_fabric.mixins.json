@@ -2,6 +2,12 @@
   "required": true,
   "package": "dev.vic17usd.spacefabric.mixin",
   "compatibilityLevel": "JAVA_25",
-  "mixins": ["ServerLevelWeatherMixin", "PlanetSleepClockMixin"],
-  "injectors": {"defaultRequire": 1}
+  "mixins": [
+    "ServerLevelWeatherMixin",
+    "PlanetSleepClockMixin",
+    "SpawnPlacementsAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
 }

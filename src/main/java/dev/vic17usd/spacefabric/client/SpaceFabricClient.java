@@ -11,6 +11,15 @@ public final class SpaceFabricClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry.register(
+                dev.vic17usd.spacefabric.entity.fauna.ModMartianFauna.CRAWLER,
+                dev.vic17usd.spacefabric.client.fauna.CrystalHumCrawlerEntityRenderer::new);
+        net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry.register(
+                dev.vic17usd.spacefabric.entity.fauna.ModMartianFauna.SANDWRAITH,
+                dev.vic17usd.spacefabric.client.fauna.GoldenEyeSandwraithEntityRenderer::new);
+        net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry.register(
+                dev.vic17usd.spacefabric.entity.fauna.ModMartianFauna.IRONMAW,
+                dev.vic17usd.spacefabric.client.fauna.RedDuneIronmawEntityRenderer::new);
+        net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry.register(
                 dev.vic17usd.spacefabric.entity.ModMarsEntities.COPPER_TRADER,
                 dev.vic17usd.spacefabric.client.entity.MartianCopperTraderRenderer::new);
         net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry.register(

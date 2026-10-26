@@ -67,5 +67,15 @@
   "destination.space_fabric.uranus": "Uranus",
   "destination.space_fabric.neptune": "Neptune",
   "entity.space_fabric.martian_copper_trader": "Martian Copper Trader",
-  "item.space_fabric.martian_copper_trader_spawn_egg": "Martian Copper Trader Spawn Egg"
+  "item.space_fabric.martian_copper_trader_spawn_egg": "Martian Copper Trader Spawn Egg",
+  "entity.space_fabric.crystal_hum_crawler": "Crystal Hum Crawler",
+  "item.space_fabric.crystal_hum_crawler_spawn_egg": "Crystal Hum Crawler Spawn Egg",
+  "entity.space_fabric.golden_eye_sandwraith": "Golden Eye Sandwraith",
+  "item.space_fabric.golden_eye_sandwraith_spawn_egg": "Golden Eye Sandwraith Spawn Egg",
+  "entity.space_fabric.red_dune_ironmaw": "Red Dune Ironmaw",
+  "item.space_fabric.red_dune_ironmaw_spawn_egg": "Red Dune Ironmaw Spawn Egg",
+  "item.space_fabric.energy_crystal_shard": "Energy Crystal Shard",
+  "item.space_fabric.condensed_stardust": "Condensed Stardust",
+  "item.space_fabric.vibration_sensor": "Vibration Sensor",
+  "item.space_fabric.crushed_iron_ore": "Crushed Iron Ore"
 }
