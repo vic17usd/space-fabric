@@ -5,6 +5,7 @@ Run after tools/import_rocket_model.py when reimporting the base model.
 """
 from pathlib import Path
 import json, copy
+from generate_material_resources import png
 ROOT=Path(__file__).resolve().parents[1]
 RES=ROOT/'src/main/resources'
 ASSETS=RES/'assets/space_fabric'
@@ -101,13 +102,18 @@ java+='''            default -> new float[0][];
 }
 '''
 (ROOT/'src/main/java/dev/vic17usd/spacefabric/client/rocket/RocketModules.java').write_text(java)
-COLORS=['light_gray','yellow','blue','white','orange','brown','yellow','cyan','blue']
+COLORS=[(197,204,210),(217,173,53),(68,142,224),(214,219,225),(230,107,60),(183,110,58),(226,196,120),(98,215,214),(66,105,206)]
 NAMES_ES=['Mercurio','Venus','la Tierra','la Luna','Marte','Júpiter','Saturno','Urano','Neptuno']
 MATERIALS=['minecraft:quartz','minecraft:obsidian','minecraft:copper_ingot','minecraft:glass','minecraft:iron_ingot','minecraft:netherite_scrap','minecraft:gold_ingot','minecraft:blue_ice','minecraft:prismarine_crystals']
 base=json.loads((ASSETS/'models/item/rocket.json').read_text())
 langs={lang:json.loads((ASSETS/f'lang/{lang}.json').read_text()) for lang in ['es_es','en_us']}
 for (name,boxes),color,es,material in zip(MODULES.items(),COLORS,NAMES_ES,MATERIALS):
-    model=copy.deepcopy(base);model['textures']['accent']=f'minecraft:block/{color}_concrete'
+    # 26.1 rejects item models whose quads use different atlases. Keep both the
+    # imported fuselage and the new accent sprite under item/, never block/.
+    accent=f'rocket_module_{name}'
+    pixels=[[tuple(max(0,min(255,c+((x*3+y*5)%7)-3)) for c in color)+(255,) for x in range(16)] for y in range(16)]
+    png(f'assets/space_fabric/textures/item/{accent}.png',pixels)
+    model=copy.deepcopy(base);model['textures']['accent']=f'space_fabric:item/{accent}'
     for x,y,z,xx,yy,zz in boxes:
         scale=16/3.284210526
         model['elements'].append({'from':[round(8-xx*scale,5),round(y*scale,5),round(8-zz*scale,5)],'to':[round(8-x*scale,5),round(yy*scale,5),round(8-z*scale,5)],'faces':{face:{'uv':[0,0,16,16],'texture':'#accent'} for face in ['up','down','north','south','east','west']}})

@@ -106,3 +106,24 @@ sin pérdida, guardado de variante/casco/carga/combustible, rutas compatibles y
 límites profundos. También emite y valida los vértices de los nueve modelos e ítems,
 el fuselaje original y la abertura real de la cabina, sin GPU. La inspección visual
 en una partida con Sodium y las pruebas de vuelos multijugador siguen pendientes.
+
+## Corrección de inventario — 0.18.1
+
+En 0.17.0 y 0.18.0 los módulos del ítem referenciaban texturas de concreto del
+atlas de bloques mientras el fuselaje usaba el atlas de ítems. Minecraft 26.1
+rechaza esa mezcla en `CuboidItemModelWrapper.validateAtlasUsage`, por lo que el
+ítem completo aparecía como el modelo rosa y negro de recurso faltante. El cohete
+básico usaba un único atlas y por eso seguía viéndose correctamente.
+
+0.18.1 incluye nueve sprites propios `textures/item/rocket_module_*.png` y corrige
+las referencias del generador y los modelos. Conserva el PNG original, geometría,
+cabina, capacidades y datos de los cohetes existentes. Los iconos marrones o de
+amatista corresponden a los kits de mejora y conservan su aspecto anterior.
+
+Sustituye el JAR anterior por `space-fabric-0.18.1.jar` y reinicia el juego; en un
+servidor, actualiza también el cliente. No hace falta fabricar los cohetes otra
+vez ni regenerar terreno. `verifyRocketItemResources` analiza los diez modelos
+con el parser y resolvedor de texturas nativos de 26.1, comprueba cada cara y que
+sus sprites pertenezcan a un único atlas. También reconstruye las nueve referencias
+antiguas y verifica que la comprobación detecte la regresión. Se ejecuta con
+`./gradlew build`. No se ha realizado una prueba visual con GPU en este entorno.

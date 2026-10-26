@@ -2,7 +2,7 @@
   "textures": {
     "0": "space_fabric:item/rocket",
     "particle": "space_fabric:item/rocket",
-    "accent": "minecraft:block/yellow_concrete"
+    "accent": "space_fabric:item/rocket_module_venus"
   },
   "elements": [
     {
