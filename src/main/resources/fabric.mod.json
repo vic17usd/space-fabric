@@ -3,7 +3,7 @@
   "id": "space_fabric",
   "version": "${version}",
   "name": "Space Fabric",
-  "description": "Nueve destinos planetarios, fauna, asentamientos y santuario con jefe bajo Marte, geología y viajes en cohete con refinería y mapa estelar.",
+  "description": "Nueve destinos planetarios, fauna, asentamientos y santuario con jefe bajo Marte, geología, viajes en cohete, refinería, mapa estelar y visor integrado de recetas y usos.",
   "environment": "*",
   "entrypoints": {
     "main": ["dev.vic17usd.spacefabric.SpaceFabric"],

@@ -3,27 +3,18 @@ package dev.vic17usd.spacefabric.machine;
 import dev.vic17usd.spacefabric.item.ModItems;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 
 /** Motor sin mundo: consume los tres ingredientes de forma atómica al completar el ciclo. */
 public final class RefineryProcess {
     private int progress;
     private int recipe;
     public int progress() { return progress; }
-    public int duration() { return recipe == 2 ? 160 : 200; }
-    public static boolean accepts(int slot, ItemStack stack) {
-        return switch (slot) {
-            case 0 -> stack.is(Items.COAL) || stack.is(Items.CHARCOAL) || stack.is(ModItems.SULFUR_CRYSTAL);
-            case 1 -> stack.is(Items.BLAZE_POWDER) || stack.is(ModItems.ACID_CONDENSATE) || stack.is(ModItems.SULFATE_DUST);
-            case 2 -> stack.is(ModItems.EMPTY_FUEL_CELL);
-            default -> false;
-        };
-    }
+    public int duration() { return recipe>0?RefineryRecipes.ALL.get(recipe-1).duration():200; }
+    public static boolean accepts(int slot, ItemStack stack) { return RefineryRecipes.accepts(slot,stack); }
     private static int match(Container inventory) {
-        if (!inventory.getItem(2).is(ModItems.EMPTY_FUEL_CELL)) return 0;
-        var base = inventory.getItem(0); var reagent = inventory.getItem(1);
-        if ((base.is(Items.COAL) || base.is(Items.CHARCOAL)) && reagent.is(Items.BLAZE_POWDER)) return 1;
-        if (base.is(ModItems.SULFUR_CRYSTAL) && (reagent.is(ModItems.ACID_CONDENSATE) || reagent.is(ModItems.SULFATE_DUST))) return 2;
+        if(!inventory.getItem(2).is(ModItems.EMPTY_FUEL_CELL))return 0;
+        for(int i=0;i<RefineryRecipes.ALL.size();i++)
+            if(RefineryRecipes.ALL.get(i).matches(inventory.getItem(0),inventory.getItem(1)))return i+1;
         return 0;
     }
     public boolean tick(Container inventory) {

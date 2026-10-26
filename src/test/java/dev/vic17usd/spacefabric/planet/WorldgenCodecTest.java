@@ -1319,4 +1319,73 @@ class WorldgenCodecTest {
         var input=net.minecraft.world.item.crafting.CraftingInput.of(1,1,List.of(new ItemStack(dev.vic17usd.spacefabric.earth.EarthMaterials.storage(mineral))));
         assertTrue(decompression.matches(input,null));assertEquals(9,decompression.assemble(input).getCount());assertEquals(output,decompression.assemble(input).getItem());
     }
+
+    private static dev.vic17usd.spacefabric.recipe.RecipeCatalog viewerCatalog() throws IOException {
+        var holders=new java.util.ArrayList<net.minecraft.world.item.crafting.RecipeHolder<?>>();
+        try(var paths=java.nio.file.Files.list(Path.of("src/main/resources/data/space_fabric/recipe"))) {
+            for(var path:paths.filter(p->p.toString().endsWith(".json")).toList()) {
+                var id=SpaceFabric.id(path.getFileName().toString().replace(".json",""));
+                var recipe=Recipe.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("recipe/"+id.getPath())).getOrThrow();
+                holders.add(new net.minecraft.world.item.crafting.RecipeHolder<>(net.minecraft.resources.ResourceKey.create(Registries.RECIPE,id),recipe));
+            }
+        }
+        var context=new net.minecraft.util.context.ContextMap.Builder()
+                .withParameter(net.minecraft.world.item.crafting.display.SlotDisplayContext.REGISTRIES,registries)
+                .withParameter(net.minecraft.world.item.crafting.display.SlotDisplayContext.FUEL_VALUES,
+                    net.minecraft.world.level.block.entity.FuelValues.vanillaBurnTimes(registries,net.minecraft.world.flag.FeatureFlags.DEFAULT_FLAGS))
+                .create(net.minecraft.world.item.crafting.display.SlotDisplayContext.CONTEXT);
+        return dev.vic17usd.spacefabric.recipe.RecipeCatalog.build(holders,context);
+    }
+    @Test void recipeViewerIndexesActualRecipesAndIngredientUsesIncludingRefinery() throws IOException {
+        var catalog=viewerCatalog();
+        var rocket=catalog.find(ModItems.ROCKET,false);
+        assertEquals(1,rocket.size());assertEquals(3,rocket.getFirst().width());assertEquals(9,rocket.getFirst().inputs().size());
+        assertTrue(rocket.getFirst().inputs().get(0).isEmpty());
+        assertTrue(rocket.getFirst().inputs().get(1).getFirst().is(Items.IRON_BLOCK));
+        assertTrue(catalog.find(ModItems.SULFATE_DUST,true).stream().anyMatch(c->c.kind().equals("refinery")));
+        var fuel=catalog.find(ModItems.ROCKET_FUEL_CELL,false);
+        assertEquals(2,fuel.size());assertTrue(fuel.stream().allMatch(c->c.station().is(ModBlocks.FUEL_REFINERY.asItem())));
+        assertTrue(catalog.find(dev.vic17usd.spacefabric.earth.EarthMaterials.product(dev.vic17usd.spacefabric.earth.EarthMineral.BAUXITE),false).stream().anyMatch(c->c.kind().equals("blasting")));
+        assertTrue(catalog.find(ModItems.MARS_ROCKET_KIT,false).stream().anyMatch(c->c.kind().equals("crafting")));
+        assertFalse(catalog.find(ModItems.VACUUM_SUIT_HELMET,false).isEmpty());
+        var invalid=dev.vic17usd.spacefabric.recipe.RecipeViewerNetwork.query(catalog,new dev.vic17usd.spacefabric.recipe.RecipeViewerNetwork.Request(7,"not a valid id",false,Integer.MAX_VALUE));
+        assertEquals(7,invalid.sequence());assertEquals(0,invalid.total());assertTrue(invalid.card().isEmpty());
+        var clamped=dev.vic17usd.spacefabric.recipe.RecipeViewerNetwork.query(catalog,new dev.vic17usd.spacefabric.recipe.RecipeViewerNetwork.Request(8,"space_fabric:rocket",false,Integer.MAX_VALUE));
+        assertEquals(0,clamped.page());assertEquals(1,clamped.total());
+    }
+    @Test void recipeViewerNativeNetworkRoundTripPreservesSlotsAlternativesAndCounts() throws IOException {
+        var catalog=viewerCatalog();
+        for(var item:List.of(ModItems.ROCKET,ModItems.ROCKET_FUEL_CELL,ModItems.VACUUM_SUIT_HELMET)) {
+            var card=catalog.find(item,false).getFirst();
+            var reply=new dev.vic17usd.spacefabric.recipe.RecipeViewerNetwork.Reply(31,0,1,Optional.of(card));
+            var buffer=new net.minecraft.network.RegistryFriendlyByteBuf(io.netty.buffer.Unpooled.buffer(),(RegistryAccess)registries);
+            try {
+                dev.vic17usd.spacefabric.recipe.RecipeViewerNetwork.Reply.CODEC.encode(buffer,reply);
+                assertTrue(buffer.readableBytes()<1048576);
+                var decoded=dev.vic17usd.spacefabric.recipe.RecipeViewerNetwork.Reply.CODEC.decode(buffer);
+                var restored=decoded.card().orElseThrow();
+                assertEquals(31,decoded.sequence());assertEquals(card.id(),restored.id());assertEquals(card.kind(),restored.kind());
+                assertEquals(card.width(),restored.width());assertEquals(card.duration(),restored.duration());
+                assertEquals(card.inputs().size(),restored.inputs().size());
+                for(int i=0;i<card.inputs().size();i++) {
+                    assertEquals(card.inputs().get(i).size(),restored.inputs().get(i).size());
+                    for(int j=0;j<card.inputs().get(i).size();j++)assertTrue(ItemStack.matches(card.inputs().get(i).get(j),restored.inputs().get(i).get(j)));
+                }
+                assertTrue(ItemStack.matches(card.outputs().getFirst(),restored.outputs().getFirst()));
+                assertTrue(ItemStack.matches(card.station(),restored.station()));
+                assertEquals(0,buffer.readableBytes());
+            } finally {buffer.release();}
+        }
+    }
+    @Test void displayedRefineryFormulasAreTheSameOnesTheMachineConsumes() throws IOException {
+        var catalog=viewerCatalog();var cards=catalog.find(ModItems.ROCKET_FUEL_CELL,false);
+        for(var card:cards)for(var base:card.inputs().get(0))for(var reagent:card.inputs().get(1)) {
+            var inventory=new net.minecraft.world.SimpleContainer(4);
+            inventory.setItem(0,base.copy());inventory.setItem(1,reagent.copy());inventory.setItem(2,new ItemStack(ModItems.EMPTY_FUEL_CELL));
+            var process=new dev.vic17usd.spacefabric.machine.RefineryProcess();
+            for(int i=0;i<card.duration();i++)process.tick(inventory);
+            assertTrue(inventory.getItem(3).is(ModItems.ROCKET_FUEL_CELL));assertEquals(1,inventory.getItem(3).getCount());
+            for(int i=0;i<3;i++)assertTrue(inventory.getItem(i).isEmpty());
+        }
+    }
 }

@@ -45,6 +45,7 @@ public final class SpaceFabric implements ModInitializer {
         dev.vic17usd.spacefabric.machine.ModMachines.initialize();
         dev.vic17usd.spacefabric.menu.ModMenus.initialize();
         ModCreativeTabs.initialize();
+        dev.vic17usd.spacefabric.recipe.RecipeViewerNetwork.initialize();
         OreGen.initialize();
         dev.vic17usd.spacefabric.worldgen.EarthOreGen.initialize();
         EnvironmentWorldgen.initialize();

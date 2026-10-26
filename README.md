@@ -1,5 +1,9 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión 0.19.0 añade un **visor de recetas y usos tipo JEI**, incluido en el JAR.
+Ábrelo con **K** o con **Recetas** en el inventario: búsqueda por nombre/ID/mod,
+crafteos, fundición y fórmulas de la refinería obtenidas del servidor.
+[Guía del visor y controles](docs/recipe-viewer.md).
 La versión 0.18.2 adapta las ocho menas terrestres al estilo de las tres referencias
 aportadas, con **31 texturas de 128px** para menas, materias primas y productos.
 [Vista previa y asignación de minerales](docs/earth-geology.md).
@@ -40,9 +44,9 @@ Consulta la [guía completa de bloques y materiales](docs/materials.md).
 Consulta la [guía de terreno y registro de biomas](docs/terrain.md).
 Consulta la [tabla de dimensiones y claves Java](docs/dimensions.md).
 
-Descarga del prototipo compilado: [space-fabric-0.18.2.jar](dist/space-fabric-0.18.2.jar)
+Descarga del prototipo compilado: [space-fabric-0.19.0.jar](dist/space-fabric-0.19.0.jar)
 (en GitHub, pulsa **Download raw file**).
-[Checksum SHA-256](dist/space-fabric-0.18.2.jar.sha256).
+[Checksum SHA-256](dist/space-fabric-0.19.0.jar.sha256).
 Fauna original: **17usdd using [CreativeMode.net](https://creativemode.net)**;
 [páginas oficiales y atribución](third_party/martian_fauna/README.md),
 [licencia de sus recursos](https://creativemode.net/mod-license).
