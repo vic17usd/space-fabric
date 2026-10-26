@@ -1250,4 +1250,73 @@ class WorldgenCodecTest {
         assertEquals(63,item.get(net.minecraft.core.component.DataComponents.CUSTOM_DATA).copyTag().getIntOr("RocketHull",-1));
         restored.restoreHull(-1);assertEquals(0,restored.hull());restored.restoreHull(101);assertEquals(100,restored.hull());
     }
+
+    @ParameterizedTest @EnumSource(dev.vic17usd.spacefabric.earth.EarthMineral.class)
+    void terrestrialMaterialsHaveRealRegistrationsLootAndCorrectMiningTiers(dev.vic17usd.spacefabric.earth.EarthMineral mineral) throws IOException {
+        for(boolean deep:new boolean[]{false,true}) {
+            var block=dev.vic17usd.spacefabric.earth.EarthMaterials.ore(mineral,deep);
+            assertEquals(SpaceFabric.id(mineral.oreId(deep)),BuiltInRegistries.BLOCK.getKey(block));
+            assertEquals(block.asItem(),BuiltInRegistries.ITEM.getValue(SpaceFabric.id(mineral.oreId(deep))));
+            assertNotNull(LootTable.DIRECT_CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("loot_table/blocks/"+mineral.oreId(deep))).getOrThrow());
+            assertFalse(new ItemStack(Items.WOODEN_PICKAXE).isCorrectToolForDrops(block.defaultBlockState()));
+            assertFalse(new ItemStack(Items.GOLDEN_PICKAXE).isCorrectToolForDrops(block.defaultBlockState()));
+            assertEquals(mineral.tool.equals("stone"),new ItemStack(Items.STONE_PICKAXE).isCorrectToolForDrops(block.defaultBlockState()));
+            assertEquals(!mineral.tool.equals("diamond"),new ItemStack(Items.IRON_PICKAXE).isCorrectToolForDrops(block.defaultBlockState()));
+            assertTrue(new ItemStack(Items.DIAMOND_PICKAXE).isCorrectToolForDrops(block.defaultBlockState()));
+            assertTrue(new ItemStack(Items.NETHERITE_PICKAXE).isCorrectToolForDrops(block.defaultBlockState()));
+        }
+        var storage=dev.vic17usd.spacefabric.earth.EarthMaterials.storage(mineral);
+        assertEquals(SpaceFabric.id(mineral.storageId()),BuiltInRegistries.BLOCK.getKey(storage));
+        assertNotNull(LootTable.DIRECT_CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("loot_table/blocks/"+mineral.storageId())).getOrThrow());
+        assertEquals(SpaceFabric.id(mineral.productId()),BuiltInRegistries.ITEM.getKey(dev.vic17usd.spacefabric.earth.EarthMaterials.product(mineral)));
+    }
+
+    @ParameterizedTest @EnumSource(dev.vic17usd.spacefabric.earth.EarthMineral.class)
+    void terrestrialVeinsReplaceBothHostRocksAndAreInjectedIntoTheActualOverworldBiomes(dev.vic17usd.spacefabric.earth.EarthMineral mineral) {
+        var key=dev.vic17usd.spacefabric.worldgen.EarthOreGen.key(mineral);
+        var placed=registries.lookupOrThrow(Registries.PLACED_FEATURE).getOrThrow(key).value();
+        var config=assertInstanceOf(net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration.class,placed.feature().value().config());
+        assertEquals(mineral.veinSize,config.size);assertEquals(2,config.targetStates.size());
+        for(int i=0;i<2;i++) {
+            var target=config.targetStates.get(i);
+            assertTrue(target.state.is(dev.vic17usd.spacefabric.earth.EarthMaterials.ore(mineral,i==1)));
+            assertTrue(target.target.test((i==0?net.minecraft.world.level.block.Blocks.STONE:net.minecraft.world.level.block.Blocks.DEEPSLATE).defaultBlockState(),net.minecraft.util.RandomSource.create(42)));
+            assertFalse(target.target.test(net.minecraft.world.level.block.Blocks.BEDROCK.defaultBlockState(),net.minecraft.util.RandomSource.create(42)));
+        }
+        var jungle=registries.lookupOrThrow(Registries.BIOME).getOrThrow(net.minecraft.world.level.biome.Biomes.JUNGLE).value();
+        var plains=registries.lookupOrThrow(Registries.BIOME).getOrThrow(net.minecraft.world.level.biome.Biomes.PLAINS).value();
+        assertTrue(jungle.getGenerationSettings().features().stream().flatMap(net.minecraft.core.HolderSet::stream).anyMatch(f->f.is(key)));
+        assertEquals(mineral!=dev.vic17usd.spacefabric.earth.EarthMineral.BAUXITE,plains.getGenerationSettings().features().stream().flatMap(net.minecraft.core.HolderSet::stream).anyMatch(f->f.is(key)));
+        for(var planet:Planet.values()) {
+            if(planet==Planet.EARTH)continue; // Uses the same vanilla biomes as the Overworld.
+            var biome=registries.lookupOrThrow(Registries.BIOME).getOrThrow(dev.vic17usd.spacefabric.worldgen.PlanetBiomes.key(planet)).value();
+            assertFalse(biome.getGenerationSettings().features().stream().flatMap(net.minecraft.core.HolderSet::stream).anyMatch(f->f.is(key)),planet.path());
+        }
+    }
+
+    @ParameterizedTest @EnumSource(dev.vic17usd.spacefabric.earth.EarthMineral.class)
+    void terrestrialRefiningAndReversibleStorageActuallyAssemble(dev.vic17usd.spacefabric.earth.EarthMineral mineral) throws IOException {
+        var output=dev.vic17usd.spacefabric.earth.EarthMaterials.product(mineral);
+        if(mineral.isMetal()) for(String source:new String[]{mineral.rawId(),mineral.oreId(false),mineral.oreId(true)}) {
+            for(String method:new String[]{"smelting","blasting"}) {
+                var recipe=assertInstanceOf(net.minecraft.world.item.crafting.AbstractCookingRecipe.class,
+                    Recipe.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("recipe/"+source+"_"+method)).getOrThrow());
+                var input=new net.minecraft.world.item.crafting.SingleRecipeInput(new ItemStack(BuiltInRegistries.ITEM.getValue(SpaceFabric.id(source))));
+                assertTrue(recipe.matches(input,null));assertEquals(output,recipe.assemble(input).getItem());
+                assertNotNull(net.minecraft.advancements.Advancement.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("advancement/recipes/earth/"+source+"_"+method)).getOrThrow());
+            }
+        }
+        assertNotNull(net.minecraft.advancements.Advancement.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("advancement/recipes/earth/"+mineral.storageId())).getOrThrow());
+        assertNotNull(net.minecraft.advancements.Advancement.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("advancement/recipes/earth/"+mineral.productId()+"_from_block")).getOrThrow());
+        var compression=assertInstanceOf(net.minecraft.world.item.crafting.ShapedRecipe.class,
+            Recipe.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("recipe/"+mineral.storageId())).getOrThrow());
+        var items=net.minecraft.core.NonNullList.withSize(9,ItemStack.EMPTY);
+        for(int i=0;i<9;i++)items.set(i,new ItemStack(output));
+        var grid=net.minecraft.world.item.crafting.CraftingInput.of(3,3,items);
+        assertTrue(compression.matches(grid,null));assertEquals(dev.vic17usd.spacefabric.earth.EarthMaterials.storage(mineral).asItem(),compression.assemble(grid).getItem());
+        var decompression=assertInstanceOf(net.minecraft.world.item.crafting.ShapelessRecipe.class,
+            Recipe.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("recipe/"+mineral.productId()+"_from_block")).getOrThrow());
+        var input=net.minecraft.world.item.crafting.CraftingInput.of(1,1,List.of(new ItemStack(dev.vic17usd.spacefabric.earth.EarthMaterials.storage(mineral))));
+        assertTrue(decompression.matches(input,null));assertEquals(9,decompression.assemble(input).getCount());assertEquals(output,decompression.assemble(input).getItem());
+    }
 }

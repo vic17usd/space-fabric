@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "ingredient": "space_fabric:argentite_ore",
+  "result": {
+    "id": "space_fabric:silver_ingot"
+  },
+  "experience": 0.7,
+  "cookingtime": 100
+}

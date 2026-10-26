@@ -3,6 +3,8 @@
   "values": [
     "space_fabric:ares_crystal_ore",
     "space_fabric:phobosite_ore",
-    "space_fabric:dense_iron_ore"
+    "space_fabric:dense_iron_ore",
+    "space_fabric:ilmenite_ore",
+    "space_fabric:deepslate_ilmenite_ore"
   ]
 }
