@@ -1,5 +1,8 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión 0.20.0 incorpora **texturas propias para los nueve kits de mejora y
+los cuatro trajes**, tanto en inventario como equipados.
+[Vista previa, colores y archivos](docs/equipment-textures.md).
 La versión 0.19.0 añade un **visor de recetas y usos tipo JEI**, incluido en el JAR.
 Ábrelo con **K** o con **Recetas** en el inventario: búsqueda por nombre/ID/mod,
 crafteos, fundición y fórmulas de la refinería obtenidas del servidor.
@@ -44,9 +47,9 @@ Consulta la [guía completa de bloques y materiales](docs/materials.md).
 Consulta la [guía de terreno y registro de biomas](docs/terrain.md).
 Consulta la [tabla de dimensiones y claves Java](docs/dimensions.md).
 
-Descarga del prototipo compilado: [space-fabric-0.19.0.jar](dist/space-fabric-0.19.0.jar)
+Descarga del prototipo compilado: [space-fabric-0.20.0.jar](dist/space-fabric-0.20.0.jar)
 (en GitHub, pulsa **Download raw file**).
-[Checksum SHA-256](dist/space-fabric-0.19.0.jar.sha256).
+[Checksum SHA-256](dist/space-fabric-0.20.0.jar.sha256).
 Fauna original: **17usdd using [CreativeMode.net](https://creativemode.net)**;
 [páginas oficiales y atribución](third_party/martian_fauna/README.md),
 [licencia de sus recursos](https://creativemode.net/mod-license).

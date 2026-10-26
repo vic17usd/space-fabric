@@ -1,0 +1,14 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "space_fabric:abyssal_suit"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "space_fabric:abyssal_suit"
+      }
+    ]
+  }
+}

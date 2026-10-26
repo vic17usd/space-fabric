@@ -123,7 +123,7 @@ for (name,boxes),color,es,material in zip(MODULES.items(),COLORS,NAMES_ES,MATERI
         path=f'{name}_{suffix}'
         (ASSETS/f'items/{path}.json').write_text(json.dumps({'model':{'type':'minecraft:model','model':f'space_fabric:item/{path}'}},indent=2)+'\n')
     (ASSETS/f'models/item/{name}_rocket.json').write_text(json.dumps(model,indent=2)+'\n')
-    (ASSETS/f'models/item/{name}_rocket_kit.json').write_text(json.dumps({'parent':'minecraft:item/generated','textures':{'layer0':f'minecraft:item/{"amethyst_shard" if name in ["uranus","neptune"] else "netherite_scrap"}'}},indent=2)+'\n')
+    (ASSETS/f'models/item/{name}_rocket_kit.json').write_text(json.dumps({'parent':'minecraft:item/generated','textures':{'layer0':f'space_fabric:item/{name}_rocket_kit'}},indent=2)+'\n')
     recipe={'type':'minecraft:crafting_shaped','category':'misc','pattern':['IPI','RCR','IPI'],'key':{'I':'minecraft:iron_ingot','P':material,'R':'minecraft:redstone','C':'minecraft:copper_block'},'result':{'id':f'space_fabric:{name}_rocket_kit','count':1}}
     (RES/f'data/space_fabric/recipe/{name}_rocket_kit.json').write_text(json.dumps(recipe,indent=2)+'\n')
     for lang,data in langs.items():
@@ -134,3 +134,6 @@ for lang,data in langs.items():
     data.update({'item.space_fabric.rocket_rating':'Casco: %s bar; %s a %s °C' if lang=='es_es' else 'Hull: %s bar; %s to %s °C','gui.space_fabric.route_safe':'Destino compatible con este cohete.' if lang=='es_es' else 'Destination compatible with this rocket.','gui.space_fabric.route_unsafe':'La protección del cohete no permite este destino.' if lang=='es_es' else 'Rocket protection does not permit this destination.','rocket.space_fabric.variant.base':'Básico' if lang=='es_es' else 'Basic','gui.space_fabric.hull':'Casco: %s%%' if lang=='es_es' else 'Hull: %s%%','message.space_fabric.upgrade_empty':'Baja del cohete para instalar el kit.' if lang=='es_es' else 'Leave the rocket before installing the kit.','message.space_fabric.rocket_unsuitable':'El casco o la protección no permiten este viaje.' if lang=='es_es' else 'Hull or environmental protection does not permit this trip.','item.space_fabric.rocket_kit_help':'Clic derecho sobre un cohete vacío para instalar.' if lang=='es_es' else 'Right-click an unoccupied rocket to install.'})
     (ASSETS/f'lang/{lang}.json').write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n')
 print('Generated nine rocket meshes, items, upgrades, recipes and translations.')
+
+from import_equipment_textures import import_art
+import_art()

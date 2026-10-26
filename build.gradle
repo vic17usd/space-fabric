@@ -84,3 +84,9 @@ tasks.register('verifyRocketItemResources', JavaExec) {
     mainClass = 'dev.vic17usd.spacefabric.client.rocket.RocketItemResourcesCheck'
 }
 tasks.named('check') { dependsOn tasks.named('verifyRocketItemResources') }
+tasks.register('verifyEquipmentTextures', JavaExec) {
+    dependsOn tasks.named('renderCheckClasses')
+    classpath = sourceSets.renderCheck.runtimeClasspath
+    mainClass = 'dev.vic17usd.spacefabric.client.rocket.EquipmentTextureCheck'
+}
+tasks.named('check') { dependsOn tasks.named('verifyEquipmentTextures') }

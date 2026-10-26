@@ -76,8 +76,9 @@ Cada conjunto tiene `helmet`, `chestplate`, `leggings` y `boots`. **Las cuatro p
 deben ser de la misma categoría**. Faltar una pieza o mezclar categorías rompe la
 protección. Hierro, diamante, netherita, casco de tortuga o botas térmicas comunes
 no sustituyen una escafandra. Las fichas de los ítems muestran sus especificaciones.
-Los iconos y el equipo visible reutilizan de momento los recursos vanilla de hierro;
-se distinguen por identificador, nombre y descripción, no por una textura nueva.
+Desde 0.20.0 cada conjunto tiene iconos propios y texturas equipadas diferentes,
+conservando las propiedades del material anterior. Consulta la
+[vista previa de trajes y kits](equipment-textures.md).
 
 El O₂ integrado todavía es ilimitado: no hay consumo de botella ni de energía.
 También mantiene el suministro de aire bajo el agua. El combate ordinario puede

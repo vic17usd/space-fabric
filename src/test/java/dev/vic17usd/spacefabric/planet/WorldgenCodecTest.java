@@ -1172,6 +1172,13 @@ class WorldgenCodecTest {
             stacks[n]=new ItemStack(BuiltInRegistries.ITEM.getValue(SpaceFabric.id(name)));
             assertFalse(stacks[n].isEmpty());
             assertTrue(stacks[n].has(net.minecraft.core.component.DataComponents.EQUIPPABLE));
+            var equipped=stacks[n].get(net.minecraft.core.component.DataComponents.EQUIPPABLE);
+            assertEquals(SpaceFabric.id(tier+"_suit"),equipped.assetId().orElseThrow().identifier());
+            var original=new ItemStack(new net.minecraft.world.item.Item[]{Items.IRON_HELMET,Items.IRON_CHESTPLATE,Items.IRON_LEGGINGS,Items.IRON_BOOTS}[n]);
+            assertEquals(original.getMaxDamage(),stacks[n].getMaxDamage());
+            assertEquals(original.get(net.minecraft.core.component.DataComponents.ATTRIBUTE_MODIFIERS),stacks[n].get(net.minecraft.core.component.DataComponents.ATTRIBUTE_MODIFIERS));
+            assertEquals(original.get(net.minecraft.core.component.DataComponents.REPAIRABLE),stacks[n].get(net.minecraft.core.component.DataComponents.REPAIRABLE));
+            assertEquals(original.get(net.minecraft.core.component.DataComponents.EQUIPPABLE).slot(),equipped.slot());
             assertEquals(2,stacks[n].get(net.minecraft.core.component.DataComponents.LORE).lines().size());
             var recipe=assertInstanceOf(net.minecraft.world.item.crafting.ShapelessRecipe.class,Recipe.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("recipe/"+name)).getOrThrow());
             var inputItems=new java.util.ArrayList<ItemStack>();

@@ -118,7 +118,8 @@ básico usaba un único atlas y por eso seguía viéndose correctamente.
 0.18.1 incluye nueve sprites propios `textures/item/rocket_module_*.png` y corrige
 las referencias del generador y los modelos. Conserva el PNG original, geometría,
 cabina, capacidades y datos de los cohetes existentes. Los iconos marrones o de
-amatista corresponden a los kits de mejora y conservan su aspecto anterior.
+amatista correspondían a los kits de mejora; desde 0.20.0 estos tienen
+[iconos propios para cada planeta](equipment-textures.md).
 
 Sustituye el JAR anterior por `space-fabric-0.18.1.jar` y reinicia el juego; en un
 servidor, actualiza también el cliente. No hace falta fabricar los cohetes otra
