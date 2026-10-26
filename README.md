@@ -1,5 +1,8 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión 0.18.2 adapta las ocho menas terrestres al estilo de las tres referencias
+aportadas, con **31 texturas de 128px** para menas, materias primas y productos.
+[Vista previa y asignación de minerales](docs/earth-geology.md).
 La versión 0.18.1 corrige los cohetes rosas y negros del inventario: las nueve
 variantes usan ahora un único atlas de texturas, como exige Minecraft 26.1.
 La versión 0.18.0 añade **ocho minerales terrestres al Overworld**: bauxita,
@@ -37,9 +40,9 @@ Consulta la [guía completa de bloques y materiales](docs/materials.md).
 Consulta la [guía de terreno y registro de biomas](docs/terrain.md).
 Consulta la [tabla de dimensiones y claves Java](docs/dimensions.md).
 
-Descarga del prototipo compilado: [space-fabric-0.18.1.jar](dist/space-fabric-0.18.1.jar)
+Descarga del prototipo compilado: [space-fabric-0.18.2.jar](dist/space-fabric-0.18.2.jar)
 (en GitHub, pulsa **Download raw file**).
-[Checksum SHA-256](dist/space-fabric-0.18.1.jar.sha256).
+[Checksum SHA-256](dist/space-fabric-0.18.2.jar.sha256).
 Fauna original: **17usdd using [CreativeMode.net](https://creativemode.net)**;
 [páginas oficiales y atribución](third_party/martian_fauna/README.md),
 [licencia de sus recursos](https://creativemode.net/mod-license).

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Original 16px pixel art and data for Earth minerals, driven by earth_minerals.json.
+"""Earth mineral data and textures, driven by earth_minerals.json.
+Menas/items use curated 128px reference-style artwork; storage blocks retain 16px art.
 No vanilla PNGs or third-party art are copied. Safe to rerun without rewriting other content.
 """
 import hashlib
@@ -203,6 +204,8 @@ public enum EarthMineral {
             {'type':'minecraft:height_range','height':{'type':'minecraft:uniform','min_inclusive':{'absolute':m['min_y']},'max_inclusive':{'absolute':m['max_y']}}},
             {'type':'minecraft:biome'}]})
     for locale,text in locales.items():write(f'assets/space_fabric/lang/{locale}.json',text)
-    print('Earth: 8 minerals, 24 blocks, 15 items, 39 original textures, 8 placed features and 58 recipes/unlocks.')
+    from import_earth_reference_textures import import_atlases
+    import_atlases()
+    print('Earth: 8 minerals, 24 blocks, 15 items, 39 textures (31 reference-style), 8 placed features and 58 recipes/unlocks.')
 
 if __name__=='__main__':main()

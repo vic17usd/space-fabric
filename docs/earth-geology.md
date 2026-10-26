@@ -1,7 +1,8 @@
-# Geología terrestre — 0.18.0 / Minecraft Fabric 26.1
+# Geología terrestre — 0.18.2 / Minecraft Fabric 26.1
 
 El Overworld recibe ocho recursos geológicos reales, con 24 bloques, 15 materiales
-y **39 texturas originales de 16 × 16 píxeles**. Se añaden las menas, sus versiones
+y **39 texturas**: 31 imágenes de 128 × 128 píxeles para menas y materiales, y ocho
+bloques de almacenamiento de 16 × 16 píxeles. Se añaden las menas, sus versiones
 en pizarra profunda y bloques de almacenamiento. Se conservan los minerales vanilla.
 
 ![Menas, materias primas, productos y bloques](assets/earth-geology-preview.png)
@@ -33,6 +34,24 @@ Overworld también pueden heredar estas modificaciones de bioma, como es habitua
 en Fabric.
 
 ## Texturas y minería
+
+En 0.18.2 el estilo se adapta a las tres referencias del usuario: fragmentos
+minerales sobre piedra gris, contornos oscuros y pequeños reflejos metálicos.
+La referencia dorada guía la esfalerita, la plateada la argentita (y el estaño de
+la casiterita), y la rojiza la bauxita. Galena, pentlandita, ilmenita y fluorita
+reciben variantes del mismo estilo con colores propios. Los materiales en bruto,
+lingotes y cristales también se actualizan para corresponder a esas menas.
+
+Se trata de adaptaciones de las referencias, no de una copia píxel por píxel.
+Los dos atlas fuente y el mapeo de sus celdas se conservan en
+[`tools/texture_sources/earth`](../tools/texture_sources/earth/README.md).
+No se sustituyen las texturas de oro, plata de otros mods, cobre o hierro vanilla.
+El ítem de cada mena usa el mismo modelo y textura que su bloque colocado.
+
+**El cambio visual se aplica también a menas ya colocadas o guardadas en el
+inventario; no requiere regenerar el mundo.** Para encontrar vetas nuevas de los
+recursos añadidos originalmente en 0.18.0 sí hace falta terreno sin explorar.
+
 
 La bauxita muestra nódulos rojizos; la casiterita, prismas pardos; la esfalerita,
 facetas de color miel; la galena, cristales cúbicos; la argentita, vetillas oscuras;
@@ -68,7 +87,7 @@ armaduras ni un simulador de química industrial para estos metales.
 
 ## Instalación y comandos
 
-Usa `space-fabric-0.18.0.jar` en cliente y servidor con Minecraft 26.1, Java 25 y
+Usa `space-fabric-0.18.2.jar` en cliente y servidor con Minecraft 26.1, Java 25 y
 Fabric API. Sustituye el JAR anterior; evita cargar dos versiones simultáneamente.
 
 **Las vetas aparecen en chunks generados después de instalar la actualización.**
@@ -102,7 +121,8 @@ las menas usan los nombres ingleses de la tabla de catálogo; consulta
 - Tags de herramientas vanilla y tags `c:` de menas, lingotes, gemas y almacenamiento.
 
 El catálogo de desarrollo está en `tools/earth_minerals.json`. Para reconstruir los
-assets, datos y enum Java:
+assets, datos y enum Java se requiere Python e ImageMagick (`magick`); compilar los
+archivos ya incluidos no requiere ImageMagick:
 
 ```sh
 python3 tools/generate_earth_resources.py
@@ -115,5 +135,7 @@ python3 tools/preview_earth_textures.py
 Las pruebas usan los registros y codecs reales de Minecraft 26.1: verifican los
 picos por nivel, loot válido, recetas ensambladas, desbloqueos, rocas objetivo y
 la presencia/ausencia de las ocho features en los biomas modificados por Fabric.
+Se revisan además dimensiones y transparencia de las 31 texturas actualizadas y
+se comprueba que regenerar los recursos conserve el arte importado.
 La inspección visual en una partida y el muestreo de vetas sobre terreno generado
 siguen pendientes; la imagen de arriba muestra los PNG utilizados por el mod.
