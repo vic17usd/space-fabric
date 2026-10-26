@@ -202,21 +202,39 @@ para evitar las cachés de cubos vanilla de los optimizadores gráficos. La
 geometría y textura del ítem no cambian. Esta ruta no añade un contorno de
 resaltado al cohete si se le aplica el efecto de brillo.
 
-## Vista del piloto desde 0.13.1
+## Cabina del piloto desde 0.14.0
 
-En primera persona no se dibuja el exterior del cohete que contiene a la entidad
-de cámara, para que el modelo macizo no obstruya la vista. Al cambiar a tercera
-persona, el cohete completo vuelve a dibujarse; los otros cohetes siguen visibles.
-No se fuerza un cambio de modo de cámara ni se añade un interior de cabina ficticio.
+El piloto ve un habitáculo 3D con paredes, techo, suelo, respaldo, consola y
+mandos. El visor circular frontal es una abertura real en esa geometría: deja
+ver el terreno, el cielo y los efectos del planeta sin una imagen de fondo.
+El marco tiene relieve y los paneles usan la zona clara del atlas del cohete,
+con iluminación interior para que también sean visibles durante la noche.
 
-El cuerpo, armadura y capas visuales de los jugadores que viajan en un cohete se
-ocultan dentro de la cabina cerrada, evitando que sobresalgan por el fuselaje.
-La marca se recalcula en cada extracción y se restablece al desmontar. Es una
-regla del renderizador del cliente, sin aplicar invisibilidad ni cambiar el
-asiento, las colisiones o la física del servidor.
+La cabina reemplaza el exterior macizo únicamente para la cámara que ocupa ese
+cohete en primera persona. En tercera persona y para los demás observadores se
+conserva el modelo exterior; cuerpo y armadura del piloto permanecen ocultos
+para que no sobresalgan de la cápsula. El ítem del inventario no cambia.
 
-Prueba manual: montar, cerrar el mapa estelar, mirar alrededor en primera persona,
-cambiar entre ambos modos de tercera persona con F5, desmontar y comprobar que
-el jugador reaparece. Revisar también otro jugador con armadura entrando y saliendo.
-La compilación y los descriptores de los Mixins se verifican automáticamente;
-estas comprobaciones visuales en partida siguen pendientes.
+La geometría interior acompaña la posición de la cámara durante la interpolación,
+pero su orientación sigue al cohete, no a los movimientos de la mirada. Al montar,
+la vista se orienta hacia el visor una sola vez. Después puedes mirar libremente
+a los lados, al suelo, al techo y hacia atrás. F5 conserva su funcionamiento normal.
+No se cambian el asiento, las colisiones ni la física del servidor.
+
+La versión 0.13.1 solo retiraba la carcasa de la vista del piloto; esta versión
+sustituye esa vista vacía por el interior. Se aplica a cohetes ya colocados al
+reiniciar el cliente con el JAR actualizado.
+
+Código: `client/rocket/RocketCockpitModel.java` define las superficies y el marco;
+`RocketCockpitView.java` centra la mirada al montar. `RocketRenderer` selecciona
+la cabina o el exterior según la cámara. Ambos modelos emiten vértices directamente
+para conservar sus UV en instalaciones con optimizadores de entidades.
+
+Validación sin GPU: `./gradlew verifyRocketCockpit` comprueba las caras emitidas,
+sus normales y materiales, nueve rayos de visión libres por el visor y seis
+direcciones que deben encontrar paneles, techo, suelo o marco. También se ejecuta
+con `build`. La comprobación visual en una partida sigue pendiente.
+
+Prueba manual: montar y cerrar el mapa estelar, mirar por el visor y girar la
+cabeza para revisar los paneles; cambiar con F5 y desmontar. Repetir durante
+el ascenso y en Marte de noche para revisar la interpolación y la iluminación.

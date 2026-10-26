@@ -10,6 +10,7 @@ import net.minecraft.resources.Identifier;
 public final class SpaceFabricClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
+        dev.vic17usd.spacefabric.client.rocket.RocketCockpitView.initialize();
         net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry.register(
                 dev.vic17usd.spacefabric.entity.sanctum.ModSanctumEntities.GOLEM,
                 dev.vic17usd.spacefabric.client.sanctum.BasaltEmberGolemEntityRenderer::new);

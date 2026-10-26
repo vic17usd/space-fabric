@@ -60,7 +60,7 @@ Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
 - Gradle Wrapper y distribución: SHA-256 verificado con los checksums oficiales.
 - JDK descargado para este entorno: SHA-256 verificado con el checksum oficial.
 
-Artefacto generado: `build/libs/space-fabric-0.13.1.jar`.
+Artefacto generado: `build/libs/space-fabric-0.14.0.jar`.
 Los informes de la ejecución están en `build/test-results/test/` y
 `build/reports/tests/test/`; son salidas locales ignoradas por Git.
 
@@ -178,3 +178,16 @@ Correcciones visuales de 0.13.1:
   descriptores. No equivale a ejecutar los Mixins ni a comprobar la cámara en juego.
 - Se conservan las 226 pruebas JUnit y la verificación de 1.152 vértices del cohete;
   la inspección visual en primera/tercera persona y multijugador sigue pendiente.
+
+Cabina interior de 0.14.0:
+
+- `verifyRocketCockpit` ejecuta el emisor real de geometría: 772 vértices con
+  coordenadas y normales finitas, UV válidas, materiales opacos, luz y overlay conservados.
+- Una prueba de intersección contra las caras emitidas confirma nueve rayos
+  libres por el visor, y seis direcciones cerradas por paredes, marco, techo o suelo.
+  Detectaría tanto una cabina vacía como una carcasa que bloquee la ventana.
+- Se conserva `verifyRocketMesh` para los 1.152 vértices del exterior, junto con
+  las 226 pruebas JUnit. La selección del modo de cámara, la orientación al
+  montar y el resultado visual durante el vuelo requieren prueba en partida.
+- El interior reutiliza el atlas importado: no se añaden texturas ni cambia el
+  modelo del ítem. La validación sigue cubriendo 303 JSON y 52 PNG.

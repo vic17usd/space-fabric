@@ -17,7 +17,8 @@ import net.minecraft.resources.Identifier;
 public final class RocketRenderer extends EntityRenderer<RocketEntity, RocketRenderer.State> {
     private static final Identifier TEXTURE = SpaceFabric.id("textures/entity/rocket.png");
     private final RocketModel model;
-    public static final class State extends EntityRenderState { float yaw; boolean hideExterior; }
+    private final RocketCockpitModel cockpit = new RocketCockpitModel();
+    public static final class State extends EntityRenderState { float yaw; boolean cockpitView; }
     public RocketRenderer(EntityRendererProvider.Context context) {
         super(context); shadowRadius = 0.9F;
         model = new RocketModel();
@@ -27,12 +28,23 @@ public final class RocketRenderer extends EntityRenderer<RocketEntity, RocketRen
         super.extractRenderState(entity, state, delta); state.yaw = entity.getYRot();
         var client = Minecraft.getInstance();
         var viewer = client.getCameraEntity();
-        state.hideExterior = client.options.getCameraType().isFirstPerson()
+        state.cockpitView = client.options.getCameraType().isFirstPerson()
                 && viewer != null && viewer.getVehicle() == entity;
     }
     @Override public void submit(State state, PoseStack poses, SubmitNodeCollector collector, CameraRenderState camera) {
-        // El modelo importado es macizo: su exterior no debe tapar la vista del ocupante.
-        if (state.hideExterior) { super.submit(state, poses, collector, camera); return; }
+        if (state.cockpitView) {
+            poses.pushPose();
+            // El habitáculo acompaña la cámara durante la interpolación del vehículo.
+            // Gira con el cohete, no con la mirada: se pueden observar paredes, suelo y mandos.
+            poses.translate(camera.pos.x-state.x, camera.pos.y-state.y, camera.pos.z-state.z);
+            poses.mulPose(Axis.YP.rotationDegrees(-state.yaw));
+            int cabinLight=0x00F000B0; // Iluminación interior, también en planetas sin luz.
+            collector.submitCustomGeometry(poses, RenderTypes.entityCutout(TEXTURE),
+                    (pose, vertices) -> cockpit.renderGeometry(pose, vertices, cabinLight, OverlayTexture.NO_OVERLAY));
+            poses.popPose();
+            super.submit(state, poses, collector, camera);
+            return;
+        }
         poses.pushPose(); poses.mulPose(Axis.YP.rotationDegrees(180 - state.yaw)); poses.scale(1, -1, -1);
         // Las UV libres de Blockbench no siguen el despliegue UV del cubo vanilla.
         // Enviar los vértices evita que Sodium reutilice las UV del constructor Cube.
