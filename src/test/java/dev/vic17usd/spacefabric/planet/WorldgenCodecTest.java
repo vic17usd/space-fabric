@@ -573,7 +573,7 @@ class WorldgenCodecTest {
     @Test void breathforgeStructureIsLoadedAndRestrictedToTheMartianBiome() {
         var structure = registries.lookupOrThrow(Registries.STRUCTURE).getOrThrow(
                 net.minecraft.resources.ResourceKey.create(Registries.STRUCTURE, SpaceFabric.id("martian_breathforge"))).value();
-        assertInstanceOf(net.minecraft.world.level.levelgen.structure.structures.JigsawStructure.class, structure);
+        assertInstanceOf(dev.vic17usd.spacefabric.worldgen.structure.MarsSurfaceStructure.class, structure);
         assertEquals(net.minecraft.world.level.levelgen.GenerationStep.Decoration.SURFACE_STRUCTURES, structure.step());
         assertEquals(1, structure.biomes().size());
         assertTrue(structure.biomes().contains(registries.lookupOrThrow(Registries.BIOME).getOrThrow(
@@ -639,7 +639,7 @@ class WorldgenCodecTest {
 
     @ParameterizedTest
     @MethodSource("martianStructureSeeds")
-    void martianStructuresGenerateRealStartsAndZeroDepthReproducesTheLocateFailure(String structureName, long seed,
+    void martianStructuresGenerateFlatPlotsAndKeepTheLegacyZeroDepthRegression(String structureName, long seed,
             @org.junit.jupiter.api.io.TempDir Path temporaryWorlds) throws IOException {
         var access = (RegistryAccess) registries;
         var holder = access.lookupOrThrow(Registries.STRUCTURE).getOrThrow(
@@ -666,14 +666,38 @@ class WorldgenCodecTest {
                     generator.getBiomeSource(), randomState, templates, seed, chunk, 0, height, martianBiome);
             assertTrue(valid.isValid(), "La estructura debe ser localizable con semilla " + seed);
             assertEquals(1, valid.getPieces().size(), "Sin conectores solo debe generarse el edificio inicial");
-            var box = valid.getPieces().getFirst().getBoundingBox();
+            var piece = assertInstanceOf(dev.vic17usd.spacefabric.worldgen.structure.MarsSurfacePiece.class, valid.getPieces().getFirst());
+            var box = piece.templateBounds();
+            assertTrue(piece.getBoundingBox().minX() >= chunk.getMinBlockX() - 128);
+            assertTrue(piece.getBoundingBox().maxX() <= chunk.getMinBlockX() + 127);
+            assertTrue(piece.getBoundingBox().minZ() >= chunk.getMinBlockZ() - 128);
+            assertTrue(piece.getBoundingBox().maxZ() <= chunk.getMinBlockZ() + 127);
             if (structureName.equals("martian_breathforge")) {
                 assertEquals(89, box.getXSpan()); assertEquals(73, box.getYSpan());
             } else {
                 assertTrue(box.getXSpan() == 124 || box.getXSpan() == 125);
                 assertEquals(84, box.getYSpan()); assertEquals(249, box.getXSpan() + box.getZSpan());
             }
+            int sampledHeight = dev.vic17usd.spacefabric.worldgen.structure.SurfacePlot.sampleHighest(piece.getBoundingBox(),
+                    (x, z) -> generator.getFirstFreeHeight(x, z, net.minecraft.world.level.levelgen.Heightmap.Types.WORLD_SURFACE_WG, height, randomState));
+            assertTrue(piece.templateOrigin().getY() > sampledHeight);
+            var pieceContext = new net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext(resources, access, templates);
+            var saved = piece.createTag(pieceContext);
+            var restored = assertInstanceOf(dev.vic17usd.spacefabric.worldgen.structure.MarsSurfacePiece.class,
+                    dev.vic17usd.spacefabric.worldgen.structure.MarsSurfaceStructures.PIECE.load(pieceContext, saved));
+            assertEquals(piece.templateOrigin(), restored.templateOrigin());
+            assertEquals(piece.templateBounds(), restored.templateBounds());
+            assertEquals(piece.getBoundingBox(), restored.getBoundingBox());
+            restored.move(16, 3, -16);
+            assertEquals(piece.templateOrigin().offset(16, 3, -16), restored.templateOrigin());
+            assertEquals(piece.templateBounds().moved(16, 3, -16), restored.templateBounds());
             var previous = resource("worldgen/structure/" + structureName).getAsJsonObject().deepCopy();
+            previous.addProperty("type", "minecraft:jigsaw"); previous.addProperty("terrain_adaptation", "beard_thin");
+            previous.addProperty("start_pool", "space_fabric:" + structureName + "/start");
+            previous.add("start_height", JsonParser.parseString("{\"absolute\":0}"));
+            previous.addProperty("project_start_to_heightmap", "WORLD_SURFACE_WG");
+            previous.addProperty("max_distance_from_center", 116); previous.addProperty("use_expansion_hack", false);
+            previous.remove("template"); previous.remove("padding");
             previous.addProperty("size", 0);
             var broken = net.minecraft.world.level.levelgen.structure.Structure.DIRECT_CODEC.parse(
                     registries.createSerializationContext(JsonOps.INSTANCE), previous).getOrThrow();
@@ -770,12 +794,12 @@ class WorldgenCodecTest {
         assertEquals(0.09, gravity.getValue(), 0.00001); assertTrue(gravity.hasModifier(foreign));
     }
 
-    @ParameterizedTest @ValueSource(ints = {0, 1, 2, 3, 4, 5})
+    @ParameterizedTest @ValueSource(ints = {0, 1})
     void copperTraderOffersConsumeItemsAndPreserveStockThroughNativeSerialization(int index) {
         var offers = dev.vic17usd.spacefabric.entity.MartianCopperTraderEntity.createTradeOffers();
-        assertEquals(6, offers.size()); var offer = offers.get(index);
+        assertEquals(2, offers.size()); var offer = offers.get(index);
         var first = offer.getCostA().copy(); var second = offer.getCostB().copy();
-        assertTrue(offer.take(first, second)); assertTrue(first.isEmpty()); assertFalse(offer.assemble().isEmpty());
+        assertTrue(offer.take(first, second)); assertTrue(first.isEmpty()); assertTrue(second.isEmpty()); assertFalse(offer.assemble().isEmpty());
         for (int i = 0; i < offer.getMaxUses(); i++) offer.increaseUses();
         assertTrue(offer.isOutOfStock());
         var ops = registries.createSerializationContext(JsonOps.INSTANCE);
@@ -783,6 +807,88 @@ class WorldgenCodecTest {
         var saved = net.minecraft.world.item.trading.MerchantOffers.CODEC.parse(ops, data).getOrThrow().get(index);
         assertTrue(saved.isOutOfStock()); saved.resetUses(); assertFalse(saved.isOutOfStock());
         assertEquals(offer.getResult().getItem(), saved.getResult().getItem());
+    }
+
+    @Test void importedTraderResourcesMatchTheUploadedJarBytes() throws Exception {
+        var manifest = JsonParser.parseString(java.nio.file.Files.readString(Path.of("third_party/martian_copper_trader/manifest.json")))
+                .getAsJsonObject().getAsJsonObject("files");
+        for (var file : manifest.entrySet()) {
+            var bytes = java.nio.file.Files.readAllBytes(Path.of(file.getKey()));
+            var hash = java.util.HexFormat.of().formatHex(java.security.MessageDigest.getInstance("SHA-256").digest(bytes));
+            assertEquals(file.getValue().getAsJsonObject().get("sha256").getAsString(), hash);
+        }
+    }
+
+    @Test void importedTraderUsesTheTwoOriginalAmethystAndCopperTrades() {
+        var offers = dev.vic17usd.spacefabric.entity.MartianCopperTraderEntity.createTradeOffers();
+        assertEquals(Items.AMETHYST_SHARD, offers.get(0).getCostA().getItem()); assertEquals(8, offers.get(0).getCostA().getCount());
+        assertEquals(Items.COPPER_INGOT, offers.get(0).getCostB().getItem()); assertEquals(4, offers.get(0).getCostB().getCount());
+        assertEquals(Items.SPYGLASS, offers.get(0).getResult().getItem());
+        assertEquals(16, offers.get(1).getCostA().getCount()); assertEquals(8, offers.get(1).getCostB().getCount());
+        assertEquals(Items.RECOVERY_COMPASS, offers.get(1).getResult().getItem());
+    }
+
+    @Test void flatPlotsClearUnsampledPeaksAndSupportEveryColumn() {
+        var world = new VoxelWorld(0, 0, 20);
+        for (int y = 21; y <= 100; y++) world.blocks.put(new net.minecraft.core.BlockPos(7, y, 7), Blocks.STONE.defaultBlockState());
+        var plot = new net.minecraft.world.level.levelgen.structure.BoundingBox(2, -60, 2, 13, 447, 13);
+        dev.vic17usd.spacefabric.worldgen.structure.SurfacePlot.prepare(world.level, plot, 30, plot);
+        for (int x = 2; x <= 13; x++) for (int z = 2; z <= 13; z++) {
+            assertTrue(world.state(new net.minecraft.core.BlockPos(x, 29, z)).is(ModBlocks.IRON_OXIDE_REGOLITH));
+            for (int y = 21; y < 29; y++) assertFalse(world.state(new net.minecraft.core.BlockPos(x, y, z)).isAir());
+            for (int y = 30; y <= 100; y++) assertTrue(world.state(new net.minecraft.core.BlockPos(x, y, z)).isAir());
+        }
+        assertFalse(world.state(new net.minecraft.core.BlockPos(0, 20, 0)).isAir());
+        assertTrue(world.state(new net.minecraft.core.BlockPos(0, 21, 0)).isAir());
+    }
+
+    @Test void flatPlotsFillDeepCanyonsAndRespectTheChunkWriteMask() {
+        var world = new VoxelWorld(0, 0, -20);
+        var plot = new net.minecraft.world.level.levelgen.structure.BoundingBox(-8, -60, -8, 23, 447, 23);
+        var clip = new net.minecraft.world.level.levelgen.structure.BoundingBox(0, -64, 0, 15, 447, 15);
+        dev.vic17usd.spacefabric.worldgen.structure.SurfacePlot.prepare(world.level, plot, 30, clip);
+        for (int x = 0; x < 16; x++) for (int z = 0; z < 16; z++)
+            for (int y = -19; y < 30; y++) assertFalse(world.state(new net.minecraft.core.BlockPos(x, y, z)).isAir());
+        assertTrue(world.blocks.keySet().stream().allMatch(clip::isInside));
+    }
+
+    @Test void surfaceHeightSamplingIsBoundedAndIncludesAllEdges() {
+        var calls = new java.util.concurrent.atomic.AtomicInteger();
+        var box = new net.minecraft.world.level.levelgen.structure.BoundingBox(-70, -64, -70, 70, 319, 70);
+        int highest = dev.vic17usd.spacefabric.worldgen.structure.SurfacePlot.sampleHighest(box, (x, z) -> {
+            calls.incrementAndGet(); return x == 70 && z == 70 ? 99 : 40;
+        });
+        assertEquals(99, highest); assertTrue(calls.get() <= 121);
+    }
+
+    @Test void actualSurfacePiecePlacesItsTemplateAfterRemovingTerrainFromRooms() throws IOException {
+        net.minecraft.nbt.CompoundTag nbt;
+        try (var input = WorldgenCodecTest.class.getResourceAsStream("/data/space_fabric/structure/martian_breathforge.nbt")) {
+            assertNotNull(input); nbt = net.minecraft.nbt.NbtIo.readCompressed(input, net.minecraft.nbt.NbtAccounter.unlimitedHeap());
+        }
+        var template = new net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate();
+        template.load(registries.lookupOrThrow(Registries.BLOCK), nbt);
+        var world = new VoxelWorld(0, 0, 40);
+        var piece = new dev.vic17usd.spacefabric.worldgen.structure.MarsSurfacePiece(SpaceFabric.id("martian_breathforge"),
+                template, new net.minecraft.core.BlockPos(-40, 30, -40), net.minecraft.world.level.block.Rotation.NONE, 8, -60, 447);
+        piece.postProcess(world.level, null, null, net.minecraft.util.RandomSource.create(42),
+                new net.minecraft.world.level.levelgen.structure.BoundingBox(0, -64, 0, 15, 447, 15),
+                new net.minecraft.world.level.ChunkPos(0, 0), net.minecraft.core.BlockPos.ZERO);
+        var expected = new java.util.HashMap<net.minecraft.core.BlockPos, net.minecraft.world.level.block.state.BlockState>();
+        var palette = nbt.getListOrEmpty("palette"); var entries = nbt.getListOrEmpty("blocks");
+        for (int i = 0; i < entries.size(); i++) {
+            var entry = entries.getCompoundOrEmpty(i); var pos = entry.getListOrEmpty("pos");
+            var state = BuiltInRegistries.BLOCK.getValue(net.minecraft.resources.Identifier.parse(
+                    palette.getCompoundOrEmpty(entry.getIntOr("state", 0)).getStringOr("Name", ""))).defaultBlockState();
+            expected.put(new net.minecraft.core.BlockPos(pos.getIntOr(0, -1), pos.getIntOr(1, -1), pos.getIntOr(2, -1)), state);
+        }
+        int cleared = 0, preserved = 0;
+        for (int x = 0; x < 16; x++) for (int z = 0; z < 16; z++) for (int dy = 0; dy <= 10; dy++) {
+            var intended = expected.getOrDefault(new net.minecraft.core.BlockPos(x + 40, dy, z + 40), Blocks.AIR.defaultBlockState());
+            assertEquals(intended, world.state(new net.minecraft.core.BlockPos(x, 30 + dy, z)));
+            if (intended.isAir()) cleared++; else preserved++;
+        }
+        assertTrue(cleared > 100); assertTrue(preserved > 100);
     }
 
     private static JsonElement resource(String path) throws IOException {

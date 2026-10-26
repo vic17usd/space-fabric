@@ -23,6 +23,9 @@ final class VoxelWorld {
         level = (WorldGenLevel) Proxy.newProxyInstance(WorldGenLevel.class.getClassLoader(), new Class<?>[] {WorldGenLevel.class},
                 (proxy, method, args) -> switch (method.getName()) {
                     case "getBlockState" -> state((BlockPos) args[0]);
+                    case "getFluidState" -> state((BlockPos) args[0]).getFluidState();
+                    case "getBlockEntity" -> null;
+                    case "blockUpdated" -> null;
                     case "isEmptyBlock" -> state((BlockPos) args[0]).isAir();
                     case "ensureCanWrite" -> true;
                     case "getMinY" -> -64;

@@ -1,12 +1,10 @@
 # Space Fabric — Minecraft Java 26.1
 
-La versión 0.9.0 añade Martian Haven a la superficie de Marte, con seis
-comerciantes de cobre persistentes, soporte vital y gravedad marciana.
-Consulta la [guía del asentamiento y sus habitantes](docs/martian-haven.md).
-Incluye la corrección de generación de Breathforge y de su búsqueda con `/locate`.
-Consulta la [guía de configuración de la estructura](docs/martian-breathforge.md).
-Puedes descargar [solo los JSON y la plantilla NBT](dist/martian-breathforge-fabric-26.1.zip)
-para integrarlos en otro proyecto Fabric con el bioma `space_fabric:mars`.
+La versión 0.10.0 sustituye el comerciante por el modelo, textura, saludo e
+intercambios de `Aldeano Marciano.jar`. Breathforge y Haven preparan ahora parcelas
+planas con relleno y despeje antes de colocar sus edificios y habitantes.
+Consulta la [guía de parcelas de Marte](docs/martian-surface-plots.md), la
+[guía del asentamiento](docs/martian-haven.md) y la [guía de Breathforge](docs/martian-breathforge.md).
 Incluye cohetes pilotables, refinerías de combustible y un mapa estelar
 para viajar entre el Overworld y los nueve cuerpos celestes.
 Consulta la [guía de cohetes, recetas y viajes](docs/space-travel.md).
@@ -15,9 +13,9 @@ Consulta la [guía completa de bloques y materiales](docs/materials.md).
 Consulta la [guía de terreno y registro de biomas](docs/terrain.md).
 Consulta la [tabla de dimensiones y claves Java](docs/dimensions.md).
 
-Descarga del prototipo compilado: [space-fabric-0.9.0.jar](dist/space-fabric-0.9.0.jar)
+Descarga del prototipo compilado: [space-fabric-0.10.0.jar](dist/space-fabric-0.10.0.jar)
 (en GitHub, pulsa **Download raw file**).
-[Checksum SHA-256](dist/space-fabric-0.9.0.jar.sha256).
+[Checksum SHA-256](dist/space-fabric-0.10.0.jar.sha256).
 Requiere Minecraft **26.1**, Java **25**, Fabric Loader y Fabric API **0.145.1+26.1**.
 Coloca el JAR y Fabric API en la carpeta `mods/`. Es el prototipo descrito abajo;
 todavía falta su validación dentro del juego.
@@ -49,7 +47,7 @@ python3 tools/validate_resources.py
 ./gradlew runClient
 ```
 
-El artefacto será `build/libs/space-fabric-0.9.0.jar`. Instala el mod y Fabric API
+El artefacto será `build/libs/space-fabric-0.10.0.jar`. Instala el mod y Fabric API
 en cliente y servidor. No se declara compatibilidad con 1.21.x ni con otras
 revisiones de 26.1 sin validarlas por separado.
 
@@ -231,7 +229,7 @@ tanque en `SuitProtection` y guarda su estado en componentes de ítem o attachme
 inmunidad, prioridad de presión e hipoxia a presión normal.
 También usa Fabric Loader JUnit y los codecs reales de Minecraft para interpretar
 los nueve tipos de dimensión, sus generadores y los tres tipos de daño; también
-comprueba refinería, persistencia del combustible, recetas, llegadas, estructuras y comerciantes: **197 casos**
+comprueba refinería, persistencia del combustible, recetas, llegadas, estructuras y comerciantes: **199 casos**
 en total. `tools/validate_resources.py` comprueba además JSON y referencias internas.
 Estas pruebas no arrancan un mundo ni comprueban la sincronización del cliente.
 

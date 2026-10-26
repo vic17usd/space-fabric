@@ -18,6 +18,12 @@ java {
     withSourcesJar()
 }
 
+jar {
+    from('third_party/martian_copper_trader/LICENSE.txt') {
+        into 'META-INF/licenses/martian_copper_trader'
+    }
+}
+
 tasks.withType(JavaCompile).configureEach {
     options.release = 25
     options.encoding = 'UTF-8'

@@ -4,9 +4,9 @@ Verificado con JDK 25, Gradle 9.8.2, Loom 1.19.3, Minecraft 26.1,
 Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
 
 - `./gradlew build --console=plain`: compilación Java, recursos, JAR y pruebas correctos.
-- JUnit: **197 ejecutadas, 197 aprobadas, 0 omitidas**.
+- JUnit: **199 ejecutadas, 199 aprobadas, 0 omitidas**.
 - `ExposureTest`: 29 casos de atmósfera, inmunidad y protección por sellado.
-- `WorldgenCodecTest`: 132 casos con los codecs reales de Minecraft; nueve tipos
+- `WorldgenCodecTest`: 134 casos con los codecs reales de Minecraft; nueve tipos
   de dimensión, nueve mundos con sus generadores y tres tipos de daño aceptados.
 - `EnvironmentRulesTest`: 12 casos de velocidades solares, niebla y corrosión.
 - Cielos y ciclos: las nueve timelines nativas producen distinta luz de día/noche
@@ -18,7 +18,7 @@ Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
 - `PlanetHazardsTest`: 10 casos de presión por altitud y exposición a lluvia ácida.
 - La carga conjunta usa `RegistryDataLoader` con los recursos vanilla y del mod,
   incluidos biomas, features, carvers, tags, fluidos y ruido.
-- `python3 tools/validate_resources.py`: 273 JSON y referencias internas coherentes.
+- `python3 tools/validate_resources.py`: 274 JSON y referencias internas coherentes.
 - Comprobaciones de materiales: 24 loot tables y recetas aceptadas por los codecs;
   etiquetas de botas térmicas, componentes de armadura y requisitos de herramientas.
 - Modificaciones reales de Fabric: vetas marcianas presentes y decoración orbital
@@ -49,16 +49,16 @@ Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
 - Haven: sus registros cargan correctamente; 45.380 bloques y seis entidades
   persistentes se conservan en la plantilla nativa con posiciones iniciales despejadas.
 - Haven también genera un inicio válido de una pieza con tres semillas y conserva
-  las dimensiones 124 × 84 × 125 bajo las rotaciones del motor jigsaw.
-- Comerciantes: tipo de entidad, atributos y huevo funcional registrados; seis
-  ofertas probadas con consumo real de materiales y serialización nativa de existencias.
+  las dimensiones 124 × 84 × 125 de la plantilla bajo sus rotaciones.
+- Comerciantes: tipo de entidad, atributos y huevo funcional registrados; dos ofertas originales
+  probadas con consumo real de materiales y serialización nativa de existencias.
 - Gravedad del comerciante: 0.0304 en Marte sin acumulación; conservación de
   modificadores ajenos al volver a gravedad normal. Hipoxia/descompresión protegidas,
   con daño de combate y presión profunda todavía permitidos por la regla de protección.
 - Gradle Wrapper y distribución: SHA-256 verificado con los checksums oficiales.
 - JDK descargado para este entorno: SHA-256 verificado con el checksum oficial.
 
-Artefacto generado: `build/libs/space-fabric-0.9.0.jar`.
+Artefacto generado: `build/libs/space-fabric-0.10.0.jar`.
 Los informes de la ejecución están en `build/test-results/test/` y
 `build/reports/tests/test/`; son salidas locales ignoradas por Git.
 
@@ -70,7 +70,7 @@ Tampoco se ha ejecutado un vuelo real ni un traslado con pasajeros en una sesió
 de juego. La compilación comprueba el uso de las firmas 26.1; las pruebas del
 planificador y de combustible no sustituyen esa verificación multijugador.
 La adaptación visual del edificio al relieve marciano también queda pendiente;
-la plantilla conserva los vacíos implícitos del formato de origen sin excavar aire.
+la preparación de parcela despeja el terreno antes de colocar los vacíos del NBT.
 La IA, la interfaz de comercio y la apariencia del comerciante requieren además
 comprobación visual en una partida real. No se simula esa sesión mediante los tests de NBT.
 
@@ -82,3 +82,14 @@ credenciales ni se desactivó su verificación.
 La configuración de red guardada como borrador añade los destinos oficiales de
 Fabric y Mojang para desarrollo. Guardar ese borrador no publica el entorno ni
 confirma que una máquina futura se haya restaurado o validado.
+
+Comprobaciones añadidas en 0.10.0:
+
+- Textura, icono y OGG originales comparados por SHA-256 con el manifiesto del JAR importado.
+- Dos ofertas de amatista/cobre comprobadas con consumo de ambos ingredientes y stock persistente.
+- Preparación real sobre picos y cañones; suelo continuo y límites del chunk respetados.
+- `MarsSurfacePiece.postProcess` coloca el NBT real de Breathforge sobre roca: sus bloques
+  se conservan y los huecos de habitación quedan como aire en el volumen VoxelWorld de prueba.
+- Ambas piezas conservan plano, rotación y límites al guardar/cargar y moverse;
+  sus parcelas quedan dentro del alcance de referencias de Minecraft.
+- El muestreo de altura es acotado e incluye los bordes de la parcela.

@@ -1,7 +1,6 @@
 package dev.vic17usd.spacefabric.entity;
 
 import dev.vic17usd.spacefabric.SpaceFabric;
-import dev.vic17usd.spacefabric.item.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -44,6 +43,8 @@ import net.minecraft.world.level.storage.ValueOutput;
 public final class MartianCopperTraderEntity extends AbstractVillager {
     public static final int RESTOCK_INTERVAL = 24_000;
     private long nextRestock;
+    private int fleeTicks;
+    public static final int TRADE_REVISION = 2;
 
     public MartianCopperTraderEntity(EntityType<? extends MartianCopperTraderEntity> type, Level level) {
         super(type, level);
@@ -52,7 +53,7 @@ public final class MartianCopperTraderEntity extends AbstractVillager {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 24)
-                .add(Attributes.MOVEMENT_SPEED, 0.28).add(Attributes.FOLLOW_RANGE, 24)
+                .add(Attributes.MOVEMENT_SPEED, 0.5).add(Attributes.FOLLOW_RANGE, 24)
                 .add(Attributes.SAFE_FALL_DISTANCE, 6);
     }
 
@@ -88,8 +89,9 @@ public final class MartianCopperTraderEntity extends AbstractVillager {
     @Override public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob partner) { return null; }
 
     @Override public InteractionResult mobInteract(Player player, InteractionHand hand) {
-        if (!isAlive() || isBaby() || isTrading() || player.isSecondaryUseActive()) return InteractionResult.PASS;
+        if (!isAlive() || isBaby() || isTrading() || fleeTicks > 0 || player.isSecondaryUseActive()) return InteractionResult.PASS;
         if (!level().isClientSide()) {
+            playSound(ModMarsEntities.ALIEN_GREETING, 0.9F, 0.85F + random.nextFloat() * 0.25F);
             if (getOffers().isEmpty()) return InteractionResult.PASS;
             setTradingPlayer(player);
             openTradingScreen(player, getDisplayName(), 1);
@@ -99,12 +101,10 @@ public final class MartianCopperTraderEntity extends AbstractVillager {
 
     public static MerchantOffers createTradeOffers() {
         var trades = new MerchantOffers();
-        trades.add(new MerchantOffer(new ItemCost(Items.COPPER_INGOT, 12), new ItemStack(Items.EMERALD), 16, 2, 0.05F));
-        trades.add(new MerchantOffer(new ItemCost(Items.EMERALD, 2), new ItemStack(Items.COPPER_INGOT, 8), 16, 2, 0.05F));
-        trades.add(new MerchantOffer(new ItemCost(Items.EMERALD), new ItemStack(ModItems.IRON_OXIDE_DUST, 2), 16, 3, 0.05F));
-        trades.add(new MerchantOffer(new ItemCost(Items.EMERALD, 4), new ItemStack(ModItems.SULFATE_DUST), 12, 3, 0.05F));
-        trades.add(new MerchantOffer(new ItemCost(ModItems.MARTIAN_OLIVINE), new ItemStack(Items.EMERALD, 3), 12, 4, 0.05F));
-        trades.add(new MerchantOffer(new ItemCost(Items.EMERALD, 8), new ItemStack(ModItems.ROCKET_FUEL_CELL), 4, 5, 0.05F));
+        trades.add(new MerchantOffer(new ItemCost(Items.AMETHYST_SHARD, 8), java.util.Optional.of(new ItemCost(Items.COPPER_INGOT, 4)),
+                new ItemStack(Items.SPYGLASS), 12, 5, 0.05F));
+        trades.add(new MerchantOffer(new ItemCost(Items.AMETHYST_SHARD, 16), java.util.Optional.of(new ItemCost(Items.COPPER_INGOT, 8)),
+                new ItemStack(Items.RECOVERY_COMPASS), 6, 10, 0.05F));
         return trades;
     }
     @Override protected void updateTrades(ServerLevel level) { offers.addAll(createTradeOffers()); }
@@ -113,11 +113,36 @@ public final class MartianCopperTraderEntity extends AbstractVillager {
     }
     @Override protected void customServerAiStep(ServerLevel level) {
         super.customServerAiStep(level);
+        if (fleeTicks > 0 && --fleeTicks % 10 == 0) fleeTowardSafety(level);
         if (nextRestock == 0) nextRestock = level.getGameTime() + RESTOCK_INTERVAL;
         if (level.getGameTime() >= nextRestock && !isTrading()) {
             if (offers != null) offers.forEach(MerchantOffer::resetUses);
             nextRestock = level.getGameTime() + RESTOCK_INTERVAL;
         }
+    }
+
+    @Override public boolean hurtServer(ServerLevel level, DamageSource source, float damage) {
+        boolean hurt = super.hurtServer(level, source, damage);
+        if (hurt && isAlive()) {
+            stopTrading(); fleeTicks = 100;
+            addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.RESISTANCE, 50, 1));
+            addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.SPEED, 100, 1));
+            fleeTowardSafety(level);
+        }
+        return hurt;
+    }
+    private void fleeTowardSafety(ServerLevel level) {
+        var guardian = level.getEntitiesOfClass(net.minecraft.world.entity.animal.golem.IronGolem.class,
+                getBoundingBox().inflate(32), golem -> golem.isAlive()).stream()
+                .min(java.util.Comparator.comparingDouble(this::distanceToSqr)).orElse(null);
+        if (guardian != null) { getNavigation().moveTo(guardian, 1.65); return; }
+        var attacker = getLastHurtByMob();
+        double angle = random.nextDouble() * Math.PI * 2;
+        double dx = attacker != null && attacker.isAlive() ? getX() - attacker.getX() : Math.cos(angle);
+        double dz = attacker != null && attacker.isAlive() ? getZ() - attacker.getZ() : Math.sin(angle);
+        double length = Math.hypot(dx, dz);
+        if (length < 0.001) { dx = 1; dz = 0; length = 1; }
+        getNavigation().moveTo(getX() + dx / length * 12, getY(), getZ() + dz / length * 12, 1.65);
     }
 
     @Override protected SoundEvent getAmbientSound() { return SoundEvents.VILLAGER_AMBIENT; }
@@ -127,10 +152,15 @@ public final class MartianCopperTraderEntity extends AbstractVillager {
     @Override protected void addAdditionalSaveData(ValueOutput output) {
         super.addAdditionalSaveData(output);
         output.putLong("NextRestock", nextRestock);
+        output.putInt("TraderRevision", TRADE_REVISION);
         if (hasHome()) output.store("SettlementHome", BlockPos.CODEC, getHomePosition());
     }
     @Override protected void readAdditionalSaveData(ValueInput input) {
         super.readAdditionalSaveData(input);
+        if (input.getIntOr("TraderRevision", 0) < TRADE_REVISION) {
+            offers = null;
+            getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.5);
+        }
         nextRestock = Math.max(0, input.getLongOr("NextRestock", 0));
         input.read("SettlementHome", BlockPos.CODEC).ifPresent(home -> setHomeTo(home, 24));
         setPersistenceRequired();

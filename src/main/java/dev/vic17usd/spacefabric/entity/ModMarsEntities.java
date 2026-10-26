@@ -10,6 +10,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 
 public final class ModMarsEntities {
+    public static final net.minecraft.sounds.SoundEvent ALIEN_GREETING = Registry.register(BuiltInRegistries.SOUND_EVENT,
+            SpaceFabric.id("alien_greeting"), net.minecraft.sounds.SoundEvent.createVariableRangeEvent(SpaceFabric.id("alien_greeting")));
     public static final EntityType<MartianCopperTraderEntity> COPPER_TRADER = Registry.register(
             BuiltInRegistries.ENTITY_TYPE, SpaceFabric.id("martian_copper_trader"),
             EntityType.Builder.of(MartianCopperTraderEntity::new, MobCategory.CREATURE)

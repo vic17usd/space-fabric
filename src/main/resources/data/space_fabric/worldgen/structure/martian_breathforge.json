@@ -1,15 +1,9 @@
 {
-  "type": "minecraft:jigsaw",
+  "type": "space_fabric:martian_surface",
   "biomes": "#space_fabric:has_structure/martian_breathforge",
   "step": "surface_structures",
   "spawn_overrides": {},
-  "terrain_adaptation": "beard_thin",
-  "start_pool": "space_fabric:martian_breathforge/start",
-  "size": 1,
-  "start_height": {
-    "absolute": 0
-  },
-  "project_start_to_heightmap": "WORLD_SURFACE_WG",
-  "max_distance_from_center": 116,
-  "use_expansion_hack": false
+  "terrain_adaptation": "none",
+  "template": "space_fabric:martian_breathforge",
+  "padding": 8
 }
