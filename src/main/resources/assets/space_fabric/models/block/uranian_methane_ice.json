@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "space_fabric:block/uranian_methane_ice"
+  }
+}

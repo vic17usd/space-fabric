@@ -7,7 +7,7 @@
       {
         "target": {
           "predicate_type": "minecraft:block_match",
-          "block": "minecraft:red_terracotta"
+          "block": "space_fabric:martian_stone"
         },
         "state": {
           "Name": "minecraft:iron_ore"

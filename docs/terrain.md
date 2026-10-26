@@ -2,14 +2,14 @@
 
 | Destino | Generación implementada |
 | --- | --- |
-| Mercurio | Roca de basalto liso y toba; sin agua, lluvia ni vegetación. Cráteres de 8–12 bloques de diámetro con cuencas de hasta cuatro bloques de profundidad. |
-| Luna | Comparte la generación seca y los cráteres, con su propio bioma, dimensión y gravedad. |
-| Venus | Basalto, depósitos de magma y cuencas de lava viscosa. Lluvia que aplica veneno a jugadores expuestos. |
-| Marte | Terracota roja en todo el subsuelo, canales profundos en la densidad, carvers de cuevas y cañones, vetas de hierro. |
-| Júpiter, Saturno, Urano, Neptuno | Mundos vacíos, sin capas sólidas ni decoración automática. Niebla corta y zona de presión extrema bajo Y=160. |
+| Mercurio | Regolito propio sobre basalto liso y toba; sin agua, lluvia ni vegetación. Cráteres de 8–12 bloques de diámetro con cuencas de hasta cuatro bloques de profundidad. |
+| Luna | Regolito lunar propio; comparte la generación seca y los cráteres, con su propio bioma, dimensión y gravedad. |
+| Venus | Roca caliente propia, basalto, depósitos de magma y cuencas de lava viscosa. Lluvia que aplica veneno a jugadores expuestos. |
+| Marte | Piedra marciana propia en todo el subsuelo, canales profundos en la densidad, carvers de cuevas y cañones, vetas de hierro. |
+| Júpiter, Saturno, Urano, Neptuno | Sin capas sólidas continuas; pequeños depósitos orbitales de materiales. Niebla corta y zona de presión extrema bajo Y=160. |
 | Tierra | Conserva generación y biomas del Overworld en una dimensión independiente. |
 
-Es una interpretación jugable. La terracota roja representa visualmente el suelo
+Es una interpretación jugable. La piedra marciana representa visualmente el suelo
 oxidado; no es un modelo geológico. Los cráteres son pequeños y frecuentes, sin
 macrocuencas planetarias. Venus no tiene todavía volcanes cónicos ni erupciones.
 
@@ -127,18 +127,19 @@ generador, cambiando únicamente `biome` para cada destino:
 
 ```json
 {
-  "type": "minecraft:flat",
+  "type": "space_fabric:orbital",
   "settings": {
     "biome": "space_fabric:jupiter",
     "layers": [],
     "lakes": false,
-    "features": false,
+    "features": true,
     "structure_overrides": []
   }
 }
 ```
 
-No hay islas del End, bedrock ni suelo natural. El gas se representa por ambiente
+No hay islas del End, bedrock ni suelo continuo; hay pequeños cuerpos orbitales
+entre 512 y 768 bloques del origen (ver `materials.md`). El gas se representa por ambiente
 y reglas de juego, no mediante millones de bloques de fluido. Por debajo de
 Y=160 la presión inflige cuatro puntos de salud por intervalo de 20 ticks,
 incluso con el traje básico. No se aplican dos golpes de atmósfera en ese intervalo.
@@ -155,9 +156,8 @@ execute in space_fabric:saturn run tp @s 0.5 240 0.5
 ```
 
 Primero usa creativo y equipa el traje antes de pasar a supervivencia. No se crea
-una plataforma automáticamente al teletransportarse. Un anillo de Saturno, una
-estación con estructuras propias o un punto de llegada seguro automatizado serían
-una extensión; no se afirma que este prototipo los genere.
+una plataforma automáticamente al teletransportarse. Los depósitos de hielo de Saturno forman una banda orbital dispersa, no un anillo
+continuo. Estaciones y llegada segura automática siguen sin estar implementadas.
 
 ## Validación
 

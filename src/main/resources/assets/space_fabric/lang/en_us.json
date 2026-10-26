@@ -2,5 +2,20 @@
   "death.attack.space_fabric.decompression": "%1$s suffered decompression",
   "death.attack.space_fabric.crushing_pressure": "%1$s was crushed by atmospheric pressure",
   "death.attack.space_fabric.hypoxia": "%1$s ran out of oxygen",
-  "item.space_fabric.viscous_lava_bucket": "Viscous Lava Bucket"
+  "item.space_fabric.viscous_lava_bucket": "Viscous Lava Bucket",
+  "block.space_fabric.mercury_regolith": "Mercury Regolith",
+  "block.space_fabric.lunar_regolith": "Lunar Regolith",
+  "block.space_fabric.venus_hot_rock": "Hot Volcanic Rock",
+  "block.space_fabric.martian_stone": "Martian Stone",
+  "block.space_fabric.ares_crystal_ore": "Ares Crystal Ore",
+  "block.space_fabric.phobosite_ore": "Phobosite Ore",
+  "block.space_fabric.uranian_methane_ice": "Uranian Methane Ice",
+  "block.space_fabric.neptunian_methane_ice": "Neptunian Methane Ice",
+  "block.space_fabric.terrestrial_basalt": "Terrestrial Basalt",
+  "block.space_fabric.jovian_meteorite": "Jovian Meteorite",
+  "block.space_fabric.saturn_ring_ice": "Saturn Ring Ice",
+  "item.space_fabric.ares_crystal": "Ares Crystal",
+  "item.space_fabric.raw_phobosite": "Raw Phobosite",
+  "item.space_fabric.thermal_boots": "Thermal Boots",
+  "itemGroup.space_fabric.materials": "Solar System Materials"
 }

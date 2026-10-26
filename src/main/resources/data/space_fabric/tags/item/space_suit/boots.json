@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "minecraft:iron_boots"
+    "minecraft:iron_boots",
+    "space_fabric:thermal_boots"
   ]
 }

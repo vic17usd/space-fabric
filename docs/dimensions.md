@@ -71,7 +71,8 @@ Los subdirectorios de chunks se materializan cuando el juego guarda datos de eso
 mundos. No crees esas carpetas manualmente: por sí solas no registran dimensiones.
 Tierra es independiente del Overworld; la Luna es un satélite incluido como
 destino adicional. Los gigantes tienen un generador vacío y una zona de presión mortal bajo Y=160;
-consulta `terrain.md` para las plataformas orbitales opcionales.
+consulta `terrain.md` para plataformas de pruebas y `materials.md` para los
+pequeños depósitos orbitales de materiales.
 
 Para visitar la Luna con permisos de operador, primero activa espectador y usa:
 
@@ -81,4 +82,4 @@ execute in space_fabric:moon run tp @s 0 180 0
 
 Reinicia el mundo después de editar los registros dinámicos. Cambiar los límites
 de dimensiones en partidas existentes puede requerir migración: prueba la versión
-0.3.0 en un mundo nuevo. `/reload` no regenera terreno ni es un registro de mundos.
+0.4.0 en un mundo nuevo. `/reload` no regenera terreno ni es un registro de mundos.

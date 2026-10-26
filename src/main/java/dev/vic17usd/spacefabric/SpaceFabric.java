@@ -6,6 +6,10 @@ import dev.vic17usd.spacefabric.gravity.PlanetGravity;
 import dev.vic17usd.spacefabric.planet.PlanetDimensions;
 import dev.vic17usd.spacefabric.worldgen.PlanetFeatures;
 import dev.vic17usd.spacefabric.fluid.PlanetFluids;
+import dev.vic17usd.spacefabric.block.ModBlocks;
+import dev.vic17usd.spacefabric.item.ModItems;
+import dev.vic17usd.spacefabric.item.ModCreativeTabs;
+import dev.vic17usd.spacefabric.worldgen.OreGen;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
@@ -23,6 +27,10 @@ public final class SpaceFabric implements ModInitializer {
     public void onInitialize() {
         PlanetFeatures.initialize();
         PlanetFluids.initialize();
+        ModItems.initialize();
+        ModBlocks.initialize();
+        ModCreativeTabs.initialize();
+        OreGen.initialize();
         PlanetDimensions.initialize();
         PlanetGravity.initialize();
         AtmosphereSystem.initialize();

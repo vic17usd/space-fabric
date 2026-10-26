@@ -1,0 +1,14 @@
+{
+  "replace": false,
+  "values": [
+    "space_fabric:venus_hot_rock",
+    "space_fabric:martian_stone",
+    "space_fabric:ares_crystal_ore",
+    "space_fabric:phobosite_ore",
+    "space_fabric:uranian_methane_ice",
+    "space_fabric:neptunian_methane_ice",
+    "space_fabric:terrestrial_basalt",
+    "space_fabric:jovian_meteorite",
+    "space_fabric:saturn_ring_ice"
+  ]
+}

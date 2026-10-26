@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Comprueba referencias internas; no sustituye los codecs de Minecraft."""
 import json
+import struct
+import zlib
 from pathlib import Path
 
 
@@ -17,7 +19,7 @@ def main():
         dimension = documents[data / "dimension" / f"{planet}.json"]
         if dimension["type"] != f"space_fabric:{planet}":
             raise ValueError(f"Referencia de dimension_type incorrecta: {planet}")
-        if dimension["generator"]["type"] != ("minecraft:flat" if planet in {"jupiter", "saturn", "uranus", "neptune"} else "minecraft:noise"):
+        if dimension["generator"]["type"] != ("space_fabric:orbital" if planet in {"jupiter", "saturn", "uranus", "neptune"} else "minecraft:noise"):
             raise ValueError(f"Generador incorrecto: {planet}")
         dimension_type = documents[data / "dimension_type" / f"{planet}.json"]
         if dimension_type["height"] % 16 or dimension_type["min_y"] % 16:
@@ -40,7 +42,49 @@ def main():
     for part in ("helmets", "chestplates", "leggings", "boots"):
         if not documents[data / "tags/item/space_suit" / f"{part}.json"]["values"]:
             raise ValueError(f"Etiqueta del traje vacía: {part}")
+    assets = root / "assets/space_fabric"
+    for state in (assets / "blockstates").glob("*.json"):
+        name = state.stem
+        for path in (assets / "models/block" / f"{name}.json", assets / "items" / f"{name}.json",
+                     data / "loot_table/blocks" / f"{name}.json"):
+            if path not in documents:
+                raise ValueError(f"Asset o loot ausente para {name}: {path}")
+        for locale in ("es_es", "en_us"):
+            if "block.space_fabric." + name not in documents[assets / "lang" / f"{locale}.json"]:
+                raise ValueError(f"Falta nombre de bloque: {name}, {locale}")
+
+    def references(value):
+        if isinstance(value, dict):
+            for key, child in value.items():
+                if key in ("model", "parent") and isinstance(child, str) and child.startswith("space_fabric:"):
+                    path = assets / "models" / (child.split(":", 1)[1] + ".json")
+                    if not path.is_file(): raise ValueError(f"Modelo ausente: {child}")
+                if key == "textures" and isinstance(child, dict):
+                    for texture in child.values():
+                        if texture.startswith("space_fabric:"):
+                            path = assets / "textures" / (texture.split(":", 1)[1] + ".png")
+                            if not path.is_file(): raise ValueError(f"Textura ausente: {texture}")
+                references(child)
+        elif isinstance(value, list):
+            for child in value: references(child)
+    for path, value in documents.items():
+        if assets in path.parents: references(value)
+    for path in (assets / "textures").rglob("*.png"):
+        content = path.read_bytes()
+        if content[:8] != b"\x89PNG\r\n\x1a\n": raise ValueError(f"PNG inválido: {path}")
+        offset, compressed = 8, b""
+        while offset < len(content):
+            length = struct.unpack(">I", content[offset:offset + 4])[0]
+            kind = content[offset + 4:offset + 8]
+            payload = content[offset + 8:offset + 8 + length]
+            crc = struct.unpack(">I", content[offset + 8 + length:offset + 12 + length])[0]
+            if zlib.crc32(kind + payload) != crc: raise ValueError(f"CRC PNG incorrecto: {path}")
+            if kind == b"IDAT": compressed += payload
+            offset += length + 12
+        if len(zlib.decompress(compressed)) != 16 * (1 + 16 * 4):
+            raise ValueError(f"Textura RGBA de 16px incompleta: {path}")
     print(f"OK: {len(documents)} JSON; nueve dimensiones y referencias internas coherentes.")
+    print("Modelos, texturas PNG, loot y traducciones de materiales: OK.")
     print("Los codecs se prueban con ./gradlew test; la comprobación en el juego es independiente.")
 
 

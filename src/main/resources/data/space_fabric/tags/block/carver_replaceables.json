@@ -4,6 +4,9 @@
     "minecraft:red_terracotta",
     "minecraft:orange_terracotta",
     "minecraft:terracotta",
-    "minecraft:iron_ore"
+    "minecraft:iron_ore",
+    "space_fabric:martian_stone",
+    "space_fabric:ares_crystal_ore",
+    "space_fabric:phobosite_ore"
   ]
 }

@@ -1,7 +1,7 @@
 {
   "aquifers_enabled": false,
   "default_block": {
-    "Name": "minecraft:red_terracotta"
+    "Name": "space_fabric:martian_stone"
   },
   "default_fluid": {
     "Name": "minecraft:air"
@@ -375,7 +375,7 @@
       {
         "type": "minecraft:block",
         "result_state": {
-          "Name": "minecraft:red_terracotta"
+          "Name": "space_fabric:martian_stone"
         }
       }
     ]

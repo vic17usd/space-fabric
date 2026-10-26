@@ -1,12 +1,13 @@
 # Space Fabric — Minecraft Java 26.1
 
-La versión 0.3.0 añade biomas propios, cráteres, lava viscosa, lluvia ácida y gigantes sin suelo.
+La versión 0.4.0 añade 11 bloques, minerales con XP, botas térmicas y depósitos orbitales.
+Consulta la [guía completa de bloques y materiales](docs/materials.md).
 Consulta la [guía de terreno y registro de biomas](docs/terrain.md).
 Consulta la [tabla de dimensiones y claves Java](docs/dimensions.md).
 
-Descarga del prototipo compilado: [space-fabric-0.3.0.jar](dist/space-fabric-0.3.0.jar)
+Descarga del prototipo compilado: [space-fabric-0.4.0.jar](dist/space-fabric-0.4.0.jar)
 (en GitHub, pulsa **Download raw file**).
-[Checksum SHA-256](dist/space-fabric-0.3.0.jar.sha256).
+[Checksum SHA-256](dist/space-fabric-0.4.0.jar.sha256).
 Requiere Minecraft **26.1**, Java **25**, Fabric Loader y Fabric API **0.145.1+26.1**.
 Coloca el JAR y Fabric API en la carpeta `mods/`. Es el prototipo descrito abajo;
 todavía falta su validación dentro del juego.
@@ -38,7 +39,7 @@ python3 tools/validate_resources.py
 ./gradlew runClient
 ```
 
-El artefacto será `build/libs/space-fabric-0.3.0.jar`. Instala el mod y Fabric API
+El artefacto será `build/libs/space-fabric-0.4.0.jar`. Instala el mod y Fabric API
 en cliente y servidor. No se declara compatibilidad con 1.21.x ni con otras
 revisiones de 26.1 sin validarlas por separado.
 
@@ -63,6 +64,8 @@ src/main/java/dev/vic17usd/spacefabric/
 │   ├── Exposure.java                # Regla pura de exposición, probada con JUnit
 │   ├── AtmosphereSystem.java        # Tick de servidor y aplicación de daño
 │   └── PlanetDamageTypes.java       # Claves de los DamageType del datapack
+├── block/                           # Regolito, roca caliente, menas y hielo de metano
+├── item/                            # Materiales, botas térmicas y pestaña creativa
 ├── worldgen/                        # Biomas, registro de features y cráteres
 ├── fluid/                           # Lava viscosa, bloque y cubo
 ├── client/                          # Renderizado del fluido en Fabric 26.1
@@ -82,8 +85,7 @@ src/main/resources/
 
 `fabric.mod.json` declara `SpaceFabric` como entrada `main` y `environment: "*"`.
 La entrada de cliente registra el renderizado de la lava viscosa. No hay Mixins:
-los eventos Fabric gestionan
-el ciclo de vida y Minecraft sincroniza el atributo vanilla de gravedad. Las
+los eventos Fabric gestionan el ciclo de vida y Minecraft sincroniza el atributo vanilla de gravedad. Las
 decisiones de daño se toman exclusivamente en el servidor.
 
 ## Registro de dimensiones
@@ -136,7 +138,8 @@ generadores vanilla, pero sus chunks y modificaciones se guardan por separado.
 Mercurio, Venus, Luna y Marte usan biomas y ajustes de ruido propios, sin océanos
 de agua ni estructuras vanilla. Tierra conserva el Overworld. Los gigantes usan
 un generador vacío, niebla densa y presión mortal por debajo de Y=160, incluso con
-la escafandra básica. No generan una superficie sólida ni plataformas automáticas.
+la escafandra básica. No generan una superficie sólida ni plataformas automáticas;
+hay pequeños depósitos de hielo y meteoritos entre 512 y 768 bloques del origen.
 
 ## Gravedad con eventos
 
@@ -191,7 +194,8 @@ Los JSON registran los daños `space_fabric:decompression`,
 armadura ordinaria o un escudo absorban el peligro. En los gigantes la zona profunda ignora el traje básico. La invulnerabilidad y el resto
 del sistema de daño conservan sus reglas vanilla.
 
-**El conjunto completo de hierro funciona como traje provisional.** Las cuatro
+**El conjunto completo de hierro funciona como traje provisional.** Las botas térmicas
+pueden reemplazar las de hierro para caminar sobre roca caliente. Las cuatro
 etiquetas `space_suit/*` permiten reemplazarlo por futuros ítems del mod o equipo
 de otro mod mediante datapack. Un casco aislado no protege. Esta fase considera
 el traje sellado y con oxígeno ilimitado: faltan tanques, consumo, fugas,
@@ -204,7 +208,7 @@ tanque en `SuitProtection` y guarda su estado en componentes de ítem o attachme
 `./gradlew test` prueba Tierra segura, planetas hostiles, protección del traje,
 inmunidad, prioridad de presión e hipoxia a presión normal.
 También usa Fabric Loader JUnit y los codecs reales de Minecraft para interpretar
-los nueve tipos de dimensión, sus generadores y los tres tipos de daño: **65 casos**
+los nueve tipos de dimensión, sus generadores y los tres tipos de daño: **81 casos**
 en total. `tools/validate_resources.py` comprueba además JSON y referencias internas.
 Estas pruebas no arrancan un mundo ni comprueban la sincronización del cliente.
 
