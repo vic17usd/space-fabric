@@ -65,5 +65,7 @@
   "destination.space_fabric.jupiter": "Júpiter",
   "destination.space_fabric.saturn": "Saturno",
   "destination.space_fabric.uranus": "Urano",
-  "destination.space_fabric.neptune": "Neptuno"
+  "destination.space_fabric.neptune": "Neptuno",
+  "entity.space_fabric.martian_copper_trader": "Comerciante marciano de cobre",
+  "item.space_fabric.martian_copper_trader_spawn_egg": "Generador de comerciante marciano de cobre"
 }

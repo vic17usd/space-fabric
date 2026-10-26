@@ -74,7 +74,8 @@ def main():
         if content[:8] != b"\x89PNG\r\n\x1a\n": raise ValueError(f"PNG inválido: {path}")
         offset, compressed = 8, b""
         width, height = struct.unpack(">II", content[16:24])
-        if content[24:29] != bytes([8, 6, 0, 0, 0]) or not (1 <= width <= 1024 and 1 <= height <= 1024):
+        color_type = content[25]
+        if content[24] != 8 or color_type not in (2, 6) or content[26:29] != bytes([0, 0, 0]) or not (1 <= width <= 2048 and 1 <= height <= 2048):
             raise ValueError(f"Formato PNG no admitido: {path}")
         while offset < len(content):
             length = struct.unpack(">I", content[offset:offset + 4])[0]
@@ -84,8 +85,9 @@ def main():
             if zlib.crc32(kind + payload) != crc: raise ValueError(f"CRC PNG incorrecto: {path}")
             if kind == b"IDAT": compressed += payload
             offset += length + 12
-        if len(zlib.decompress(compressed)) != height * (1 + width * 4):
-            raise ValueError(f"Textura RGBA incompleta: {path}")
+        channels = 3 if color_type == 2 else 4
+        if len(zlib.decompress(compressed)) != height * (1 + width * channels):
+            raise ValueError(f"Textura RGB/RGBA incompleta: {path}")
     print(f"OK: {len(documents)} JSON; nueve dimensiones y referencias internas coherentes.")
     print("Modelos, texturas PNG, loot y traducciones de materiales: OK.")
     print("Los codecs se prueban con ./gradlew test; la comprobación en el juego es independiente.")

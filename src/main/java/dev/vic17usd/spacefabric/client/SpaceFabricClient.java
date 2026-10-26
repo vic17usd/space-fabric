@@ -11,6 +11,9 @@ public final class SpaceFabricClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry.register(
+                dev.vic17usd.spacefabric.entity.ModMarsEntities.COPPER_TRADER,
+                dev.vic17usd.spacefabric.client.entity.MartianCopperTraderRenderer::new);
+        net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry.register(
                 dev.vic17usd.spacefabric.space.ModSpaceEntities.ROCKET, dev.vic17usd.spacefabric.client.rocket.RocketRenderer::new);
         net.minecraft.client.gui.screens.MenuScreens.register(dev.vic17usd.spacefabric.menu.ModMenus.ROCKET,
                 dev.vic17usd.spacefabric.client.menu.RocketScreen::new);

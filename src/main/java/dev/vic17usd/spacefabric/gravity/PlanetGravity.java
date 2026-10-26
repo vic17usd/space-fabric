@@ -9,6 +9,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 
 /** Afecta a jugadores y otras entidades vivas con el atributo vanilla de gravedad. */
@@ -43,6 +44,11 @@ public final class PlanetGravity {
         }
 
         double scale = PlanetDimensions.find(entity.level()).map(Planet::gravityScale).orElse(1.0);
+        applyToAttribute(gravity, scale);
+    }
+
+    /** Comparte la misma operación para todas las entidades vivas, incluidos los colonos marcianos. */
+    public static void applyToAttribute(AttributeInstance gravity, double scale) {
         var existing = gravity.getModifier(MODIFIER_ID);
         double amount = scale - 1.0;
         if (existing != null && Double.compare(existing.amount(), amount) == 0) {

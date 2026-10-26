@@ -16,6 +16,9 @@ import java.util.function.Function;
 
 public final class ModItems {
     private static final Map<String, Item> ITEMS = new LinkedHashMap<>();
+    public static final Item MARTIAN_COPPER_TRADER_SPAWN_EGG = register("martian_copper_trader_spawn_egg",
+            net.minecraft.world.item.SpawnEggItem::new, new Item.Properties().spawnEgg(
+                    dev.vic17usd.spacefabric.entity.ModMarsEntities.COPPER_TRADER));
     public static final Item ROCKET = register("rocket", RocketItem::new, new Item.Properties().stacksTo(1).fireResistant());
     public static final Item EMPTY_FUEL_CELL = register("empty_fuel_cell", new Item.Properties());
     public static final Item ROCKET_FUEL_CELL = register("rocket_fuel_cell", new Item.Properties().stacksTo(16));

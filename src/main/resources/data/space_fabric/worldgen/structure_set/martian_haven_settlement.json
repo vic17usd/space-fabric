@@ -1,0 +1,10 @@
+{
+  "structures": [{"structure": "space_fabric:martian_haven_settlement", "weight": 1}],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 48,
+    "separation": 20,
+    "salt": 937281451,
+    "exclusion_zone": {"other_set": "space_fabric:martian_breathforge", "chunk_count": 16}
+  }
+}

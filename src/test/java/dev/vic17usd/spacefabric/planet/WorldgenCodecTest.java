@@ -638,12 +638,12 @@ class WorldgenCodecTest {
     }
 
     @ParameterizedTest
-    @ValueSource(longs = {0L, 42L, 8675309L})
-    void breathforgeGeneratesARealStartAndZeroDepthReproducesTheLocateFailure(long seed,
+    @MethodSource("martianStructureSeeds")
+    void martianStructuresGenerateRealStartsAndZeroDepthReproducesTheLocateFailure(String structureName, long seed,
             @org.junit.jupiter.api.io.TempDir Path temporaryWorlds) throws IOException {
         var access = (RegistryAccess) registries;
         var holder = access.lookupOrThrow(Registries.STRUCTURE).getOrThrow(
-                net.minecraft.resources.ResourceKey.create(Registries.STRUCTURE, SpaceFabric.id("martian_breathforge")));
+                net.minecraft.resources.ResourceKey.create(Registries.STRUCTURE, SpaceFabric.id(structureName)));
         var stem = LevelStem.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE), resource("dimension/mars")).getOrThrow();
         var generator = assertInstanceOf(net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator.class, stem.generator());
         var randomState = net.minecraft.world.level.levelgen.RandomState.create(generator.generatorSettings().value(),
@@ -656,7 +656,7 @@ class WorldgenCodecTest {
                         List.of(ServerPacksSource.createVanillaPackSource(), pack))) {
             var templates = new net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager(
                     resources, world, net.minecraft.util.datafix.DataFixers.getDataFixer(), access.lookupOrThrow(Registries.BLOCK));
-            assertTrue(templates.get(SpaceFabric.id("martian_breathforge")).isPresent());
+            assertTrue(templates.get(SpaceFabric.id(structureName)).isPresent());
             var chunk = new net.minecraft.world.level.ChunkPos(2, -3);
             var height = net.minecraft.world.level.LevelHeightAccessor.create(Planet.MARS.minY(), Planet.MARS.height());
             java.util.function.Predicate<net.minecraft.core.Holder<net.minecraft.world.level.biome.Biome>> martianBiome =
@@ -666,9 +666,14 @@ class WorldgenCodecTest {
                     generator.getBiomeSource(), randomState, templates, seed, chunk, 0, height, martianBiome);
             assertTrue(valid.isValid(), "La estructura debe ser localizable con semilla " + seed);
             assertEquals(1, valid.getPieces().size(), "Sin conectores solo debe generarse el edificio inicial");
-            assertEquals(89, valid.getPieces().getFirst().getBoundingBox().getXSpan());
-            assertEquals(73, valid.getPieces().getFirst().getBoundingBox().getYSpan());
-            var previous = resource("worldgen/structure/martian_breathforge").getAsJsonObject().deepCopy();
+            var box = valid.getPieces().getFirst().getBoundingBox();
+            if (structureName.equals("martian_breathforge")) {
+                assertEquals(89, box.getXSpan()); assertEquals(73, box.getYSpan());
+            } else {
+                assertTrue(box.getXSpan() == 124 || box.getXSpan() == 125);
+                assertEquals(84, box.getYSpan()); assertEquals(249, box.getXSpan() + box.getZSpan());
+            }
+            var previous = resource("worldgen/structure/" + structureName).getAsJsonObject().deepCopy();
             previous.addProperty("size", 0);
             var broken = net.minecraft.world.level.levelgen.structure.Structure.DIRECT_CODEC.parse(
                     registries.createSerializationContext(JsonOps.INSTANCE), previous).getOrThrow();
@@ -677,6 +682,107 @@ class WorldgenCodecTest {
             assertFalse(invalid.isValid(), "26.1 no añade la pieza inicial con size=0");
             assertTrue(invalid.getPieces().isEmpty());
         }
+    }
+
+    static Stream<org.junit.jupiter.params.provider.Arguments> martianStructureSeeds() {
+        return Stream.of("martian_breathforge", "martian_haven_settlement").flatMap(name ->
+                Stream.of(0L, 42L, 8675309L).map(seed -> org.junit.jupiter.params.provider.Arguments.of(name, seed)));
+    }
+
+    @Test void havenTemplatePreservesItsBlocksAndIncludesExactlySixSafeRegisteredResidents() throws IOException {
+        var source = JsonParser.parseString(java.nio.file.Files.readString(Path.of("tools/structure_sources/martian_haven_settlement.json"))).getAsJsonObject();
+        net.minecraft.nbt.CompoundTag nbt;
+        try (var input = WorldgenCodecTest.class.getResourceAsStream("/data/space_fabric/structure/martian_haven_settlement.nbt")) {
+            assertNotNull(input); nbt = net.minecraft.nbt.NbtIo.readCompressed(input, net.minecraft.nbt.NbtAccounter.unlimitedHeap());
+        }
+        var blocks = nbt.getListOrEmpty("blocks"); var original = source.getAsJsonArray("blocks");
+        assertEquals(45380, blocks.size()); assertEquals(original.size(), blocks.size());
+        var palette = nbt.getListOrEmpty("palette"); assertEquals(36, palette.size());
+        var occupied = new java.util.HashSet<net.minecraft.core.BlockPos>();
+        for (int i = 0; i < blocks.size(); i++) {
+            var block = blocks.getCompoundOrEmpty(i); var entry = original.get(i).getAsJsonArray();
+            var position = block.getListOrEmpty("pos");
+            for (int axis = 0; axis < 3; axis++) assertEquals(entry.get(axis).getAsInt(), position.getIntOr(axis, -1));
+            assertEquals(entry.get(3).getAsInt(), block.getIntOr("state", -1));
+            occupied.add(new net.minecraft.core.BlockPos(position.getIntOr(0, -1), position.getIntOr(1, -1), position.getIntOr(2, -1)));
+        }
+        var template = new net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate();
+        template.load(registries.lookupOrThrow(Registries.BLOCK), nbt);
+        assertEquals(new net.minecraft.core.Vec3i(124, 84, 125), template.getSize());
+        var residents = template.save(new net.minecraft.nbt.CompoundTag()).getListOrEmpty("entities");
+        assertEquals(6, residents.size());
+        var positions = new java.util.HashSet<net.minecraft.core.BlockPos>();
+        for (int i = 0; i < residents.size(); i++) {
+            var resident = residents.getCompoundOrEmpty(i); var data = resident.getCompoundOrEmpty("nbt");
+            assertEquals("space_fabric:martian_copper_trader", data.getStringOr("id", ""));
+            assertTrue(data.getBooleanOr("PersistenceRequired", false)); assertFalse(data.keySet().contains("UUID"));
+            var position = resident.getListOrEmpty("blockPos");
+            var point = new net.minecraft.core.BlockPos(position.getIntOr(0, -1), position.getIntOr(1, -1), position.getIntOr(2, -1));
+            assertTrue(positions.add(point)); assertTrue(occupied.contains(point.below()));
+            for (int dy = 0; dy < 3; dy++) assertFalse(occupied.contains(point.above(dy)));
+        }
+    }
+
+    @Test void havenRegistryReferencesAreResolvedAndItsOnlyBiomeIsMars() {
+        var structure = registries.lookupOrThrow(Registries.STRUCTURE).getOrThrow(net.minecraft.resources.ResourceKey.create(
+                Registries.STRUCTURE, SpaceFabric.id("martian_haven_settlement"))).value();
+        assertEquals(1, structure.biomes().size());
+        assertTrue(structure.biomes().contains(registries.lookupOrThrow(Registries.BIOME).getOrThrow(
+                dev.vic17usd.spacefabric.worldgen.PlanetBiomes.key(Planet.MARS))));
+        assertNotNull(registries.lookupOrThrow(Registries.TEMPLATE_POOL).getOrThrow(net.minecraft.resources.ResourceKey.create(
+                Registries.TEMPLATE_POOL, SpaceFabric.id("martian_haven_settlement/start"))));
+        assertNotNull(registries.lookupOrThrow(Registries.STRUCTURE_SET).getOrThrow(net.minecraft.resources.ResourceKey.create(
+                Registries.STRUCTURE_SET, SpaceFabric.id("martian_haven_settlement"))));
+    }
+
+    @Test void copperTraderAndItsUsableSpawnEggHaveNativeAttributeAndEntityRegistrations() {
+        var type = dev.vic17usd.spacefabric.entity.ModMarsEntities.COPPER_TRADER;
+        assertEquals(SpaceFabric.id("martian_copper_trader"), BuiltInRegistries.ENTITY_TYPE.getKey(type));
+        assertTrue(net.minecraft.world.item.SpawnEggItem.spawnsEntity(new ItemStack(ModItems.MARTIAN_COPPER_TRADER_SPAWN_EGG), type));
+        var attributes = net.minecraft.world.entity.ai.attributes.DefaultAttributes.getSupplier(type);
+        assertNotNull(attributes); assertEquals(24, attributes.getBaseValue(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH));
+        assertEquals(6, attributes.getBaseValue(net.minecraft.world.entity.ai.attributes.Attributes.SAFE_FALL_DISTANCE));
+        assertEquals(0.08, attributes.getBaseValue(net.minecraft.world.entity.ai.attributes.Attributes.GRAVITY), 0.00001);
+    }
+
+    @ParameterizedTest @ValueSource(strings = {"hypoxia", "decompression", "crushing_pressure"})
+    void tradersResistOxygenLossButKeepDeepPressureVulnerability(String path) {
+        var type = registries.lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(net.minecraft.resources.ResourceKey.create(
+                Registries.DAMAGE_TYPE, SpaceFabric.id(path)));
+        var source = new net.minecraft.world.damagesource.DamageSource(type);
+        assertEquals(!path.equals("crushing_pressure"), dev.vic17usd.spacefabric.entity.MartianCopperTraderEntity.resistsAtmosphere(source));
+    }
+
+    @Test void tradersKeepNormalCombatDamageAndMartianGravityDoesNotAccumulate() {
+        var damage = new net.minecraft.world.damagesource.DamageSource(registries.lookupOrThrow(Registries.DAMAGE_TYPE)
+                .getOrThrow(net.minecraft.world.damagesource.DamageTypes.GENERIC));
+        assertFalse(dev.vic17usd.spacefabric.entity.MartianCopperTraderEntity.resistsAtmosphere(damage));
+        var gravity = net.minecraft.world.entity.ai.attributes.DefaultAttributes.getSupplier(
+                dev.vic17usd.spacefabric.entity.ModMarsEntities.COPPER_TRADER).createInstance(ignored -> {}, net.minecraft.world.entity.ai.attributes.Attributes.GRAVITY);
+        dev.vic17usd.spacefabric.gravity.PlanetGravity.applyToAttribute(gravity, Planet.MARS.gravityScale());
+        assertEquals(0.0304, gravity.getValue(), 0.00001);
+        dev.vic17usd.spacefabric.gravity.PlanetGravity.applyToAttribute(gravity, Planet.MARS.gravityScale());
+        assertEquals(0.0304, gravity.getValue(), 0.00001);
+        var foreign = SpaceFabric.id("test_foreign_gravity");
+        gravity.addTransientModifier(new net.minecraft.world.entity.ai.attributes.AttributeModifier(foreign, 0.01,
+                net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE));
+        dev.vic17usd.spacefabric.gravity.PlanetGravity.applyToAttribute(gravity, 1.0);
+        assertEquals(0.09, gravity.getValue(), 0.00001); assertTrue(gravity.hasModifier(foreign));
+    }
+
+    @ParameterizedTest @ValueSource(ints = {0, 1, 2, 3, 4, 5})
+    void copperTraderOffersConsumeItemsAndPreserveStockThroughNativeSerialization(int index) {
+        var offers = dev.vic17usd.spacefabric.entity.MartianCopperTraderEntity.createTradeOffers();
+        assertEquals(6, offers.size()); var offer = offers.get(index);
+        var first = offer.getCostA().copy(); var second = offer.getCostB().copy();
+        assertTrue(offer.take(first, second)); assertTrue(first.isEmpty()); assertFalse(offer.assemble().isEmpty());
+        for (int i = 0; i < offer.getMaxUses(); i++) offer.increaseUses();
+        assertTrue(offer.isOutOfStock());
+        var ops = registries.createSerializationContext(JsonOps.INSTANCE);
+        var data = net.minecraft.world.item.trading.MerchantOffers.CODEC.encodeStart(ops, offers).getOrThrow();
+        var saved = net.minecraft.world.item.trading.MerchantOffers.CODEC.parse(ops, data).getOrThrow().get(index);
+        assertTrue(saved.isOutOfStock()); saved.resetUses(); assertFalse(saved.isOutOfStock());
+        assertEquals(offer.getResult().getItem(), saved.getResult().getItem());
     }
 
     private static JsonElement resource(String path) throws IOException {
