@@ -1,38 +1,42 @@
-# Flota, niveles y combustible — 0.23.0 / Fabric 26.1
+# Flota, niveles y combustible — 0.25.0 / Fabric 26.1
 
 Desde 0.24.0, estos modelos realizan una [secuencia visible de viaje](rocket-journey.md),
 con crucero espacial y descenso automático. Los niveles y consumos de esta guía
 siguen vigentes.
 
-Se usan los cinco modelos nuevos y el modelo original. Se conservan las texturas
-embebidas, UV de cada cara, pivotes y rotaciones de Blockbench. Los diseños que
-comparten casco reciben módulos diferentes; los ítems del inventario muestran
-la misma geometría 3D que las entidades.
+Se usan ocho modelos suministrados para las diez variantes del mod. Se conservan
+las texturas embebidas, UV de cada cara, pivotes y rotaciones de Blockbench.
+**Todos muestran únicamente las piezas del archivo original**: se han eliminado
+los collares, radiadores, jaulas, antenas y franjas de color añadidos por el mod.
+Los ítems del inventario muestran la misma geometría 3D que las entidades.
+Las patas, aletas y paneles incluidos en cada `.bbmodel` siguen formando parte
+de su diseño. Algunas variantes comparten el mismo modelo original, sin retoques.
 
 ![Vista de referencia de los diez diseños](assets/rocket-fleet-preview.png)
 
 Vista calculada de los recursos incluidos, **no una captura dentro de Minecraft**.
 Los modelos se escalan de forma uniforme y se apoyan por su punto más bajo.
-Su caja de colisión incluye los módulos y cabe en las plataformas existentes.
+Su caja de colisión se ajusta al modelo y cabe en las plataformas existentes.
 La cabina interior funcional anterior se conserva como habitáculo común.
 
 ## Asignación
 
-| Cohete | Modelo suministrado | Adaptación exterior |
-|---|---|---|
-| Básico | space-rocket | Diseño original |
-| Tierra | modern-space-rocket | Telemetría azul y antena |
-| Luna | space-rocket | Depósitos y apoyos lunares |
-| Venus | venus-atmosphere-lander | Refuerzo térmico y contra el ácido |
-| Marte | two-stage-heavy-lift-orbital-rocket | Depósitos y filtros de polvo |
-| Mercurio | dieselpunk-space-rocket | Radiadores y protección solar |
-| Júpiter | two-stage-heavy-lift-orbital-rocket | Jaula de protección y blindaje de radiación |
-| Saturno | dieselpunk-space-rocket | Collares exteriores amplios |
-| Urano | biomechanical-exploration-rocket | Módulo criogénico turquesa |
-| Neptuno | biomechanical-exploration-rocket | Refuerzos azules contra vientos extremos |
+| Cohete | Modelo suministrado |
+|---|---|
+| Básico | space-rocket |
+| Tierra | modern-space-rocket |
+| Luna | space-rocket |
+| Venus | venus-atmosphere-lander |
+| Marte | two-stage-heavy-lift-orbital-rocket |
+| Mercurio | dieselpunk-space-rocket |
+| Júpiter | venus-vertical-landing-rocket |
+| Saturno | mars-landing-rocket |
+| Urano | biomechanical-exploration-rocket |
+| Neptuno | biomechanical-exploration-rocket |
 
-Las modificaciones son módulos geométricos del mod; los originales `.bbmodel`
-se guardan completos en `tools/import_sources/`.
+Los originales `.bbmodel` se guardan completos en `tools/import_sources/`.
+Los nuevos modelos sustituyen la apariencia de Júpiter y Saturno, conservando sus
+ítems, capacidades, protección, combustible y secuencia de viaje.
 
 ## Progresión
 
@@ -72,8 +76,8 @@ ruta, no del número de veces que se pulsa el botón ni de la duración del asce
 | venus | 2 | venus_lander | 6000 | 2000 | 2100 |
 | mars | 3 | heavy | 8000 | 2500 | 1700 |
 | mercury | 4 | dieselpunk | 10000 | 4100 | 3100 |
-| jupiter | 5 | heavy | 20000 | 4400 | 9500 |
-| saturn | 6 | dieselpunk | 24000 | 5700 | 8300 |
+| jupiter | 5 | vertical_lander | 20000 | 4400 | 9500 |
+| saturn | 6 | mars_lander | 24000 | 5700 | 8300 |
 | uranus | 7 | biomechanical | 28000 | 7000 | 8200 |
 | neptune | 8 | biomechanical | 32000 | 8600 | 10000 |
 
@@ -115,7 +119,7 @@ orbital, no una reproducción de la cantidad de propelente de una misión real.
 
 ## Partidas existentes e instalación
 
-Sustituye el JAR por **space-fabric-0.23.0.jar en cliente y servidor** y reinicia.
+Sustituye el JAR por **space-fabric-0.25.0.jar en cliente y servidor** y reinicia.
 Se conservan IDs de ítems, variantes, carga, casco y combustible guardado. Los
 vehículos existentes adoptan su nueva apariencia y capacidad, sin rellenarse.
 No hace falta regenerar los planetas. Ningún depósito se reduce respecto de las
@@ -136,14 +140,18 @@ Las recetas y los iconos de los kits siguen disponibles en el visor integrado.
 - `tools/import_rocket_fleet.py`: importa geometría y texturas, produce ítems y
   mallas de entidad. `generate_rocket_variants.py` lo ejecuta al regenerar kits.
 - `tools/rocket_fleet_manifest.json`: modelo fuente, escalas y límites de los diez diseños.
-- `tools/rocket_modules.json`: geometría de los módulos exteriores.
+- El generador y los recursos de módulos exteriores se han eliminado para que
+  la regeneración no vuelva a añadir accesorios al casco.
 - `tools/preview_rocket_fleet.py`: vista de referencia con Pillow y NumPy.
 
 Las pruebas comprueban los niveles acumulativos, ambos sentidos de todas las
 rutas, combustible suficiente para regresar, límites profundos, guardado de los
 depósitos completos, datos de menú con el paquete nativo y rechazo de reducciones
-que perderían combustible. El chequeo visual por CPU emite 46.992 vértices y
+que perderían combustible. El chequeo visual por CPU emite 42.672 vértices y
 compara las rotaciones y UV con las clases nativas de ítems de Minecraft 26.1.
+También comprueba que el número de cubos y caras coincida exactamente con el
+original, que no haya tintes ni texturas de acento, y que las variantes que usan
+el mismo archivo tengan la misma malla.
 Los modelos de inventario usan un solo atlas y todas sus texturas existen.
 La apariencia y los vuelos interactivos con Sodium dentro de una partida siguen
 pendientes; las pruebas no arrancan una GPU ni sustituyen esa comprobación.

@@ -1,5 +1,10 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión 0.25.0 usa **solo los modelos originales de los cohetes**, sin módulos,
+collares, antenas ni colores añadidos. Asigna `venus-vertical-landing-rocket` a
+Júpiter y `mars-landing-rocket` a Saturno.
+[Asignación y vista previa actualizada](docs/rocket-fleet.md).
+
 La versión 0.24.0 añade **viajes visibles de lanzamiento a aterrizaje**: ascenso
 en el mundo, estrellas y planetas en 3D durante el crucero, fundidos y descenso
 automático. Se mantiene la vista desde la cabina y con F5.
@@ -71,9 +76,9 @@ Consulta la [guía completa de bloques y materiales](docs/materials.md).
 Consulta la [guía de terreno y registro de biomas](docs/terrain.md).
 Consulta la [tabla de dimensiones y claves Java](docs/dimensions.md).
 
-Descarga del prototipo compilado: [space-fabric-0.24.0.jar](dist/space-fabric-0.24.0.jar)
+Descarga del prototipo compilado: [space-fabric-0.25.0.jar](dist/space-fabric-0.25.0.jar)
 (en GitHub, pulsa **Download raw file**).
-[Checksum SHA-256](dist/space-fabric-0.24.0.jar.sha256).
+[Checksum SHA-256](dist/space-fabric-0.25.0.jar.sha256).
 Fauna original: **17usdd using [CreativeMode.net](https://creativemode.net)**;
 [páginas oficiales y atribución](third_party/martian_fauna/README.md),
 [licencia de sus recursos](https://creativemode.net/mod-license).

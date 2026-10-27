@@ -11,13 +11,11 @@ SOURCES={
     'classic':'space-rocket', 'dieselpunk':'dieselpunk-space-rocket',
     'biomechanical':'biomechanical-exploration-rocket',
     'heavy':'two-stage-heavy-lift-orbital-rocket',
-    'venus_lander':'venus-atmosphere-lander', 'modern':'modern-space-rocket'}
+    'venus_lander':'venus-atmosphere-lander', 'modern':'modern-space-rocket',
+    'vertical_lander':'venus-vertical-landing-rocket', 'mars_lander':'mars-landing-rocket'}
 ASSIGNMENTS={'base':'classic','mercury':'dieselpunk','venus':'venus_lander',
-    'earth':'modern','moon':'classic','mars':'heavy','jupiter':'heavy',
-    'saturn':'dieselpunk','uranus':'biomechanical','neptune':'biomechanical'}
-COLORS={'mercury':0xFFC5CCD2,'venus':0xFFD9AD35,'earth':0xFF448EE0,
-    'moon':0xFFD6DBE1,'mars':0xFFE66B3C,'jupiter':0xFFB76E3A,
-    'saturn':0xFFE2C478,'uranus':0xFF62D7D6,'neptune':0xFF4269CE}
+    'earth':'modern','moon':'classic','mars':'heavy','jupiter':'vertical_lander',
+    'saturn':'mars_lander','uranus':'biomechanical','neptune':'biomechanical'}
 
 def rotate(p,e):
     pivot=e.get('origin',[0,0,0]);v=[p[i]-pivot[i] for i in range(3)]
@@ -46,7 +44,7 @@ def write(path,data):
     path.parent.mkdir(parents=True,exist_ok=True);path.write_text(json.dumps(data,separators=(',',':'))+'\n')
 
 def generate():
-    modules=json.loads((ROOT/'tools/rocket_modules.json').read_text());metadata={}
+    metadata={}
     for variant,source in ASSIGNMENTS.items():
         doc=json.loads((ROOT/f'tools/import_sources/{SOURCES[source]}.bbmodel').read_text())
         assert set(doc['outliner'])=={e['uuid'] for e in doc['elements']},'Transformed groups require explicit support'
@@ -81,19 +79,10 @@ def generate():
                 uv=info['uv'];emit([world(rotate(p,e)) for p in points],[uv[0]/w,uv[1]/h,uv[2]/w,uv[3]/h],-1)
                 element['faces'][side]={'texture':'#0','uv':[uv[0]*16/w,uv[1]*16/h,uv[2]*16/w,uv[3]*16/h]}
             elements.append(element)
-        hull_height=(hi[1]-lo[1])*scale;hull_width=max(hi[0]-lo[0],hi[2]-lo[2])*scale
-        for box in modules.get(variant,[]):
-            b=[value*(hull_height/3.284210526 if i%3==1 else hull_width/1.6) for i,value in enumerate(box)]
-            for points in faces(b[:3],b[3:]).values():emit(points,[16/w,48/h,36/w,72/h],COLORS[variant])
-            factor=icon_scale/scale
-            elements.append({'from':[8-b[3]*factor,b[1]*factor,8-b[5]*factor],
-                'to':[8-b[0]*factor,b[4]*factor,8-b[2]*factor],
-                'faces':{side:{'uv':[0,0,16,16],'texture':'#accent'} for side in faces(b[:3],b[3:])}})
         width=2*max(max(abs(p[0]),abs(p[2])) for p in bounds)+.04;height=max(p[1] for p in bounds)+.02
         metadata[variant]={'source':source,'width':round(width,6),'height':round(height,6),'cubes':len(doc['elements']),'quads':len(quads),'scale':scale,'center':[cx,lo[1],cz]}
         write(ASSETS/f'rocket_mesh/{variant}.json',{'texture':f'space_fabric:textures/entity/rocket_fleet/{source}.png','quads':quads})
         textures={'0':f'space_fabric:item/rocket_fleet/{source}','particle':f'space_fabric:item/rocket_fleet/{source}'}
-        if variant!='base':textures['accent']=f'space_fabric:item/rocket_module_{variant}'
         path='rocket' if variant=='base' else variant+'_rocket'
         write(ASSETS/f'models/item/{path}.json',{'textures':textures,'elements':elements,'display':{
             'gui':{'rotation':[30,225,0],'scale':[1.1]*3},'ground':{'translation':[0,2,0],'scale':[.5]*3},
@@ -111,6 +100,6 @@ public final class RocketHullGeometry {
     java+='    public static float height(RocketVariant variant){return switch(variant){\n'
     java+=''.join(f'        case {v.upper()} -> {m["height"]}F;\n' for v,m in metadata.items())+'    };}\n}\n'
     (ROOT/'src/main/java/dev/vic17usd/spacefabric/space/RocketHullGeometry.java').write_text(java)
-    print('Imported six textured hulls into ten distinct rocket designs, preserving rotated pivots and per-face UVs.')
+    print('Imported eight original hulls for ten rocket variants; no added geometry or tints.')
 
 if __name__=='__main__':generate()

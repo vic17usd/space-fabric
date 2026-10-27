@@ -18,7 +18,7 @@ public final class RocketModulesCheck {
     public static void main(String[] args) throws Exception {
         net.minecraft.SharedConstants.tryDetectVersion();net.minecraft.server.Bootstrap.bootStrap();
         var manifest=JsonParser.parseString(Files.readString(Path.of("tools/rocket_fleet_manifest.json"))).getAsJsonObject();
-        var meshes=new HashSet<String>();int total=0;
+        var meshes=new HashMap<String,String>();int total=0;
         for(var variant:RocketVariant.values()) {
             var meta=manifest.getAsJsonObject(variant.path);
             var mesh=new RocketFleetModel(variant);var emitted=new ArrayList<float[]>();
@@ -28,6 +28,7 @@ public final class RocketModulesCheck {
                 float x=(float)values[0],y=(float)values[1],z=(float)values[2];
                 if(Math.max(Math.abs(x),Math.abs(z))>RocketHullGeometry.width(variant)/2||y<-.001||y>RocketHullGeometry.height(variant))throw new AssertionError("Mesh outside collision box: "+variant);
                 if((int)values[6]!=123||(int)values[7]!=456)throw new AssertionError("Lost light/overlay");
+                if((int)values[3]!=-1)throw new AssertionError("Added tint on original hull: "+variant);
                 float length=0;for(int i=8;i<11;i++)length+=(float)values[i]*(float)values[i];
                 if(Math.abs(length-1)>.00001)throw new AssertionError("Invalid normal");
                 if((float)values[4]<0||(float)values[4]>1||(float)values[5]<0||(float)values[5]>1)throw new AssertionError("UV outside atlas");
@@ -35,13 +36,17 @@ public final class RocketModulesCheck {
             });
             mesh.renderGeometry(new PoseStack().last(),sink,456,123);
             if(emitted.size()!=meta.get("quads").getAsInt()*4)throw new AssertionError("Missing faces");
-            if(!meshes.add(Arrays.deepToString(emitted.toArray())))throw new AssertionError("Duplicate rocket design");
+            String shape=Arrays.deepToString(emitted.toArray());
+            String previous=meshes.putIfAbsent(meta.get("source").getAsString(),shape);
+            if(previous!=null&&!previous.equals(shape))throw new AssertionError("Shared original hull was modified: "+variant);
             String name=variant==RocketVariant.BASE?"rocket":variant.path+"_rocket";
             var json=JsonParser.parseString(Files.readString(Path.of("src/main/resources/assets/space_fabric/models/item/"+name+".json"))).getAsJsonObject();
             var parsed=CuboidModel.fromStream(new StringReader(json.toString()));
             var elements=((UnbakedCuboidGeometry)parsed.geometry()).elements();
             if(elements.size()*24!=emitted.size())throw new AssertionError("Item lost geometry");
             var raw=JsonParser.parseString(Files.readString(Path.of("tools/import_sources/"+sourceFile(meta.get("source").getAsString())+".bbmodel"))).getAsJsonObject();
+            if(elements.size()!=raw.getAsJsonArray("elements").size()||mesh.faceCount()!=elements.size()*6)
+                throw new AssertionError("Geometry added to the original model: "+variant);
             float factor=0;
             var first=raw.getAsJsonArray("elements").get(0).getAsJsonObject();
             for(int axis=0;axis<3;axis++) {
@@ -66,7 +71,8 @@ public final class RocketModulesCheck {
             }
             total+=emitted.size();
         }
-        System.out.println("OK: ten distinct textured fleet designs, "+total+" vertices; native item/entity rotations, UVs and collision bounds agree.");
+        if(meshes.size()!=8)throw new AssertionError("Missing supplied rocket model");
+        System.out.println("OK: eight unmodified hulls for ten variants, "+total+" vertices; no exterior additions, and native item/entity rotations, UVs and collision bounds agree.");
         var report=new StringBuilder("| Cohete | Nivel | Modelo | Depósito | Tierra → destino | Destino → Tierra |\n|---|---:|---|---:|---:|---:|\n");
         Arrays.stream(RocketVariant.values()).sorted(Comparator.comparingInt(RocketVariant::rank)).forEach(variant->{
             var target=TravelDestination.ALL.stream().filter(d->d.planet()==variant.mission&& !d.id().equals("overworld")).findFirst().orElseThrow();
@@ -79,5 +85,6 @@ public final class RocketModulesCheck {
     private static String sourceFile(String source){return switch(source){
         case "classic"->"space-rocket";case "dieselpunk"->"dieselpunk-space-rocket";
         case "modern"->"modern-space-rocket";case "venus_lander"->"venus-atmosphere-lander";
-        case "heavy"->"two-stage-heavy-lift-orbital-rocket";case "biomechanical"->"biomechanical-exploration-rocket";default->throw new IllegalArgumentException(source);};}
+        case "heavy"->"two-stage-heavy-lift-orbital-rocket";case "biomechanical"->"biomechanical-exploration-rocket";
+        case "vertical_lander"->"venus-vertical-landing-rocket";case "mars_lander"->"mars-landing-rocket";default->throw new IllegalArgumentException(source);};}
 }

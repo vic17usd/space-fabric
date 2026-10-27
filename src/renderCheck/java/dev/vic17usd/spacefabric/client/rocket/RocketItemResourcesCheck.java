@@ -43,13 +43,18 @@ public final class RocketItemResourcesCheck {
                 throw new AssertionError("Wrong item definition: "+id);
             var json=JsonParser.parseString(Files.readString(ASSETS.resolve("models/item/"+id+".json"))).getAsJsonObject();
             validate(json);
-            if(variant!=RocketVariant.BASE) {
+            if(!json.getAsJsonObject("textures").keySet().equals(java.util.Set.of("0","particle")))
+                throw new AssertionError("Unexpected exterior accent texture: "+id);
+            for(var element:json.getAsJsonArray("elements"))for(var face:element.getAsJsonObject().getAsJsonObject("faces").asMap().values())
+                if(!face.getAsJsonObject().get("texture").getAsString().equals("#0"))throw new AssertionError("Non-original face texture: "+id);
+            {
                 var broken=json.deepCopy();broken.getAsJsonObject("textures").addProperty("accent","minecraft:block/yellow_concrete");
+                broken.getAsJsonArray("elements").get(0).getAsJsonObject().getAsJsonObject("faces").asMap().values().iterator().next().getAsJsonObject().addProperty("texture","#accent");
                 boolean rejected=false;
                 try {validate(broken);}catch(IllegalStateException expected){rejected=true;}
                 if(!rejected)throw new AssertionError("Regression check missed the old mixed-atlas failure");
             }
         }
-        System.out.println("OK: all ten rocket inventory models parse with native 26.1 classes, resolve every face, and use one atlas; nine old mixed-atlas models rejected.");
+        System.out.println("OK: ten original rocket inventory models, no accent faces; all parse natively with one atlas, and mixed-atlas regressions are rejected.");
     }
 }
