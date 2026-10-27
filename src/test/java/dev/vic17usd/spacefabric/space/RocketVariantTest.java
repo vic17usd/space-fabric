@@ -17,12 +17,16 @@ class RocketVariantTest {
         assertTrue(RocketVariant.MERCURY.permits(Planet.MOON,false));
         assertTrue(RocketVariant.JUPITER.permits(Planet.MARS,false));
         assertFalse(RocketVariant.MOON.permits(Planet.MERCURY,false));
-        assertFalse(RocketVariant.MARS.permits(Planet.VENUS,false));
+        assertTrue(RocketVariant.MARS.permits(Planet.VENUS,false));
         assertFalse(RocketVariant.JUPITER.permits(Planet.NEPTUNE,false));
-        assertFalse(RocketVariant.NEPTUNE.permits(Planet.VENUS,false));
+        assertTrue(RocketVariant.NEPTUNE.permits(Planet.VENUS,false));
         assertFalse(RocketVariant.EARTH.permits(Planet.MARS,false));
         assertFalse(RocketVariant.BASE.permits(Planet.VENUS,false));
-        assertFalse(RocketVariant.MERCURY.permits(Planet.MOON,true));
+        assertTrue(RocketVariant.MERCURY.permits(Planet.MOON,true));
+    }
+    @Test void everyTierIncludesAllEarlierDestinationsAndRejectsLaterOnes() {
+        for(var variant:RocketVariant.values())for(var planet:Planet.values())
+            assertEquals(RocketRules.tier(planet)<=variant.rank(),variant.permits(planet,false),variant+":"+planet);
     }
     @Test void noHullSurvivesUnlimitedGasGiantDepth() {
         for(var variant:RocketVariant.values()) for(var planet:new Planet[]{Planet.JUPITER,Planet.SATURN,Planet.URANUS,Planet.NEPTUNE})

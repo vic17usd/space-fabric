@@ -17,12 +17,12 @@ import net.minecraft.resources.Identifier;
 
 public final class RocketRenderer extends EntityRenderer<RocketEntity, RocketRenderer.State> {
     private static final Identifier TEXTURE = SpaceFabric.id("textures/entity/rocket.png");
-    private final RocketModel model;
+    private final java.util.EnumMap<RocketVariant,RocketFleetModel> models=new java.util.EnumMap<>(RocketVariant.class);
     private final RocketCockpitModel cockpit = new RocketCockpitModel();
     public static final class State extends EntityRenderState { float yaw; boolean cockpitView; RocketVariant variant=RocketVariant.BASE; }
     public RocketRenderer(EntityRendererProvider.Context context) {
         super(context); shadowRadius = 0.9F;
-        model = new RocketModel();
+        for(var variant:RocketVariant.values())models.put(variant,new RocketFleetModel(variant));
     }
     @Override public State createRenderState() { return new State(); }
     @Override public void extractRenderState(RocketEntity entity, State state, float delta) {
@@ -46,17 +46,14 @@ public final class RocketRenderer extends EntityRenderer<RocketEntity, RocketRen
             super.submit(state, poses, collector, camera);
             return;
         }
-        poses.pushPose(); poses.mulPose(Axis.YP.rotationDegrees(180 - state.yaw)); poses.scale(1, -1, -1);
+        poses.pushPose(); poses.mulPose(Axis.YP.rotationDegrees(-state.yaw));
         // Las UV libres de Blockbench no siguen el despliegue UV del cubo vanilla.
         // Enviar los vértices evita que Sodium reutilice las UV del constructor Cube.
         int light = state.lightCoords;
-        collector.submitCustomGeometry(poses, RenderTypes.entityCutout(TEXTURE),
-                (pose, vertices) -> model.renderGeometry(pose, vertices, light, OverlayTexture.NO_OVERLAY, -1));
+        var model=models.get(state.variant);
+        collector.submitCustomGeometry(poses, RenderTypes.entityCutout(model.texture),
+                (pose, vertices) -> model.renderGeometry(pose, vertices, light, OverlayTexture.NO_OVERLAY));
         poses.popPose();
-        var variant=state.variant;
-        poses.pushPose();poses.mulPose(Axis.YP.rotationDegrees(-state.yaw));
-        collector.submitCustomGeometry(poses, RenderTypes.entityCutout(TEXTURE),
-                (pose,vertices)->RocketModules.renderGeometry(variant,pose,vertices,light,OverlayTexture.NO_OVERLAY));
-        poses.popPose(); super.submit(state, poses, collector, camera);
+        super.submit(state, poses, collector, camera);
     }
 }

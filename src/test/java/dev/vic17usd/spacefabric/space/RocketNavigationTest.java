@@ -20,11 +20,14 @@ class RocketNavigationTest {
         assertEquals(RocketNavigation.Reason.READY,parked.board());assertEquals(RocketNavigation.Reason.BOARD_FIRST,parked.launch());
         assertEquals(RocketNavigation.Reason.READY,state(variant,0,target,RocketRules.IDLE,variant.fuelCapacity(),cost,100,true,true,true).launch(),variant.path);
     }
-    @Test void mercuryBlockedFromMarsHasDustCauseButMarsRocketCanGoThere() {
+    @Test void higherTiersReachMarsButLunarRocketGivesARangeReason() {
         int mars=destination(Planet.MARS);
-        assertEquals(RocketNavigation.Reason.UNSUPPORTED,state(RocketVariant.MERCURY,0,mars,0,3000,400,100,true,true,true).destination(mars));
-        assertEquals(RocketVariant.ProtectionFailure.DUST,RocketVariant.MERCURY.protectionFailure(Planet.MARS,240));
+        assertEquals(RocketNavigation.Reason.READY,state(RocketVariant.MERCURY,0,mars,0,3000,400,100,true,true,true).destination(mars));
+        assertEquals(RocketNavigation.Reason.RANGE,state(RocketVariant.MOON,0,mars,0,3000,400,100,true,true,true).destination(mars));
         assertEquals(RocketNavigation.Reason.READY,state(RocketVariant.MARS,0,mars,0,3000,400,100,true,true,true).launch());
+    }
+    @Test void lowTierCannotEvadeProgressionByDepartingFromAnAdvancedPlanet() {
+        assertEquals(RocketNavigation.Reason.RANGE,state(RocketVariant.MOON,destination(Planet.NEPTUNE),0,0,3000,400,100,true,true,true).launch());
     }
     @Test void currentDimensionDoesNotPretendToBeAnUnsupportedPlanet() {
         int mars=destination(Planet.MARS);

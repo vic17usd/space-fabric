@@ -102,4 +102,7 @@ public final class RocketModel {
     (ROOT / 'src/main/resources/assets/space_fabric/models/item/rocket.json').write_text(json.dumps(item, indent=2)+'\n')
     print(f'Importados {len(elements)} cubos, 288 caras y atlas 512x512; altura visible {39*scale/16:.3f} bloques.')
 
-if __name__ == '__main__': generate()
+if __name__ == '__main__':
+    generate()
+    from import_rocket_fleet import generate as import_fleet
+    import_fleet()

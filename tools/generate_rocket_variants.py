@@ -137,3 +137,7 @@ print('Generated nine rocket meshes, items, upgrades, recipes and translations.'
 
 from import_equipment_textures import import_art
 import_art()
+
+# Fleet hulls supersede the legacy shared-fuselage inventory models above.
+from import_rocket_fleet import generate as import_fleet
+import_fleet()

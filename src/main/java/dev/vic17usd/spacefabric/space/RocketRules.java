@@ -13,18 +13,13 @@ public final class RocketRules {
 
     public static int tier(Planet planet) {
         return switch (planet) {
-            case EARTH, MOON -> 0;
-            case VENUS -> 1;
-            case MERCURY, MARS -> 2;
-            case JUPITER -> 4;
-            case SATURN -> 5;
-            case URANUS -> 6;
-            case NEPTUNE -> 7;
+            case EARTH -> 0;case MOON -> 1;case VENUS -> 2;case MARS -> 3;
+            case MERCURY -> 4;case JUPITER -> 5;case SATURN -> 6;case URANUS -> 7;case NEPTUNE -> 8;
         };
     }
 
     public static int cost(TravelDestination from, TravelDestination to) {
-        return from.world().equals(to.world()) ? 0 : 200 + Math.abs(tier(from.planet()) - tier(to.planet())) * 100;
+        return RocketFuelBudget.cost(from,to);
     }
 
     public static boolean canLaunch(boolean pilot, int state, int fuel, int cost, boolean differentWorld) {

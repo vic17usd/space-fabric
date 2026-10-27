@@ -1,5 +1,10 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión 0.23.0 asigna **seis modelos Blockbench a diez diseños de cohete**,
+incluido el heavy-lift para Marte y el lander para Venus. Añade progresión por
+niveles, depósitos diferentes y combustible basado en presupuestos orbitales
+ajustados al juego. [Modelos, niveles, consumos y vista previa](docs/rocket-fleet.md).
+
 La versión 0.22.0 integra **cuatro casillas de traje dentro del inventario de
 supervivencia**, en una columna junto al personaje. La armadura conserva sus
 espacios propios. [Guía de espacios del traje](docs/suit-slots.md).
@@ -61,9 +66,9 @@ Consulta la [guía completa de bloques y materiales](docs/materials.md).
 Consulta la [guía de terreno y registro de biomas](docs/terrain.md).
 Consulta la [tabla de dimensiones y claves Java](docs/dimensions.md).
 
-Descarga del prototipo compilado: [space-fabric-0.22.0.jar](dist/space-fabric-0.22.0.jar)
+Descarga del prototipo compilado: [space-fabric-0.23.0.jar](dist/space-fabric-0.23.0.jar)
 (en GitHub, pulsa **Download raw file**).
-[Checksum SHA-256](dist/space-fabric-0.22.0.jar.sha256).
+[Checksum SHA-256](dist/space-fabric-0.23.0.jar.sha256).
 Fauna original: **17usdd using [CreativeMode.net](https://creativemode.net)**;
 [páginas oficiales y atribución](third_party/martian_fauna/README.md),
 [licencia de sus recursos](https://creativemode.net/mod-license).

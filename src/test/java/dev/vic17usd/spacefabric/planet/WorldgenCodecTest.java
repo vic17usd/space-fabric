@@ -1262,7 +1262,7 @@ class WorldgenCodecTest {
         assertEquals(variant,placed.variant());assertEquals(751,placed.fuel());assertEquals(63,placed.hull());
         var tooltip=new java.util.ArrayList<net.minecraft.network.chat.Component>();
         factory.appendHoverText(item,net.minecraft.world.item.Item.TooltipContext.of(registries),net.minecraft.world.item.component.TooltipDisplay.DEFAULT,tooltip::add,net.minecraft.world.item.TooltipFlag.NORMAL);
-        var tankLine=assertInstanceOf(net.minecraft.network.chat.contents.TranslatableContents.class,tooltip.getLast().getContents());
+        var tankLine=assertInstanceOf(net.minecraft.network.chat.contents.TranslatableContents.class,tooltip.getFirst().getContents());
         assertEquals("item.space_fabric.rocket_fuel",tankLine.getKey());
         assertEquals(751,tankLine.getArgs()[0]);assertEquals(variant.fuelCapacity(),tankLine.getArgs()[1]);
         assertThrows(IllegalArgumentException.class,()->factory.createRocket(null,new ItemStack(Items.STICK)));
@@ -1578,5 +1578,31 @@ class WorldgenCodecTest {
         var loader=Thread.currentThread().getContextClassLoader();
         Class.forName("net.minecraft.client.gui.screens.inventory.InventoryScreen",false,loader);
         Class.forName("net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen",false,loader);
+    }
+    @ParameterizedTest @org.junit.jupiter.params.provider.EnumSource(dev.vic17usd.spacefabric.space.RocketVariant.class)
+    void fleetFullTanksSurvivePlacementNbtAndNativeMenuPackets(dev.vic17usd.spacefabric.space.RocketVariant variant) throws Exception {
+        var stack=dev.vic17usd.spacefabric.space.RocketItem.packed(Integer.MAX_VALUE,variant,77);
+        var item=assertInstanceOf(dev.vic17usd.spacefabric.space.RocketItem.class,stack.getItem());
+        var ops=registries.createSerializationContext(JsonOps.INSTANCE);
+        var serialized=ItemStack.CODEC.parse(ops,ItemStack.CODEC.encodeStart(ops,stack).getOrThrow()).getOrThrow();
+        var rocket=item.createRocket(null,serialized);
+        assertEquals(variant.fuelCapacity(),rocket.fuel());assertEquals(77,rocket.hull());
+        assertEquals(dev.vic17usd.spacefabric.space.RocketHullGeometry.width(variant),rocket.getDimensions(net.minecraft.world.entity.Pose.STANDING).width());
+        var write=rocket.getClass().getDeclaredMethod("addAdditionalSaveData",net.minecraft.world.level.storage.ValueOutput.class);write.setAccessible(true);
+        var out=net.minecraft.world.level.storage.TagValueOutput.createWithContext(net.minecraft.util.ProblemReporter.DISCARDING,registries);write.invoke(rocket,out);
+        var read=rocket.getClass().getDeclaredMethod("readAdditionalSaveData",net.minecraft.world.level.storage.ValueInput.class);read.setAccessible(true);
+        var restored=new dev.vic17usd.spacefabric.space.RocketEntity(dev.vic17usd.spacefabric.space.ModSpaceEntities.ROCKET,null);
+        read.invoke(restored,net.minecraft.world.level.storage.TagValueInput.create(net.minecraft.util.ProblemReporter.DISCARDING,registries,out.buildResult()));
+        assertEquals(variant,restored.variant());assertEquals(variant.fuelCapacity(),restored.fuel());
+        var buffer=new net.minecraft.network.FriendlyByteBuf(io.netty.buffer.Unpooled.buffer());
+        try {
+            var codec=net.minecraft.network.protocol.game.ClientboundContainerSetDataPacket.STREAM_CODEC;
+            codec.encode(buffer,new net.minecraft.network.protocol.game.ClientboundContainerSetDataPacket(1,9,variant.fuelCapacity()));
+            assertEquals(variant.fuelCapacity(),codec.decode(buffer).getValue());
+        } finally {buffer.release();}
+        if(variant.fuelCapacity()>dev.vic17usd.spacefabric.space.RocketVariant.EARTH.fuelCapacity()) {
+            assertFalse(rocket.install(dev.vic17usd.spacefabric.space.RocketVariant.EARTH));
+            assertEquals(variant,rocket.variant());assertEquals(variant.fuelCapacity(),rocket.fuel());
+        }
     }
 }

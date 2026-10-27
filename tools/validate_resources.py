@@ -83,6 +83,15 @@ def main():
     for folder in ("entity", "item"):
         if (assets / "textures" / folder / "rocket.png").read_bytes() != expected_texture:
             raise ValueError(f"Atlas del cohete distinto al original: {folder}")
+    # Every new fleet hull retains the exact texture embedded in its supplied .bbmodel.
+    from import_rocket_fleet import SOURCES
+    for name, filename in SOURCES.items():
+        source = root.parents[2] / f"tools/import_sources/{filename}.bbmodel"
+        hull = json.loads(source.read_text())
+        expected = base64.b64decode(hull["textures"][0]["source"].split(",", 1)[1], validate=True)
+        for folder in ("entity", "item"):
+            if (assets / f"textures/{folder}/rocket_fleet/{name}.png").read_bytes() != expected:
+                raise ValueError(f"Atlas de flota distinto al original: {name}/{folder}")
     # Los renderers de entidad declaran sus texturas en Java, fuera de los modelos JSON.
     client = root.parent / "java/dev/vic17usd/spacefabric/client"
     for source in client.rglob("*.java"):

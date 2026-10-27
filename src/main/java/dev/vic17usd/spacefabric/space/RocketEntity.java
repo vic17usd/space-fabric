@@ -59,8 +59,18 @@ public final class RocketEntity extends Entity implements ExtendedMenuProvider<I
     }
     public boolean permits(TravelDestination destination){return variant().permits(destination.planet(),RocketFlightConfig.exclusive());}
     public boolean install(RocketVariant target){
-        if(isFlying()||isVehicle())return false;
+        if(isFlying()||isVehicle()||fuel()>target.fuelCapacity())return false;
+        var bounds=net.minecraft.world.entity.EntityDimensions.scalable(RocketHullGeometry.width(target),RocketHullGeometry.height(target)).makeBoundingBox(position());
+        if(level()!=null&&(!level().noCollision(this,bounds)||!level().getEntities(this,bounds).isEmpty()))return false;
         configureVariant(target);restoreHull(100);return true;
+    }
+    @Override public net.minecraft.world.entity.EntityDimensions getDimensions(net.minecraft.world.entity.Pose pose) {
+        var type=entityData==null?RocketVariant.BASE:variant();
+        return net.minecraft.world.entity.EntityDimensions.scalable(RocketHullGeometry.width(type),RocketHullGeometry.height(type));
+    }
+    @Override public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+        super.onSyncedDataUpdated(key);
+        if(VARIANT.equals(key)&&level()!=null)refreshDimensions();
     }
     public int fuelCapacity(){return variant().fuelCapacity();}
     @Override protected Component getTypeName(){return variant().label();}
@@ -87,7 +97,7 @@ public final class RocketEntity extends Entity implements ExtendedMenuProvider<I
         if (isFlying()||!player.isAlive()||player.isSpectator()) return InteractionResult.PASS;
         var stack = player.getItemInHand(hand);
         if (stack.getItem() instanceof RocketUpgradeItem kit) {
-            if(!install(kit.variant())) { player.sendOverlayMessage(Component.translatable("message.space_fabric.upgrade_empty"));return InteractionResult.FAIL; }
+            if(!install(kit.variant())) { player.sendOverlayMessage(Component.translatable("message.space_fabric.upgrade_blocked"));return InteractionResult.FAIL; }
             if(!player.isCreative())stack.shrink(1);
             player.sendOverlayMessage(Component.translatable("message.space_fabric.rocket_upgraded",variant().label()));
             return InteractionResult.SUCCESS_SERVER;
@@ -131,7 +141,12 @@ public final class RocketEntity extends Entity implements ExtendedMenuProvider<I
         int cost = requiredFuel();
         var reason=navigation(pilot).launch();
         if(reason!=RocketNavigation.Reason.READY) {
-            pilot.sendOverlayMessage(Component.translatable(reason.key,variant().label()));return false;
+            if(reason==RocketNavigation.Reason.RANGE) {
+                int source=TravelDestination.indexOf(server.dimension());
+                int required=Math.max(RocketRules.tier(destination.planet()),source<0?0:RocketRules.tier(TravelDestination.at(source).planet()));
+                pilot.sendOverlayMessage(Component.translatable(reason.key,required,variant().rank()));
+            } else pilot.sendOverlayMessage(Component.translatable(reason.key));
+            return false;
         }
         if (server.getServer().getLevel(destination.world()) == null || !server.noCollision(this, getBoundingBox().move(0, 1, 0))) {
             pilot.sendOverlayMessage(Component.translatable("message.space_fabric.launch_blocked")); return false;

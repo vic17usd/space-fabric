@@ -1,5 +1,9 @@
 # Cohetes: identidad, combustible y destinos — 0.21.1
 
+> **Actualización 0.23.0:** los modelos, capacidades, consumos y bloqueos por planeta
+> de esta guía describen versiones anteriores. El sistema vigente usa niveles
+> acumulativos: consulta [la flota y sus consumos actuales](rocket-fleet.md).
+
 Esta actualización corrige la información y los controles del mapa estelar.
 
 - El encabezado identifica el **modelo real del cohete**: por ejemplo, «Cohete de

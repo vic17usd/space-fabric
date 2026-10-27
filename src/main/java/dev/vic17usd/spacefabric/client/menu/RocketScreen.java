@@ -38,10 +38,13 @@ public final class RocketScreen extends SpaceContainerScreen<RocketMenu> {
         var state=menu.state();
         if(reason==RocketNavigation.Reason.UNSUPPORTED&&destination>=0&&destination<TravelDestination.ALL.size()) {
             var target=TravelDestination.at(destination).planet();
-            if(state.exclusive()&&target!=dev.vic17usd.spacefabric.planet.Planet.EARTH&&target!=state.variant().mission)
-                return Component.translatable("gui.space_fabric.rocket_protection.exclusive");
             var failure=state.variant().protectionFailure(target,240);
             return Component.translatable("gui.space_fabric.rocket_protection."+failure.name().toLowerCase(java.util.Locale.ROOT));
+        }
+        if(reason==RocketNavigation.Reason.RANGE&&destination>=0&&destination<TravelDestination.ALL.size()) {
+            int required=RocketRules.tier(TravelDestination.at(destination).planet());
+            if(state.source()>=0)required=Math.max(required,RocketRules.tier(TravelDestination.at(state.source()).planet()));
+            return Component.translatable(reason.key,required,state.variant().rank());
         }
         return Component.translatable(reason.key);
     }
@@ -101,7 +104,7 @@ public final class RocketScreen extends SpaceContainerScreen<RocketMenu> {
         gui.text(font,font.plainSubstrByWidth(rocket.getString(),148),8,7,state.variant().color);
         var destination=TravelDestination.at(Math.clamp(state.selected(),0,TravelDestination.ALL.size()-1));
         gui.text(font,font.plainSubstrByWidth(Component.translatable("gui.space_fabric.selected_destination",destination.label()).getString(),148),164,7,0xFFE5F5FF);
-        gui.text(font,Component.translatable("gui.space_fabric.hull",state.hull()),164,78,state.hull()>25?0xFF45D5B0:0xFFFF7555);
+        gui.text(font,Component.translatable("gui.space_fabric.hull_rank",state.hull(),state.variant().rank()),164,78,state.hull()>25?0xFF45D5B0:0xFFFF7555);
         gui.text(font,Component.translatable("gui.space_fabric.trip_cost",state.cost()),164,89,state.fuel()>=state.cost()?0xFFB5D6E5:0xFFFF7555);
         gui.text(font,state.ready()?Component.translatable("gui.space_fabric.fuel",state.fuel(),state.capacity()):Component.translatable("gui.space_fabric.rocket_reason.sync"),8,104,0xFFB5D6E5);
         gui.text(font, Component.translatable("gui.space_fabric.cargo"), 8, 127, 0xFFB5D6E5);

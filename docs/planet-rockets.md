@@ -1,5 +1,9 @@
 # Cohetes planetarios — 0.17.0 / Fabric 26.1
 
+> **Actualización 0.23.0:** los modelos, capacidades, consumos y bloqueos por planeta
+> de esta guía describen versiones anteriores. El sistema vigente usa niveles
+> acumulativos: consulta [la flota y sus consumos actuales](rocket-fleet.md).
+
 Hay nueve variantes además del cohete básico. Se conserva el fuselaje, textura,
 visor y cabina 3D del modelo `space-rocket.bbmodel`; cada variante incorpora equipo
 exterior diferente, también visible en su ítem 3D. Los componentes exteriores no

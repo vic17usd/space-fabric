@@ -5,7 +5,7 @@ public final class RocketNavigation {
     private RocketNavigation() { }
     public enum Reason {
         READY("ready"), SYNC("sync"), IN_FLIGHT("in_flight"), OTHER_PILOT("other_pilot"),
-        CURRENT_WORLD("current_world"), UNSUPPORTED("unsupported"), UNKNOWN_WORLD("unknown_world"),
+        CURRENT_WORLD("current_world"), RANGE("range"), UNSUPPORTED("unsupported"), UNKNOWN_WORLD("unknown_world"),
         BOARD_FIRST("board_first"), ALREADY_BOARDED("already_boarded"), BROKEN_HULL("broken_hull"), LOW_FUEL("low_fuel");
         public final String key;
         Reason(String key){this.key="gui.space_fabric.rocket_reason."+key;}
@@ -19,6 +19,7 @@ public final class RocketNavigation {
             if(source<0)return Reason.UNKNOWN_WORLD;
             if(index<0||index>=TravelDestination.ALL.size())return Reason.UNSUPPORTED;
             if(index==source)return Reason.CURRENT_WORLD;
+            if(Math.max(RocketRules.tier(TravelDestination.at(source).planet()),RocketRules.tier(TravelDestination.at(index).planet()))>variant.rank())return Reason.RANGE;
             if(!variant.permits(TravelDestination.at(index).planet(),exclusive))return Reason.UNSUPPORTED;
             return Reason.READY;
         }

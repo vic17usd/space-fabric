@@ -149,7 +149,7 @@
   "message.space_fabric.rocket_unsuitable": "El casco o la protección no permiten este viaje.",
   "item.space_fabric.rocket_kit_help": "Clic derecho sobre un cohete vacío para instalar.",
   "item.space_fabric.rocket_rating": "Casco: %s bar; %s a %s °C",
-  "gui.space_fabric.route_safe": "Destino compatible con este cohete.",
+  "gui.space_fabric.route_safe": "Destino incluido en el nivel de este cohete.",
   "gui.space_fabric.route_unsafe": "La protección del cohete no permite este destino.",
   "block.space_fabric.bauxite_ore": "Mena de bauxita",
   "block.space_fabric.deepslate_bauxite_ore": "Mena de bauxita en pizarra profunda",
@@ -253,5 +253,9 @@
   "gui.space_fabric.rocket_protection.wind": "Los refuerzos no soportan los vientos del destino.",
   "gui.space_fabric.rocket_protection.exclusive": "El servidor limita este cohete a su misión y el regreso a la Tierra.",
   "gui.space_fabric.fuel_per_cell": "Cada celda: %s unidades",
-  "gui.space_fabric.fuel_cell_note": "La celda se carga solo si cabe completa."
+  "gui.space_fabric.fuel_cell_note": "La celda se carga solo si cabe completa.",
+  "gui.space_fabric.rocket_reason.range": "Requiere nivel %s; tu cohete es de nivel %s.",
+  "item.space_fabric.rocket_rank": "Nivel %s: permite viajar a los niveles anteriores.",
+  "gui.space_fabric.hull_rank": "Casco: %s%% | N%s",
+  "message.space_fabric.upgrade_blocked": "El cohete debe estar vacío, tener espacio libre y no exceder el depósito del nuevo modelo."
 }

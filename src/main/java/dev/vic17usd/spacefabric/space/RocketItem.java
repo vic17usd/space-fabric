@@ -44,6 +44,7 @@ public class RocketItem extends Item {
             java.util.function.Consumer<net.minecraft.network.chat.Component> lines,net.minecraft.world.item.TooltipFlag flags) {
         super.appendHoverText(stack,context,display,lines,flags);
         lines.accept(net.minecraft.network.chat.Component.translatable("item.space_fabric.rocket_fuel",storedFuel(stack),variant.fuelCapacity()));
+        lines.accept(net.minecraft.network.chat.Component.translatable("item.space_fabric.rocket_rank",variant.rank()));
     }
 
     @Override public InteractionResult useOn(UseOnContext context) {

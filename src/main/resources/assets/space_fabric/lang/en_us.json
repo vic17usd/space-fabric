@@ -149,7 +149,7 @@
   "message.space_fabric.rocket_unsuitable": "Hull or environmental protection does not permit this trip.",
   "item.space_fabric.rocket_kit_help": "Right-click an unoccupied rocket to install.",
   "item.space_fabric.rocket_rating": "Hull: %s bar; %s to %s °C",
-  "gui.space_fabric.route_safe": "Destination compatible with this rocket.",
+  "gui.space_fabric.route_safe": "Destination included in this rocket tier.",
   "gui.space_fabric.route_unsafe": "Rocket protection does not permit this destination.",
   "block.space_fabric.bauxite_ore": "Bauxite Ore",
   "block.space_fabric.deepslate_bauxite_ore": "Deepslate Bauxite Ore",
@@ -253,5 +253,9 @@
   "gui.space_fabric.rocket_protection.wind": "The reinforcement cannot withstand the destination winds.",
   "gui.space_fabric.rocket_protection.exclusive": "The server limits this rocket to its mission and returning to Earth.",
   "gui.space_fabric.fuel_per_cell": "Each cell: %s units",
-  "gui.space_fabric.fuel_cell_note": "A cell loads only if its full contents fit."
+  "gui.space_fabric.fuel_cell_note": "A cell loads only if its full contents fit.",
+  "gui.space_fabric.rocket_reason.range": "Requires tier %s; your rocket is tier %s.",
+  "item.space_fabric.rocket_rank": "Tier %s: includes earlier destinations.",
+  "gui.space_fabric.hull_rank": "Hull: %s%% | T%s",
+  "message.space_fabric.upgrade_blocked": "Rocket must be unoccupied, have clearance, and fit its fuel in the new tank."
 }
