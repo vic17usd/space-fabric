@@ -1924,4 +1924,57 @@ class WorldgenCodecTest {
         }
     }
 
+    @Test void sulfurOutcropsUseTheOriginal21ShapesAndStatePieces() throws IOException {
+        var block=ModBlocks.SULFUR_CLUSTER;
+        assertEquals(21,block.getStateDefinition().getPossibleStates().size());
+        var pieces=dev.vic17usd.spacefabric.block.SulfurClusterBlock.PIECES;
+        assertEquals(21,pieces.size());
+        var geometry=resource("sulfur_cluster").getAsJsonObject().getAsJsonArray("blocks");
+        for(int i=0;i<21;i++) {
+            var state=block.defaultBlockState().setValue(dev.vic17usd.spacefabric.block.SulfurClusterBlock.PIECE,i);
+            var shape=state.getCollisionShape(net.minecraft.world.level.EmptyBlockGetter.INSTANCE,net.minecraft.core.BlockPos.ZERO);
+            assertFalse(shape.isEmpty());
+            var bounds=geometry.get(i).getAsJsonObject().getAsJsonObject("bounds");
+            assertEquals(bounds.get("minX").getAsDouble()/16,shape.bounds().minX,0.0001);
+            assertEquals(bounds.get("maxY").getAsDouble()/16,shape.bounds().maxY,0.0001);
+        }
+        assertFalse(block.defaultBlockState().isCollisionShapeFullBlock(net.minecraft.world.level.EmptyBlockGetter.INSTANCE,net.minecraft.core.BlockPos.ZERO));
+        assertInstanceOf(dev.vic17usd.spacefabric.item.SulfurClusterItem.class,block.asItem());
+        assertTrue(new ItemStack(Items.STONE_PICKAXE).isCorrectToolForDrops(block.defaultBlockState()));
+        assertFalse(new ItemStack(Items.WOODEN_PICKAXE).isCorrectToolForDrops(block.defaultBlockState()));
+    }
+    @Test void sulfurOutcropsActuallyPlaceCompleteGroundedGeometryWithoutCrossingChunks() {
+        for(int seed=0;seed<16;seed++) {
+            var world=new VoxelWorld(-2,3,64);
+            for(int x=-32;x<-16;x++)for(int z=48;z<64;z++)world.blocks.put(new net.minecraft.core.BlockPos(x,64,z),ModBlocks.VULCANIZED_BASALT.defaultBlockState());
+            assertTrue(dev.vic17usd.spacefabric.worldgen.SulfurClusterFeature.placeOnSurface(world.level,new net.minecraft.core.BlockPos(-32,0,48),net.minecraft.util.RandomSource.create(seed)));
+            var parts=world.blocks.entrySet().stream().filter(e->e.getValue().is(ModBlocks.SULFUR_CLUSTER)).toList();
+            assertEquals(21,parts.size());
+            for(var part:parts)assertTrue(part.getKey().getY()>=65&&part.getKey().getY()<=67);
+            assertEquals(21,parts.stream().map(e->e.getValue().getValue(dev.vic17usd.spacefabric.block.SulfurClusterBlock.PIECE)).distinct().count());
+        }
+    }
+    @Test void sulfurOutcropPlacementRejectsCliffsLavaObstaclesAndUnloadedSpace() {
+        var anchor=new net.minecraft.core.BlockPos(5,65,5);
+        for(var obstruction:List.of(Blocks.AIR,Blocks.LAVA)) {
+            var world=new VoxelWorld(0,0,64);world.blocks.put(anchor.offset(1,-1,1),obstruction.defaultBlockState());
+            assertFalse(dev.vic17usd.spacefabric.block.SulfurClusterBlock.canPlace(world.level,anchor));
+        }
+        var world=new VoxelWorld(0,0,64);
+        assertTrue(dev.vic17usd.spacefabric.block.SulfurClusterBlock.canPlace(world.level,anchor));
+        world.blocks.put(anchor.offset(2,2,2),Blocks.CHEST.defaultBlockState());
+        assertFalse(dev.vic17usd.spacefabric.block.SulfurClusterBlock.canPlace(world.level,anchor));
+        assertFalse(dev.vic17usd.spacefabric.block.SulfurClusterBlock.canPlace(world.level,new net.minecraft.core.BlockPos(15,65,15)));
+    }
+    @Test void sulfurOutcropFeatureIsRegisteredOnlyForVenus() throws IOException {
+        var key=net.minecraft.resources.ResourceKey.create(Registries.PLACED_FEATURE,SpaceFabric.id("sulfur_cluster"));
+        assertNotNull(registries.lookupOrThrow(Registries.PLACED_FEATURE).getOrThrow(key));
+        for(var planet:Planet.values()) {
+            if(planet==Planet.EARTH)continue;
+            var biome=registries.lookupOrThrow(Registries.BIOME).getOrThrow(dev.vic17usd.spacefabric.worldgen.PlanetBiomes.key(planet));
+            assertEquals(planet==Planet.VENUS,biome.value().getGenerationSettings().features().stream().flatMap(net.minecraft.core.HolderSet::stream).anyMatch(f->f.is(key)));
+        }
+        assertNotNull(LootTable.DIRECT_CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("loot_table/blocks/sulfur_cluster")).getOrThrow());
+    }
+
 }

@@ -31,6 +31,7 @@
     "space_fabric:titanium_block",
     "space_fabric:fluorite_ore",
     "space_fabric:deepslate_fluorite_ore",
-    "space_fabric:fluorite_block"
+    "space_fabric:fluorite_block",
+    "space_fabric:sulfur_cluster"
   ]
 }

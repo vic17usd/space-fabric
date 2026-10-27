@@ -10,5 +10,8 @@ public final class PlanetFeatures {
     public static final CraterFeature CRATER = Registry.register(
             BuiltInRegistries.FEATURE, SpaceFabric.id("crater"), new CraterFeature());
 
+    public static final SulfurClusterFeature SULFUR_CLUSTER = Registry.register(
+            BuiltInRegistries.FEATURE, SpaceFabric.id("sulfur_cluster"), new SulfurClusterFeature());
+
     public static void initialize() { }
 }

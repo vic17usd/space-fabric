@@ -19,6 +19,7 @@ java {
 }
 
 jar {
+    from('third_party/venus_ground') { include '**/LICENSE.txt'; include 'README.md'; into 'META-INF/licenses/venus_ground' }
     from('third_party/venus_expansion') { include '**/LICENSE.txt'; include 'README.md'; into 'META-INF/licenses/venus_expansion' }
     from("third_party/venus_fauna") { include "**/LICENSE.txt"; include "README.md"; into "META-INF/licenses/venus_fauna" }
     from('third_party/martian_sanctum') {
@@ -115,3 +116,10 @@ tasks.register('exportRocketJourneyPreview', JavaExec) {
     mainClass = 'dev.vic17usd.spacefabric.client.rocket.RocketFlightSceneCheck'
     args 'preview'
 }
+
+tasks.register('verifyVenusGroundAssets', JavaExec) {
+    dependsOn tasks.named('renderCheckClasses')
+    classpath = sourceSets.renderCheck.runtimeClasspath
+    mainClass = 'dev.vic17usd.spacefabric.client.rocket.VenusGroundAssetsCheck'
+}
+tasks.named('check') { dependsOn tasks.named('verifyVenusGroundAssets') }

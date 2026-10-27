@@ -22,6 +22,7 @@ import dev.vic17usd.spacefabric.machine.FuelRefineryBlock;
 public final class ModBlocks {
     private static final Map<String, Block> BLOCKS = new LinkedHashMap<>();
     static {
+        Registry.register(BuiltInRegistries.BLOCK_TYPE, SpaceFabric.id("sulfur_cluster"), SulfurClusterBlock.CODEC);
         Registry.register(BuiltInRegistries.BLOCK_TYPE, SpaceFabric.id("fuel_refinery"), FuelRefineryBlock.CODEC);
         Registry.register(BuiltInRegistries.BLOCK_TYPE, SpaceFabric.id("regolith"), PlanetRegolithBlock.CODEC);
         Registry.register(BuiltInRegistries.BLOCK_TYPE, SpaceFabric.id("hot_volcanic_rock"), HotVolcanicRockBlock.CODEC);
@@ -76,6 +77,8 @@ public final class ModBlocks {
             properties -> new PlanetOreBlock(UniformInt.of(1, 3), properties), stoneProperties().strength(3.5F, 7.0F));
     public static final Block SULFUR_DEPOSIT = register("sulfur_deposit", HotVolcanicRockBlock::new,
             stoneProperties().strength(1.5F, 3.0F).lightLevel(state -> 2));
+    public static final Block SULFUR_CLUSTER = register("sulfur_cluster", SulfurClusterBlock::new,
+            stoneProperties().strength(1.5F, 3.0F).noOcclusion());
     public static final Block CONDENSED_SULFURIC_ACID = register("condensed_sulfuric_acid", CondensedAcidBlock::new,
             stoneProperties().strength(1.0F, 2.0F));
 
@@ -97,8 +100,9 @@ public final class ModBlocks {
         var id = SpaceFabric.id(path);
         Block block = Registry.register(BuiltInRegistries.BLOCK, id,
                 factory.apply(properties.setId(ResourceKey.create(Registries.BLOCK, id))));
-        Registry.register(BuiltInRegistries.ITEM, id, new BlockItem(block,
-                new Item.Properties().setId(ResourceKey.create(Registries.ITEM, id)).useBlockDescriptionPrefix()));
+        Registry.register(BuiltInRegistries.ITEM, id, (path.equals("sulfur_cluster")
+                ? new dev.vic17usd.spacefabric.item.SulfurClusterItem(block, new Item.Properties().setId(ResourceKey.create(Registries.ITEM, id)).useBlockDescriptionPrefix())
+                : new BlockItem(block, new Item.Properties().setId(ResourceKey.create(Registries.ITEM, id)).useBlockDescriptionPrefix())));
         BLOCKS.put(path, block);
         return block;
     }

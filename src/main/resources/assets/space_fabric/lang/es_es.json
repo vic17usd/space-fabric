@@ -314,5 +314,6 @@
   "advancements.space_fabric.colony.mars.title": "Geología marciana",
   "advancements.space_fabric.colony.mars.description": "Analiza una muestra de Marte para fabricar un cargador solar.",
   "advancements.space_fabric.colony.venus.title": "Industria bajo presión",
-  "advancements.space_fabric.colony.venus.description": "Analiza una muestra de Venus para fabricar el generador geotérmico."
+  "advancements.space_fabric.colony.venus.description": "Analiza una muestra de Venus para fabricar el generador geotérmico.",
+  "block.space_fabric.sulfur_cluster": "Afloramiento de azufre venusiano"
 }

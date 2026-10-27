@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "id": "sulfurstone-cluster-spcbdqbx",
+  "version": "1",
+  "name": "Sulfurstone Cluster",
+  "description": "Discover a shimmering sulfurstone cluster that chimes and sparkles with a simple touch.",
+  "authors": [
+    "vic17usd using CreativeMode.net"
+  ],
+  "contact": {
+    "homepage": "https://creativemode.net",
+    "sources": "https://creativemode.net/mod/sulfurstone-cluster-spcbdqbx"
+  },
+  "license": "ARR - CreativeMode.net/mod-license",
+  "icon": "assets/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "sulfurstone_cluster_spcbdqbx.SulfurstoneCluster"
+    ],
+    "client": [
+      "sulfurstone_cluster_spcbdqbx.SulfurstoneClusterClient"
+    ],
+    "fabric-datagen": [
+      "sulfurstone_cluster_spcbdqbx.SulfurstoneClusterDataGenerator"
+    ]
+  },
+  "mixins": [
+    "sulfurstone_cluster_spcbdqbx.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.18.4",
+    "minecraft": "~26.1",
+    "java": ">=25",
+    "fabric-api": "*"
+  },
+  "suggests": {
+    "another-mod": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/creativemode"
+      }
+    },
+    "creativemode:mod": {
+      "schemaVersion": 1,
+      "modId": "4668bd3c-b731-46a7-86cc-fcd815cb4585",
+      "modSlug": "sulfurstone-cluster-spcbdqbx",
+      "modVersion": 1
+    }
+  },
+  "jars": [
+    {
+      "file": "META-INF/jars/creativemode-telemetry.jar"
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "venus-sulfurstone-gtdukli6:block/venus_sulfurstone_gtdukli6"
+  }
+}

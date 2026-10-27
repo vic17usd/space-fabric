@@ -244,3 +244,19 @@ Colonias de Marte y Venus, versión 0.29.0:
 No se ha ejecutado una partida interactiva ni una sesión multijugador para esta
 entrega. La inspección visual, el recorrido por esclusas y la automatización con
 tolvas requieren comprobación en juego. Las pruebas no sustituyen esa observación.
+
+Suelo de Venus, versión 0.30.0:
+
+- Compilación completa correcta: 422 pruebas JUnit sin fallos, errores ni omisiones,
+  y nueve comprobaciones de recursos/renderizado por CPU. 896 JSON válidos.
+- Los cuatro PNG importados coinciden byte por byte con los originales. La
+  regeneración desde las fuentes guardadas produce los mismos recursos.
+- Los modelos de las tres rocas, las 21 piezas del afloramiento y su modelo
+  completo de inventario se decodifican con el cliente nativo 26.1, sin GPU.
+- Colocación real sobre un volumen de prueba en 16 semillas: 21 estados distintos,
+  entre una y tres capas sobre el terreno, sin escrituras fuera del chunk.
+- Se rechazan huecos en la base, lava, obstáculos en el volumen y chunks
+  descargados. Se comprueban cajas de colisión, herramienta mínima, loot y
+  asignación de la característica exclusivamente al bioma de Venus.
+- Los bloques existentes mantienen sus IDs y comportamientos. Los afloramientos
+  naturales requieren chunks nuevos. Inspección visual y multijugador pendientes.

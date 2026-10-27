@@ -54,6 +54,7 @@
     "space_fabric:water_electrolyzer",
     "space_fabric:solar_charger",
     "space_fabric:geothermal_generator",
-    "space_fabric:sample_analyzer"
+    "space_fabric:sample_analyzer",
+    "space_fabric:sulfur_cluster"
   ]
 }

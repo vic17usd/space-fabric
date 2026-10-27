@@ -314,5 +314,6 @@
   "advancements.space_fabric.colony.mars.title": "Martian geology",
   "advancements.space_fabric.colony.mars.description": "Analyze a Mars sample to craft a solar charger.",
   "advancements.space_fabric.colony.venus.title": "Industry under pressure",
-  "advancements.space_fabric.colony.venus.description": "Analyze a Venus sample to craft a geothermal generator."
+  "advancements.space_fabric.colony.venus.description": "Analyze a Venus sample to craft a geothermal generator.",
+  "block.space_fabric.sulfur_cluster": "Venusian Sulfur Outcrop"
 }

@@ -22,6 +22,7 @@ final class VoxelWorld {
         this.groundY = groundY;
         level = (WorldGenLevel) Proxy.newProxyInstance(WorldGenLevel.class.getClassLoader(), new Class<?>[] {WorldGenLevel.class},
                 (proxy, method, args) -> switch (method.getName()) {
+                    case "hasChunk" -> (int)args[0]==chunkX && (int)args[1]==chunkZ;
                     case "getBlockState" -> state((BlockPos) args[0]);
                     case "getFluidState" -> state((BlockPos) args[0]).getFluidState();
                     case "getBlockEntity" -> null;
