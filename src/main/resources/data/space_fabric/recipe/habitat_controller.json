@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "HCH",
+    "ROG",
+    "HCH"
+  ],
+  "key": {
+    "H": "space_fabric:pressure_hull",
+    "C": "minecraft:copper_ingot",
+    "R": "minecraft:redstone",
+    "O": "minecraft:observer",
+    "G": "minecraft:glass"
+  },
+  "result": {
+    "id": "space_fabric:habitat_controller",
+    "count": 1
+  }
+}

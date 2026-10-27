@@ -1,0 +1,9 @@
+{
+  "type": "space_fabric:martian_surface",
+  "biomes": "#space_fabric:has_structure/martian_breathforge",
+  "step": "surface_structures",
+  "spawn_overrides": {},
+  "terrain_adaptation": "none",
+  "template": "space_fabric:martian_breathforge_surface",
+  "padding": 8
+}

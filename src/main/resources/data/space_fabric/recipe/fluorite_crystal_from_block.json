@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "space_fabric:fluorite_block"
+  ],
+  "result": {
+    "id": "space_fabric:fluorite_crystal",
+    "count": 9
+  }
+}

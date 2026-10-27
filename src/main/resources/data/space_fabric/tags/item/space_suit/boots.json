@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "space_fabric:vacuum_suit_boots",
+    "space_fabric:venus_suit_boots",
+    "space_fabric:cryo_suit_boots",
+    "space_fabric:abyssal_suit_boots"
+  ]
+}

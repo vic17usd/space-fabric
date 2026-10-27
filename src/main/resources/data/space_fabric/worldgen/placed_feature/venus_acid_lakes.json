@@ -1,0 +1,12 @@
+{
+  "feature": "space_fabric:venus_acid_lakes",
+  "placement": [
+    {
+      "type": "minecraft:rarity_filter",
+      "chance": 6
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

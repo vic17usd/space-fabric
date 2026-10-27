@@ -1,0 +1,8 @@
+{
+  "type": "space_fabric:shadow_crater_ice",
+  "config": {
+    "state": {
+      "Name": "space_fabric:crater_ice"
+    }
+  }
+}

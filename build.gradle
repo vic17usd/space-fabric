@@ -1,0 +1,134 @@
+plugins {
+    id 'net.fabricmc.fabric-loom' version "${loom_version}"
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${minecraft_version}"
+    implementation "net.fabricmc:fabric-loader:${loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
+
+    testImplementation platform('org.junit:junit-bom:5.12.2')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation "net.fabricmc:fabric-loader-junit:${loader_version}"
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(25)
+    withSourcesJar()
+}
+
+jar {
+    from('third_party/venus_landscapes') { include '**/LICENSE.txt'; include 'README.md'; into 'META-INF/licenses/venus_landscapes' }
+    from('third_party/venus_ground') { include '**/LICENSE.txt'; include 'README.md'; into 'META-INF/licenses/venus_ground' }
+    from('third_party/venus_expansion') { include '**/LICENSE.txt'; include 'README.md'; into 'META-INF/licenses/venus_expansion' }
+    from("third_party/venus_fauna") { include "**/LICENSE.txt"; include "README.md"; into "META-INF/licenses/venus_fauna" }
+    from('third_party/martian_sanctum') {
+        include '**/LICENSE.txt'
+        include 'README.md'
+        into 'META-INF/licenses/martian_sanctum'
+    }
+    from('third_party/martian_fauna') {
+        include '**/LICENSE.txt'
+        include 'README.md'
+        into 'META-INF/licenses/martian_fauna'
+    }
+    from('third_party/martian_copper_trader/LICENSE.txt') {
+        into 'META-INF/licenses/martian_copper_trader'
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = 25
+    options.encoding = 'UTF-8'
+}
+
+processResources {
+    def modVersion = project.version
+    inputs.property 'version', modVersion
+    filesMatching('fabric.mod.json') {
+        expand version: modVersion
+    }
+}
+
+test {
+    maxHeapSize = '1536m'
+    useJUnitPlatform()
+}
+
+// Verifica el emisor de UV real con las clases de cliente, sin arrancar Minecraft ni una GPU.
+sourceSets {
+    renderCheck {
+        compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
+        runtimeClasspath += output + compileClasspath
+    }
+}
+tasks.named('compileRenderCheckJava') { dependsOn tasks.named('classes') }
+tasks.register('verifyRocketMesh', JavaExec) {
+    dependsOn tasks.named('renderCheckClasses')
+    classpath = sourceSets.renderCheck.runtimeClasspath
+    mainClass = 'dev.vic17usd.spacefabric.client.rocket.RocketMeshCheck'
+}
+tasks.named('check') { dependsOn tasks.named('verifyRocketMesh') }
+tasks.register('verifyRocketCockpit', JavaExec) {
+    dependsOn tasks.named('renderCheckClasses')
+    classpath = sourceSets.renderCheck.runtimeClasspath
+    mainClass = 'dev.vic17usd.spacefabric.client.rocket.RocketCockpitCheck'
+}
+tasks.named('check') { dependsOn tasks.named('verifyRocketCockpit') }
+tasks.register('verifyRocketModules', JavaExec) {
+    dependsOn tasks.named('renderCheckClasses')
+    classpath = sourceSets.renderCheck.runtimeClasspath
+    mainClass = 'dev.vic17usd.spacefabric.client.rocket.RocketModulesCheck'
+}
+tasks.named('check') { dependsOn tasks.named('verifyRocketModules') }
+tasks.register('verifyRocketItemResources', JavaExec) {
+    dependsOn tasks.named('renderCheckClasses')
+    classpath = sourceSets.renderCheck.runtimeClasspath
+    mainClass = 'dev.vic17usd.spacefabric.client.rocket.RocketItemResourcesCheck'
+}
+tasks.named('check') { dependsOn tasks.named('verifyRocketItemResources') }
+tasks.register('verifyEquipmentTextures', JavaExec) {
+    dependsOn tasks.named('renderCheckClasses')
+    classpath = sourceSets.renderCheck.runtimeClasspath
+    mainClass = 'dev.vic17usd.spacefabric.client.rocket.EquipmentTextureCheck'
+}
+tasks.named('check') { dependsOn tasks.named('verifyEquipmentTextures') }
+tasks.register('verifyRocketFlightScene', JavaExec) {
+    dependsOn tasks.named('renderCheckClasses')
+    classpath = sourceSets.renderCheck.runtimeClasspath
+    mainClass = 'dev.vic17usd.spacefabric.client.rocket.RocketFlightSceneCheck'
+}
+tasks.named('check') { dependsOn tasks.named('verifyRocketFlightScene') }
+tasks.register('verifyVenusExpansionModels', JavaExec) {
+    dependsOn tasks.named('renderCheckClasses')
+    classpath = sourceSets.renderCheck.runtimeClasspath
+    mainClass = 'dev.vic17usd.spacefabric.client.venus.VenusExpansionModelCheck'
+}
+tasks.named('check') { dependsOn tasks.named('verifyVenusExpansionModels') }
+tasks.register('verifyColonyAssets', JavaExec) {
+    dependsOn tasks.named('renderCheckClasses')
+    classpath = sourceSets.renderCheck.runtimeClasspath
+    mainClass = 'dev.vic17usd.spacefabric.client.rocket.ColonyAssetsCheck'
+}
+tasks.named('check') { dependsOn tasks.named('verifyColonyAssets') }
+tasks.register('exportRocketJourneyPreview', JavaExec) {
+    dependsOn tasks.named('renderCheckClasses')
+    classpath = sourceSets.renderCheck.runtimeClasspath
+    mainClass = 'dev.vic17usd.spacefabric.client.rocket.RocketFlightSceneCheck'
+    args 'preview'
+}
+
+tasks.register('verifyVenusGroundAssets', JavaExec) {
+    dependsOn tasks.named('renderCheckClasses')
+    classpath = sourceSets.renderCheck.runtimeClasspath
+    mainClass = 'dev.vic17usd.spacefabric.client.rocket.VenusGroundAssetsCheck'
+}
+tasks.named('check') { dependsOn tasks.named('verifyVenusGroundAssets') }
+
+tasks.register('verifyHabitatView', JavaExec) {
+    dependsOn tasks.named('renderCheckClasses')
+    classpath = sourceSets.renderCheck.runtimeClasspath
+    mainClass = 'dev.vic17usd.spacefabric.client.colony.HabitatViewCheck'
+}
+tasks.named('check') { dependsOn tasks.named('verifyHabitatView') }

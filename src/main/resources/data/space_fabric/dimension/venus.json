@@ -1,0 +1,102 @@
+{
+  "type": "space_fabric:venus",
+  "generator": {
+    "type": "minecraft:noise",
+    "biome_source": {
+      "type": "minecraft:multi_noise",
+      "biomes": [
+        {
+          "biome": "space_fabric:venus",
+          "parameters": {
+            "temperature": [
+              -2,
+              2
+            ],
+            "continentalness": [
+              -2,
+              2
+            ],
+            "erosion": [
+              -2,
+              2
+            ],
+            "depth": [
+              -2,
+              2
+            ],
+            "weirdness": [
+              -2,
+              2
+            ],
+            "humidity": [
+              -0.25,
+              0.25
+            ],
+            "offset": 0
+          }
+        },
+        {
+          "biome": "space_fabric:venus_fumaroles",
+          "parameters": {
+            "temperature": [
+              -2,
+              2
+            ],
+            "continentalness": [
+              -2,
+              2
+            ],
+            "erosion": [
+              -2,
+              2
+            ],
+            "depth": [
+              -2,
+              2
+            ],
+            "weirdness": [
+              -2,
+              2
+            ],
+            "humidity": [
+              -1,
+              -0.25
+            ],
+            "offset": 0
+          }
+        },
+        {
+          "biome": "space_fabric:venus_obsidian_basins",
+          "parameters": {
+            "temperature": [
+              -2,
+              2
+            ],
+            "continentalness": [
+              -2,
+              2
+            ],
+            "erosion": [
+              -2,
+              2
+            ],
+            "depth": [
+              -2,
+              2
+            ],
+            "weirdness": [
+              -2,
+              2
+            ],
+            "humidity": [
+              0.25,
+              1
+            ],
+            "offset": 0
+          }
+        }
+      ]
+    },
+    "settings": "space_fabric:venus"
+  }
+}

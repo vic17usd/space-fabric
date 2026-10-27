@@ -1,0 +1,29 @@
+[
+  {
+    "source": "Venus Volcan.jar",
+    "source_sha256": "86094d2959491def119ab0bdeb4d5d584e0a90110d09f878cd193bb819c9019b",
+    "folder": "volcano",
+    "authors": [
+      "vic17usd using CreativeMode.net"
+    ],
+    "url": "https://creativemode.net/mod/sulfur-crown-caldera-dpjre4dw"
+  },
+  {
+    "source": "Venus acido.jar",
+    "source_sha256": "c4cfa6832d1f958af162dd6b0ac909b6a8d639a644ff600cee104c7e9c95c3c7",
+    "folder": "vents",
+    "authors": [
+      "vic17usd using CreativeMode.net"
+    ],
+    "url": "https://creativemode.net/mod/ashen-acid-vents-j6czsz6r"
+  },
+  {
+    "source": "Venus lagos.jar",
+    "source_sha256": "605acd738c8dfdb1b210b662598c0e544b9e09493ca549072d2e703c670c0f6f",
+    "folder": "lakes",
+    "authors": [
+      "vic17usd using CreativeMode.net"
+    ],
+    "url": "https://creativemode.net/mod/obsidian-sulfur-wastes-wcwkrsde"
+  }
+]

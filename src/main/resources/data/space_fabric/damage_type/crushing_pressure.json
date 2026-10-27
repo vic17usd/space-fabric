@@ -1,0 +1,6 @@
+{
+  "message_id": "space_fabric.crushing_pressure",
+  "scaling": "never",
+  "exhaustion": 0.0,
+  "effects": "hurt"
+}

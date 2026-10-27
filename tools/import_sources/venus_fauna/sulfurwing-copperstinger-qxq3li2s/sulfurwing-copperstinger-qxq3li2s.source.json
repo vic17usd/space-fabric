@@ -1,0 +1,37 @@
+{
+  "animation_names": [
+    "sulfur_hover_idle",
+    "sulfur_hover_flight",
+    "sulfur_stinger_strike"
+  ],
+  "asset_id": "sulfurwing-copperstinger-qxq3li2s",
+  "outputs": {
+    "sulfurwing-copperstinger-qxq3li2s.bbmodel": {
+      "bytes": 1051978,
+      "sha256": "7fb7abc083083206bf25a8264712097dbbe5c194737a3452bd336a43e0fb1b8d"
+    },
+    "sulfurwing-copperstinger-qxq3li2s.mob.json": {
+      "bytes": 1089945,
+      "sha256": "2facf1b5852ce5788289a7d30adcf927ad97261b660ae18a35b52a428ea840a0"
+    },
+    "sulfurwing-copperstinger-qxq3li2s.png": {
+      "bytes": 503123,
+      "sha256": "2bcc58ce6af37376643968c1c6c73ca0b9910312ed7a76ec4f56b3e895fe9e9e"
+    },
+    "sulfurwing-copperstinger-qxq3li2s.preview.png": {
+      "bytes": 1084878,
+      "sha256": "16ede8de92a9e4694405fb2b8d64502966e3ad093e89b90d58c66c1bb38d4f1e"
+    },
+    "sulfurwing-copperstinger-qxq3li2s.render.png": {
+      "bytes": 433431,
+      "sha256": "ee6b222f7489ecfd978aeb56d4da8025605faeece986420f0f6da40a161c5cb7"
+    }
+  },
+  "schema_version": 1,
+  "source": {
+    "kind": "reference_image",
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "reference_sha256": "8627fc00babcc38f819039b7bb02e24873a5979fbcaebaa000cc474103b46d8d"
+  }
+}

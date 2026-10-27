@@ -1,0 +1,12 @@
+{
+  "feature": "space_fabric:venus_vent_field",
+  "placement": [
+    {
+      "type": "minecraft:rarity_filter",
+      "chance": 1
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

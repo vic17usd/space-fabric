@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "space_fabric:vacuum_suit_chestplate",
+    "space_fabric:venus_suit_chestplate",
+    "space_fabric:cryo_suit_chestplate",
+    "space_fabric:abyssal_suit_chestplate"
+  ]
+}

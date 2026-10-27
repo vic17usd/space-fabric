@@ -1,0 +1,9 @@
+{
+  "type": "space_fabric:martian_surface",
+  "biomes": "#space_fabric:has_structure/martian_haven_settlement",
+  "step": "surface_structures",
+  "spawn_overrides": {},
+  "terrain_adaptation": "none",
+  "template": "space_fabric:martian_haven_settlement_surface",
+  "padding": 8
+}

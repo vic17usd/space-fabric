@@ -1,0 +1,29 @@
+{
+  "replace": false,
+  "values": [
+    "space_fabric:bauxite_ore",
+    "space_fabric:deepslate_bauxite_ore",
+    "space_fabric:cassiterite_ore",
+    "space_fabric:deepslate_cassiterite_ore",
+    "space_fabric:sphalerite_ore",
+    "space_fabric:deepslate_sphalerite_ore",
+    "space_fabric:galena_ore",
+    "space_fabric:deepslate_galena_ore",
+    "space_fabric:argentite_ore",
+    "space_fabric:deepslate_argentite_ore",
+    "space_fabric:pentlandite_ore",
+    "space_fabric:deepslate_pentlandite_ore",
+    "space_fabric:ilmenite_ore",
+    "space_fabric:deepslate_ilmenite_ore",
+    "space_fabric:fluorite_ore",
+    "space_fabric:deepslate_fluorite_ore",
+    "#c:ores/bauxite",
+    "#c:ores/cassiterite",
+    "#c:ores/sphalerite",
+    "#c:ores/galena",
+    "#c:ores/argentite",
+    "#c:ores/pentlandite",
+    "#c:ores/ilmenite",
+    "#c:ores/fluorite"
+  ]
+}

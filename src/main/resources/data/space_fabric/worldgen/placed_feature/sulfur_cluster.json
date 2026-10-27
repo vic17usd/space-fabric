@@ -1,0 +1,12 @@
+{
+  "feature": "space_fabric:sulfur_cluster",
+  "placement": [
+    {
+      "type": "minecraft:rarity_filter",
+      "chance": 12
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

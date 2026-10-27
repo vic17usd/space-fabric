@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "space_fabric",
+  "version": "${version}",
+  "name": "Space Fabric",
+  "description": "Nueve destinos planetarios, fauna, asentamientos y santuario con jefe bajo Marte, geología, viajes en cohete, refinería, mapa estelar y visor integrado de recetas y usos.",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["dev.vic17usd.spacefabric.SpaceFabric"],
+    "client": ["dev.vic17usd.spacefabric.client.SpaceFabricClient"]
+  },
+  "depends": {
+    "fabricloader": ">=0.20.1",
+    "minecraft": "26.1",
+    "java": ">=25",
+    "fabric-api": ">=0.145.1"
+  },
+  "mixins": [
+    "space_fabric.mixins.json",
+    {"config": "space_fabric.client.mixins.json", "environment": "client"}
+  ]
+}

@@ -1,0 +1,14 @@
+.gradle/
+build/
+run/
+logs/
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+__pycache__/
+
+/config/space-fabric-atmosphere.json
+
+/config/space-fabric-rockets.json

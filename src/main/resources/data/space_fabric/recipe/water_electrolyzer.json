@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "HCH",
+    "WRW",
+    "HCH"
+  ],
+  "key": {
+    "H": "space_fabric:pressure_hull",
+    "C": "minecraft:copper_ingot",
+    "W": "minecraft:water_bucket",
+    "R": "minecraft:redstone"
+  },
+  "result": {
+    "id": "space_fabric:water_electrolyzer",
+    "count": 1
+  }
+}

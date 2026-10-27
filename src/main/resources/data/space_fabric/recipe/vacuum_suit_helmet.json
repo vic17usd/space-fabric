@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    "minecraft:iron_helmet",
+    "minecraft:glass",
+    "space_fabric:empty_fuel_cell"
+  ],
+  "result": {
+    "id": "space_fabric:vacuum_suit_helmet",
+    "count": 1
+  }
+}

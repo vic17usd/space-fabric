@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "space_fabric:viscous_lava",
+    "space_fabric:flowing_viscous_lava"
+  ]
+}

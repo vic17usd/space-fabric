@@ -1,0 +1,15 @@
+{
+  "structures": [
+    {
+      "structure": "space_fabric:soulfire_netherite_sanctum",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 1250,
+    "separation": 1249,
+    "spread_type": "linear",
+    "salt": 624832017
+  }
+}

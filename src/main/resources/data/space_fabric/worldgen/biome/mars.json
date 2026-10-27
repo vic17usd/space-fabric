@@ -1,0 +1,58 @@
+{
+  "has_precipitation": false,
+  "temperature": 0.8,
+  "downfall": 0.0,
+  "attributes": {
+    "minecraft:visual/sky_color": "#b96540",
+    "minecraft:visual/fog_color": "#a35d40",
+    "minecraft:visual/fog_start_distance": 0,
+    "minecraft:visual/fog_end_distance": 112
+  },
+  "effects": {
+    "water_color": "#3f76e4"
+  },
+  "spawners": {
+    "creature": [
+      {
+        "type": "space_fabric:crystal_hum_crawler",
+        "weight": 18,
+        "minCount": 1,
+        "maxCount": 3
+      }
+    ],
+    "monster": [
+      {
+        "type": "space_fabric:golden_eye_sandwraith",
+        "weight": 10,
+        "minCount": 1,
+        "maxCount": 2
+      },
+      {
+        "type": "space_fabric:red_dune_ironmaw",
+        "weight": 2,
+        "minCount": 1,
+        "maxCount": 1
+      }
+    ]
+  },
+  "spawn_costs": {},
+  "carvers": [
+    "space_fabric:cave",
+    "space_fabric:canyon"
+  ],
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "space_fabric:oxide_iron"
+    ],
+    [],
+    [],
+    [],
+    []
+  ]
+}

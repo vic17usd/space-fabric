@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "space_fabric:silver_block"
+  ],
+  "result": {
+    "id": "space_fabric:silver_ingot",
+    "count": 9
+  }
+}

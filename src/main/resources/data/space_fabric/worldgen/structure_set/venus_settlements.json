@@ -1,0 +1,18 @@
+{
+  "structures": [
+    {
+      "structure": "space_fabric:copper_crown_village",
+      "weight": 1
+    },
+    {
+      "structure": "space_fabric:sunstone_pyramid_bazaar",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 128,
+    "separation": 64,
+    "salt": 86415037
+  }
+}

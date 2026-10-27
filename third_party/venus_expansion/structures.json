@@ -1,0 +1,127 @@
+{
+  "copper_crown_village": {
+    "jar": "Venus build 2.jar",
+    "sha256": "0da7396f959beb1c1274a8fa2db0f77f97f1222b45de20f42749faaffa157629",
+    "source_page": "https://creativemode.net/mod/copper-crown-village-zvhfngoo",
+    "authors": [
+      "17usdd using CreativeMode.net"
+    ],
+    "source_member": "data/copper-crown-village-zvhfngoo/structures/copper_crown_village.json",
+    "original_blocks": 202703,
+    "size": [
+      137,
+      79,
+      130
+    ],
+    "tiles": 65,
+    "palette_mapping": {
+      "minecraft:stone": "minecraft:basalt",
+      "minecraft:cobblestone": "minecraft:blackstone",
+      "minecraft:stone_bricks": "minecraft:polished_blackstone_bricks",
+      "minecraft:mossy_stone_bricks": "minecraft:weathered_cut_copper",
+      "minecraft:cracked_stone_bricks": "minecraft:cracked_polished_blackstone_bricks",
+      "minecraft:deepslate_bricks": "minecraft:deepslate_bricks",
+      "minecraft:andesite": "minecraft:polished_basalt",
+      "minecraft:smooth_stone": "minecraft:smooth_stone",
+      "minecraft:prismarine": "minecraft:prismarine",
+      "minecraft:dark_prismarine": "minecraft:dark_prismarine",
+      "minecraft:water": "minecraft:lime_stained_glass",
+      "minecraft:spruce_planks": "minecraft:polished_blackstone_bricks",
+      "minecraft:dark_oak_planks": "minecraft:polished_blackstone",
+      "minecraft:spruce_log": "minecraft:basalt",
+      "minecraft:white_wool": "minecraft:white_terracotta",
+      "minecraft:red_wool": "minecraft:red_terracotta",
+      "minecraft:orange_wool": "minecraft:orange_terracotta",
+      "minecraft:yellow_wool": "minecraft:yellow_terracotta",
+      "minecraft:green_wool": "minecraft:green_terracotta",
+      "minecraft:blue_wool": "minecraft:blue_terracotta",
+      "minecraft:purple_wool": "minecraft:purple_terracotta",
+      "minecraft:glass": "minecraft:glass",
+      "minecraft:glowstone": "minecraft:glowstone",
+      "minecraft:sea_lantern": "minecraft:sea_lantern",
+      "minecraft:gold_block": "minecraft:gold_block",
+      "minecraft:copper_block": "minecraft:copper_block",
+      "minecraft:oxidized_copper": "minecraft:oxidized_copper"
+    },
+    "adapted_blocks": 61385,
+    "surface_adaptation": {
+      "retained_blocks": 61353,
+      "added_support_blocks": 32,
+      "max_support_height": 6,
+      "removed_base_blocks": 141350,
+      "ground_levels_removed": [
+        2,
+        14,
+        38
+      ]
+    },
+    "template_revision": "surface_v2"
+  },
+  "sunstone_pyramid_bazaar": {
+    "jar": "Venus build.jar",
+    "sha256": "144f57a837fcc34531f4a7bbf031cd3baedbaf63439236ae7629a325e4e49334",
+    "source_page": "https://creativemode.net/mod/sunstone-pyramid-bazaar-m4ezrsqc",
+    "authors": [
+      "17usdd using CreativeMode.net"
+    ],
+    "source_member": "data/sunstone-pyramid-bazaar-m4ezrsqc/structures/sunstone_pyramid_bazaar.json",
+    "original_blocks": 82273,
+    "size": [
+      173,
+      60,
+      171
+    ],
+    "tiles": 104,
+    "palette_mapping": {
+      "minecraft:stone_bricks": "minecraft:polished_blackstone_bricks",
+      "minecraft:cracked_stone_bricks": "minecraft:cracked_polished_blackstone_bricks",
+      "minecraft:smooth_stone": "minecraft:smooth_stone",
+      "minecraft:sandstone": "minecraft:sandstone",
+      "minecraft:smooth_sandstone": "minecraft:smooth_sandstone",
+      "minecraft:red_sandstone": "minecraft:red_sandstone",
+      "minecraft:nether_bricks": "minecraft:nether_bricks",
+      "minecraft:prismarine": "minecraft:prismarine",
+      "minecraft:dark_prismarine": "minecraft:dark_prismarine",
+      "minecraft:clay": "minecraft:clay",
+      "minecraft:moss_block": "minecraft:moss_block",
+      "minecraft:water": "minecraft:lime_stained_glass",
+      "minecraft:spruce_planks": "minecraft:polished_blackstone_bricks",
+      "minecraft:dark_oak_planks": "minecraft:polished_blackstone",
+      "minecraft:spruce_log": "minecraft:basalt",
+      "minecraft:terracotta": "minecraft:terracotta",
+      "minecraft:white_terracotta": "minecraft:white_terracotta",
+      "minecraft:white_wool": "minecraft:white_terracotta",
+      "minecraft:red_wool": "minecraft:red_terracotta",
+      "minecraft:orange_wool": "minecraft:orange_terracotta",
+      "minecraft:yellow_wool": "minecraft:yellow_terracotta",
+      "minecraft:lime_wool": "minecraft:lime_terracotta",
+      "minecraft:green_wool": "minecraft:green_terracotta",
+      "minecraft:cyan_wool": "minecraft:cyan_terracotta",
+      "minecraft:light_blue_wool": "minecraft:light_blue_terracotta",
+      "minecraft:blue_wool": "minecraft:blue_terracotta",
+      "minecraft:purple_wool": "minecraft:purple_terracotta",
+      "minecraft:magenta_wool": "minecraft:magenta_terracotta",
+      "minecraft:red_concrete": "minecraft:red_concrete",
+      "minecraft:yellow_concrete": "minecraft:yellow_concrete",
+      "minecraft:glass": "minecraft:glass",
+      "minecraft:glowstone": "minecraft:glowstone",
+      "minecraft:sea_lantern": "minecraft:sea_lantern",
+      "minecraft:iron_block": "minecraft:iron_block",
+      "minecraft:gold_block": "minecraft:gold_block",
+      "minecraft:emerald_block": "minecraft:emerald_block",
+      "minecraft:lapis_block": "minecraft:lapis_block",
+      "minecraft:crying_obsidian": "minecraft:crying_obsidian"
+    },
+    "adapted_blocks": 83499,
+    "surface_adaptation": {
+      "retained_blocks": 81851,
+      "added_support_blocks": 1648,
+      "max_support_height": 9,
+      "removed_base_blocks": 422,
+      "ground_levels_removed": [
+        2
+      ]
+    },
+    "template_revision": "surface_v2"
+  }
+}

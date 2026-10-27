@@ -1,0 +1,10 @@
+[
+  {"id":"bauxite","es":"bauxita","en":"Bauxite","metal":"aluminum","metal_es":"aluminio","metal_en":"Aluminum","color":[183,88,48],"metal_color":[199,213,219],"pattern":"nodules","tool":"stone","size":12,"count":8,"min_y":32,"max_y":128,"formula":"Mezcla rica en hidróxidos de aluminio"},
+  {"id":"cassiterite","es":"casiterita","en":"Cassiterite","metal":"tin","metal_es":"estaño","metal_en":"Tin","color":[102,72,49],"metal_color":[184,202,199],"pattern":"prisms","tool":"stone","size":7,"count":6,"min_y":0,"max_y":96,"formula":"SnO₂"},
+  {"id":"sphalerite","es":"esfalerita","en":"Sphalerite","metal":"zinc","metal_es":"zinc","metal_en":"Zinc","color":[194,142,41],"metal_color":[143,171,186],"pattern":"facets","tool":"stone","size":8,"count":7,"min_y":-32,"max_y":64,"formula":"ZnS"},
+  {"id":"galena","es":"galena","en":"Galena","metal":"lead","metal_es":"plomo","metal_en":"Lead","color":[135,145,165],"metal_color":[98,111,144],"pattern":"cubes","tool":"iron","size":7,"count":5,"min_y":-48,"max_y":32,"formula":"PbS"},
+  {"id":"argentite","es":"argentita","en":"Argentite","metal":"silver","metal_es":"plata","metal_en":"Silver","color":[76,83,101],"metal_color":[222,233,240],"pattern":"veins","tool":"iron","size":5,"count":3,"min_y":-56,"max_y":16,"formula":"Ag₂S; acantita estable a temperatura ambiente"},
+  {"id":"pentlandite","es":"pentlandita","en":"Pentlandite","metal":"nickel","metal_es":"níquel","metal_en":"Nickel","color":[165,144,88],"metal_color":[178,184,150],"pattern":"grains","tool":"iron","size":6,"count":4,"min_y":-48,"max_y":24,"formula":"(Fe,Ni)₉S₈"},
+  {"id":"ilmenite","es":"ilmenita","en":"Ilmenite","metal":"titanium","metal_es":"titanio","metal_en":"Titanium","color":[54,66,87],"metal_color":[145,148,177],"pattern":"plates","tool":"diamond","size":4,"count":3,"min_y":-60,"max_y":0,"formula":"FeTiO₃"},
+  {"id":"fluorite","es":"fluorita","en":"Fluorite","metal":null,"metal_es":null,"metal_en":null,"color":[132,93,185],"metal_color":[105,202,150],"pattern":"zoned_cubes","tool":"stone","size":6,"count":5,"min_y":-32,"max_y":48,"formula":"CaF₂"}
+]

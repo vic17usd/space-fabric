@@ -1,0 +1,56 @@
+{
+  "basalt-ember-golem-dydu35gm": {
+    "source_jar": "basalt-ember-golem-dydu35gm.jar",
+    "sha256": "1e8be49527eda47c702fe2049ae682cba20678e0ee29dd1efaaaf2eb04d1ca81",
+    "authors": [
+      "17usdd using CreativeMode.net"
+    ],
+    "source_page": "https://creativemode.net/mod/basalt-ember-golem-dydu35gm",
+    "assets": {
+      "src/main/resources/assets/space_fabric/textures/entity/basalt_ember_golem.png": {
+        "source": "assets/basalt-ember-golem-dydu35gm/textures/entity/basalt_ember_golem_dydu35gm.png",
+        "sha256": "e0ed4e684a4ad6a6f2666f6f9e0553991ef849ecd3e6292745130636d9365c3c"
+      },
+      "src/main/resources/assets/space_fabric/textures/item/basalt_ember_golem_spawn_egg.png": {
+        "source": "assets/basalt-ember-golem-dydu35gm/textures/item/basalt_ember_golem_dydu35gm_spawn_egg.png",
+        "sha256": "36283fef69926346c59bfcd28c6330a95293f4f720caac0a53aae75e42f1979b"
+      },
+      "src/main/resources/assets/space_fabric/textures/item/obsidian_core.png": {
+        "source": "assets/basalt-ember-golem-dydu35gm/textures/item/obsidian_core.png",
+        "sha256": "752f6f1d843c08766b6d9f94ccb94f9c088f52f6a498918bf290819b19e8bbaa"
+      }
+    }
+  },
+  "basalt-bosswarden-zezs7w7r": {
+    "source_jar": "basalt-bosswarden-zezs7w7r.jar",
+    "sha256": "01592aa6645f87dbc1668ee1de8c7bf479bce60fb99d994ddb3f04ad96afaa6a",
+    "authors": [
+      "17usdd using CreativeMode.net"
+    ],
+    "source_page": "https://creativemode.net/mod/basalt-bosswarden-zezs7w7r",
+    "assets": {
+      "src/main/resources/assets/space_fabric/textures/entity/basalt_bosswarden.png": {
+        "source": "assets/basalt-bosswarden-zezs7w7r/textures/entity/basalt_bosswarden_zezs7w7r.png",
+        "sha256": "78ddded6c0771d27080280d3b2b177a85cfb3067166e756d103394820ee51b4c"
+      },
+      "src/main/resources/assets/space_fabric/textures/item/basalt_bosswarden_spawn_egg.png": {
+        "source": "assets/basalt-bosswarden-zezs7w7r/textures/item/basalt_bosswarden_zezs7w7r_spawn_egg.png",
+        "sha256": "d6f9fd3277f257cca1d052444916e929efa52ce1f0cb0752684db64736966fec"
+      }
+    }
+  },
+  "soulfire-netherite-sanctum-jr4gpmi7": {
+    "source_jar": "soulfire-netherite-sanctum-jr4gpmi7 (1).jar",
+    "sha256": "a0e78871120719618ed3ca2a1fb12593067aa8efe4b1ce217bf33abb38668bb3",
+    "authors": [
+      "17usdd using CreativeMode.net"
+    ],
+    "source_page": "https://creativemode.net/mod/soulfire-netherite-sanctum-jr4gpmi7",
+    "assets": {
+      "tools/structure_sources/soulfire_netherite_sanctum.json": {
+        "source": "data/soulfire-netherite-sanctum-jr4gpmi7/structures/soulfire_netherite_sanctum.json",
+        "sha256": "2969c97336f2cf18d3c0277259efd2aa9fdf82d2964b7d4aa87fb73745cdefb3"
+      }
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "dev.vic17usd.spacefabric.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "mixins": [
+    "RocketPassengerMixin",
+    "InventorySuitMixin",
+    "ServerLevelWeatherMixin",
+    "PlanetSleepClockMixin",
+    "SpawnPlacementsAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
