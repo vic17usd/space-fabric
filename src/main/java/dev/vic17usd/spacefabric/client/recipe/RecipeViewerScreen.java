@@ -81,9 +81,13 @@ public final class RecipeViewerScreen extends Screen {
     @Override protected void setInitialFocus(){if(recipesButton!=null)setInitialFocus(recipesButton);}
     @Override public void tick() {if(loading&&Util.getMillis()-requestedAt>10000){loading=false;unsupported=true;updateButtons();}}
     @Override public boolean isPauseScreen(){return false;}
+    /** Keep the world visible: the default Screen background adds blur and a dark veil. */
+    @Override public void extractBackground(GuiGraphicsExtractor gui,int mouseX,int mouseY,float delta) {
+        if(minecraft.level==null)super.extractBackground(gui,mouseX,mouseY,delta);
+    }
     @Override public void onClose(){minecraft.setScreen(previous);}
     private void slot(GuiGraphicsExtractor gui,List<ItemStack> choices,int x,int y,int mouseX,int mouseY) {
-        gui.fill(x-1,y-1,x+17,y+17,0xFF405968);gui.fill(x,y,x+16,y+16,0xFF0A1721);
+        gui.fill(x,y,x+16,y+16,0x550A1721);gui.outline(x-1,y-1,18,18,0x99405968);
         if(choices.isEmpty())return;
         var stack=choices.get((int)((Util.getMillis()/1000)%choices.size()));
         gui.item(stack,x,y);gui.itemDecorations(font,stack,x,y);
@@ -91,9 +95,9 @@ public final class RecipeViewerScreen extends Screen {
     }
     @Override public void extractRenderState(GuiGraphicsExtractor gui,int mouseX,int mouseY,float delta) {
         hovered=ItemStack.EMPTY;
-        gui.fill(left-1,top-1,left+panelWidth+1,top+panelHeight+1,0xFF668D9D);
-        gui.fill(left,top,left+panelWidth,top+panelHeight,0xFA101E2B);
-        gui.verticalLine(left+188,top+30,top+panelHeight-8,0xFF405968);
+        // An outline rather than a filled panel leaves the catalog background transparent.
+        gui.outline(left-1,top-1,panelWidth+2,panelHeight+2,0x99668D9D);
+        gui.verticalLine(left+188,top+30,top+panelHeight-8,0x99405968);
         gui.text(font,title,left+8,top+12,0xFFE6F5FF);
         gui.text(font,Component.translatable("gui.space_fabric.viewer.items",filtered.size()),left+196,top+12,0xFFABCCD8);
         gui.item(selected,left+8,top+61);

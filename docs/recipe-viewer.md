@@ -1,8 +1,12 @@
-# Visor de recetas y usos — 0.19.0 / Fabric 26.1
+# Visor de recetas y usos — Fabric 26.1
 
 El mod incluye una lista de ítems y un visor de recetas de estilo JEI, integrado
 en el propio JAR. Muestra los ítems registrados de Minecraft y del mod, con sus
 nombres y texturas, una búsqueda y una ficha de fabricación o procesamiento.
+
+Desde 0.21.2 el fondo del panel es transparente y el mundo se ve sin desenfoque
+ni velo oscuro. Las casillas tienen un sombreado tenue; los ítems, textos,
+botones, búsqueda y tooltips conservan su legibilidad.
 
 ## Cómo abrirlo
 
@@ -72,7 +76,7 @@ necesitan una integración específica.
 
 ## Servidores y actualizaciones
 
-Instala **space-fabric-0.19.0.jar en cliente y servidor**, manteniendo Fabric API.
+Instala **space-fabric-0.21.2.jar en cliente y servidor**, manteniendo Fabric API.
 El servidor recibe el ítem, el tipo de consulta y la página, y devuelve una sola
 ficha. El cliente no decide ingredientes, resultados ni acciones de inventario.
 Los índices se invalidan al recargar datapacks y al detener el servidor. Las
