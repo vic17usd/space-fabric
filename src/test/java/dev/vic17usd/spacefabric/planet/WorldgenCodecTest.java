@@ -1977,4 +1977,61 @@ class WorldgenCodecTest {
         assertNotNull(LootTable.DIRECT_CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("loot_table/blocks/sulfur_cluster")).getOrThrow());
     }
 
+    @Test void habitatTelemetryRoundTripsWithBoundedRoomGeometryAndOptionalUpdates() {
+        var pos=net.minecraft.core.BlockPos.ZERO;
+        var room=new dev.vic17usd.spacefabric.colony.SealScanner.Room(dev.vic17usd.spacefabric.colony.SealScanner.Status.SEALED,
+                java.util.Set.of(pos),java.util.Map.of(pos.below(),dev.vic17usd.spacefabric.colony.SealScanner.Cell.RATED));
+        var reading=new dev.vic17usd.spacefabric.colony.HabitatReadings(dev.vic17usd.spacefabric.colony.HabitatReadings.Condition.PRESSURIZED,9600,1455,75,1,true);
+        var dimension=SpaceFabric.id("venus");
+        for(var original:List.of(
+                new dev.vic17usd.spacefabric.colony.HabitatNetwork.State(dimension,Optional.of(pos.below()),reading,true,Optional.of(room)),
+                new dev.vic17usd.spacefabric.colony.HabitatNetwork.State(dimension,Optional.of(pos.below()),reading,false,Optional.empty()),
+                dev.vic17usd.spacefabric.colony.HabitatNetwork.State.absent(dimension))) {
+            var buffer=new net.minecraft.network.RegistryFriendlyByteBuf(io.netty.buffer.Unpooled.buffer(),(RegistryAccess)registries);
+            try {
+                dev.vic17usd.spacefabric.colony.HabitatNetwork.State.CODEC.encode(buffer,original);
+                assertEquals(original,dev.vic17usd.spacefabric.colony.HabitatNetwork.State.CODEC.decode(buffer));
+                assertEquals(0,buffer.readableBytes());
+            } finally {buffer.release();}
+        }
+    }
+    @Test void habitatTelemetryRejectsInvalidEnumsAndUnboundedAllocations() {
+        for(int invalid:new int[]{-1,Integer.MAX_VALUE}) {
+            var buffer=new net.minecraft.network.RegistryFriendlyByteBuf(io.netty.buffer.Unpooled.buffer(),(RegistryAccess)registries);
+            try {
+                buffer.writeUtf("space_fabric:venus",256);buffer.writeBoolean(true);buffer.writeBlockPos(net.minecraft.core.BlockPos.ZERO);buffer.writeVarInt(invalid);
+                assertThrows(IllegalArgumentException.class,()->dev.vic17usd.spacefabric.colony.HabitatNetwork.State.CODEC.decode(buffer));
+            } finally {buffer.release();}
+        }
+    }
+    @Test void habitatTelemetryRejectsOversizedAirAndBoundaryCountsBeforeReadingPositions() {
+        for(boolean airOverflow:new boolean[]{true,false}) {
+            var buffer=new net.minecraft.network.RegistryFriendlyByteBuf(io.netty.buffer.Unpooled.buffer(),(RegistryAccess)registries);
+            try {
+                buffer.writeUtf("space_fabric:venus",256);buffer.writeBoolean(true);buffer.writeBlockPos(net.minecraft.core.BlockPos.ZERO);
+                buffer.writeVarInt(dev.vic17usd.spacefabric.colony.HabitatReadings.Condition.PRESSURIZED.ordinal());
+                buffer.writeVarInt(2400);buffer.writeVarInt(2400);buffer.writeVarInt(2400);buffer.writeVarInt(1);buffer.writeBoolean(true);
+                buffer.writeBoolean(true);buffer.writeBoolean(true);
+                buffer.writeVarInt(airOverflow?513:1);
+                if(!airOverflow){buffer.writeBlockPos(net.minecraft.core.BlockPos.ZERO);buffer.writeVarInt(4097);}
+                assertThrows(IllegalArgumentException.class,()->dev.vic17usd.spacefabric.colony.HabitatNetwork.State.CODEC.decode(buffer));
+            } finally {buffer.release();}
+        }
+    }
+    @Test void habitatMenuKeepsAllNineSavedSlotsRejectsWrongInputsAndSynchronizesReadings() {
+        var inventory=new net.minecraft.world.entity.player.Inventory(null,new net.minecraft.world.entity.EntityEquipment());var storage=new net.minecraft.world.SimpleContainer(9);
+        var reading=new dev.vic17usd.spacefabric.colony.HabitatReadings(dev.vic17usd.spacefabric.colony.HabitatReadings.Condition.NEEDS_POWER,2410,0,2110,75,true);
+        var menu=new dev.vic17usd.spacefabric.menu.HabitatMenu(1,inventory,storage,dev.vic17usd.spacefabric.menu.HabitatMenu.data(()->reading));
+        assertEquals(reading,menu.readings());assertEquals(45,menu.slots.size());
+        assertTrue(menu.getSlot(0).mayPlace(new ItemStack(dev.vic17usd.spacefabric.colony.ColonyContent.OXYGEN_CANISTER)));
+        assertFalse(menu.getSlot(0).mayPlace(new ItemStack(Items.DIAMOND)));
+        for(int i=3;i<9;i++)assertFalse(menu.getSlot(i).mayPlace(new ItemStack(Items.IRON_INGOT)));
+        storage.setItem(6,new ItemStack(dev.vic17usd.spacefabric.colony.ColonyContent.EMPTY_CANISTER,2));
+        assertEquals(2,menu.getSlot(6).getItem().getCount());
+        inventory.setItem(9,new ItemStack(dev.vic17usd.spacefabric.colony.ColonyContent.OXYGEN_CANISTER,3));
+        assertEquals(3,menu.quickMoveStack(null,9).getCount());assertEquals(3,storage.getItem(0).getCount());assertTrue(inventory.getItem(9).isEmpty());
+        assertEquals(2,menu.quickMoveStack(null,6).getCount());assertTrue(storage.getItem(6).isEmpty());
+        assertEquals(2,inventory.getNonEquipmentItems().stream().filter(stack->stack.is(dev.vic17usd.spacefabric.colony.ColonyContent.EMPTY_CANISTER)).mapToInt(ItemStack::getCount).sum());
+    }
+
 }

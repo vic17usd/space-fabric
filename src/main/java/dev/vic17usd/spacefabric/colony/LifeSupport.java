@@ -3,6 +3,9 @@ package dev.vic17usd.spacefabric.colony;
 /** Resource budgets in game units, advanced once per second by the server. */
 public final class LifeSupport {
     public static final int CAPACITY=9600,CELL=2400;
+    public enum Failure { NONE, OXYGEN, POWER, COOLANT, VOLUME }
+    private Failure failure=Failure.NONE;
+    public Failure failure(){return failure;}
     private int oxygen,energy,coolant,volume;
     private boolean pressurized;
     public int oxygen(){return oxygen;} public int energy(){return energy;} public int coolant(){return coolant;}
@@ -19,11 +22,12 @@ public final class LifeSupport {
     }
     public void vent(){oxygen=0;volume=0;pressurized=false;}
     public boolean tick(int newVolume,int occupants,boolean venus) {
-        if(newVolume<=0 || newVolume>SealScanner.MAX_VOLUME){vent();return false;}
+        if(newVolume<=0 || newVolume>SealScanner.MAX_VOLUME){vent();failure=Failure.VOLUME;return false;}
         if(volume!=newVolume){pressurized=false;volume=newVolume;}
         int startup=pressurized?0:2*volume;
         int breath=Math.max(0,occupants), power=venus?15:5, cooling=venus?5:0;
-        if(oxygen<startup+breath || energy<power || coolant<cooling){pressurized=false;return false;}
+        failure=oxygen<startup+breath?Failure.OXYGEN:energy<power?Failure.POWER:coolant<cooling?Failure.COOLANT:Failure.NONE;
+        if(failure!=Failure.NONE){pressurized=false;return false;}
         oxygen-=startup+breath;energy-=power;coolant-=cooling;pressurized=true;return true;
     }
 }

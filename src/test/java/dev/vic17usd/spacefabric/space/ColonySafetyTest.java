@@ -82,4 +82,29 @@ class ColonySafetyTest {
         for(int i=0;i<10;i++)assertTrue(support.tick(27,0,false));
         assertEquals(oxygen,support.oxygen());
     }
+    @Test void supplyFailuresIdentifyTheActualMissingResource() {
+        var support=new LifeSupport();assertFalse(support.tick(75,1,true));
+        assertEquals(LifeSupport.Failure.OXYGEN,support.failure());
+        support.fill(0);assertFalse(support.tick(75,1,true));assertEquals(LifeSupport.Failure.POWER,support.failure());
+        support.fill(1);assertFalse(support.tick(75,1,true));assertEquals(LifeSupport.Failure.COOLANT,support.failure());
+        support.fill(2);assertTrue(support.tick(75,1,true));assertEquals(LifeSupport.Failure.NONE,support.failure());
+    }
+    @Test void regulatedReadingsNeverPretendThatAFailedHabitatHasSafePressureOrTemperature() {
+        var r=new HabitatReadings(HabitatReadings.Condition.PRESSURIZED,3000,3000,3000,75,true);
+        assertEquals(1013,r.pressureDeciKpa());assertEquals(22,r.temperatureCelsius());assertEquals(HabitatReadings.Reserve.NONE,r.lowReserve());
+        for(var condition:HabitatReadings.Condition.values()) {
+            if(condition==HabitatReadings.Condition.PRESSURIZED)continue;
+            var unsafe=new HabitatReadings(condition,9600,9600,9600,75,true);
+            assertFalse(unsafe.regulated());assertEquals(-1,unsafe.pressureDeciKpa());assertEquals(-1,unsafe.temperatureCelsius());
+        }
+    }
+    @Test void reserveWarningsRespectCoolingRequirementsAndNeverExceedTheirBars() {
+        var mars=new HabitatReadings(HabitatReadings.Condition.PRESSURIZED,3000,3000,0,75,false);
+        assertEquals(HabitatReadings.Reserve.NONE,mars.lowReserve());
+        assertEquals(HabitatReadings.Reserve.COOLANT,new HabitatReadings(mars.condition(),3000,3000,10,75,true).lowReserve());
+        assertEquals(HabitatReadings.Reserve.ENERGY,new HabitatReadings(mars.condition(),3000,10,3000,75,true).lowReserve());
+        assertEquals(HabitatReadings.Reserve.OXYGEN,new HabitatReadings(mars.condition(),10,3000,3000,75,true).lowReserve());
+        assertEquals(0,HabitatReadings.fraction(-1));assertEquals(1,HabitatReadings.fraction(Integer.MAX_VALUE));
+    }
+
 }

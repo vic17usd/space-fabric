@@ -123,3 +123,10 @@ tasks.register('verifyVenusGroundAssets', JavaExec) {
     mainClass = 'dev.vic17usd.spacefabric.client.rocket.VenusGroundAssetsCheck'
 }
 tasks.named('check') { dependsOn tasks.named('verifyVenusGroundAssets') }
+
+tasks.register('verifyHabitatView', JavaExec) {
+    dependsOn tasks.named('renderCheckClasses')
+    classpath = sourceSets.renderCheck.runtimeClasspath
+    mainClass = 'dev.vic17usd.spacefabric.client.colony.HabitatViewCheck'
+}
+tasks.named('check') { dependsOn tasks.named('verifyHabitatView') }

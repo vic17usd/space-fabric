@@ -25,6 +25,20 @@ public final class HabitatSystem {
         for(var machine:map.values())if(!machine.isRemoved()&&machine.getBlockPos().distManhattan(head)<=3*SealScanner.MAX_RADIUS+1&&machine.protects(head))return true;
         return false;
     }
+    /** Prefer the actual room; a nearby controller is only a diagnostic fallback. */
+    public static ColonyMachineBlockEntity controllerFor(ServerPlayer player) {
+        var machines=ACTIVE.get(player.level());if(machines==null||!player.isAlive()||player.isSpectator())return null;
+        var head=BlockPos.containing(player.getEyePosition());
+        ColonyMachineBlockEntity best=null;int score=Integer.MAX_VALUE;
+        for(var machine:machines.values()) {
+            if(machine.isRemoved())continue;
+            int distance=machine.getBlockPos().distManhattan(head);
+            if(distance>3*SealScanner.MAX_RADIUS+1)continue;
+            int candidate=machine.protects(head)?distance:machine.monitors(head)?100+distance:distance<=6?200+distance:Integer.MAX_VALUE;
+            if(candidate<score){best=machine;score=candidate;}
+        }
+        return best;
+    }
     static SealScanner.World world(ServerLevel level) {
         return pos->{
             if(pos.getY()<level.getMinY()||pos.getY()>=level.getMaxY())return SealScanner.Cell.UNLOADED;

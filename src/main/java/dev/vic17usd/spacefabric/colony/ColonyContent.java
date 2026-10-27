@@ -57,5 +57,5 @@ public final class ColonyContent {
     public static Block block(Machine kind){return switch(kind){case HABITAT->HABITAT_CONTROLLER;case ELECTROLYZER->ELECTROLYZER;case SOLAR->SOLAR_CHARGER;case GEOTHERMAL->GEOTHERMAL_GENERATOR;case ANALYZER->SAMPLE_ANALYZER;};}
     public static Map<String,Block> blocks(){return Collections.unmodifiableMap(BLOCKS);}
     public static Map<String,Item> items(){return Collections.unmodifiableMap(ITEMS);}
-    public static void initialize(){HabitatSystem.initialize();ColonyWorldgen.initialize();}
+    public static void initialize(){HabitatSystem.initialize();HabitatNetwork.initialize();ColonyWorldgen.initialize();}
 }

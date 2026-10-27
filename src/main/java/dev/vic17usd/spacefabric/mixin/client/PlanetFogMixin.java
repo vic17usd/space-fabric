@@ -28,6 +28,10 @@ public abstract class PlanetFogMixin {
             return;
         }
         if (camera.getFluidInCamera() != FogType.NONE) return;
+        if(dev.vic17usd.spacefabric.client.colony.HabitatView.clearInterior(camera)) {
+            dev.vic17usd.spacefabric.client.colony.HabitatFog.apply(callback.getReturnValue(),chunks);
+            return;
+        }
         var planet = PlanetDimensions.find(level).orElse(null);
         if (planet != Planet.MARS && planet != Planet.VENUS) return;
         if (!level.canSeeSky(BlockPos.containing(camera.position()))) return;

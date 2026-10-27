@@ -8,6 +8,9 @@ analizables e informes usados en los generadores. Avances y visor de recetas.
 Marte comienza una colonia basada en agua y energía solar; Venus necesita un
 cerramiento certificado, refrigeración y energía geotérmica.
 
+El diagnóstico y el interior visual de los hábitats se amplían en **0.31.0**:
+[panel, indicadores y niebla de interior](habitat-interiors.md).
+
 ## Entrega 2: invernaderos, mantenimiento y almacenamiento — diseñada
 
 - Depósitos conectados y pasamuros certificados: transporte de líquidos/energía

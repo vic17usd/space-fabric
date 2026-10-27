@@ -269,3 +269,26 @@ Nombres de estructuras, versión 0.30.1:
   para `/locate structure`. Los JSON de registro de estructuras permanecen
   idénticos a 0.30.0; no cambian generación, habitantes ni plantillas.
 - La presentación del chat y sus enlaces requiere comprobación en una partida.
+
+Interiores de hábitats, versión 0.31.0:
+
+- `./gradlew build --console=plain`: 429 pruebas JUnit aprobadas, sin errores ni
+  omisiones, y diez comprobaciones por CPU. 901 JSON válidos.
+- Se distinguen fallos por oxígeno, energía y refrigerante. Las lecturas reguladas
+  muestran objetivos de 101,3 kPa y 22 °C; todos los estados de fallo los retiran.
+- Paquetes completos, incrementales y de salida conservan sus campos y geometría.
+  Se rechazan enumeraciones y tamaños de geometría inválidos antes de leer posiciones.
+- El menú nativo conserva nueve slots, muestra las reservas sincronizadas, filtra
+  entradas y permite transferir suministros/productos con Shift sin duplicarlos.
+- `verifyHabitatView` usa el estado real del cliente y `FogData`: comprueba cámara
+  exterior, jugador exterior, fuga local, zona descargada, cambio de dimensión o
+  controlador, estados de fallo, mensajes caducados y limpieza de sesión.
+- El ajuste interior conserva los campos nativos de distancia de renderizado,
+  cielo y nubes. Agua/lava y efectos de ceguera/oscuridad se excluyen en la ruta
+  del Mixin. Estos caminos no se han observado en una partida interactiva.
+- La geometría cambia solamente al cambiar sala/cierre y se valida localmente
+  una vez por tick; no se solicitan acciones de protección al cliente.
+
+Pendientes: aspecto del panel/HUD, transición de niebla con ventanas, recorrido
+por esclusas y sincronización multijugador en una partida real. Los objetivos
+regulados no equivalen a una simulación termodinámica ni a presión volumétrica.

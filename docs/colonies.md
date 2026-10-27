@@ -1,11 +1,11 @@
-# Colonias de Marte y Venus — primera entrega, 0.29.0
+# Colonias de Marte y Venus — 0.29.0, actualizada en 0.31.0
 
 Esta entrega construye el ciclo jugable inicial: hielo → agua → oxígeno e
 hidrógeno, baterías, habitaciones presurizadas y análisis de muestras. Incluye
 recetas, texturas originales, inventarios persistentes y avances. El diseño de
 las siguientes entregas está en [el plan de desarrollo](planet-development-roadmap.md).
 
-Instala `space-fabric-0.29.0.jar` en cliente y servidor con Fabric API para 26.1.
+Instala `space-fabric-0.31.0.jar` en cliente y servidor con Fabric API para 26.1.
 Los bloques se pueden fabricar en partidas existentes. El nuevo hielo subterráneo
 aparece en chunks nuevos de Marte; también se admite hielo vanilla y agua traída
 mediante cubos, así que el ciclo no depende de regenerar una dimensión.
@@ -46,7 +46,9 @@ conservan. Al volver a cerrar se necesita oxígeno para presurizar otra vez.
 
 ## Inventario de las máquinas
 
-Se usa una interfaz nativa de nueve casillas, de izquierda a derecha por filas:
+El controlador tiene su propio panel de diagnóstico desde 0.31.0, conservando
+las nueve casillas. Las demás máquinas mantienen su interfaz nativa. Las posiciones
+se cuentan de izquierda a derecha por filas:
 
 | Posición | Función |
 |---|---|
@@ -119,8 +121,10 @@ Implementado: construcción, cierre de habitaciones, recursos y automatización
 por tolvas, generación de hielo, investigación inicial, recetas y avances.
 Los cultivos usan la mecánica vanilla en un espacio protegido e iluminado.
 Todavía no hay irrigación automática, fotosíntesis conectada al depósito, rovers,
-contratos de aldeanos ni simulación de corrosión de máquinas. La niebla visual
-del planeta se conserva dentro de los edificios en esta entrega.
+contratos de aldeanos ni simulación de corrosión de máquinas. Desde 0.31.0, la niebla planetaria de suelo se retira cuando el jugador y la
+cámara están dentro de una sala regulada y verificada. El controlador y un
+indicador en pantalla muestran reservas, presión/temperatura reguladas y fallos.
+Consulta [el comportamiento y sus límites](habitat-interiors.md).
 
 Las pruebas verifican fugas y puertas, muestreo acotado, mobiliario interior de
 Venus, reservas y presión, transacciones de todas las fórmulas, recipientes
