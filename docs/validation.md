@@ -260,3 +260,12 @@ Suelo de Venus, versión 0.30.0:
   asignación de la característica exclusivamente al bioma de Venus.
 - Los bloques existentes mantienen sus IDs y comportamientos. Los afloramientos
   naturales requieren chunks nuevos. Inspección visual y multijugador pendientes.
+
+Nombres de estructuras, versión 0.30.1:
+
+- Compilación correcta: 422 pruebas JUnit y nueve comprobaciones por CPU;
+  901 JSON válidos. Los cinco alias apuntan a las estructuras existentes.
+- El JAR contiene el catálogo `/estructuras`, las traducciones y las etiquetas
+  para `/locate structure`. Los JSON de registro de estructuras permanecen
+  idénticos a 0.30.0; no cambian generación, habitantes ni plantillas.
+- La presentación del chat y sus enlaces requiere comprobación en una partida.

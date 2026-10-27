@@ -1,4 +1,6 @@
-# Martian Haven y aldeano del JAR — Fabric 26.1, versión 0.11.0
+# Pueblo de Marte y aldeano del JAR — Fabric 26.1, versión 0.11.0
+
+Nombre visible actualizado en 0.30.1. [Catálogo y búsquedas en español](structure-names.md).
 
 Haven retira tres capas de pedestal y el terreno importado del nuevo plano Y=0;
 la plantilla de superficie conserva 20.406 bloques, mide 124 × 81 × 125 y mantiene

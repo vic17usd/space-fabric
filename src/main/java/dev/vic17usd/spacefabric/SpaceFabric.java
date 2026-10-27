@@ -61,6 +61,7 @@ public final class SpaceFabric implements ModInitializer {
         MeteorSystem.initialize();
         StormParticles.initialize();
         PlanetCommands.initialize();
+        dev.vic17usd.spacefabric.command.StructureNames.initialize();
         EnvironmentCommands.initialize();
         LOGGER.info("Space Fabric: sistemas planetarios inicializados para Minecraft 26.1");
     }

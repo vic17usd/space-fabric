@@ -315,5 +315,12 @@
   "advancements.space_fabric.colony.mars.description": "Analiza una muestra de Marte para fabricar un cargador solar.",
   "advancements.space_fabric.colony.venus.title": "Industria bajo presión",
   "advancements.space_fabric.colony.venus.description": "Analiza una muestra de Venus para fabricar el generador geotérmico.",
-  "block.space_fabric.sulfur_cluster": "Afloramiento de azufre venusiano"
+  "block.space_fabric.sulfur_cluster": "Afloramiento de azufre venusiano",
+  "structure.space_fabric.martian_breathforge": "Base de Marte",
+  "structure.space_fabric.martian_haven_settlement": "Pueblo de Marte",
+  "structure.space_fabric.soulfire_netherite_sanctum": "Santuario subterráneo de Marte",
+  "structure.space_fabric.copper_crown_village": "Pueblo de Venus",
+  "structure.space_fabric.sunstone_pyramid_bazaar": "Pirámide de Venus",
+  "commands.space_fabric.structures.title": "Estructuras de Marte y Venus",
+  "commands.space_fabric.structures.hint": "Pulsa un nombre para preparar su comando de búsqueda. Localizar requiere permisos de operador."
 }

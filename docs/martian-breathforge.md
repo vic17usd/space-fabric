@@ -1,4 +1,6 @@
-# Martian Breathforge — Fabric 26.1, versión 0.11.0
+# Base de Marte — Fabric 26.1, versión 0.11.0
+
+Nombre visible actualizado en 0.30.1. [Catálogo y búsquedas en español](structure-names.md).
 
 La plantilla de superficie contiene 28.147 bloques y mide 89 × 72 × 89: retira
 la capa de pedestal inferior y el terreno importado al nivel del piso. Conserva

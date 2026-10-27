@@ -1,4 +1,6 @@
-# Soulfire Netherite Sanctum bajo Marte — Fabric 26.1, versión 0.13.0
+# Santuario subterráneo de Marte — Fabric 26.1, versión 0.13.0
+
+Nombre visible actualizado en 0.30.1. [Catálogo y búsquedas en español](structure-names.md).
 
 Se integra el santuario del JAR aportado con **Basalt Ember Golem** en el altar
 central y **cuatro Basalt Bosswarden**. Se conservan sus modelos, animaciones y

@@ -60,8 +60,8 @@ conserva su día solar largo del sistema planetario. Para comprobar la noche:
 
 | Estructura | Tamaño adaptado | Bloques finales | Plantillas pequeñas |
 |---|---|---:|---:|
-| Copper Crown Village | 137×79×130 | 61.385 | 65 |
-| Sunstone Pyramid Bazaar | 173×60×171 | 83.499 | 104 |
+| Pueblo de Venus | 137×79×130 | 61.385 | 65 |
+| Pirámide de Venus | 173×60×171 | 83.499 | 104 |
 
 Se generan sobre terreno nivelado de basalto en Venus. Se conservan edificios,
 torres y pirámides, retirando los basamentos del editor y adaptando materiales:
