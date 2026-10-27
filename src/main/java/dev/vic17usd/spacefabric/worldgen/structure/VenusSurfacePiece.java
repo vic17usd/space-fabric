@@ -18,16 +18,23 @@ public final class VenusSurfacePiece extends StructurePiece {
     private final StructureTemplate template;
     private BlockPos origin;
     private final Rotation rotation;
+    private final int blend;
     public VenusSurfacePiece(BoundingBox box,int surfaceY) {
+        this(box,surfaceY,0);
+    }
+    public VenusSurfacePiece(BoundingBox box,int surfaceY,int blend) {
         super(VenusSurfaceStructures.PIECE,0,box);plot=true;templateId=null;template=null;
+        this.blend=blend;
         origin=new BlockPos(box.getCenter().getX(),surfaceY,box.getCenter().getZ());rotation=Rotation.NONE;
     }
     public VenusSurfacePiece(Identifier id,StructureTemplate template,BlockPos origin,Rotation rotation) {
         super(VenusSurfaceStructures.PIECE,0,template.getBoundingBox(new StructurePlaceSettings().setRotation(rotation),origin));
         plot=false;templateId=id;this.template=template;this.origin=origin;this.rotation=rotation;
+        blend=0;
     }
     public VenusSurfacePiece(StructurePieceSerializationContext context,CompoundTag tag) {
         super(VenusSurfaceStructures.PIECE,tag);plot=tag.getBooleanOr("Plot",false);
+        blend=Math.clamp(tag.getIntOr("Blend",0),0,32);
         origin=new BlockPos(tag.getIntOr("OriginX",0),tag.getIntOr("OriginY",0),tag.getIntOr("OriginZ",0));
         rotation=Rotation.valueOf(tag.getStringOr("Rotation",Rotation.NONE.name()));
         templateId=plot?null:Identifier.parse(tag.getStringOr("Template",""));
@@ -35,15 +42,17 @@ public final class VenusSurfacePiece extends StructurePiece {
     }
     public boolean isPlot(){return plot;}
     public BlockPos origin(){return origin;}
+    public int blend(){return blend;}
     @Override public Rotation getRotation(){return rotation;}
     @Override public BlockPos getLocatorPosition(){return origin;}
     @Override public void move(int x,int y,int z){super.move(x,y,z);origin=origin.offset(x,y,z);}
     @Override protected void addAdditionalSaveData(StructurePieceSerializationContext context,CompoundTag tag) {
         tag.putBoolean("Plot",plot);tag.putInt("OriginX",origin.getX());tag.putInt("OriginY",origin.getY());tag.putInt("OriginZ",origin.getZ());tag.putString("Rotation",rotation.name());
         if(!plot)tag.putString("Template",templateId.toString());
+        if(plot)tag.putInt("Blend",blend);
     }
     @Override public void postProcess(WorldGenLevel level,StructureManager structures,ChunkGenerator generator,RandomSource random,BoundingBox clip,ChunkPos chunk,BlockPos pivot) {
-        if(plot){SurfacePlot.prepareVenus(level,boundingBox,origin.getY()+1,clip);return;}
+        if(plot){SurfacePlot.prepareVenus(level,boundingBox,origin.getY()+1,clip,blend);return;}
         template.placeInWorld(level,origin,origin,new StructurePlaceSettings().setRotation(rotation).setBoundingBox(clip).setIgnoreEntities(true).setKnownShape(true),random,18);
     }
 }

@@ -1,5 +1,11 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión 0.28.0 corrige **las estructuras flotantes y los grandes pedestales
+de Venus**. Retira los basamentos del modelo, baja sus edificios a una misma cota
+y elige terreno suave, con una transición gradual hacia el paisaje.
+Se aplica a construcciones nuevas; las ya guardadas conservan su generación anterior.
+[Detalles, límites y comprobación](docs/venus-expansion.md#integración-con-el-suelo--0280).
+
 La versión 0.27.0 hace que el cohete **aterrice directamente en el terreno** del
 Overworld, Tierra, Mercurio, Venus, Luna y Marte. Busca suelo seco y plano durante
 el crucero y desciende hasta apoyar el modelo, sin crear plataformas flotantes.
@@ -87,9 +93,9 @@ Consulta la [guía completa de bloques y materiales](docs/materials.md).
 Consulta la [guía de terreno y registro de biomas](docs/terrain.md).
 Consulta la [tabla de dimensiones y claves Java](docs/dimensions.md).
 
-Descarga del prototipo compilado: [space-fabric-0.27.0.jar](dist/space-fabric-0.27.0.jar)
+Descarga del prototipo compilado: [space-fabric-0.28.0.jar](dist/space-fabric-0.28.0.jar)
 (en GitHub, pulsa **Download raw file**).
-[Checksum SHA-256](dist/space-fabric-0.27.0.jar.sha256).
+[Checksum SHA-256](dist/space-fabric-0.28.0.jar.sha256).
 Fauna original: **17usdd using [CreativeMode.net](https://creativemode.net)**;
 [páginas oficiales y atribución](third_party/martian_fauna/README.md),
 [licencia de sus recursos](https://creativemode.net/mod-license).

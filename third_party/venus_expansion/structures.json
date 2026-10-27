@@ -10,10 +10,10 @@
     "original_blocks": 202703,
     "size": [
       137,
-      117,
+      79,
       130
     ],
-    "tiles": 75,
+    "tiles": 65,
     "palette_mapping": {
       "minecraft:stone": "minecraft:basalt",
       "minecraft:cobblestone": "minecraft:blackstone",
@@ -42,7 +42,20 @@
       "minecraft:gold_block": "minecraft:gold_block",
       "minecraft:copper_block": "minecraft:copper_block",
       "minecraft:oxidized_copper": "minecraft:oxidized_copper"
-    }
+    },
+    "adapted_blocks": 61385,
+    "surface_adaptation": {
+      "retained_blocks": 61353,
+      "added_support_blocks": 32,
+      "max_support_height": 6,
+      "removed_base_blocks": 141350,
+      "ground_levels_removed": [
+        2,
+        14,
+        38
+      ]
+    },
+    "template_revision": "surface_v2"
   },
   "sunstone_pyramid_bazaar": {
     "jar": "Venus build.jar",
@@ -55,7 +68,7 @@
     "original_blocks": 82273,
     "size": [
       173,
-      62,
+      60,
       171
     ],
     "tiles": 104,
@@ -98,6 +111,17 @@
       "minecraft:emerald_block": "minecraft:emerald_block",
       "minecraft:lapis_block": "minecraft:lapis_block",
       "minecraft:crying_obsidian": "minecraft:crying_obsidian"
-    }
+    },
+    "adapted_blocks": 83499,
+    "surface_adaptation": {
+      "retained_blocks": 81851,
+      "added_support_blocks": 1648,
+      "max_support_height": 9,
+      "removed_base_blocks": 422,
+      "ground_levels_removed": [
+        2
+      ]
+    },
+    "template_revision": "surface_v2"
   }
 }

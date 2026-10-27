@@ -5,382 +5,333 @@
   "spawn_overrides": {},
   "terrain_adaptation": "none",
   "width": 137,
-  "height": 117,
+  "height": 79,
   "depth": 130,
-  "padding": 4,
+  "padding": 16,
+  "max_terrain_relief": 8,
   "tiles": [
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_0_0",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_0_0",
       "x": 0,
       "z": 0
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_0_16",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_0_16",
       "x": 0,
       "z": 16
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_0_32",
-      "x": 0,
-      "z": 32
-    },
-    {
-      "template": "space_fabric:venus/copper_crown_village/tile_0_48",
-      "x": 0,
-      "z": 48
-    },
-    {
-      "template": "space_fabric:venus/copper_crown_village/tile_0_64",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_0_64",
       "x": 0,
       "z": 64
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_0_80",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_0_80",
       "x": 0,
       "z": 80
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_0_96",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_0_96",
       "x": 0,
       "z": 96
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_0_112",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_0_112",
       "x": 0,
       "z": 112
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_0_128",
-      "x": 0,
-      "z": 128
-    },
-    {
-      "template": "space_fabric:venus/copper_crown_village/tile_16_0",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_16_0",
       "x": 16,
       "z": 0
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_16_16",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_16_16",
       "x": 16,
       "z": 16
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_16_32",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_16_32",
       "x": 16,
       "z": 32
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_16_48",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_16_48",
       "x": 16,
       "z": 48
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_16_64",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_16_64",
       "x": 16,
       "z": 64
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_16_80",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_16_80",
       "x": 16,
       "z": 80
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_16_96",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_16_96",
       "x": 16,
       "z": 96
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_16_112",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_16_112",
       "x": 16,
       "z": 112
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_16_128",
-      "x": 16,
-      "z": 128
-    },
-    {
-      "template": "space_fabric:venus/copper_crown_village/tile_32_0",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_32_0",
       "x": 32,
       "z": 0
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_32_16",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_32_16",
       "x": 32,
       "z": 16
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_32_32",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_32_32",
       "x": 32,
       "z": 32
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_32_48",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_32_48",
       "x": 32,
       "z": 48
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_32_64",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_32_64",
       "x": 32,
       "z": 64
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_32_80",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_32_80",
       "x": 32,
       "z": 80
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_32_96",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_32_96",
       "x": 32,
       "z": 96
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_32_112",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_32_112",
       "x": 32,
       "z": 112
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_32_128",
-      "x": 32,
-      "z": 128
-    },
-    {
-      "template": "space_fabric:venus/copper_crown_village/tile_48_0",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_48_0",
       "x": 48,
       "z": 0
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_48_16",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_48_16",
       "x": 48,
       "z": 16
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_48_32",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_48_32",
       "x": 48,
       "z": 32
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_48_48",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_48_48",
       "x": 48,
       "z": 48
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_48_64",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_48_64",
       "x": 48,
       "z": 64
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_48_80",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_48_80",
       "x": 48,
       "z": 80
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_48_96",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_48_96",
       "x": 48,
       "z": 96
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_48_112",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_48_112",
       "x": 48,
       "z": 112
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_48_128",
-      "x": 48,
-      "z": 128
-    },
-    {
-      "template": "space_fabric:venus/copper_crown_village/tile_64_0",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_64_0",
       "x": 64,
       "z": 0
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_64_16",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_64_16",
       "x": 64,
       "z": 16
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_64_32",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_64_32",
       "x": 64,
       "z": 32
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_64_48",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_64_48",
       "x": 64,
       "z": 48
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_64_64",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_64_64",
       "x": 64,
       "z": 64
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_64_80",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_64_80",
       "x": 64,
       "z": 80
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_64_96",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_64_96",
       "x": 64,
       "z": 96
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_64_112",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_64_112",
       "x": 64,
       "z": 112
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_64_128",
-      "x": 64,
-      "z": 128
-    },
-    {
-      "template": "space_fabric:venus/copper_crown_village/tile_80_0",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_80_0",
       "x": 80,
       "z": 0
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_80_16",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_80_16",
       "x": 80,
       "z": 16
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_80_32",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_80_32",
       "x": 80,
       "z": 32
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_80_48",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_80_48",
       "x": 80,
       "z": 48
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_80_64",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_80_64",
       "x": 80,
       "z": 64
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_80_80",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_80_80",
       "x": 80,
       "z": 80
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_80_96",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_80_96",
       "x": 80,
       "z": 96
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_80_112",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_80_112",
       "x": 80,
       "z": 112
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_80_128",
-      "x": 80,
-      "z": 128
-    },
-    {
-      "template": "space_fabric:venus/copper_crown_village/tile_96_0",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_96_0",
       "x": 96,
       "z": 0
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_96_16",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_96_16",
       "x": 96,
       "z": 16
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_96_32",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_96_32",
       "x": 96,
       "z": 32
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_96_48",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_96_48",
       "x": 96,
       "z": 48
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_96_64",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_96_64",
       "x": 96,
       "z": 64
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_96_80",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_96_80",
       "x": 96,
       "z": 80
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_96_96",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_96_96",
       "x": 96,
       "z": 96
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_96_112",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_96_112",
       "x": 96,
       "z": 112
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_96_128",
-      "x": 96,
-      "z": 128
-    },
-    {
-      "template": "space_fabric:venus/copper_crown_village/tile_112_0",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_112_0",
       "x": 112,
       "z": 0
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_112_16",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_112_16",
       "x": 112,
       "z": 16
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_112_32",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_112_32",
       "x": 112,
       "z": 32
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_112_48",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_112_48",
       "x": 112,
       "z": 48
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_112_64",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_112_64",
       "x": 112,
       "z": 64
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_112_80",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_112_80",
       "x": 112,
       "z": 80
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_112_96",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_112_96",
       "x": 112,
       "z": 96
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_112_112",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_112_112",
       "x": 112,
       "z": 112
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_112_128",
-      "x": 112,
-      "z": 128
-    },
-    {
-      "template": "space_fabric:venus/copper_crown_village/tile_128_0",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_128_0",
       "x": 128,
       "z": 0
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_128_80",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_128_80",
       "x": 128,
       "z": 80
     },
     {
-      "template": "space_fabric:venus/copper_crown_village/tile_128_96",
+      "template": "space_fabric:venus/surface_v2/copper_crown_village/tile_128_96",
       "x": 128,
       "z": 96
     }

@@ -1711,7 +1711,7 @@ class WorldgenCodecTest {
         }
     }
     @ParameterizedTest @ValueSource(strings={"copper_crown_village","sunstone_pyramid_bazaar"})
-    void venusTemplatesAreTiledWithoutLostBlocksFlammablesOrWater(String name) throws IOException {
+    void venusTemplatesHaveNoTallDisplayBasesDetachedPartsFlammablesOrWater(String name) throws IOException {
         var holder=registries.lookupOrThrow(Registries.STRUCTURE).getOrThrow(net.minecraft.resources.ResourceKey.create(Registries.STRUCTURE,SpaceFabric.id(name)));
         var structure=assertInstanceOf(dev.vic17usd.spacefabric.worldgen.structure.VenusSurfaceStructure.class,holder.value());
         assertTrue(structure.biomes().contains(registries.lookupOrThrow(Registries.BIOME).getOrThrow(dev.vic17usd.spacefabric.worldgen.PlanetBiomes.key(Planet.VENUS))));
@@ -1734,17 +1734,43 @@ class WorldgenCodecTest {
                 }
             }
         }
+        assertEquals(name.equals("copper_crown_village")?61385:83499,total);
+        assertEquals(name.equals("copper_crown_village")?65:104,structure.tiles().size());
+        assertEquals(name.equals("copper_crown_village")?78:59,positions.stream().mapToInt(net.minecraft.core.BlockPos::getY).max().orElseThrow());
+        // Every imported part has a path to the implicit planetary floor, including old floating awnings and caps.
+        var reached=new java.util.HashSet<net.minecraft.core.BlockPos>();var queue=new java.util.ArrayList<net.minecraft.core.BlockPos>();
+        positions.stream().filter(p->p.getY()<=1).forEach(p->{reached.add(p);queue.add(p);});
+        for(int i=0;i<queue.size();i++)for(var direction:net.minecraft.core.Direction.values()) {
+            var next=queue.get(i).relative(direction);
+            if(positions.contains(next)&&reached.add(next))queue.add(next);
+        }
+        assertEquals(positions.size(),reached.size(),"An imported piece is still suspended without support");
+    }
+    @ParameterizedTest @ValueSource(strings={"copper_crown_village","sunstone_pyramid_bazaar"})
+    void oldVenusTemplateIdsRemainAvailableForSavedStructurePieces(String name) throws IOException {
+        int total=0,tiles=0;
+        for(int x=0;x<192;x+=16)for(int z=0;z<192;z+=16) {
+            try(var input=getClass().getResourceAsStream("/data/space_fabric/structure/venus/"+name+"/tile_"+x+"_"+z+".nbt")) {
+                if(input==null)continue;
+                var nbt=net.minecraft.nbt.NbtIo.readCompressed(input,net.minecraft.nbt.NbtAccounter.unlimitedHeap());
+                var template=new net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate();
+                template.load(registries.lookupOrThrow(Registries.BLOCK),nbt);
+                assertEquals(name.equals("copper_crown_village")?117:62,template.getSize().getY());
+                total+=nbt.getListOrEmpty("blocks").size();tiles++;
+            }
+        }
+        assertEquals(name.equals("copper_crown_village")?75:104,tiles);
         assertEquals(name.equals("copper_crown_village")?202703:82273,total);
-        assertEquals(name.equals("copper_crown_village")?75:104,structure.tiles().size());
     }
     @Test void venusPlotPreparesOnlyItsCurrentChunkUsingVenusianGround() {
         var world=new VoxelWorld(0,0,40);
         var plot=new net.minecraft.world.level.levelgen.structure.BoundingBox(-10,-60,-10,40,319,40);
-        var piece=new dev.vic17usd.spacefabric.worldgen.structure.VenusSurfacePiece(plot,64);
+        var piece=new dev.vic17usd.spacefabric.worldgen.structure.VenusSurfacePiece(plot,44,16);
         piece.postProcess(world.level,null,null,net.minecraft.util.RandomSource.create(42),new net.minecraft.world.level.levelgen.structure.BoundingBox(0,-64,0,15,319,15),new net.minecraft.world.level.ChunkPos(0,0),net.minecraft.core.BlockPos.ZERO);
         assertTrue(world.blocks.keySet().stream().allMatch(pos->pos.getX()>=0&&pos.getX()<16&&pos.getZ()>=0&&pos.getZ()<16));
-        assertEquals(ModBlocks.VULCANIZED_BASALT,world.state(new net.minecraft.core.BlockPos(8,64,8)).getBlock());
-        assertEquals(Blocks.BASALT,world.state(new net.minecraft.core.BlockPos(8,63,8)).getBlock());
+        assertEquals(ModBlocks.VULCANIZED_BASALT,world.state(new net.minecraft.core.BlockPos(8,44,8)).getBlock());
+        assertEquals(Blocks.BASALT,world.state(new net.minecraft.core.BlockPos(8,43,8)).getBlock());
+        assertTrue(world.blocks.keySet().stream().allMatch(p->p.getY()<=44));
     }
     @Test void nativeVenusGenerationAssemblesTiledSurfacePiecesAndPersistsTheirOrigin(@org.junit.jupiter.api.io.TempDir Path temporary) throws IOException {
         var access=(RegistryAccess)registries;
@@ -1755,19 +1781,75 @@ class WorldgenCodecTest {
         try(var world=net.minecraft.world.level.storage.LevelStorageSource.createDefault(temporary).createAccess("venus-test");var resources=new MultiPackResourceManager(PackType.SERVER_DATA,List.of(ServerPacksSource.createVanillaPackSource(),pack))) {
             var templates=new net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager(resources,world,net.minecraft.util.datafix.DataFixers.getDataFixer(),access.lookupOrThrow(Registries.BLOCK));
             var context=new net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext(resources,access,templates);
+            // Pre-0.28 saves have no Blend field and refer to the original, taller template IDs.
+            var legacyId=SpaceFabric.id("venus/copper_crown_village/tile_0_0");
+            var legacy=new dev.vic17usd.spacefabric.worldgen.structure.VenusSurfacePiece(legacyId,templates.get(legacyId).orElseThrow(),
+                    new net.minecraft.core.BlockPos(0,70,0),net.minecraft.world.level.block.Rotation.NONE);
+            var legacyTag=legacy.createTag(context);legacyTag.remove("Blend");
+            var restoredLegacy=new dev.vic17usd.spacefabric.worldgen.structure.VenusSurfacePiece(context,legacyTag);
+            assertEquals(legacy.origin(),restoredLegacy.origin());assertEquals(0,restoredLegacy.blend());
+            assertEquals(117,restoredLegacy.getBoundingBox().getYSpan());
             for(var name:List.of("copper_crown_village","sunstone_pyramid_bazaar")) {
                 var holder=access.lookupOrThrow(Registries.STRUCTURE).getOrThrow(net.minecraft.resources.ResourceKey.create(Registries.STRUCTURE,SpaceFabric.id(name)));
-                var start=holder.value().generate(holder,PlanetDimensions.key(Planet.VENUS),access,generator,generator.getBiomeSource(),random,templates,42,new net.minecraft.world.level.ChunkPos(0,0),0,net.minecraft.world.level.LevelHeightAccessor.create(Planet.VENUS.minY(),Planet.VENUS.height()),biome->biome.is(dev.vic17usd.spacefabric.worldgen.PlanetBiomes.key(Planet.VENUS)));
-                assertTrue(start.isValid());assertEquals(name.equals("copper_crown_village")?76:105,start.getPieces().size());
+                net.minecraft.world.level.levelgen.structure.StructureStart start=null;
+                var height=net.minecraft.world.level.LevelHeightAccessor.create(Planet.VENUS.minY(),Planet.VENUS.height());
+                for(int attempt=0;attempt<64&&(start==null||!start.isValid());attempt++) {
+                    var chunk=new net.minecraft.world.level.ChunkPos((attempt%8)*32,(attempt/8)*32);
+                    start=holder.value().generate(holder,PlanetDimensions.key(Planet.VENUS),access,generator,generator.getBiomeSource(),random,templates,42,chunk,0,height,biome->biome.is(dev.vic17usd.spacefabric.worldgen.PlanetBiomes.key(Planet.VENUS)));
+                }
+                assertNotNull(start);assertTrue(start.isValid(),"No gentle Venus site in the bounded generation test");
+                assertEquals(name.equals("copper_crown_village")?66:105,start.getPieces().size());
                 var floor=assertInstanceOf(dev.vic17usd.spacefabric.worldgen.structure.VenusSurfacePiece.class,start.getPieces().getFirst());assertTrue(floor.isPlot());
+                assertEquals(16,floor.blend());
+                assertEquals(floor.origin().getY(),dev.vic17usd.spacefabric.worldgen.structure.VenusTerrain.ground(floor.getBoundingBox(),8,
+                        (x,z)->generator.getFirstFreeHeight(x,z,net.minecraft.world.level.levelgen.Heightmap.Types.WORLD_SURFACE_WG,height,random)).orElseThrow());
                 for(var original:start.getPieces()) {
                     var piece=assertInstanceOf(dev.vic17usd.spacefabric.worldgen.structure.VenusSurfacePiece.class,original);
                     var restored=new dev.vic17usd.spacefabric.worldgen.structure.VenusSurfacePiece(context,piece.createTag(context));
-                    assertEquals(piece.origin(),restored.origin());assertEquals(piece.getRotation(),restored.getRotation());
+                    assertEquals(piece.origin(),restored.origin());assertEquals(piece.getRotation(),restored.getRotation());assertEquals(piece.blend(),restored.blend());
                     if(!piece.isPlot()){assertEquals(floor.origin().getY(),piece.origin().getY());assertTrue(piece.getBoundingBox().getXSpan()<=16);assertTrue(piece.getBoundingBox().getZSpan()<=16);}
+                }
+                assertVenusPlacedAcrossChunks(start,context,generator,floor.origin().getY());
+            }
+        }
+    }
+
+    /** Execute native placement of every chunk, not just loading templates or comparing origins. */
+    private void assertVenusPlacedAcrossChunks(net.minecraft.world.level.levelgen.structure.StructureStart start,
+            net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext context,
+            net.minecraft.world.level.chunk.ChunkGenerator generator,int floorY) throws IOException {
+        var box=start.getBoundingBox();
+        var placed=new java.util.HashMap<net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState>();
+        for(int cx=box.minX()>>4;cx<=box.maxX()>>4;cx++)for(int cz=box.minZ()>>4;cz<=box.maxZ()>>4;cz++) {
+            var world=new VoxelWorld(cx,cz,floorY-2);
+            var clip=new net.minecraft.world.level.levelgen.structure.BoundingBox(cx<<4,-64,cz<<4,(cx<<4)+15,319,(cz<<4)+15);
+            for(var piece:start.getPieces())if(piece.getBoundingBox().intersects(clip))
+                piece.postProcess(world.level,null,generator,net.minecraft.util.RandomSource.create(42),clip,new net.minecraft.world.level.ChunkPos(cx,cz),net.minecraft.core.BlockPos.ZERO);
+            placed.putAll(world.blocks);
+        }
+        int checked=0;
+        for(var original:start.getPieces()) {
+            var piece=(dev.vic17usd.spacefabric.worldgen.structure.VenusSurfacePiece)original;
+            if(piece.isPlot())continue;
+            String template=piece.createTag(context).getStringOr("Template","").split(":",2)[1];
+            try(var input=getClass().getResourceAsStream("/data/space_fabric/structure/"+template+".nbt")) {
+                assertNotNull(input);var nbt=net.minecraft.nbt.NbtIo.readCompressed(input,net.minecraft.nbt.NbtAccounter.unlimitedHeap());
+                var palette=nbt.getListOrEmpty("palette");
+                for(var entry:nbt.getListOrEmpty("blocks")) {
+                    var block=(net.minecraft.nbt.CompoundTag)entry;var coordinates=block.getListOrEmpty("pos");
+                    var local=new net.minecraft.core.BlockPos(((net.minecraft.nbt.IntTag)coordinates.get(0)).intValue(),
+                            ((net.minecraft.nbt.IntTag)coordinates.get(1)).intValue(),((net.minecraft.nbt.IntTag)coordinates.get(2)).intValue());
+                    var pos=piece.origin().offset(dev.vic17usd.spacefabric.worldgen.structure.VenusSurfaceStructure.rotate(local,piece.getRotation()));
+                    var expected=BuiltInRegistries.BLOCK.getValue(net.minecraft.resources.Identifier.parse(
+                            ((net.minecraft.nbt.CompoundTag)palette.get(block.getIntOr("state",-1))).getStringOr("Name","")));
+                    assertNotNull(placed.get(pos),"A chunk seam lost a building block at "+pos);
+                    assertEquals(expected,placed.get(pos).getBlock());
+                    if(local.getY()<=1)assertFalse(placed.get(pos.below()).isAir(),"A ground-floor piece is floating at "+pos);
+                    checked++;
                 }
             }
         }
+        assertTrue(checked>60000);
     }
 
 }
