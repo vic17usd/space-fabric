@@ -19,8 +19,11 @@ public final class SuitProtection {
     }
     private SuitProtection() { }
     public static SuitTier tier(Player player) {
-        return tier(player.getItemBySlot(EquipmentSlot.HEAD),player.getItemBySlot(EquipmentSlot.CHEST),
+        return tier(SuitEquipment.get(player),player.getItemBySlot(EquipmentSlot.HEAD),player.getItemBySlot(EquipmentSlot.CHEST),
                 player.getItemBySlot(EquipmentSlot.LEGS),player.getItemBySlot(EquipmentSlot.FEET));
+    }
+    public static SuitTier tier(SuitLoadout dedicated,ItemStack head,ItemStack chest,ItemStack legs,ItemStack feet) {
+        var selected=dedicated.tier();return selected!=SuitTier.NONE?selected:tier(head,chest,legs,feet);
     }
     public static SuitTier tier(ItemStack head,ItemStack chest,ItemStack legs,ItemStack feet) {
         ItemStack[] stacks={head,chest,legs,feet};
@@ -32,6 +35,11 @@ public final class SuitProtection {
         }
         return SuitTier.NONE;
     }
+    public static boolean accepts(int slot,ItemStack stack){
+        if(slot<0||slot>=4||stack.isEmpty())return false;
+        return TAGS.values().stream().anyMatch(tags->stack.is(tags.get(slot)));
+    }
+    public static int slot(ItemStack stack){for(int i=0;i<4;i++)if(accepts(i,stack))return i;return -1;}
     public static boolean isSealed(Player player){return tier(player)!=SuitTier.NONE;}
     public static boolean resistsAcid(Player player){return tier(player).acidResistant;}
 }

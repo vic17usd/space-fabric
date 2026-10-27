@@ -36,6 +36,7 @@ public final class VenusAcidSystem {
         if (seconds == 0) { target.removeAttached(EXPOSURE); return; }
         target.setAttached(EXPOSURE, seconds);
         int wear = AcidExposure.armorDamage(seconds);
+        if(wear>0)dev.vic17usd.spacefabric.equipment.SuitEquipment.environmentalWear(player,wear);
         if (wear > 0) for (var slot : ARMOR) {
             var stack = player.getItemBySlot(slot);
             if (stack.isDamageableItem()) stack.hurtAndBreak(wear, player, slot);

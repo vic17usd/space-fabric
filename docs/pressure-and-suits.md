@@ -72,6 +72,9 @@ no permite caminar en la superficie de Venus ni explorar gigantes de esta manera
 Para los planetas rocosos se comprueba el intervalo térmico completo de referencia;
 no se calcula transferencia de calor, enfriamiento ni radiación en tiempo real.
 
+Desde 0.21.0 puedes equipar el traje en sus [espacios independientes con J](suit-slots.md)
+y llevar armadura normal al mismo tiempo.
+
 Cada conjunto tiene `helmet`, `chestplate`, `leggings` y `boots`. **Las cuatro piezas
 deben ser de la misma categoría**. Faltar una pieza o mezclar categorías rompe la
 protección. Hierro, diamante, netherita, casco de tortuga o botas térmicas comunes
@@ -81,9 +84,12 @@ conservando las propiedades del material anterior. Consulta la
 [vista previa de trajes y kits](equipment-textures.md).
 
 El O₂ integrado todavía es ilimitado: no hay consumo de botella ni de energía.
-También mantiene el suministro de aire bajo el agua. El combate ordinario puede
-romper una pieza y, por tanto, abrir el traje. Las pociones de resistencia, la
-armadura y los tótems no sustituyen la protección ambiental.
+También mantiene el suministro de aire bajo el agua. En los espacios independientes,
+el combate desgasta la armadura normal; el traje puede deteriorarse por corrosión
+si no resiste el ambiente. Las piezas usadas como armadura por compatibilidad
+conservan el desgaste de combate vanilla. Romper una pieza del conjunto abre el
+traje. Las pociones de resistencia, la armadura y los tótems no sustituyen la
+protección ambiental.
 
 ## Fabricación y acceso antes de viajar
 

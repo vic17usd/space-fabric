@@ -11,7 +11,7 @@ def main():
  for tier,(es,en) in TIERS.items():
   for part,(pes,pen,tag,typ) in PARTS.items():
    name=tier+'_suit_'+part
-   fields.append(f'    public static final Item {name.upper()} = register("{name}", new Item.Properties().humanoidArmor(SuitMaterials.forTier("{tier}"), ArmorType.{typ}).fireResistant().component(net.minecraft.core.component.DataComponents.LORE,new net.minecraft.world.item.component.ItemLore(java.util.List.of(net.minecraft.network.chat.Component.translatable("item.space_fabric.suit_rating.{tier}"),net.minecraft.network.chat.Component.translatable("item.space_fabric.suit_complete")))));')
+   fields.append(f'    public static final Item {name.upper()} = register("{name}", dev.vic17usd.spacefabric.equipment.SuitItem::new, new Item.Properties().humanoidArmor(SuitMaterials.forTier("{tier}"), ArmorType.{typ}).fireResistant().component(net.minecraft.core.component.DataComponents.LORE,new net.minecraft.world.item.component.ItemLore(java.util.List.of(net.minecraft.network.chat.Component.translatable("item.space_fabric.suit_rating.{tier}"),net.minecraft.network.chat.Component.translatable("item.space_fabric.suit_complete")))));')
    write(A/f'items/{name}.json',{'model':{'type':'minecraft:model','model':'space_fabric:item/'+name}})
    write(A/f'models/item/{name}.json',{'parent':'minecraft:item/generated','textures':{'layer0':'space_fabric:item/'+name}})
    write(D/f'space_fabric/tags/item/suits/{tier}/{tag}.json',{'replace':False,'values':['space_fabric:'+name]})

@@ -36,6 +36,7 @@ public final class HotVolcanicRockBlock extends Block {
         if (living instanceof Player player && (player.isCreative() || player.isSpectator())) return;
         if (living instanceof dev.vic17usd.spacefabric.entity.venus.VenusMob) return;
         if (!living.isAlive() || protectsFromHeat(living.getItemBySlot(EquipmentSlot.FEET))) return;
+        if(living instanceof Player player && protectsFromHeat(dev.vic17usd.spacefabric.equipment.SuitEquipment.get(player).items().get(3)))return;
         // Respeta la inmunidad al fuego y los invulnerability frames de Minecraft.
         if (living.tickCount % 10 == 0) {
             living.hurtServer(server, server.damageSources().hotFloor(), 1.0F);

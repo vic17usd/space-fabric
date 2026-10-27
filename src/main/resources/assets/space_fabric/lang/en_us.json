@@ -212,5 +212,20 @@
   "gui.space_fabric.viewer.kind.campfire_cooking": "Campfire",
   "gui.space_fabric.viewer.kind.stonecutting": "Stonecutting",
   "gui.space_fabric.viewer.kind.smithing": "Smithing",
-  "gui.space_fabric.viewer.kind.refinery": "Fuel refinery"
+  "gui.space_fabric.viewer.kind.refinery": "Fuel refinery",
+  "gui.space_fabric.suit_inventory": "Space suit",
+  "gui.space_fabric.suit_separate": "Separate from your armor",
+  "gui.space_fabric.suit_part_0": "Head",
+  "gui.space_fabric.suit_part_1": "Chest",
+  "gui.space_fabric.suit_part_2": "Legs",
+  "gui.space_fabric.suit_part_3": "Feet",
+  "gui.space_fabric.suit_tier.none": "Incomplete or mixed suit",
+  "gui.space_fabric.suit_tier.vacuum": "Set: vacuum",
+  "gui.space_fabric.suit_tier.venus": "Set: Venus",
+  "gui.space_fabric.suit_tier.cryo": "Set: cryogenic",
+  "gui.space_fabric.suit_tier.abyssal": "Set: abyssal",
+  "key.space_fabric.suit_inventory": "Open space suit slots",
+  "message.space_fabric.suit_server": "The server needs an updated Space Fabric.",
+  "message.space_fabric.suit_broken": "A suit piece has broken!",
+  "message.space_fabric.suit_migrated": "Suit moved to its separate slots."
 }

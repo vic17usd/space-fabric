@@ -53,6 +53,7 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.item.crafting.Recipe;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -1394,5 +1395,93 @@ class WorldgenCodecTest {
             assertTrue(inventory.getItem(3).is(ModItems.ROCKET_FUEL_CELL));assertEquals(1,inventory.getItem(3).getCount());
             for(int i=0;i<3;i++)assertTrue(inventory.getItem(i).isEmpty());
         }
+    }
+
+    private static dev.vic17usd.spacefabric.equipment.SuitLoadout suitLoadout(String tier) {
+        return new dev.vic17usd.spacefabric.equipment.SuitLoadout(java.util.stream.Stream.of("helmet","chestplate","leggings","boots")
+                .map(part->new ItemStack(ModItems.all().get(tier+"_suit_"+part))).toList());
+    }
+    @ParameterizedTest @ValueSource(strings={"vacuum","venus","cryo","abyssal"})
+    void separateSuitRetainsProtectionWithCombatArmorAndPersistsThroughNativeCodecs(String tier) {
+        var loadout=suitLoadout(tier);loadout.items().get(1).setDamageValue(17);
+        var armor=List.of(new ItemStack(Items.NETHERITE_HELMET),new ItemStack(Items.NETHERITE_CHESTPLATE),new ItemStack(Items.NETHERITE_LEGGINGS),new ItemStack(Items.NETHERITE_BOOTS));
+        assertEquals(tier,dev.vic17usd.spacefabric.equipment.SuitProtection.tier(loadout,armor.get(0),armor.get(1),armor.get(2),armor.get(3)).path);
+        var ops=registries.createSerializationContext(net.minecraft.nbt.NbtOps.INSTANCE);
+        var encoded=dev.vic17usd.spacefabric.equipment.SuitLoadout.CODEC.encodeStart(ops,loadout).getOrThrow();
+        var restored=dev.vic17usd.spacefabric.equipment.SuitLoadout.CODEC.parse(ops,encoded).getOrThrow();
+        assertEquals(tier,restored.tier().path);assertEquals(17,restored.items().get(1).getDamageValue());
+        for(int index=0;index<4;index++)assertTrue(ItemStack.matches(loadout.items().get(index),restored.items().get(index)));
+        var buffer=new net.minecraft.network.RegistryFriendlyByteBuf(io.netty.buffer.Unpooled.buffer(),(RegistryAccess)registries);
+        try {
+            dev.vic17usd.spacefabric.equipment.SuitLoadout.STREAM_CODEC.encode(buffer,loadout);
+            var synced=dev.vic17usd.spacefabric.equipment.SuitLoadout.STREAM_CODEC.decode(buffer);
+            for(int index=0;index<4;index++)assertTrue(ItemStack.matches(loadout.items().get(index),synced.items().get(index)));
+            assertEquals(0,buffer.readableBytes());
+        }finally{buffer.release();}
+        var partial=loadout.snapshot();partial.items().get(3).shrink(1);
+        assertEquals(dev.vic17usd.spacefabric.equipment.SuitTier.NONE,dev.vic17usd.spacefabric.equipment.SuitProtection.tier(partial,armor.get(0),armor.get(1),armor.get(2),armor.get(3)));
+        assertEquals(tier,dev.vic17usd.spacefabric.equipment.SuitProtection.tier(partial,loadout.items().get(0),loadout.items().get(1),loadout.items().get(2),loadout.items().get(3)).path);
+        assertEquals(1,loadout.items().get(3).getCount()); // Snapshots do not share mutable stacks.
+        assertTrue(dev.vic17usd.spacefabric.block.HotVolcanicRockBlock.protectsFromHeat(loadout.items().get(3)));
+        assertEquals(dev.vic17usd.spacefabric.SpaceFabric.id("suit_inventory"),BuiltInRegistries.MENU.getKey(dev.vic17usd.spacefabric.menu.ModMenus.SUIT));
+        for(var stack:loadout.items())assertInstanceOf(dev.vic17usd.spacefabric.equipment.SuitItem.class,stack.getItem());
+    }
+    @Test void suitContainerUsesALiveStorageViewRejectsWrongSlotsAndDoesNotDuplicateRemovedItems() {
+        var stored=new java.util.concurrent.atomic.AtomicReference<>(dev.vic17usd.spacefabric.equipment.SuitLoadout.empty());
+        var container=new dev.vic17usd.spacefabric.equipment.SuitContainer(stored::get,stored::set,p->true);
+        var loadout=suitLoadout("venus");
+        for(int index=0;index<4;index++) {
+            final int part=index;
+            assertTrue(container.canPlaceItem(part,loadout.items().get(part)));
+            assertFalse(container.canPlaceItem(part,new ItemStack(Items.NETHERITE_HELMET)));
+            assertFalse(container.canPlaceItem(part,loadout.items().get((part+1)%4)));
+            container.setItem(part,loadout.items().get(part));
+        }
+        assertEquals(dev.vic17usd.spacefabric.equipment.SuitTier.VENUS,stored.get().tier());
+        assertThrows(IllegalArgumentException.class,()->container.setItem(0,new ItemStack(Items.DIAMOND)));
+        assertThrows(IllegalArgumentException.class,()->container.setItem(0,new ItemStack(ModItems.VENUS_SUIT_HELMET,2)));
+        var taken=container.removeItem(0,64);assertTrue(taken.is(ModItems.VENUS_SUIT_HELMET));assertEquals(1,taken.getCount());
+        assertTrue(container.getItem(0).isEmpty());assertTrue(container.removeItem(0,1).isEmpty());
+        stored.set(dev.vic17usd.spacefabric.equipment.SuitLoadout.empty()); // Death/respawn clears the actual backing store.
+        assertTrue(container.isEmpty());
+    }
+    @Test void nativeSuitMenuShiftClickRoutesCorrectlyAndKeepsTheOtherInventoryIntact() {
+        var stored=new java.util.concurrent.atomic.AtomicReference<>(dev.vic17usd.spacefabric.equipment.SuitLoadout.empty());
+        var container=new dev.vic17usd.spacefabric.equipment.SuitContainer(stored::get,stored::set,p->true);
+        var inventory=new net.minecraft.world.entity.player.Inventory(null,new net.minecraft.world.entity.EntityEquipment());
+        inventory.setItem(9,new ItemStack(ModItems.CRYO_SUIT_HELMET));inventory.setItem(10,new ItemStack(Items.DIAMOND,19));
+        var menu=new dev.vic17usd.spacefabric.menu.SuitMenu(1,inventory,container);
+        assertEquals(40,menu.slots.size());assertFalse(menu.quickMoveStack(null,4).isEmpty());
+        assertTrue(container.getItem(0).is(ModItems.CRYO_SUIT_HELMET));assertTrue(inventory.getItem(9).isEmpty());
+        assertTrue(menu.quickMoveStack(null,5).isEmpty());assertEquals(19,inventory.getItem(10).getCount());
+        assertFalse(menu.quickMoveStack(null,0).isEmpty());assertTrue(container.getItem(0).isEmpty());
+        assertEquals(1,inventory.countItem(ModItems.CRYO_SUIT_HELMET));assertEquals(19,inventory.countItem(Items.DIAMOND));
+    }
+    @Test void dedicatedSuitDeathPolicyPreservesKeepInventoryAndRespectsVanishing() {
+        var original=suitLoadout("abyssal");
+        var keep=dev.vic17usd.spacefabric.equipment.SuitEquipment.deathResult(original,true,false);
+        assertEquals(dev.vic17usd.spacefabric.equipment.SuitTier.ABYSSAL,keep.remaining().tier());assertTrue(keep.drops().isEmpty());
+        assertTrue(dev.vic17usd.spacefabric.equipment.SuitEquipment.deathResult(original,false,true).drops().isEmpty());
+        var normal=dev.vic17usd.spacefabric.equipment.SuitEquipment.deathResult(original,false,false);
+        assertTrue(normal.remaining().items().stream().allMatch(ItemStack::isEmpty));assertEquals(4,normal.drops().size());
+        normal.drops().getFirst().shrink(1);assertFalse(original.items().getFirst().isEmpty());
+        original.items().get(0).enchant(registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(net.minecraft.world.item.enchantment.Enchantments.VANISHING_CURSE),1);
+        assertEquals(3,dev.vic17usd.spacefabric.equipment.SuitEquipment.deathResult(original,false,false).drops().size());
+    }
+    @Test void completeLegacySuitCanMigrateAtomicallyButCombatArmorAndExistingDedicatedItemsCannotBeOverwritten() {
+        var worn=suitLoadout("vacuum");var stacks=worn.items();
+        var migration=dev.vic17usd.spacefabric.equipment.SuitEquipment.migrationCandidate(dev.vic17usd.spacefabric.equipment.SuitLoadout.empty(),stacks.get(0),stacks.get(1),stacks.get(2),stacks.get(3));
+        assertTrue(migration.isPresent());assertEquals(dev.vic17usd.spacefabric.equipment.SuitTier.VACUUM,migration.orElseThrow().tier());
+        assertTrue(dev.vic17usd.spacefabric.equipment.SuitEquipment.migrationCandidate(worn,stacks.get(0),stacks.get(1),stacks.get(2),stacks.get(3)).isEmpty());
+        assertTrue(dev.vic17usd.spacefabric.equipment.SuitEquipment.migrationCandidate(dev.vic17usd.spacefabric.equipment.SuitLoadout.empty(),new ItemStack(Items.DIAMOND_HELMET),new ItemStack(Items.DIAMOND_CHESTPLATE),new ItemStack(Items.DIAMOND_LEGGINGS),new ItemStack(Items.DIAMOND_BOOTS)).isEmpty());
+    }
+    @Test void malformedSuitInventoriesCannotLoadAdditionalSlotsOrOverstackEquipment() {
+        assertThrows(IllegalArgumentException.class,()->new dev.vic17usd.spacefabric.equipment.SuitLoadout(List.of(ItemStack.EMPTY)));
+        assertThrows(IllegalArgumentException.class,()->new dev.vic17usd.spacefabric.equipment.SuitLoadout(List.of(new ItemStack(ModItems.CRYO_SUIT_HELMET,2),ItemStack.EMPTY,ItemStack.EMPTY,ItemStack.EMPTY)));
+        assertTrue(dev.vic17usd.spacefabric.equipment.SuitLoadout.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),new com.google.gson.JsonArray()).error().isPresent());
+    }
+    @Test void suitClientMixinTargetsExactNativeRendererDescriptors() throws IOException {
+        assertClientTarget("net/minecraft/client/renderer/entity/player/AvatarRenderer","<init>","(Lnet/minecraft/client/renderer/entity/EntityRendererProvider$Context;Z)V");
+        assertClientTarget("net/minecraft/client/renderer/entity/player/AvatarRenderer","extractRenderState","(Lnet/minecraft/world/entity/Avatar;Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;F)V");
     }
 }

@@ -36,6 +36,9 @@ vacío y detenido.
 | Criogénico | Blanco y azul hielo, detalles cian y visor azul |
 | Abisal | Azul oscuro/grafito, bandas violetas y visor turquesa |
 
+Desde 0.21.0 estos conjuntos pueden usarse en [espacios independientes](suit-slots.md)
+junto con armadura normal.
+
 Cada conjunto tiene casco, pechera, pantalones y botas. Las texturas equipadas usan
 la geometría de armadura humanoide de Minecraft, con visores, paneles, juntas y
 bandas colocados sobre sus caras. No se añade un nuevo modelo 3D de armadura ni

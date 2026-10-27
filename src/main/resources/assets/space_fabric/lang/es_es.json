@@ -212,5 +212,20 @@
   "gui.space_fabric.viewer.kind.campfire_cooking": "Hoguera",
   "gui.space_fabric.viewer.kind.stonecutting": "Cortapiedras",
   "gui.space_fabric.viewer.kind.smithing": "Herrería",
-  "gui.space_fabric.viewer.kind.refinery": "Refinería de combustible"
+  "gui.space_fabric.viewer.kind.refinery": "Refinería de combustible",
+  "gui.space_fabric.suit_inventory": "Traje espacial",
+  "gui.space_fabric.suit_separate": "Traje y armadura separados",
+  "gui.space_fabric.suit_part_0": "Casco",
+  "gui.space_fabric.suit_part_1": "Pecho",
+  "gui.space_fabric.suit_part_2": "Piernas",
+  "gui.space_fabric.suit_part_3": "Botas",
+  "gui.space_fabric.suit_tier.none": "Traje incompleto o mezclado",
+  "gui.space_fabric.suit_tier.vacuum": "Conjunto: vacío",
+  "gui.space_fabric.suit_tier.venus": "Conjunto: venusiano",
+  "gui.space_fabric.suit_tier.cryo": "Conjunto: criogénico",
+  "gui.space_fabric.suit_tier.abyssal": "Conjunto: abisal",
+  "key.space_fabric.suit_inventory": "Abrir espacios del traje espacial",
+  "message.space_fabric.suit_server": "El servidor necesita Space Fabric actualizado.",
+  "message.space_fabric.suit_broken": "¡Se ha roto una pieza del traje!",
+  "message.space_fabric.suit_migrated": "Traje trasladado a sus espacios independientes."
 }

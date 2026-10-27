@@ -6,7 +6,8 @@
     "PlanetFogMixin",
     "PlanetSkyMixin",
     "RocketPilotStateMixin",
-    "RocketPilotRendererMixin"
+    "RocketPilotRendererMixin",
+    "SuitRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
