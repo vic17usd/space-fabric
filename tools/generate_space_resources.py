@@ -55,7 +55,7 @@ def main():
         "entity.space_fabric.rocket": ("Cohete de exploración", "Exploration Rocket"),
         "gui.space_fabric.board": ("Pilotar", "Board"),
         "gui.space_fabric.launch": ("Despegar", "Launch"),
-        "gui.space_fabric.fuel": ("Fuel: %s | coste: %s", "Fuel: %s | cost: %s"),
+        "gui.space_fabric.fuel": ("Comb.: %s/%s", "Fuel: %s/%s"),
         "gui.space_fabric.cargo": ("Carga", "Cargo"),
         "gui.space_fabric.cells": ("Celda → vacía", "Cell → empty"),
         "gui.space_fabric.refinery_slot_0": ("Base", "Base"),

@@ -1,5 +1,8 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión 0.21.1 corrige la **identificación, el combustible y los bloqueos del
+mapa estelar**: muestra cantidad/máximo y coste por separado, explica cada bloqueo
+y permite elegir destino antes de subir. [Guía de controles y caso Marte](docs/rocket-controls.md).
 La versión 0.21.0 añade **cuatro espacios independientes para el traje espacial**,
 para llevarlo junto con la armadura. Ábrelos con **J** o **Traje espacial** en el
 inventario. Incluye guardado, sincronización, migración del conjunto anterior y
@@ -51,9 +54,9 @@ Consulta la [guía completa de bloques y materiales](docs/materials.md).
 Consulta la [guía de terreno y registro de biomas](docs/terrain.md).
 Consulta la [tabla de dimensiones y claves Java](docs/dimensions.md).
 
-Descarga del prototipo compilado: [space-fabric-0.21.0.jar](dist/space-fabric-0.21.0.jar)
+Descarga del prototipo compilado: [space-fabric-0.21.1.jar](dist/space-fabric-0.21.1.jar)
 (en GitHub, pulsa **Download raw file**).
-[Checksum SHA-256](dist/space-fabric-0.21.0.jar.sha256).
+[Checksum SHA-256](dist/space-fabric-0.21.1.jar.sha256).
 Fauna original: **17usdd using [CreativeMode.net](https://creativemode.net)**;
 [páginas oficiales y atribución](third_party/martian_fauna/README.md),
 [licencia de sus recursos](https://creativemode.net/mod-license).

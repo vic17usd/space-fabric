@@ -31,6 +31,7 @@ public final class RocketRules {
         return pilot && state == IDLE && differentWorld && cost > 0 && fuel >= cost;
     }
 
-    public static boolean fitsCell(int fuel) { return fuel >= 0 && fuel <= TANK_CAPACITY - FUEL_PER_CELL; }
+    public static boolean fitsCell(int fuel) { return fitsCell(fuel,TANK_CAPACITY); }
+    public static boolean fitsCell(int fuel,int capacity) { return fuel >= 0 && fuel <= capacity - FUEL_PER_CELL; }
     public static double ascentSpeed(int ticks) { return Math.min(1.2, 0.08 + Math.max(0, ticks) * 0.015); }
 }

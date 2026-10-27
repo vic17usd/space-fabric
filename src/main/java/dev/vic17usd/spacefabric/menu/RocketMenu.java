@@ -15,21 +15,22 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 public final class RocketMenu extends AbstractContainerMenu {
-    public static final int LAUNCH = 100, BOARD = 101;
+    public static final int LAUNCH = 100, BOARD = 101, DATA_COUNT=12;
     private final RocketEntity rocket;
     private final ContainerData data;
-    public RocketMenu(int id, Inventory inventory) { this(id, inventory, null, new SimpleContainer(11), new SimpleContainerData(9)); }
+    public RocketMenu(int id, Inventory inventory) { this(id, inventory, null, new SimpleContainer(11), new SimpleContainerData(DATA_COUNT)); }
     public RocketMenu(int id, Inventory inventory, RocketEntity rocket) {
         this(id, inventory, rocket, rocket.inventory(), new ContainerData() {
             @Override public int get(int index) { return switch (index) {
                 case 0 -> rocket.fuel(); case 1 -> rocket.destinationIndex(); case 2 -> rocket.flightState();
                 case 3 -> rocket.requiredFuel(); case 4 -> rocket.isPilot(inventory.player) ? 1 : 0;
-                case 5 -> TravelDestination.indexOf(rocket.level().dimension());
+                case 5 -> rocket.level()==null?-1:TravelDestination.indexOf(rocket.level().dimension());
                 case 6 -> rocket.variant().ordinal(); case 7 -> rocket.hull();
-                case 8 -> dev.vic17usd.spacefabric.space.RocketFlightConfig.exclusive()?1:0; default -> 0;
+                case 8 -> dev.vic17usd.spacefabric.space.RocketFlightConfig.exclusive()?1:0;
+                case 9 -> rocket.fuelCapacity(); case 10 -> rocket.isVehicle()?1:0; case 11 -> 1; default -> 0;
             }; }
             @Override public void set(int index, int value) { }
-            @Override public int getCount() { return 9; }
+            @Override public int getCount() { return DATA_COUNT; }
         });
     }
     private RocketMenu(int id, Inventory inventory, RocketEntity rocket, Container storage, ContainerData data) {
@@ -40,12 +41,16 @@ public final class RocketMenu extends AbstractContainerMenu {
         addStandardInventorySlots(inventory, 8, 164); addDataSlots(data);
     }
     public int value(int index) { return data.get(index); }
+    public dev.vic17usd.spacefabric.space.RocketNavigation.State state() {
+        return new dev.vic17usd.spacefabric.space.RocketNavigation.State(dev.vic17usd.spacefabric.space.RocketVariant.byId(value(6)),
+            value(5),value(1),value(2),value(0),value(3),value(9),value(7),value(4)==1,value(10)==1,value(8)==1,value(11)==1);
+    }
     @Override public boolean stillValid(Player player) {
-        return rocket == null || (!rocket.isRemoved() && player.level() == rocket.level() && player.distanceToSqr(rocket) <= 64);
+        return rocket == null || (player.isAlive()&&!player.isSpectator()&&!rocket.isRemoved() && player.level() == rocket.level() && player.distanceToSqr(rocket) <= 64);
     }
     @Override public boolean clickMenuButton(Player player, int button) {
         if (rocket == null || !stillValid(player) || !(player instanceof ServerPlayer server)) return false;
-        if (button == BOARD) return !rocket.isFlying() && (rocket.isPilot(player) || player.startRiding(rocket));
+        if (button == BOARD) return rocket.navigation(player).board()==dev.vic17usd.spacefabric.space.RocketNavigation.Reason.READY && player.startRiding(rocket);
         if (button == LAUNCH) return rocket.requestLaunch(server);
         return rocket.selectDestination(player, button);
     }

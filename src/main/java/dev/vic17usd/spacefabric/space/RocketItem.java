@@ -23,12 +23,27 @@ public class RocketItem extends Item {
     public static ItemStack packed(int fuel,RocketVariant variant,int hull) {
         var stack = new ItemStack(variant==RocketVariant.BASE?ModItems.ROCKET:ModItems.all().get(variant.path+"_rocket"));
         CustomData.update(DataComponents.CUSTOM_DATA, stack,
-                tag -> {tag.putInt("RocketFuel", Math.clamp(fuel, 0, RocketRules.TANK_CAPACITY));tag.putInt("RocketHull",Math.clamp(hull,0,100));});
+                tag -> {tag.putInt("RocketFuel", Math.clamp(fuel, 0, variant.fuelCapacity()));tag.putInt("RocketHull",Math.clamp(hull,0,100));});
         return stack;
     }
     public static int storedFuel(ItemStack stack) {
         return Math.clamp(stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag().getIntOr("RocketFuel", 0),
-                0, RocketRules.TANK_CAPACITY);
+                0, stack.getItem() instanceof RocketItem rocket?rocket.variant.fuelCapacity():RocketRules.TANK_CAPACITY);
+    }
+
+    /** Placement and pickup share this path; item identity is authoritative over arbitrary custom data. */
+    public RocketEntity createRocket(net.minecraft.world.level.Level level,ItemStack stack) {
+        if(!stack.is(this))throw new IllegalArgumentException("Rocket item identity does not match placement factory");
+        var rocket=new RocketEntity(ModSpaceEntities.ROCKET,level);
+        rocket.configureVariant(variant);
+        rocket.restorePackedFuel(storedFuel(stack));
+        rocket.restoreHull(stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getIntOr("RocketHull",100));
+        return rocket;
+    }
+    @Override public void appendHoverText(ItemStack stack,TooltipContext context,net.minecraft.world.item.component.TooltipDisplay display,
+            java.util.function.Consumer<net.minecraft.network.chat.Component> lines,net.minecraft.world.item.TooltipFlag flags) {
+        super.appendHoverText(stack,context,display,lines,flags);
+        lines.accept(net.minecraft.network.chat.Component.translatable("item.space_fabric.rocket_fuel",storedFuel(stack),variant.fuelCapacity()));
     }
 
     @Override public InteractionResult useOn(UseOnContext context) {
@@ -37,10 +52,7 @@ public class RocketItem extends Item {
         var player = context.getPlayer();
         var pos = context.getClickedPos().above();
         if (!player.mayUseItemAt(pos, Direction.UP, context.getItemInHand())) return InteractionResult.FAIL;
-        var rocket = new RocketEntity(ModSpaceEntities.ROCKET, level);
-        rocket.restorePackedFuel(storedFuel(context.getItemInHand()));
-        rocket.configureVariant(variant);
-        rocket.restoreHull(context.getItemInHand().getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getIntOr("RocketHull",100));
+        var rocket = createRocket(level,context.getItemInHand());
         rocket.setPos(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
         rocket.setYRot(player.getYRot());
         if (!level.getWorldBorder().isWithinBounds(rocket.getBoundingBox()) || !level.noCollision(rocket, rocket.getBoundingBox())

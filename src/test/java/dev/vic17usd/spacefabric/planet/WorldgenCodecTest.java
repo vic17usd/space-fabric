@@ -1255,6 +1255,36 @@ class WorldgenCodecTest {
         var item=ItemStack.CODEC.parse(ops,ItemStack.CODEC.encodeStart(ops,packed).getOrThrow()).getOrThrow();
         assertEquals(variant,assertInstanceOf(dev.vic17usd.spacefabric.space.RocketItem.class,item.getItem()).variant());
         assertEquals(751,dev.vic17usd.spacefabric.space.RocketItem.storedFuel(item));
+        var factory=assertInstanceOf(dev.vic17usd.spacefabric.space.RocketItem.class,item.getItem());
+        // Exercise the actual placement factory, including a stale custom-data variant that must not override the item ID.
+        net.minecraft.world.item.component.CustomData.update(net.minecraft.core.component.DataComponents.CUSTOM_DATA,item,tag->tag.putString("RocketVariant","mercury"));
+        var placed=factory.createRocket(null,item);
+        assertEquals(variant,placed.variant());assertEquals(751,placed.fuel());assertEquals(63,placed.hull());
+        var tooltip=new java.util.ArrayList<net.minecraft.network.chat.Component>();
+        factory.appendHoverText(item,net.minecraft.world.item.Item.TooltipContext.of(registries),net.minecraft.world.item.component.TooltipDisplay.DEFAULT,tooltip::add,net.minecraft.world.item.TooltipFlag.NORMAL);
+        var tankLine=assertInstanceOf(net.minecraft.network.chat.contents.TranslatableContents.class,tooltip.getLast().getContents());
+        assertEquals("item.space_fabric.rocket_fuel",tankLine.getKey());
+        assertEquals(751,tankLine.getArgs()[0]);assertEquals(variant.fuelCapacity(),tankLine.getArgs()[1]);
+        assertThrows(IllegalArgumentException.class,()->factory.createRocket(null,new ItemStack(Items.STICK)));
+
+        assertEquals(variant.label(),placed.getName());
+        int mission=dev.vic17usd.spacefabric.space.TravelDestination.indexOf(dev.vic17usd.spacefabric.planet.PlanetDimensions.key(variant.mission));
+        assertEquals(mission,placed.destinationIndex());
+        var inventory=new net.minecraft.world.entity.player.Inventory(null,new net.minecraft.world.entity.EntityEquipment());
+        var serverMenu=new dev.vic17usd.spacefabric.menu.RocketMenu(7,inventory,placed);
+        var replica=new dev.vic17usd.spacefabric.menu.RocketMenu(7,inventory);
+        assertEquals(dev.vic17usd.spacefabric.space.RocketNavigation.Reason.SYNC,replica.state().destination(mission));
+        for(int datum=0;datum<dev.vic17usd.spacefabric.menu.RocketMenu.DATA_COUNT;datum++)replica.setData(datum,serverMenu.value(datum));
+        assertEquals(variant,replica.state().variant());assertEquals(751,replica.state().fuel());
+        assertEquals(variant.fuelCapacity(),replica.state().capacity());assertEquals(63,replica.state().hull());
+        replica.setData(5,0); // A loaded Overworld, distinct from the planet/variant IDs.
+        replica.setData(3,dev.vic17usd.spacefabric.space.RocketRules.cost(dev.vic17usd.spacefabric.space.TravelDestination.at(0),dev.vic17usd.spacefabric.space.TravelDestination.at(mission)));
+        assertEquals(dev.vic17usd.spacefabric.space.RocketNavigation.Reason.READY,replica.state().destination(mission));
+        assertEquals(dev.vic17usd.spacefabric.space.RocketNavigation.Reason.BOARD_FIRST,replica.state().launch());
+        replica.setData(4,1);replica.setData(10,1);
+        var launch=replica.state().launch();
+        assertEquals(replica.state().fuel()>=replica.state().cost()?dev.vic17usd.spacefabric.space.RocketNavigation.Reason.READY:dev.vic17usd.spacefabric.space.RocketNavigation.Reason.LOW_FUEL,launch);
+
         assertEquals(63,item.get(net.minecraft.core.component.DataComponents.CUSTOM_DATA).copyTag().getIntOr("RocketHull",-1));
         restored.restoreHull(-1);assertEquals(0,restored.hull());restored.restoreHull(101);assertEquals(100,restored.hull());
     }

@@ -62,13 +62,20 @@ public final class RocketEntity extends Entity implements ExtendedMenuProvider<I
         if(isFlying()||isVehicle())return false;
         configureVariant(target);restoreHull(100);return true;
     }
+    public int fuelCapacity(){return variant().fuelCapacity();}
+    @Override protected Component getTypeName(){return variant().label();}
+    public RocketNavigation.State navigation(Player player) {
+        int source=level()==null?-1:TravelDestination.indexOf(level().dimension());
+        return new RocketNavigation.State(variant(),source,destinationIndex(),flightState(),fuel(),requiredFuel(),fuelCapacity(),hull(),
+                isPilot(player),isVehicle(),RocketFlightConfig.exclusive(),true);
+    }
     public int fuel() { return entityData.get(FUEL); }
-    void restorePackedFuel(int fuel) { entityData.set(FUEL, Math.clamp(fuel, 0, RocketRules.TANK_CAPACITY)); }
+    void restorePackedFuel(int fuel) { entityData.set(FUEL, Math.clamp(fuel, 0, fuelCapacity())); }
     public int destinationIndex() { return entityData.get(DESTINATION); }
     public int flightState() { return entityData.get(FLIGHT); }
     public SimpleContainer inventory() { return inventory; }
     public boolean isFlying() { return flightState() != RocketRules.IDLE; }
-    public boolean isPilot(Player player) { return getFirstPassenger() == player; }
+    public boolean isPilot(Player player) { return player!=null && getFirstPassenger() == player; }
     @Override public boolean isPickable() { return true; }
     @Override public boolean isAttackable() { return true; }
     @Override protected boolean canAddPassenger(Entity passenger) { return getPassengers().isEmpty() && passenger instanceof Player; }
@@ -77,18 +84,22 @@ public final class RocketEntity extends Entity implements ExtendedMenuProvider<I
 
     @Override public InteractionResult interact(Player player, InteractionHand hand, Vec3 hit) {
         if (!(level() instanceof ServerLevel)) return InteractionResult.SUCCESS;
-        if (isFlying()) return InteractionResult.PASS;
+        if (isFlying()||!player.isAlive()||player.isSpectator()) return InteractionResult.PASS;
         var stack = player.getItemInHand(hand);
         if (stack.getItem() instanceof RocketUpgradeItem kit) {
             if(!install(kit.variant())) { player.sendOverlayMessage(Component.translatable("message.space_fabric.upgrade_empty"));return InteractionResult.FAIL; }
             if(!player.isCreative())stack.shrink(1);
+            player.sendOverlayMessage(Component.translatable("message.space_fabric.rocket_upgraded",variant().label()));
             return InteractionResult.SUCCESS_SERVER;
         }
         if(stack.is(net.minecraft.world.item.Items.IRON_INGOT)&&hull()<100) {
             restoreHull(hull()+25);if(!player.isCreative())stack.shrink(1);return InteractionResult.SUCCESS_SERVER;
         }
         if (stack.is(ModItems.ROCKET_FUEL_CELL)) {
-            if (!RocketRules.fitsCell(fuel())) return InteractionResult.FAIL;
+            if (!RocketRules.fitsCell(fuel(),fuelCapacity())) {
+                player.sendOverlayMessage(Component.translatable("message.space_fabric.fuel_cell_space",RocketRules.FUEL_PER_CELL,fuel(),fuelCapacity()));
+                return InteractionResult.FAIL;
+            }
             entityData.set(FUEL, fuel() + RocketRules.FUEL_PER_CELL);
             if (!player.isCreative()) {
                 stack.shrink(1);
@@ -103,26 +114,24 @@ public final class RocketEntity extends Entity implements ExtendedMenuProvider<I
     }
 
     public boolean selectDestination(Player player, int index) {
-        if (!isPilot(player) || isFlying() || index < 0 || index >= TravelDestination.ALL.size()) return false;
-        if(!permits(TravelDestination.at(index)))return false;
+        if(player==null||!player.isAlive()||player.isSpectator()||isRemoved()||player.level()!=level()||player.distanceToSqr(this)>64)return false;
+        if(navigation(player).destination(index)!=RocketNavigation.Reason.READY)return false;
         entityData.set(DESTINATION, index);
         return true;
     }
 
     public int requiredFuel() {
-        int source = TravelDestination.indexOf(level().dimension());
+        int source = level()==null?-1:TravelDestination.indexOf(level().dimension());
         return source < 0 ? 0 : RocketRules.cost(TravelDestination.at(source), TravelDestination.at(destinationIndex()));
     }
 
     public boolean requestLaunch(ServerPlayer pilot) {
-        if (!(level() instanceof ServerLevel server) || isRemoved() || !pilot.isAlive() || pilot.level() != server) return false;
+        if (!(level() instanceof ServerLevel server) || isRemoved() || !pilot.isAlive() || pilot.isSpectator() || pilot.level() != server) return false;
         var destination = TravelDestination.at(destinationIndex());
         int cost = requiredFuel();
-        if(hull()<=0 || !permits(destination)) {
-            pilot.sendOverlayMessage(Component.translatable("message.space_fabric.rocket_unsuitable"));return false;
-        }
-        if (!RocketRules.canLaunch(isPilot(pilot), flightState(), fuel(), cost, !destination.world().equals(level().dimension()))) {
-            pilot.sendOverlayMessage(Component.translatable("message.space_fabric.launch_requirements")); return false;
+        var reason=navigation(pilot).launch();
+        if(reason!=RocketNavigation.Reason.READY) {
+            pilot.sendOverlayMessage(Component.translatable(reason.key,variant().label()));return false;
         }
         if (server.getServer().getLevel(destination.world()) == null || !server.noCollision(this, getBoundingBox().move(0, 1, 0))) {
             pilot.sendOverlayMessage(Component.translatable("message.space_fabric.launch_blocked")); return false;
@@ -170,7 +179,7 @@ public final class RocketEntity extends Entity implements ExtendedMenuProvider<I
     private void absorbFuelCell() {
         var input = inventory.getItem(0);
         var output = inventory.getItem(1);
-        if (!RocketRules.fitsCell(fuel()) || !input.is(ModItems.ROCKET_FUEL_CELL)
+        if (!RocketRules.fitsCell(fuel(),fuelCapacity()) || !input.is(ModItems.ROCKET_FUEL_CELL)
                 || (!output.isEmpty() && (!output.is(ModItems.EMPTY_FUEL_CELL) || output.getCount() >= output.getMaxStackSize()))) return;
         input.shrink(1);
         if (output.isEmpty()) inventory.setItem(1, new ItemStack(ModItems.EMPTY_FUEL_CELL)); else output.grow(1);
@@ -207,7 +216,7 @@ public final class RocketEntity extends Entity implements ExtendedMenuProvider<I
             restored=planet==dev.vic17usd.spacefabric.planet.Planet.EARTH?RocketVariant.BASE:RocketVariant.byName(planet.path());
         }
         entityData.set(VARIANT,restored.ordinal()); restoreHull(input.getIntOr("Hull",100));
-        entityData.set(FUEL, Math.clamp(input.getIntOr("Fuel", 0), 0, RocketRules.TANK_CAPACITY));
+        entityData.set(FUEL, Math.clamp(input.getIntOr("Fuel", 0), 0, fuelCapacity()));
         entityData.set(DESTINATION, Math.clamp(input.getIntOr("Destination", 0), 0, TravelDestination.ALL.size() - 1));
         inventory.clearContent();
         ContainerHelper.loadAllItems(input, inventory.getItems());

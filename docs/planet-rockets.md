@@ -128,3 +128,6 @@ con el parser y resolvedor de texturas nativos de 26.1, comprueba cada cara y qu
 sus sprites pertenezcan a un único atlas. También reconstruye las nueve referencias
 antiguas y verifica que la comprobación detecte la regresión. Se ejecuta con
 `./gradlew build`. No se ha realizado una prueba visual con GPU en este entorno.
+
+Desde 0.21.1 el mapa separa modelo y destino, muestra combustible actual/máximo y
+el motivo concreto de los bloqueos. Consulta la [corrección de controles](rocket-controls.md).

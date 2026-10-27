@@ -26,19 +26,27 @@ public enum RocketVariant {
         this.acidResistant=acidResistant;this.dustProtected=dustProtected;this.radiationRating=radiationRating;
         this.windRating=windRating;this.color=color;
     }
-    public boolean protects(Planet planet,double y) {
+    /** All current designs retain the original 3000-unit tank; presentation reads this same value. */
+    public int fuelCapacity(){return RocketRules.TANK_CAPACITY;}
+    public net.minecraft.network.chat.Component label(){
+        return net.minecraft.network.chat.Component.translatable("item.space_fabric."+(this==BASE?"rocket":path+"_rocket"));
+    }
+    public enum ProtectionFailure { NONE, PRESSURE, TEMPERATURE, ACID, DUST, RADIATION, WIND }
+    public ProtectionFailure protectionFailure(Planet planet,double y) {
         var profile=AtmosphereProfile.of(planet);
-        if(profile.pressureAt(y)>maxKpa || profile.minTemperatureAt(y)<minCelsius || profile.maxTemperatureAt(y)>maxCelsius) return false;
+        if(profile.pressureAt(y)>maxKpa)return ProtectionFailure.PRESSURE;
+        if(profile.minTemperatureAt(y)<minCelsius||profile.maxTemperatureAt(y)>maxCelsius)return ProtectionFailure.TEMPERATURE;
         return switch(planet) {
-            case VENUS -> acidResistant;
-            case MARS -> dustProtected;
-            case MERCURY -> radiationRating>=2;
-            case JUPITER -> radiationRating>=3 && windRating>=3;
-            case SATURN,URANUS -> windRating>=2;
-            case NEPTUNE -> windRating>=4;
-            default -> true;
+            case VENUS -> acidResistant?ProtectionFailure.NONE:ProtectionFailure.ACID;
+            case MARS -> dustProtected?ProtectionFailure.NONE:ProtectionFailure.DUST;
+            case MERCURY -> radiationRating>=2?ProtectionFailure.NONE:ProtectionFailure.RADIATION;
+            case JUPITER -> radiationRating<3?ProtectionFailure.RADIATION:windRating<3?ProtectionFailure.WIND:ProtectionFailure.NONE;
+            case SATURN,URANUS -> windRating>=2?ProtectionFailure.NONE:ProtectionFailure.WIND;
+            case NEPTUNE -> windRating>=4?ProtectionFailure.NONE:ProtectionFailure.WIND;
+            default -> ProtectionFailure.NONE;
         };
     }
+    public boolean protects(Planet planet,double y) {return protectionFailure(planet,y)==ProtectionFailure.NONE;}
     public boolean permits(Planet planet,boolean exclusive) {
         return (!exclusive || planet==Planet.EARTH || planet==mission) && protects(planet,240);
     }
