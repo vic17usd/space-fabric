@@ -1444,7 +1444,9 @@ class WorldgenCodecTest {
         assertTrue(rocket.getFirst().inputs().get(1).getFirst().is(Items.IRON_BLOCK));
         assertTrue(catalog.find(ModItems.SULFATE_DUST,true).stream().anyMatch(c->c.kind().equals("refinery")));
         var fuel=catalog.find(ModItems.ROCKET_FUEL_CELL,false);
-        assertEquals(2,fuel.size());assertTrue(fuel.stream().allMatch(c->c.station().is(ModBlocks.FUEL_REFINERY.asItem())));
+        assertEquals(2,fuel.stream().filter(c->c.kind().equals("refinery")).count());
+        assertTrue(fuel.stream().filter(c->c.kind().equals("refinery")).allMatch(c->c.station().is(ModBlocks.FUEL_REFINERY.asItem())));
+        assertTrue(fuel.stream().anyMatch(c->c.kind().equals("crafting")));
         assertTrue(catalog.find(dev.vic17usd.spacefabric.earth.EarthMaterials.product(dev.vic17usd.spacefabric.earth.EarthMineral.BAUXITE),false).stream().anyMatch(c->c.kind().equals("blasting")));
         assertTrue(catalog.find(ModItems.MARS_ROCKET_KIT,false).stream().anyMatch(c->c.kind().equals("crafting")));
         assertFalse(catalog.find(ModItems.VACUUM_SUIT_HELMET,false).isEmpty());
@@ -1479,7 +1481,7 @@ class WorldgenCodecTest {
     }
     @Test void displayedRefineryFormulasAreTheSameOnesTheMachineConsumes() throws IOException {
         var catalog=viewerCatalog();var cards=catalog.find(ModItems.ROCKET_FUEL_CELL,false);
-        for(var card:cards)for(var base:card.inputs().get(0))for(var reagent:card.inputs().get(1)) {
+        for(var card:cards.stream().filter(c->c.kind().equals("refinery")).toList())for(var base:card.inputs().get(0))for(var reagent:card.inputs().get(1)) {
             var inventory=new net.minecraft.world.SimpleContainer(4);
             inventory.setItem(0,base.copy());inventory.setItem(1,reagent.copy());inventory.setItem(2,new ItemStack(ModItems.EMPTY_FUEL_CELL));
             var process=new dev.vic17usd.spacefabric.machine.RefineryProcess();
@@ -1850,6 +1852,76 @@ class WorldgenCodecTest {
             }
         }
         assertTrue(checked>60000);
+    }
+
+    @ParameterizedTest @ValueSource(strings={"pressure_hull","pressure_window","airlock_door","habitat_controller","water_electrolyzer","solar_charger","geothermal_generator","sample_analyzer","empty_canister","empty_power_cell","charged_power_cell","water_canister","blank_data_card","hydrogen_rocket_fuel","water_bucket_from_canister"})
+    void colonyCraftingRecipesDecodeAgainstTheNativeRegistry(String name) throws IOException {
+        assertNotNull(Recipe.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("recipe/"+name)).getOrThrow());
+    }
+    @ParameterizedTest @ValueSource(strings={"root","water","oxygen","mars","venus"})
+    void colonyAdvancementsHaveNativeInventoryTriggers(String name) throws IOException {
+        assertNotNull(net.minecraft.advancements.Advancement.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("advancement/colony/"+name)).getOrThrow());
+    }
+    @Test void pressureShellAndDoorClassificationUsesActualTagsAndOpenState() {
+        var c=dev.vic17usd.spacefabric.colony.ColonyContent.class;
+        var level=net.minecraft.world.level.EmptyBlockGetter.INSTANCE;var pos=net.minecraft.core.BlockPos.ZERO;
+        for(var block:dev.vic17usd.spacefabric.colony.ColonyContent.blocks().values()) {
+            if(block==dev.vic17usd.spacefabric.colony.ColonyContent.MARTIAN_ICE)continue;
+            assertEquals(dev.vic17usd.spacefabric.colony.SealScanner.Cell.RATED,dev.vic17usd.spacefabric.colony.HabitatSystem.classify(block.defaultBlockState(),level,pos));
+        }
+        var door=dev.vic17usd.spacefabric.colony.ColonyContent.AIRLOCK_DOOR.defaultBlockState();
+        assertEquals(dev.vic17usd.spacefabric.colony.SealScanner.Cell.OPEN,dev.vic17usd.spacefabric.colony.HabitatSystem.classify(door.setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.OPEN,true),level,pos));
+        assertEquals(dev.vic17usd.spacefabric.colony.SealScanner.Cell.SOLID,dev.vic17usd.spacefabric.colony.HabitatSystem.classify(Blocks.STONE.defaultBlockState(),level,pos));
+        assertEquals(dev.vic17usd.spacefabric.colony.SealScanner.Cell.OPEN,dev.vic17usd.spacefabric.colony.HabitatSystem.classify(Blocks.STONE_SLAB.defaultBlockState(),level,pos));
+    }
+    @Test void everyColonyFormulaIsAtomicReturnsContainersAndAppearsInTheRecipeBrowser() throws IOException {
+        var catalog=viewerCatalog();
+        for(var formula:dev.vic17usd.spacefabric.colony.ColonyRecipes.ALL) {
+            var inventory=new net.minecraft.world.SimpleContainer(9);
+            formula.inputs().forEach(p->inventory.setItem(p.slot(),p.stack()));
+            var first=formula.outputs().getFirst();inventory.setItem(first.slot(),new ItemStack(Items.BARRIER));
+            assertFalse(formula.commit(inventory));
+            formula.inputs().forEach(p->assertEquals(p.count(),inventory.getItem(p.slot()).getCount()));
+            inventory.setItem(first.slot(),ItemStack.EMPTY);assertTrue(formula.commit(inventory));
+            formula.inputs().forEach(p->assertTrue(inventory.getItem(p.slot()).isEmpty()));
+            formula.outputs().forEach(p->{assertTrue(inventory.getItem(p.slot()).is(p.item()));assertEquals(p.count(),inventory.getItem(p.slot()).getCount());});
+            assertFalse(formula.commit(inventory));
+            assertTrue(catalog.find(first.item(),false).stream().anyMatch(card->card.id().endsWith(formula.id())));
+        }
+    }
+    @Test void colonyContainersAndReservesRoundTripThroughNativeBlockEntityNbt() {
+        var blocks=dev.vic17usd.spacefabric.colony.ColonyContent.blocks();
+        for(var kind:dev.vic17usd.spacefabric.colony.ColonyContent.Machine.values()) {
+            var state=dev.vic17usd.spacefabric.colony.ColonyContent.block(kind).defaultBlockState();
+            var original=new dev.vic17usd.spacefabric.colony.ColonyMachineBlockEntity(net.minecraft.core.BlockPos.ZERO,state);
+            original.setItem(0,new ItemStack(dev.vic17usd.spacefabric.colony.ColonyContent.OXYGEN_CANISTER,2));
+            original.support().fill(0);original.support().fill(1);original.support().fill(2);
+            var restored=assertInstanceOf(dev.vic17usd.spacefabric.colony.ColonyMachineBlockEntity.class,
+                    net.minecraft.world.level.block.entity.BlockEntity.loadStatic(net.minecraft.core.BlockPos.ZERO,state,original.saveWithFullMetadata(registries),registries));
+            assertEquals(kind,restored.kind());assertEquals(2,restored.getItem(0).getCount());
+            assertEquals(2400,restored.support().oxygen());assertEquals(2400,restored.support().energy());assertEquals(2400,restored.support().coolant());
+            assertFalse(restored.protects(net.minecraft.core.BlockPos.ZERO));
+            assertFalse(restored.canPlaceItem(3,new ItemStack(Items.IRON_INGOT)));
+            assertFalse(restored.canTakeItemThroughFace(0,restored.getItem(0),net.minecraft.core.Direction.DOWN));
+        }
+    }
+    @Test void hydrogenCraftingReturnsItsCanisterAndMakesRealRocketFuel() throws IOException {
+        var recipe=assertInstanceOf(net.minecraft.world.item.crafting.CraftingRecipe.class,
+                Recipe.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("recipe/hydrogen_rocket_fuel")).getOrThrow());
+        var input=net.minecraft.world.item.crafting.CraftingInput.of(3,1,List.of(new ItemStack(dev.vic17usd.spacefabric.colony.ColonyContent.HYDROGEN_CANISTER),
+                new ItemStack(ModItems.SULFATE_DUST),new ItemStack(ModItems.EMPTY_FUEL_CELL)));
+        assertTrue(recipe.matches(input,null));assertTrue(recipe.assemble(input).is(ModItems.ROCKET_FUEL_CELL));
+        assertTrue(recipe.getRemainingItems(input).get(0).is(dev.vic17usd.spacefabric.colony.ColonyContent.EMPTY_CANISTER));
+    }
+    @Test void martianIceIsAnUndergroundMarsOnlyFeature() {
+        var key=net.minecraft.resources.ResourceKey.create(Registries.PLACED_FEATURE,SpaceFabric.id("martian_ground_ice"));
+        assertNotNull(registries.lookupOrThrow(Registries.PLACED_FEATURE).getOrThrow(key));
+        for(var planet:Planet.values()) {
+            if(planet==Planet.EARTH)continue;
+            var biome=registries.lookupOrThrow(Registries.BIOME).getOrThrow(dev.vic17usd.spacefabric.worldgen.PlanetBiomes.key(planet));
+            boolean found=biome.value().getGenerationSettings().features().stream().flatMap(net.minecraft.core.HolderSet::stream).anyMatch(f->f.is(key));
+            assertEquals(planet==Planet.MARS,found);
+        }
     }
 
 }

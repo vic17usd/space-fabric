@@ -31,6 +31,7 @@ public final class VenusAcidSystem {
         boolean exposed = planet == Planet.VENUS && player.isAlive() && !player.isCreative() && !player.isSpectator()
                 && !SuitProtection.resistsAcid(player)
                 && !dev.vic17usd.spacefabric.space.RocketCabin.protects(player)
+                && !dev.vic17usd.spacefabric.colony.HabitatSystem.protects(player)
                 && level.isRainingAt(player.blockPosition().above());
         int seconds = AcidExposure.nextSeconds(target.getAttachedOrCreate(EXPOSURE), exposed);
         if (seconds == 0) { target.removeAttached(EXPOSURE); return; }

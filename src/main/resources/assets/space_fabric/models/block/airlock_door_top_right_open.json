@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/door_top_right_open",
+  "textures": {
+    "bottom": "space_fabric:block/airlock_door_bottom",
+    "top": "space_fabric:block/airlock_door_top"
+  }
+}

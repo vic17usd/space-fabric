@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "HFH",
+    "CDS",
+    "HRH"
+  ],
+  "key": {
+    "H": "space_fabric:pressure_hull",
+    "F": "minecraft:furnace",
+    "C": "minecraft:copper_ingot",
+    "D": "space_fabric:venus_research_report",
+    "S": "space_fabric:sulfur_crystal",
+    "R": "minecraft:redstone"
+  },
+  "result": {
+    "id": "space_fabric:geothermal_generator",
+    "count": 1
+  }
+}

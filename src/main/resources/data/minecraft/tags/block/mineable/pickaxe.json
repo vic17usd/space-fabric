@@ -45,6 +45,15 @@
     "space_fabric:titanium_block",
     "space_fabric:fluorite_ore",
     "space_fabric:deepslate_fluorite_ore",
-    "space_fabric:fluorite_block"
+    "space_fabric:fluorite_block",
+    "space_fabric:pressure_hull",
+    "space_fabric:pressure_window",
+    "space_fabric:airlock_door",
+    "space_fabric:martian_ground_ice",
+    "space_fabric:habitat_controller",
+    "space_fabric:water_electrolyzer",
+    "space_fabric:solar_charger",
+    "space_fabric:geothermal_generator",
+    "space_fabric:sample_analyzer"
   ]
 }

@@ -103,6 +103,12 @@ tasks.register('verifyVenusExpansionModels', JavaExec) {
     mainClass = 'dev.vic17usd.spacefabric.client.venus.VenusExpansionModelCheck'
 }
 tasks.named('check') { dependsOn tasks.named('verifyVenusExpansionModels') }
+tasks.register('verifyColonyAssets', JavaExec) {
+    dependsOn tasks.named('renderCheckClasses')
+    classpath = sourceSets.renderCheck.runtimeClasspath
+    mainClass = 'dev.vic17usd.spacefabric.client.rocket.ColonyAssetsCheck'
+}
+tasks.named('check') { dependsOn tasks.named('verifyColonyAssets') }
 tasks.register('exportRocketJourneyPreview', JavaExec) {
     dependsOn tasks.named('renderCheckClasses')
     classpath = sourceSets.renderCheck.runtimeClasspath

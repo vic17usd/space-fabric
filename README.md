@@ -1,5 +1,11 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión 0.29.0 inicia las **colonias de Marte y Venus**: habitaciones selladas,
+oxígeno, refrigeración, hielo subterráneo, electrólisis, baterías solares/geotérmicas
+e informes de investigación. Incluye cinco máquinas, recetas y primeros avances.
+[Guía para construir la primera base](docs/colonies.md) ·
+[Plan de las siguientes entregas y modelo del rover](docs/planet-development-roadmap.md).
+
 La versión 0.28.0 corrige **las estructuras flotantes y los grandes pedestales
 de Venus**. Retira los basamentos del modelo, baja sus edificios a una misma cota
 y elige terreno suave, con una transición gradual hacia el paisaje.
@@ -93,9 +99,9 @@ Consulta la [guía completa de bloques y materiales](docs/materials.md).
 Consulta la [guía de terreno y registro de biomas](docs/terrain.md).
 Consulta la [tabla de dimensiones y claves Java](docs/dimensions.md).
 
-Descarga del prototipo compilado: [space-fabric-0.28.0.jar](dist/space-fabric-0.28.0.jar)
+Descarga del prototipo compilado: [space-fabric-0.29.0.jar](dist/space-fabric-0.29.0.jar)
 (en GitHub, pulsa **Download raw file**).
-[Checksum SHA-256](dist/space-fabric-0.28.0.jar.sha256).
+[Checksum SHA-256](dist/space-fabric-0.29.0.jar.sha256).
 Fauna original: **17usdd using [CreativeMode.net](https://creativemode.net)**;
 [páginas oficiales y atribución](third_party/martian_fauna/README.md),
 [licencia de sus recursos](https://creativemode.net/mod-license).

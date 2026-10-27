@@ -62,6 +62,7 @@ def main():
                     if not path.is_file(): raise ValueError(f"Modelo ausente: {child}")
                 if key == "textures" and isinstance(child, dict):
                     for texture in child.values():
+                        if isinstance(texture, dict): texture = texture.get("sprite", "")
                         if texture.startswith("space_fabric:"):
                             path = assets / "textures" / (texture.split(":", 1)[1] + ".png")
                             if not path.is_file(): raise ValueError(f"Textura ausente: {texture}")

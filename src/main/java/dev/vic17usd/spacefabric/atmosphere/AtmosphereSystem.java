@@ -24,7 +24,8 @@ public final class AtmosphereSystem {
         ServerTickEvents.END_LEVEL_TICK.register(level->{
             for(var player:level.players()) {
                 var suit=SuitProtection.tier(player);
-                if(suit.oxygen || dev.vic17usd.spacefabric.space.RocketCabin.protects(player)) player.setAirSupply(player.getMaxAirSupply());
+                if(suit.oxygen || dev.vic17usd.spacefabric.space.RocketCabin.protects(player)
+                        || dev.vic17usd.spacefabric.colony.HabitatSystem.protects(player)) player.setAirSupply(player.getMaxAirSupply());
                 var planet=PlanetDimensions.find(level);
                 if(planet.isPresent()) tick(level,player,planet.get(),suit);
                 else ((AttachmentTarget)player).removeAttached(DOSE);
@@ -34,7 +35,8 @@ public final class AtmosphereSystem {
     private static void tick(ServerLevel level,ServerPlayer player,Planet planet,dev.vic17usd.spacefabric.equipment.SuitTier suit) {
         var data=(AttachmentTarget)player;
         if(level.getGameTime()%20==0)VenusAcidSystem.tick(level,player,planet);
-        if(!player.isAlive()||player.isCreative()||player.isSpectator()||dev.vic17usd.spacefabric.space.RocketCabin.protects(player)) {
+        if(!player.isAlive()||player.isCreative()||player.isSpectator()||dev.vic17usd.spacefabric.space.RocketCabin.protects(player)
+                || dev.vic17usd.spacefabric.colony.HabitatSystem.protects(player)) {
             data.removeAttached(DOSE);return;
         }
         var danger=PressureExposure.danger(planet,player.getY(),suit);

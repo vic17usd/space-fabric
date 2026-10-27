@@ -44,6 +44,7 @@ public final class SpaceFabric implements ModInitializer {
         dev.vic17usd.spacefabric.entity.fauna.ModMartianFauna.initialize();
         dev.vic17usd.spacefabric.space.ModSpaceEntities.initialize();
         dev.vic17usd.spacefabric.machine.ModMachines.initialize();
+        dev.vic17usd.spacefabric.colony.ColonyContent.initialize();
         dev.vic17usd.spacefabric.menu.ModMenus.initialize();
         ModCreativeTabs.initialize();
         dev.vic17usd.spacefabric.equipment.SuitEquipment.initialize();

@@ -220,3 +220,27 @@ Presión y equipo de 0.16.0:
 
 Las cifras físicas son aproximadas; los tiempos letales y las capacidades de los
 trajes son calibración de juego y equipo futurista, no resultados clínicos.
+
+Colonias de Marte y Venus, versión 0.29.0:
+
+- `./gradlew build --console=plain`: 417 pruebas JUnit, sin fallos, errores ni
+  pruebas omitidas, y ocho comprobaciones nativas de recursos/renderizado por CPU.
+- `python3 tools/validate_resources.py`: 867 JSON válidos. La regeneración de los
+  recursos coloniales produce los mismos archivos sin modificar los anteriores.
+- Se comprueban habitaciones cerradas, puertas abiertas, roturas de piso/techo,
+  zonas descargadas y límites del escaneo. Una mesa de trabajo dentro de la
+  envolvente certificada de Venus no invalida su cierre exterior.
+- Las reservas requieren oxígeno, energía y, en Venus, refrigeración. Las pruebas
+  cubren consumo, pérdida de oxígeno por fuga, límites y carga de reservas.
+- Las 13 fórmulas procesan entradas y salidas de forma atómica, devuelven baterías
+  o recipientes y aparecen en el visor. Las 15 recetas y los cinco avances se
+  decodifican con los registros nativos de Minecraft 26.1.
+- Se verifica el guardado y la carga NBT de las cinco máquinas, el rechazo de
+  inserciones automáticas en salidas y la receta de combustible de hidrógeno con
+  devolución de bombona. El hielo subterráneo se asigna solamente a Marte.
+- La ventana usa el material translúcido nativo de 26.1; se comprueban su alfa,
+  los modelos coloniales y las ocho variantes de la puerta sin usar una GPU.
+
+No se ha ejecutado una partida interactiva ni una sesión multijugador para esta
+entrega. La inspección visual, el recorrido por esclusas y la automatización con
+tolvas requieren comprobación en juego. Las pruebas no sustituyen esa observación.

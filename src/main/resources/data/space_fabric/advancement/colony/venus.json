@@ -1,0 +1,37 @@
+{
+  "display": {
+    "icon": {
+      "id": "space_fabric:venus_research_report"
+    },
+    "title": {
+      "translate": "advancements.space_fabric.colony.venus.title"
+    },
+    "description": {
+      "translate": "advancements.space_fabric.colony.venus.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "obtained": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "space_fabric:venus_research_report"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "obtained"
+    ]
+  ],
+  "parent": "space_fabric:colony/mars"
+}
