@@ -32,6 +32,10 @@ La cota final es la cara superior del bloque natural, no una capa de aire sobre
 la montaña más alta del área. La geometría de cada modelo tiene su punto más
 bajo en Y=0, de modo que las patas apoyan al terminar el descenso físico.
 
+La altura prevista regula el frenado. El descenso solo termina al colisionar
+con un bloque: si el suelo cambia durante la aproximación, por ejemplo por un
+meteorito, mantiene un empuje suave hacia abajo hasta encontrar soporte real.
+
 El planificador exige apoyo natural, seco y completo en una zona de **3×3**, a
 la misma altura bajo todo el cohete; la anchura máxima de la flota es 2,64 bloques.
 Comprueba espacio libre en **5×5** para el casco y la aproximación. Rechaza
@@ -129,9 +133,10 @@ o paquetes de shaders en una partida real de este entorno.
 columna con obstáculos, rechazo de huecos y plataformas, límites de búsqueda,
 futuros pendientes/fallidos y cancelación, guardado y recuperación de fases,
 conservación de combustible y carga, aplicación de los Mixins y sus descriptores nativos.
-La versión 0.27.0 pasa **371 pruebas JUnit** y siete verificaciones de renderizado
+La versión 0.27.0 pasa **372 pruebas JUnit** y siete verificaciones de renderizado
 por CPU. Incluye selección de terreno sobre las columnas de ruido nativas de
-Mercurio, Venus, Luna y Marte con semilla 42; no sustituye una partida completa
+Mercurio, Venus, Luna y Marte con semilla 42, y colisiones nativas de los diez
+cascos contra el suelo, también tras perder la capa de apoyo prevista. No sustituye una partida completa
 con sus decoraciones, otros mods y jugadores.
 `verifyRocketFlightScene` emite todos los destinos y cinco posiciones del crucero
 con las clases nativas de vértices, verificando límites, luz y geometría sin GPU.

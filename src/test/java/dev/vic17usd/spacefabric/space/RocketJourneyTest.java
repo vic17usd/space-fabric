@@ -44,4 +44,22 @@ class RocketJourneyTest {
             assertEquals(duration,RocketJourney.cruiseClock(duration,duration,false));
         }
     }
+    @Test void nativeCollisionStopsEveryHullOnTheActualFloorEvenIfThePlannedFloorWasRemoved() {
+        for(var variant:RocketVariant.values())for(double floorY:new double[]{64,60}) {
+            var box=new net.minecraft.world.phys.AABB(8.5-RocketHullGeometry.width(variant)/2,112,8.5-RocketHullGeometry.width(variant)/2,
+                    8.5+RocketHullGeometry.width(variant)/2,112+RocketHullGeometry.height(variant),8.5+RocketHullGeometry.width(variant)/2);
+            var ground=net.minecraft.world.phys.shapes.Shapes.box(0,floorY-1,0,16,floorY,16);
+            boolean collided=false;int ticks=0;
+            while(!collided && ticks++<2000) {
+                double requested=-RocketJourney.landingThrust(box.minY,64);
+                assertTrue(requested<0,"Altitude alone must never stop the ship in midair");
+                double actual=net.minecraft.world.phys.shapes.Shapes.collide(net.minecraft.core.Direction.Axis.Y,box,java.util.List.of(ground),requested);
+                box=box.move(0,actual,0);collided=actual!=requested;
+                assertTrue(box.minY>=floorY,"The hull must not penetrate the surface");
+            }
+            assertTrue(collided);assertEquals(floorY,box.minY,1e-7);
+        }
+        assertTrue(RocketJourney.landingThrust(63,64)>0);
+        assertTrue(RocketJourney.landingThrust(64.00001,64)>0);
+    }
 }

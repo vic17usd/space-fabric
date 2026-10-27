@@ -237,15 +237,10 @@ public final class RocketEntity extends Entity implements ExtendedMenuProvider<I
 
     private void tickDescent(ServerLevel server) {
         entityData.set(JOURNEY_TICKS,journeyTicks()+1);
-        double remaining=getY()-touchdownY;
-        if(remaining<=.001){
-            // Use collision movement for the last fraction too; the model's lowest vertex is Y=0.
-            if(remaining>0)move(MoverType.SELF,new Vec3(0,-remaining,0));
-            setOnGround(true);finishLanding();return;
-        }
-        setDeltaMovement(0,-RocketJourney.descentStep(remaining),0);
+        // Planned Y controls braking; only real collision completes landing, even if a meteor removed the floor.
+        setDeltaMovement(0,-RocketJourney.landingThrust(getY(),touchdownY),0);
         move(MoverType.SELF,getDeltaMovement());
-        if(verticalCollision || getY()<=touchdownY){setOnGround(true);finishLanding();return;}
+        if(verticalCollision){setOnGround(true);finishLanding();return;}
         if(tickCount%4==0)server.sendParticles(ParticleTypes.FLAME,getX(),getY()-.1,getZ(),5,.2,.1,.2,.02);
     }
     private void setFlightPhase(int phase){entityData.set(FLIGHT,phase);entityData.set(JOURNEY_TICKS,0);entityData.set(LANDING_WAIT,false);flightTicks=0;}
