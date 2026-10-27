@@ -19,10 +19,11 @@ public final class RocketFlightView {
         HudElementRegistry.addLast(SpaceFabric.id("rocket_journey"),(gui,delta)->{
             var rocket=rocket();if(rocket==null||!rocket.isFlying())return;
             var client=Minecraft.getInstance();float elapsed=rocket.journeyTicks()+delta.getGameTimeDeltaPartialTick(false);
-            float fade=RocketJourney.blackout(rocket.flightState(),elapsed,rocket.journeyDuration(),rocket.getY(),rocket.level().getMaxY()-8);
+            // Keep the space view visible while chunks load; do not leave the pilot on a black screen.
+            float fade=rocket.isFindingLanding()?0:RocketJourney.blackout(rocket.flightState(),elapsed,rocket.journeyDuration(),rocket.getY(),rocket.level().getMaxY()-8);
             int w=client.getWindow().getGuiScaledWidth(),h=client.getWindow().getGuiScaledHeight();
             if(fade>0)gui.fill(0,0,w,h,((int)(fade*255)<<24));
-            String phase=rocket.isCruising()?"cruise":rocket.flightState()==RocketJourney.DESCENDING?"descent":"ascent";
+            String phase=rocket.isFindingLanding()?"landing_search":rocket.isCruising()?"cruise":rocket.flightState()==RocketJourney.DESCENDING?"descent":"ascent";
             var from=TravelDestination.at(rocket.originIndex());var to=TravelDestination.at(rocket.destinationIndex());
             gui.centeredText(client.font,Component.translatable("gui.space_fabric.journey_route",from.label(),to.label()),w/2,12,0xFFE4F3FF);
             gui.centeredText(client.font,Component.translatable("gui.space_fabric.journey_"+phase),w/2,25,0xFF72E0C9);
@@ -31,7 +32,7 @@ public final class RocketFlightView {
                 gui.fill(left,40,left+width,44,0xFF253747);
                 gui.fill(left,40,left+(int)(width*RocketJourney.progress(elapsed,rocket.journeyDuration())),44,0xFF72E0C9);
                 int seconds=Math.max(0,(int)Math.ceil((rocket.journeyDuration()-elapsed)/20));
-                gui.centeredText(client.font,Component.translatable("gui.space_fabric.journey_eta",seconds),w/2,49,0xFFE4F3FF);
+                if(!rocket.isFindingLanding())gui.centeredText(client.font,Component.translatable("gui.space_fabric.journey_eta",seconds),w/2,49,0xFFE4F3FF);
             }
             gui.centeredText(client.font,Component.translatable("gui.space_fabric.journey_harness"),w/2,h-45,0xFFBDCADA);
         });

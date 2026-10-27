@@ -33,4 +33,15 @@ class RocketJourneyTest {
         assertEquals(0,RocketJourney.blackout(RocketJourney.DESCENDING,20,240,100,312));
         assertEquals(0,RocketJourney.progress(-1,240));assertEquals(1,RocketJourney.progress(9999,240));
     }
+    @Test void slowTerrainGenerationKeepsSpaceVisibleUntilTheFinalFadeCanReallyBegin() {
+        for(int duration:new int[]{240,420,720}) {
+            int held=RocketJourney.cruiseClock(duration,duration,true);
+            assertEquals(0,RocketJourney.blackout(RocketJourney.CRUISING,held+.99f,duration,312,312));
+            for(int tick=0;tick<1200;tick++)held=RocketJourney.cruiseClock(held+1,duration,true);
+            assertTrue(held<duration);
+            int resumed=RocketJourney.cruiseClock(held+1,duration,false);
+            assertTrue(resumed>held);assertEquals(duration-20,resumed);
+            assertEquals(duration,RocketJourney.cruiseClock(duration,duration,false));
+        }
+    }
 }

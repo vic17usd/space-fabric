@@ -261,6 +261,7 @@
   "gui.space_fabric.journey_route": "%s → %s",
   "gui.space_fabric.journey_ascent": "Launch · Ascending to orbit",
   "gui.space_fabric.journey_cruise": "Space cruise",
+  "gui.space_fabric.journey_landing_search": "Finding a safe landing site…",
   "gui.space_fabric.journey_descent": "Approach · Automatic landing",
   "gui.space_fabric.journey_eta": "Arrival in %s s",
   "gui.space_fabric.journey_harness": "Look around freely · Disembark after landing",

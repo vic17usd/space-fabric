@@ -261,6 +261,7 @@
   "gui.space_fabric.journey_route": "%s → %s",
   "gui.space_fabric.journey_ascent": "Despegue · Ascendiendo a órbita",
   "gui.space_fabric.journey_cruise": "Travesía espacial",
+  "gui.space_fabric.journey_landing_search": "Buscando una zona de aterrizaje segura…",
   "gui.space_fabric.journey_descent": "Aproximación · Aterrizaje automático",
   "gui.space_fabric.journey_eta": "Llegada en %s s",
   "gui.space_fabric.journey_harness": "Puedes mirar alrededor · Desembarque al aterrizar",

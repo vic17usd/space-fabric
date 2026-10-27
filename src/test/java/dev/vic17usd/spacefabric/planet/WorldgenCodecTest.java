@@ -118,6 +118,64 @@ class WorldgenCodecTest {
         assertEquals(planet.fogColor(), attributes.get("minecraft:visual/fog_color").getAsString());
     }
 
+    @Test
+    void landingSurfaceTagResolvesRealTerrainWithoutAcceptingPadsFluidsOrFoliage() {
+        var world=net.minecraft.world.level.EmptyBlockGetter.INSTANCE;
+        var pos=net.minecraft.core.BlockPos.ZERO;
+        for(var block:List.of(Blocks.GRASS_BLOCK,Blocks.SAND,Blocks.SNOW_BLOCK,Blocks.SMOOTH_BASALT,
+                ModBlocks.MERCURY_REGOLITH,ModBlocks.MERCURY_SILICATE,ModBlocks.LUNAR_REGOLITH,
+                ModBlocks.VENUS_HOT_ROCK,ModBlocks.VULCANIZED_BASALT,ModBlocks.MARTIAN_STONE,
+                ModBlocks.IRON_OXIDE_REGOLITH,ModBlocks.TERRESTRIAL_BASALT)) {
+            assertTrue(dev.vic17usd.spacefabric.space.SpaceTravel.naturalGround(block.defaultBlockState(),world,pos),
+                    ()->"Missing landing terrain: "+BuiltInRegistries.BLOCK.getKey(block));
+        }
+        for(var block:List.of(ModBlocks.LANDING_PAD,Blocks.AIR,Blocks.WATER,Blocks.LAVA,Blocks.OAK_LOG,
+                Blocks.OAK_LEAVES,Blocks.OAK_PLANKS,Blocks.GLASS,Blocks.STONE_SLAB,Blocks.SNOW,
+                Blocks.POWDER_SNOW,Blocks.SHORT_GRASS,Blocks.FIRE)) {
+            assertFalse(dev.vic17usd.spacefabric.space.SpaceTravel.naturalGround(block.defaultBlockState(),world,pos),
+                    ()->"Unsafe landing terrain: "+BuiltInRegistries.BLOCK.getKey(block));
+        }
+        assertTrue(BuiltInRegistries.TICKET_TYPE.containsKey(SpaceFabric.id("rocket_landing")));
+    }
+
+    @ParameterizedTest
+    @EnumSource(value=Planet.class,names={"MERCURY","VENUS","MOON","MARS"})
+    void landingPlannerFindsFlatGroundAtTheNativeNoiseSurfaceInsteadOfTheSky(Planet planet) throws IOException {
+        var stem=LevelStem.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("dimension/"+planet.path())).getOrThrow();
+        var generator=(net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator)stem.generator();
+        var random=net.minecraft.world.level.levelgen.RandomState.create(generator.generatorSettings().value(),
+                registries.lookupOrThrow(Registries.NOISE),42L);
+        var height=net.minecraft.world.level.LevelHeightAccessor.create(planet.minY(),planet.height());
+        var columns=new java.util.HashMap<Long,net.minecraft.world.level.NoiseColumn>();
+        var heights=new java.util.HashMap<Long,Integer>();
+        var world=new dev.vic17usd.spacefabric.space.LandingPlanner.World() {
+            net.minecraft.world.level.block.state.BlockState state(net.minecraft.core.BlockPos pos) {
+                long key=net.minecraft.core.BlockPos.asLong(pos.getX(),0,pos.getZ());
+                return columns.computeIfAbsent(key,k->generator.getBaseColumn(pos.getX(),pos.getZ(),height,random)).getBlock(pos.getY());
+            }
+            @Override public int surface(int x,int z) {
+                return heights.computeIfAbsent(net.minecraft.core.BlockPos.asLong(x,0,z),k->generator.getBaseHeight(x,z,
+                        net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,height,random)-1);
+            }
+            @Override public int minY() { return height.getMinY(); }
+            @Override public int maxY() { return height.getMaxY(); }
+            @Override public boolean air(net.minecraft.core.BlockPos pos) { return state(pos).isAir(); }
+            @Override public boolean pad(net.minecraft.core.BlockPos pos) { return false; }
+            @Override public boolean ground(net.minecraft.core.BlockPos pos) {
+                return surface(pos.getX(),pos.getZ())==pos.getY()
+                        && dev.vic17usd.spacefabric.space.SpaceTravel.naturalGround(state(pos),net.minecraft.world.level.EmptyBlockGetter.INSTANCE,pos);
+            }
+            @Override public boolean available(net.minecraft.core.BlockPos pos) { return true; }
+        };
+        net.minecraft.core.BlockPos floor=null;
+        for(int i=0;i<9 && floor==null;i++)floor=dev.vic17usd.spacefabric.space.LandingPlanner.findInChunk(world,
+                dev.vic17usd.spacefabric.space.LandingPlanner.candidateChunk(i,0),false,0).orElse(null);
+        assertNotNull(floor,"No native ground in "+planet);
+        assertEquals(world.surface(floor.getX(),floor.getZ()),floor.getY());
+        assertTrue(world.ground(floor));assertTrue(world.air(floor.above()));
+        assertTrue(floor.getY()<world.maxY()-8,"Must not fall back to the world ceiling");
+    }
+
     @ParameterizedTest
     @EnumSource(Planet.class)
     void dimensionAndGeneratorResolveAgainstRealRegistries(Planet planet) throws IOException {

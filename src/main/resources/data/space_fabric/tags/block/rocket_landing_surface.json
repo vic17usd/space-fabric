@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "#minecraft:dirt", "#minecraft:sand", "#minecraft:terracotta",
+    "minecraft:grass_block", "minecraft:podzol", "minecraft:mycelium", "minecraft:clay", "minecraft:moss_block",
+    "minecraft:stone", "minecraft:granite", "minecraft:diorite", "minecraft:andesite",
+    "minecraft:deepslate", "minecraft:tuff", "minecraft:calcite", "minecraft:gravel",
+    "minecraft:sandstone", "minecraft:red_sandstone", "minecraft:snow_block",
+    "minecraft:ice", "minecraft:packed_ice", "minecraft:blue_ice",
+    "minecraft:basalt", "minecraft:smooth_basalt", "minecraft:blackstone", "minecraft:obsidian",
+    "space_fabric:mercury_regolith", "space_fabric:mercury_silicate", "space_fabric:crater_ice",
+    "space_fabric:lunar_regolith", "space_fabric:venus_hot_rock", "space_fabric:vulcanized_basalt",
+    "space_fabric:martian_stone", "space_fabric:iron_oxide_regolith", "space_fabric:terrestrial_basalt"
+  ]
+}

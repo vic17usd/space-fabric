@@ -11,6 +11,8 @@ public final class RocketJourney {
     public static int safeDuration(int ticks){return Math.clamp(ticks,MIN_CRUISE,MAX_CRUISE);}
     public static float progress(float ticks,int duration){return Math.clamp(ticks/Math.max(1,duration),0,1);}
     public static float smooth(float progress){float p=Math.clamp(progress,0,1);return p*p*(3-2*p);}
+    /** Hold before the outgoing fade while the destination's asynchronous landing search completes. */
+    public static int cruiseClock(int elapsed,int duration,boolean waiting){return waiting?Math.min(elapsed,duration-21):elapsed;}
     public static double descentStep(double remaining){return Math.min(Math.max(0,remaining),Math.clamp(.08+remaining*.018,.08,.55));}
     public static boolean validPhase(int phase){return phase>=RocketRules.IDLE&&phase<=DESCENDING;}
     public static float blackout(int phase,float elapsed,int duration,double y,int ceiling) {

@@ -40,11 +40,13 @@ public final class RocketEntity extends Entity implements ExtendedMenuProvider<I
     private static final EntityDataAccessor<Integer> JOURNEY_TICKS = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> JOURNEY_DURATION = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> ORIGIN = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> LANDING_WAIT = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.BOOLEAN);
     public static final int INVENTORY_SIZE = 11;
     private final SimpleContainer inventory = new SimpleContainer(INVENTORY_SIZE);
     private final InterpolationHandler interpolation = new InterpolationHandler(this, 3);
     private int flightTicks;
     private double touchdownY;
+    private LandingSearch landingSearch;
 
     public RocketEntity(EntityType<? extends RocketEntity> type, Level level) {
         super(type, level);
@@ -55,6 +57,7 @@ public final class RocketEntity extends Entity implements ExtendedMenuProvider<I
         builder.define(VARIANT,0); builder.define(HULL,100); builder.define(FUEL, 0); builder.define(DESTINATION, 0); builder.define(FLIGHT, RocketRules.IDLE);
         builder.define(JOURNEY_TICKS,0);builder.define(JOURNEY_DURATION,RocketJourney.MIN_CRUISE);
         builder.define(ORIGIN,0);
+        builder.define(LANDING_WAIT,false);
     }
     public RocketVariant variant(){return RocketVariant.byId(entityData.get(VARIANT));}
     public int hull(){return entityData.get(HULL);}
@@ -93,6 +96,7 @@ public final class RocketEntity extends Entity implements ExtendedMenuProvider<I
     public int journeyDuration(){return entityData.get(JOURNEY_DURATION);}
     public int originIndex(){return entityData.get(ORIGIN);}
     public boolean isCruising(){return flightState()==RocketJourney.CRUISING;}
+    public boolean isFindingLanding(){return isCruising() && entityData.get(LANDING_WAIT);}
     public SimpleContainer inventory() { return inventory; }
     public boolean isFlying() { return flightState() != RocketRules.IDLE; }
     public boolean isPilot(Player player) { return player!=null && getFirstPassenger() == player; }
@@ -192,13 +196,24 @@ public final class RocketEntity extends Entity implements ExtendedMenuProvider<I
         }
         resetFallDistance();getPassengers().forEach(Entity::resetFallDistance);
         if(flightState()==RocketJourney.DESCENDING){tickDescent(server);return;}
-        if (!(getFirstPassenger() instanceof ServerPlayer pilot) || !pilot.isAlive()) {setDeltaMovement(Vec3.ZERO);return;}
+        if (!(getFirstPassenger() instanceof ServerPlayer pilot) || !pilot.isAlive()) {
+            clearLandingSearch();setDeltaMovement(Vec3.ZERO);return;
+        }
         entityData.set(JOURNEY_TICKS,journeyTicks()+1);
         if(isCruising()) {
             setDeltaMovement(Vec3.ZERO);
-            if(journeyTicks()>=journeyDuration()) {
+            if(landingSearch==null)landingSearch=SpaceTravel.prepare(this);
+            if(landingSearch!=null)landingSearch.tick();
+            boolean waiting=landingSearch!=null && !landingSearch.done()
+                    && journeyTicks()>=journeyDuration()-20;
+            entityData.set(LANDING_WAIT,waiting);
+            // Keep the last second's fade until terrain is ready, instead of flashing black and reopening space.
+            entityData.set(JOURNEY_TICKS,RocketJourney.cruiseClock(journeyTicks(),journeyDuration(),waiting));
+            if(journeyTicks()>=journeyDuration() && (landingSearch==null || landingSearch.done())) {
                 setFlightPhase(RocketRules.TRANSFERRING);
-                if(!SpaceTravel.transfer(this)) {
+                boolean transferred=SpaceTravel.transfer(this,landingSearch);
+                clearLandingSearch();
+                if(!transferred) {
                     beginDescent(touchdownY);
                     pilot.sendOverlayMessage(Component.translatable("message.space_fabric.no_landing_return"));
                 }
@@ -223,14 +238,19 @@ public final class RocketEntity extends Entity implements ExtendedMenuProvider<I
     private void tickDescent(ServerLevel server) {
         entityData.set(JOURNEY_TICKS,journeyTicks()+1);
         double remaining=getY()-touchdownY;
-        if(remaining<=.001){finishLanding();return;}
+        if(remaining<=.001){
+            // Use collision movement for the last fraction too; the model's lowest vertex is Y=0.
+            if(remaining>0)move(MoverType.SELF,new Vec3(0,-remaining,0));
+            setOnGround(true);finishLanding();return;
+        }
         setDeltaMovement(0,-RocketJourney.descentStep(remaining),0);
         move(MoverType.SELF,getDeltaMovement());
-        if(verticalCollision){finishLanding();return;} // Newly placed obstacles stop the descent safely.
+        if(verticalCollision || getY()<=touchdownY){setOnGround(true);finishLanding();return;}
         if(tickCount%4==0)server.sendParticles(ParticleTypes.FLAME,getX(),getY()-.1,getZ(),5,.2,.1,.2,.02);
     }
-    private void setFlightPhase(int phase){entityData.set(FLIGHT,phase);entityData.set(JOURNEY_TICKS,0);flightTicks=0;}
+    private void setFlightPhase(int phase){entityData.set(FLIGHT,phase);entityData.set(JOURNEY_TICKS,0);entityData.set(LANDING_WAIT,false);flightTicks=0;}
     public void beginDescent(double touchdownY) {
+        clearLandingSearch();
         this.touchdownY=Double.isFinite(touchdownY)?Math.min(touchdownY,getY()):getY();
         setDeltaMovement(Vec3.ZERO);setFlightPhase(RocketJourney.DESCENDING);
     }
@@ -247,7 +267,10 @@ public final class RocketEntity extends Entity implements ExtendedMenuProvider<I
     }
 
     public void finishLanding() { abort(); resetFallDistance(); getPassengers().forEach(Entity::resetFallDistance); }
-    private void abort() {setFlightPhase(RocketRules.IDLE);setDeltaMovement(Vec3.ZERO);}
+    private void abort() {clearLandingSearch();setFlightPhase(RocketRules.IDLE);setDeltaMovement(Vec3.ZERO);}
+    private void clearLandingSearch() {
+        if(landingSearch!=null){landingSearch.close();landingSearch=null;}
+    }
 
     @Override public boolean hurtServer(ServerLevel level, DamageSource source, float damage) {
         if (isRemoved() || isVehicle() || isFlying() || !(source.getEntity() instanceof Player player)) return false;
