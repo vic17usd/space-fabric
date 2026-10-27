@@ -257,5 +257,12 @@
   "gui.space_fabric.rocket_reason.range": "Requires tier %s; your rocket is tier %s.",
   "item.space_fabric.rocket_rank": "Tier %s: includes earlier destinations.",
   "gui.space_fabric.hull_rank": "Hull: %s%% | T%s",
-  "message.space_fabric.upgrade_blocked": "Rocket must be unoccupied, have clearance, and fit its fuel in the new tank."
+  "message.space_fabric.upgrade_blocked": "Rocket must be unoccupied, have clearance, and fit its fuel in the new tank.",
+  "gui.space_fabric.journey_route": "%s → %s",
+  "gui.space_fabric.journey_ascent": "Launch · Ascending to orbit",
+  "gui.space_fabric.journey_cruise": "Space cruise",
+  "gui.space_fabric.journey_descent": "Approach · Automatic landing",
+  "gui.space_fabric.journey_eta": "Arrival in %s s",
+  "gui.space_fabric.journey_harness": "Look around freely · Disembark after landing",
+  "message.space_fabric.no_landing_return": "No safe landing at destination. Returning to the launch point."
 }

@@ -19,7 +19,7 @@ public final class SpaceTravel {
         if (target == null || target == source) return false;
         boolean orbital = destination.planet() == Planet.JUPITER || destination.planet() == Planet.SATURN
                 || destination.planet() == Planet.URANUS || destination.planet() == Planet.NEPTUNE;
-        var floor = LandingPlanner.find(new LandingPlanner.World() {
+        var landingWorld = new LandingPlanner.World() {
             @Override public int surface(int x, int z) {
                 int highest = target.getMinY();
                 for (int dx = -2; dx <= 2; dx++) for (int dz = -2; dz <= 2; dz++)
@@ -32,18 +32,21 @@ public final class SpaceTravel {
             @Override public boolean available(BlockPos pos) {
                 // Fuerza la carga del único chunk que contiene toda la plataforma.
                 target.getChunkAt(pos);
-                var box = new AABB(pos.getX() - 2, pos.getY(), pos.getZ() - 2, pos.getX() + 3, pos.getY() + 6, pos.getZ() + 3);
+                var box = new AABB(pos.getX() - 2, pos.getY(), pos.getZ() - 2, pos.getX() + 3, pos.getY() + 54, pos.getZ() + 3);
                 return target.getWorldBorder().isWithinBounds(box) && target.getEntities(null, box).isEmpty();
             }
-        }, orbital, rocket.getUUID().hashCode()).orElse(null);
+        };
+        var floor = LandingPlanner.find(landingWorld, orbital, rocket.getUUID().hashCode()).orElse(null);
         if (floor == null || !rocket.variant().protects(destination.planet(),floor.getY()+1)) return false;
         for (int dx = -2; dx <= 2; dx++) for (int dz = -2; dz <= 2; dz++)
             target.setBlockAndUpdate(floor.offset(dx, 0, dz), ModBlocks.LANDING_PAD.defaultBlockState());
         // La API nativa traslada también los pasajeros y los vuelve a montar; no se duplican a mano.
+        int approach=LandingPlanner.approachHeight(landingWorld,floor,RocketHullGeometry.height(rocket.variant()));
+        rocket.getPassengers().forEach(RocketCabin::prepareTransfer);
         var arrived = rocket.teleport(new TeleportTransition(target,
-                Vec3.atBottomCenterOf(floor.above()), Vec3.ZERO, rocket.getYRot(), 0,
+                Vec3.atBottomCenterOf(floor.above(1+approach)), Vec3.ZERO, rocket.getYRot(), 0,
                 TeleportTransition.PLACE_PORTAL_TICKET));
-        if (arrived instanceof RocketEntity transferred) { transferred.finishLanding(); return true; }
+        if (arrived instanceof RocketEntity transferred) {transferred.beginDescent(floor.getY()+1);return true;}
         return false;
     }
 }

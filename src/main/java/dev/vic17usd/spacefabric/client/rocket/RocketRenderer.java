@@ -17,9 +17,14 @@ import net.minecraft.resources.Identifier;
 
 public final class RocketRenderer extends EntityRenderer<RocketEntity, RocketRenderer.State> {
     private static final Identifier TEXTURE = SpaceFabric.id("textures/entity/rocket.png");
+    private static final Identifier FLIGHT_MATERIAL=SpaceFabric.id("textures/entity/flight_white.png");
     private final java.util.EnumMap<RocketVariant,RocketFleetModel> models=new java.util.EnumMap<>(RocketVariant.class);
     private final RocketCockpitModel cockpit = new RocketCockpitModel();
-    public static final class State extends EntityRenderState { float yaw; boolean cockpitView; RocketVariant variant=RocketVariant.BASE; }
+    public static final class State extends EntityRenderState {
+        float yaw,journeyProgress;boolean cockpitView,spaceView;
+        RocketVariant variant=RocketVariant.BASE;
+        dev.vic17usd.spacefabric.planet.Planet origin,destination;
+    }
     public RocketRenderer(EntityRendererProvider.Context context) {
         super(context); shadowRadius = 0.9F;
         for(var variant:RocketVariant.values())models.put(variant,new RocketFleetModel(variant));
@@ -31,8 +36,19 @@ public final class RocketRenderer extends EntityRenderer<RocketEntity, RocketRen
         var viewer = client.getCameraEntity();
         state.cockpitView = client.options.getCameraType().isFirstPerson()
                 && viewer != null && viewer.getVehicle() == entity;
+        state.spaceView=entity==RocketFlightView.rocket()&&entity.isCruising();
+        state.journeyProgress=dev.vic17usd.spacefabric.space.RocketJourney.progress(entity.journeyTicks()+delta,entity.journeyDuration());
+        state.origin=dev.vic17usd.spacefabric.space.TravelDestination.at(entity.originIndex()).planet();
+        state.destination=dev.vic17usd.spacefabric.space.TravelDestination.at(entity.destinationIndex()).planet();
     }
     @Override public void submit(State state, PoseStack poses, SubmitNodeCollector collector, CameraRenderState camera) {
+        if(state.spaceView) {
+            poses.pushPose();poses.translate(camera.pos.x-state.x,camera.pos.y-state.y,camera.pos.z-state.z);
+            poses.mulPose(Axis.YP.rotationDegrees(-state.yaw));
+            collector.submitCustomGeometry(poses,RenderTypes.entityCutout(FLIGHT_MATERIAL,false),
+                (pose,vertices)->RocketFlightScene.render(pose,vertices,state.origin,state.destination,state.journeyProgress));
+            poses.popPose();
+        }
         if (state.cockpitView) {
             poses.pushPose();
             // El habitáculo acompaña la cámara durante la interpolación del vehículo.

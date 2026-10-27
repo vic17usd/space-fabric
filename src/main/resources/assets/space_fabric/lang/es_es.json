@@ -257,5 +257,12 @@
   "gui.space_fabric.rocket_reason.range": "Requiere nivel %s; tu cohete es de nivel %s.",
   "item.space_fabric.rocket_rank": "Nivel %s: permite viajar a los niveles anteriores.",
   "gui.space_fabric.hull_rank": "Casco: %s%% | N%s",
-  "message.space_fabric.upgrade_blocked": "El cohete debe estar vacío, tener espacio libre y no exceder el depósito del nuevo modelo."
+  "message.space_fabric.upgrade_blocked": "El cohete debe estar vacío, tener espacio libre y no exceder el depósito del nuevo modelo.",
+  "gui.space_fabric.journey_route": "%s → %s",
+  "gui.space_fabric.journey_ascent": "Despegue · Ascendiendo a órbita",
+  "gui.space_fabric.journey_cruise": "Travesía espacial",
+  "gui.space_fabric.journey_descent": "Aproximación · Aterrizaje automático",
+  "gui.space_fabric.journey_eta": "Llegada en %s s",
+  "gui.space_fabric.journey_harness": "Puedes mirar alrededor · Desembarque al aterrizar",
+  "message.space_fabric.no_landing_return": "No hay aterrizaje seguro en el destino. Regresando al punto de despegue."
 }

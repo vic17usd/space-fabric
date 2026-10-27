@@ -37,10 +37,14 @@ public final class RocketEntity extends Entity implements ExtendedMenuProvider<I
     private static final EntityDataAccessor<Integer> FLIGHT = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> HULL = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> JOURNEY_TICKS = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> JOURNEY_DURATION = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> ORIGIN = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.INT);
     public static final int INVENTORY_SIZE = 11;
     private final SimpleContainer inventory = new SimpleContainer(INVENTORY_SIZE);
     private final InterpolationHandler interpolation = new InterpolationHandler(this, 3);
     private int flightTicks;
+    private double touchdownY;
 
     public RocketEntity(EntityType<? extends RocketEntity> type, Level level) {
         super(type, level);
@@ -49,6 +53,8 @@ public final class RocketEntity extends Entity implements ExtendedMenuProvider<I
 
     @Override protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(VARIANT,0); builder.define(HULL,100); builder.define(FUEL, 0); builder.define(DESTINATION, 0); builder.define(FLIGHT, RocketRules.IDLE);
+        builder.define(JOURNEY_TICKS,0);builder.define(JOURNEY_DURATION,RocketJourney.MIN_CRUISE);
+        builder.define(ORIGIN,0);
     }
     public RocketVariant variant(){return RocketVariant.byId(entityData.get(VARIANT));}
     public int hull(){return entityData.get(HULL);}
@@ -83,6 +89,10 @@ public final class RocketEntity extends Entity implements ExtendedMenuProvider<I
     void restorePackedFuel(int fuel) { entityData.set(FUEL, Math.clamp(fuel, 0, fuelCapacity())); }
     public int destinationIndex() { return entityData.get(DESTINATION); }
     public int flightState() { return entityData.get(FLIGHT); }
+    public int journeyTicks(){return entityData.get(JOURNEY_TICKS);}
+    public int journeyDuration(){return entityData.get(JOURNEY_DURATION);}
+    public int originIndex(){return entityData.get(ORIGIN);}
+    public boolean isCruising(){return flightState()==RocketJourney.CRUISING;}
     public SimpleContainer inventory() { return inventory; }
     public boolean isFlying() { return flightState() != RocketRules.IDLE; }
     public boolean isPilot(Player player) { return player!=null && getFirstPassenger() == player; }
@@ -94,7 +104,11 @@ public final class RocketEntity extends Entity implements ExtendedMenuProvider<I
 
     @Override public InteractionResult interact(Player player, InteractionHand hand, Vec3 hit) {
         if (!(level() instanceof ServerLevel)) return InteractionResult.SUCCESS;
-        if (isFlying()||!player.isAlive()||player.isSpectator()) return InteractionResult.PASS;
+        if (!player.isAlive()||player.isSpectator()) return InteractionResult.PASS;
+        if(isFlying()) {
+            // An unloaded/disconnected flight pauses when unoccupied; boarding resumes it.
+            return !isVehicle()&&player.startRiding(this)?InteractionResult.SUCCESS_SERVER:InteractionResult.PASS;
+        }
         var stack = player.getItemInHand(hand);
         if (stack.getItem() instanceof RocketUpgradeItem kit) {
             if(!install(kit.variant())) { player.sendOverlayMessage(Component.translatable("message.space_fabric.upgrade_blocked"));return InteractionResult.FAIL; }
@@ -152,8 +166,11 @@ public final class RocketEntity extends Entity implements ExtendedMenuProvider<I
             pilot.sendOverlayMessage(Component.translatable("message.space_fabric.launch_blocked")); return false;
         }
         entityData.set(FUEL, fuel() - cost); // Reserva/consumo único del vuelo completo, protegido frente a doble pulsación.
-        entityData.set(FLIGHT, RocketRules.ASCENDING);
-        flightTicks = 0;
+        int origin=TravelDestination.indexOf(server.dimension());
+        entityData.set(ORIGIN,origin);
+        entityData.set(JOURNEY_DURATION,RocketJourney.duration(TravelDestination.at(origin),destination));
+        touchdownY=getY(); // Safe return height if no destination landing is available.
+        setFlightPhase(RocketRules.ASCENDING);
         pilot.closeContainer();
         return true;
     }
@@ -173,22 +190,49 @@ public final class RocketEntity extends Entity implements ExtendedMenuProvider<I
             if (getFirstPassenger() instanceof ServerPlayer pilot && pilot.getLastClientInput().jump()) requestLaunch(pilot);
             return;
         }
-        if (flightState() != RocketRules.ASCENDING) return;
-        if (!(getFirstPassenger() instanceof ServerPlayer pilot) || !pilot.isAlive() || ++flightTicks > 1200) {
-            abort(); return;
+        resetFallDistance();getPassengers().forEach(Entity::resetFallDistance);
+        if(flightState()==RocketJourney.DESCENDING){tickDescent(server);return;}
+        if (!(getFirstPassenger() instanceof ServerPlayer pilot) || !pilot.isAlive()) {setDeltaMovement(Vec3.ZERO);return;}
+        entityData.set(JOURNEY_TICKS,journeyTicks()+1);
+        if(isCruising()) {
+            setDeltaMovement(Vec3.ZERO);
+            if(journeyTicks()>=journeyDuration()) {
+                setFlightPhase(RocketRules.TRANSFERRING);
+                if(!SpaceTravel.transfer(this)) {
+                    beginDescent(touchdownY);
+                    pilot.sendOverlayMessage(Component.translatable("message.space_fabric.no_landing_return"));
+                }
+            }
+            return;
         }
+        if (flightState()!=RocketRules.ASCENDING)return;
+        if (++flightTicks > 1200) {beginDescent(touchdownY);return;}
         if (getY() >= level().getMaxY() - 8) {
-            entityData.set(FLIGHT, RocketRules.TRANSFERRING);
-            if (!SpaceTravel.transfer(this)) { abort(); pilot.sendOverlayMessage(Component.translatable("message.space_fabric.no_landing")); }
+            setDeltaMovement(Vec3.ZERO);setFlightPhase(RocketJourney.CRUISING);
             return;
         }
         setDeltaMovement(0, RocketRules.ascentSpeed(flightTicks), 0);
         move(MoverType.SELF, getDeltaMovement());
-        if (verticalCollision) { abort(); pilot.sendOverlayMessage(Component.translatable("message.space_fabric.launch_blocked")); return; }
+        if (verticalCollision) {beginDescent(touchdownY);pilot.sendOverlayMessage(Component.translatable("message.space_fabric.launch_blocked"));return;}
         if (tickCount % 3 == 0) {
             server.sendParticles(ParticleTypes.FLAME, getX(), getY() - 0.1, getZ(), 8, 0.3, 0.2, 0.3, 0.04);
             server.sendParticles(ParticleTypes.SMOKE, getX(), getY() - 0.3, getZ(), 4, 0.4, 0.2, 0.4, 0.02);
         }
+    }
+
+    private void tickDescent(ServerLevel server) {
+        entityData.set(JOURNEY_TICKS,journeyTicks()+1);
+        double remaining=getY()-touchdownY;
+        if(remaining<=.001){finishLanding();return;}
+        setDeltaMovement(0,-RocketJourney.descentStep(remaining),0);
+        move(MoverType.SELF,getDeltaMovement());
+        if(verticalCollision){finishLanding();return;} // Newly placed obstacles stop the descent safely.
+        if(tickCount%4==0)server.sendParticles(ParticleTypes.FLAME,getX(),getY()-.1,getZ(),5,.2,.1,.2,.02);
+    }
+    private void setFlightPhase(int phase){entityData.set(FLIGHT,phase);entityData.set(JOURNEY_TICKS,0);flightTicks=0;}
+    public void beginDescent(double touchdownY) {
+        this.touchdownY=Double.isFinite(touchdownY)?Math.min(touchdownY,getY()):getY();
+        setDeltaMovement(Vec3.ZERO);setFlightPhase(RocketJourney.DESCENDING);
     }
 
     private void absorbFuelCell() {
@@ -203,7 +247,7 @@ public final class RocketEntity extends Entity implements ExtendedMenuProvider<I
     }
 
     public void finishLanding() { abort(); resetFallDistance(); getPassengers().forEach(Entity::resetFallDistance); }
-    private void abort() { entityData.set(FLIGHT, RocketRules.IDLE); setDeltaMovement(Vec3.ZERO); flightTicks = 0; }
+    private void abort() {setFlightPhase(RocketRules.IDLE);setDeltaMovement(Vec3.ZERO);}
 
     @Override public boolean hurtServer(ServerLevel level, DamageSource source, float damage) {
         if (isRemoved() || isVehicle() || isFlying() || !(source.getEntity() instanceof Player player)) return false;
@@ -235,11 +279,25 @@ public final class RocketEntity extends Entity implements ExtendedMenuProvider<I
         entityData.set(DESTINATION, Math.clamp(input.getIntOr("Destination", 0), 0, TravelDestination.ALL.size() - 1));
         inventory.clearContent();
         ContainerHelper.loadAllItems(input, inventory.getItems());
-        abort(); // Un cohete cargado desde disco no inicia automáticamente otro traslado.
+        abort(); // Legacy saves never start an unrequested flight.
+        if(input.getIntOr("JourneyVersion",0)==1) {
+            int phase=input.getIntOr("JourneyPhase",RocketRules.IDLE);
+            if(RocketJourney.validPhase(phase)) {
+                setFlightPhase(phase==RocketRules.TRANSFERRING?RocketJourney.CRUISING:phase);
+                entityData.set(JOURNEY_TICKS,Math.clamp(input.getIntOr("JourneyTicks",0),0,RocketJourney.MAX_CRUISE));
+                entityData.set(JOURNEY_DURATION,RocketJourney.safeDuration(input.getIntOr("JourneyDuration",RocketJourney.MIN_CRUISE)));
+                entityData.set(ORIGIN,Math.clamp(input.getIntOr("JourneyOrigin",0),0,TravelDestination.ALL.size()-1));
+                double touchdown=input.getDoubleOr("JourneyTouchdownY",getY());
+                touchdownY=Double.isFinite(touchdown)?Math.min(touchdown,getY()):getY();
+            }
+        }
     }
     @Override protected void addAdditionalSaveData(ValueOutput output) {
         output.putString("RocketVariant",variant().path);output.putInt("Hull",hull());
         output.putInt("Fuel", fuel()); output.putInt("Destination", destinationIndex());
+        output.putInt("JourneyVersion",1);output.putInt("JourneyPhase",flightState());output.putInt("JourneyTicks",journeyTicks());
+        output.putInt("JourneyDuration",journeyDuration());output.putInt("JourneyOrigin",originIndex());
+        output.putDouble("JourneyTouchdownY",touchdownY);
         ContainerHelper.saveAllItems(output, inventory.getItems());
     }
     @Override public Integer getScreenOpeningData(ServerPlayer player) { return getId(); }

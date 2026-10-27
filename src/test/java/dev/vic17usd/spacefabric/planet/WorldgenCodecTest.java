@@ -1605,4 +1605,33 @@ class WorldgenCodecTest {
             assertEquals(variant,rocket.variant());assertEquals(variant.fuelCapacity(),rocket.fuel());
         }
     }
+    @ParameterizedTest @ValueSource(ints={1,2,3,4})
+    void activeJourneyPersistsWithoutChargingAgainAndTransferRestoresAsRetry(int phase) throws Exception {
+        var rocket=new dev.vic17usd.spacefabric.space.RocketEntity(dev.vic17usd.spacefabric.space.ModSpaceEntities.ROCKET,null);
+        rocket.setPos(8.5,312,8.5);
+        var read=rocket.getClass().getDeclaredMethod("readAdditionalSaveData",net.minecraft.world.level.storage.ValueInput.class);read.setAccessible(true);
+        var write=rocket.getClass().getDeclaredMethod("addAdditionalSaveData",net.minecraft.world.level.storage.ValueOutput.class);write.setAccessible(true);
+        var input=new net.minecraft.nbt.CompoundTag();input.putString("RocketVariant","mars");input.putInt("Fuel",551);
+        input.putInt("Destination",5);input.putInt("JourneyVersion",1);input.putInt("JourneyPhase",phase);
+        input.putInt("JourneyTicks",120);input.putInt("JourneyDuration",420);input.putInt("JourneyOrigin",0);input.putDouble("JourneyTouchdownY",64);
+        read.invoke(rocket,net.minecraft.world.level.storage.TagValueInput.create(net.minecraft.util.ProblemReporter.DISCARDING,registries,input));
+        assertEquals(phase==2?3:phase,rocket.flightState());assertEquals(120,rocket.journeyTicks());assertEquals(420,rocket.journeyDuration());assertEquals(551,rocket.fuel());
+        rocket.inventory().setItem(3,new ItemStack(ModItems.ARES_CRYSTAL,5));
+        var output=net.minecraft.world.level.storage.TagValueOutput.createWithContext(net.minecraft.util.ProblemReporter.DISCARDING,registries);write.invoke(rocket,output);
+        var restored=new dev.vic17usd.spacefabric.space.RocketEntity(dev.vic17usd.spacefabric.space.ModSpaceEntities.ROCKET,null);restored.setPos(8.5,312,8.5);
+        read.invoke(restored,net.minecraft.world.level.storage.TagValueInput.create(net.minecraft.util.ProblemReporter.DISCARDING,registries,output.buildResult()));
+        assertEquals(rocket.flightState(),restored.flightState());assertEquals(120,restored.journeyTicks());assertEquals(551,restored.fuel());
+        assertEquals(5,restored.inventory().getItem(3).getCount());assertEquals(64,output.buildResult().getDoubleOr("JourneyTouchdownY",0));
+        restored.beginDescent(64);assertEquals(4,restored.flightState());assertEquals(0,restored.journeyTicks());assertEquals(551,restored.fuel());
+        restored.finishLanding();assertEquals(0,restored.flightState());assertEquals(551,restored.fuel());
+    }
+    @Test void journeyClientMixinsApplyAndUseExactNativeDescriptors() throws Exception {
+        assertClientTarget("net/minecraft/world/entity/player/Player","wantsToStopRiding","()Z");
+        assertClientTarget("net/minecraft/client/renderer/WeatherEffectRenderer","render","(Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/client/renderer/state/level/WeatherRenderState;)V");
+        assertClientTarget("net/minecraft/client/renderer/CloudRenderer","render","(ILnet/minecraft/client/CloudStatus;FILnet/minecraft/world/phys/Vec3;JF)V");
+        var loader=Thread.currentThread().getContextClassLoader();
+        Class.forName("net.minecraft.client.renderer.WeatherEffectRenderer",false,loader);
+        Class.forName("net.minecraft.client.renderer.CloudRenderer",false,loader);
+        Class.forName("net.minecraft.client.renderer.fog.FogRenderer",false,loader);
+    }
 }

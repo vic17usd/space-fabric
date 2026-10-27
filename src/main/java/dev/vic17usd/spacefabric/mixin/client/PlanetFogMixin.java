@@ -20,6 +20,13 @@ public abstract class PlanetFogMixin {
     @Inject(method = "setupFog", at = @At("RETURN"))
     private void spaceFabric$storm(Camera camera, int chunks, DeltaTracker delta, float darkness,
                                   ClientLevel level, CallbackInfoReturnable<FogData> callback) {
+        if(dev.vic17usd.spacefabric.client.rocket.RocketFlightView.inSpace()) {
+            FogData fog=callback.getReturnValue();
+            fog.environmentalStart=128;fog.environmentalEnd=256;
+            fog.renderDistanceStart=128;fog.renderDistanceEnd=256;
+            fog.skyEnd=512;fog.cloudEnd=512;fog.color.set(0,0,.005F,1);
+            return;
+        }
         if (camera.getFluidInCamera() != FogType.NONE) return;
         var planet = PlanetDimensions.find(level).orElse(null);
         if (planet != Planet.MARS && planet != Planet.VENUS) return;

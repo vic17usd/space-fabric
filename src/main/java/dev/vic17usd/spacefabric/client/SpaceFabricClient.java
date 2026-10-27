@@ -10,6 +10,7 @@ import net.minecraft.resources.Identifier;
 public final class SpaceFabricClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
+        dev.vic17usd.spacefabric.client.rocket.RocketFlightView.initialize();
         dev.vic17usd.spacefabric.client.equipment.SuitEquipmentClient.initialize();
         dev.vic17usd.spacefabric.client.recipe.RecipeViewerClient.initialize();
 net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry.register(dev.vic17usd.spacefabric.entity.venus.ModVenusEntities.ACIDSTONE_SLIME,dev.vic17usd.spacefabric.client.venus.AcidstoneSlimeEntityRenderer::new);

@@ -13,6 +13,15 @@ public final class LandingPlanner {
         boolean available(BlockPos floor);
     }
     private LandingPlanner() { }
+    /** Clear vertical approach above the pad; does not remove terrain or roof blocks. */
+    public static int approachHeight(World world,BlockPos floor,double hullHeight) {
+        int clear=0;
+        outer:for(int y=1;y<=Math.min(54,world.maxY()-floor.getY()-1);y++) {
+            for(int x=-2;x<=2;x++)for(int z=-2;z<=2;z++)if(!world.air(floor.offset(x,y,z)))break outer;
+            clear=y;
+        }
+        return Math.min(48,Math.max(0,clear-(int)Math.ceil(hullHeight)-1));
+    }
     public static Optional<BlockPos> find(World world, boolean orbital, int offset) {
         for (int pass = 0; pass < (orbital ? 1 : 2); pass++) {
             for (int i = 0; i < 16; i++) {

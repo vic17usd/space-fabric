@@ -90,3 +90,15 @@ tasks.register('verifyEquipmentTextures', JavaExec) {
     mainClass = 'dev.vic17usd.spacefabric.client.rocket.EquipmentTextureCheck'
 }
 tasks.named('check') { dependsOn tasks.named('verifyEquipmentTextures') }
+tasks.register('verifyRocketFlightScene', JavaExec) {
+    dependsOn tasks.named('renderCheckClasses')
+    classpath = sourceSets.renderCheck.runtimeClasspath
+    mainClass = 'dev.vic17usd.spacefabric.client.rocket.RocketFlightSceneCheck'
+}
+tasks.named('check') { dependsOn tasks.named('verifyRocketFlightScene') }
+tasks.register('exportRocketJourneyPreview', JavaExec) {
+    dependsOn tasks.named('renderCheckClasses')
+    classpath = sourceSets.renderCheck.runtimeClasspath
+    mainClass = 'dev.vic17usd.spacefabric.client.rocket.RocketFlightSceneCheck'
+    args 'preview'
+}

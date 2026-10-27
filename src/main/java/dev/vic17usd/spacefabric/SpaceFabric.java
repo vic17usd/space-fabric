@@ -52,6 +52,7 @@ public final class SpaceFabric implements ModInitializer {
         EnvironmentWorldgen.initialize();
         PlanetDimensions.initialize();
         PlanetGravity.initialize();
+        dev.vic17usd.spacefabric.space.RocketCabin.initialize();
         AtmosphereSystem.initialize();
         PlanetRotation.initialize();
         VenusAcidSystem.initialize();

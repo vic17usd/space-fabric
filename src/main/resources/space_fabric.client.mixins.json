@@ -3,6 +3,8 @@
   "package": "dev.vic17usd.spacefabric.mixin.client",
   "compatibilityLevel": "JAVA_25",
   "client": [
+    "RocketFlightWeatherMixin",
+    "RocketFlightCloudMixin",
     "InventorySuitScreenMixin",
     "CreativeSuitInventoryMixin",
     "PlanetFogMixin",

@@ -51,4 +51,16 @@ class LandingPlannerTest {
         assertEquals(239, floor.getY()); assertTrue(floor.above().getY() > 160);
         assertTrue(floor.getX() >= 8 && floor.getX() <= 56);
     }
+    @Test void approachUsesAFreeColumnAndStopsBelowNewRoofsWithoutDeletingThem() {
+        var world=new World();var floor=new BlockPos(8,64,8);
+        assertEquals(48,LandingPlanner.approachHeight(world,floor,3.6));
+        var roof=floor.offset(2,12,-2);world.obstacles.add(roof);
+        assertEquals(6,LandingPlanner.approachHeight(world,floor,3.6));
+        assertTrue(world.obstacles.contains(roof));
+    }
+    @Test void approachNeverSpawnsTheHullAboveTheBuildLimit() {
+        var floor=new BlockPos(8,376,8);var world=new World();
+        int height=LandingPlanner.approachHeight(world,floor,3.6);
+        assertEquals(2,height);assertTrue(floor.getY()+1+height+3.6<world.maxY());
+    }
 }

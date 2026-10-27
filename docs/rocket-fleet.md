@@ -1,5 +1,9 @@
 # Flota, niveles y combustible — 0.23.0 / Fabric 26.1
 
+Desde 0.24.0, estos modelos realizan una [secuencia visible de viaje](rocket-journey.md),
+con crucero espacial y descenso automático. Los niveles y consumos de esta guía
+siguen vigentes.
+
 Se usan los cinco modelos nuevos y el modelo original. Se conservan las texturas
 embebidas, UV de cada cara, pivotes y rotaciones de Blockbench. Los diseños que
 comparten casco reciben módulos diferentes; los ítems del inventario muestran
