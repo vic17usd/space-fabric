@@ -32,6 +32,9 @@ public final class HotVolcanicRockBlock extends Block {
     @Override
     public void stepOn(Level level, BlockPos pos, BlockState state, Entity entity) {
         super.stepOn(level, pos, state, entity);
+        applyHeat(level,entity);
+    }
+    public static void applyHeat(Level level,Entity entity) {
         if (!(level instanceof ServerLevel server) || !(entity instanceof LivingEntity living)) return;
         if (living instanceof Player player && (player.isCreative() || player.isSpectator())) return;
         if (living instanceof dev.vic17usd.spacefabric.entity.venus.VenusMob) return;

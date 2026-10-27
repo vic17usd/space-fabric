@@ -19,6 +19,7 @@ java {
 }
 
 jar {
+    from('third_party/venus_landscapes') { include '**/LICENSE.txt'; include 'README.md'; into 'META-INF/licenses/venus_landscapes' }
     from('third_party/venus_ground') { include '**/LICENSE.txt'; include 'README.md'; into 'META-INF/licenses/venus_ground' }
     from('third_party/venus_expansion') { include '**/LICENSE.txt'; include 'README.md'; into 'META-INF/licenses/venus_expansion' }
     from("third_party/venus_fauna") { include "**/LICENSE.txt"; include "README.md"; into "META-INF/licenses/venus_fauna" }
@@ -51,6 +52,7 @@ processResources {
 }
 
 test {
+    maxHeapSize = '1536m'
     useJUnitPlatform()
 }
 

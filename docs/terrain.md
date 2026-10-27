@@ -4,14 +4,14 @@
 | --- | --- |
 | Mercurio | Regolito propio sobre basalto liso y toba; sin agua, lluvia ni vegetación. Cráteres de 8–12 bloques de diámetro con cuencas de hasta cuatro bloques de profundidad. |
 | Luna | Regolito lunar propio; comparte la generación seca y los cráteres, con su propio bioma, dimensión y gravedad. |
-| Venus | Roca caliente propia, basalto, depósitos de magma y cuencas de lava viscosa. Lluvia que aplica veneno a jugadores expuestos. |
+| Venus | Tres regiones volcánicas, fumarolas, cuencas de obsidiana, lagunas corrosivas, grietas de lava y grandes calderas desde 0.32.0. |
 | Marte | Piedra marciana propia en todo el subsuelo, canales profundos en la densidad, carvers de cuevas y cañones, vetas de hierro. |
 | Júpiter, Saturno, Urano, Neptuno | Sin capas sólidas continuas; pequeños depósitos orbitales de materiales. Niebla corta y zona de presión extrema bajo Y=160. |
 | Tierra | Conserva generación y biomas del Overworld en una dimensión independiente. |
 
 Es una interpretación jugable. La piedra marciana representa visualmente el suelo
 oxidado; no es un modelo geológico. Los cráteres son pequeños y frecuentes, sin
-macrocuencas planetarias. Venus no tiene todavía volcanes cónicos ni erupciones.
+macrocuencas planetarias. Venus añade calderas del diseño aportado en 0.32.0; todavía no hay erupciones dinámicas.
 
 ## Cómo se registran los biomas
 
@@ -103,23 +103,15 @@ clases Java y los registros del mod. Para obtenerlo durante desarrollo:
 give @s space_fabric:viscous_lava_bucket
 ```
 
-Venus tiene `has_precipitation: true`, `temperature: 2.0` y `downfall: 1.0`.
-`downfall` no significa lluvia permanente: el clima debe estar activo. Para probar:
+En los datos actuales Venus tiene `has_precipitation: false`: no se representa
+lluvia que alcance el suelo. Los peligros principales son presión, hipoxia y calor.
+Desde 0.32.0, las capas corrosivas de los nuevos paisajes aplican daño de contacto
+independiente del clima. [Regiones, fumarolas y caldera](venus-landscapes.md).
 
-```mcfunction
-planetenvironment storm
-```
-
-Cada 20 ticks, la exposición a la lluvia aumenta la corrosión: veneno I–III si
-falta sellado y desgaste de armadura mojada. Véase `environments.md`.
-Un techo o entrar en una zona sin lluvia impide renovar el veneno; el efecto ya
-aplicado puede durar tres segundos más. El comando se ejecuta estando en Venus y evita cambiar el clima de otros mundos.
-La presión atmosférica continúa siendo
-un peligro independiente: un techo normal no es una habitación presurizada.
-
-La lluvia conserva las partículas y el sonido vanilla. La composición sulfúrica
-se representa con veneno; no hay todavía partículas verdes ni química del ácido.
-El veneno vanilla no mata por sí solo; presión, lava y exposición sí pueden matar.
+Un techo normal no equivale a una habitación presurizada. Para vivir dentro de
+una base se requiere el [soporte vital y cerramiento adecuados](colonies.md).
+La lógica de corrosión por lluvia se conserva para configuraciones que habiliten
+precipitación; no describe la superficie venusiana predeterminada actual.
 
 ## Gigantes sin suelo y alternativa orbital
 

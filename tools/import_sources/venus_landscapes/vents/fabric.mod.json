@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "id": "ashen-acid-vents-j6czsz6r",
+  "version": "1.0.0",
+  "name": "Ashen Acid Vents",
+  "description": "Survive the Ashen Wastes, a barren land of smoking vents, bubbling acid, and glowing cracks.",
+  "authors": [
+    "vic17usd using CreativeMode.net"
+  ],
+  "contact": {
+    "homepage": "https://creativemode.net",
+    "sources": "https://creativemode.net/mod/ashen-acid-vents-j6czsz6r"
+  },
+  "license": "ARR - CreativeMode.net/mod-license",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "ashen_acid_vents_j6czsz6r.AshenAcidVents"
+    ],
+    "client": [
+      "ashen_acid_vents_j6czsz6r.AshenAcidVentsClient"
+    ],
+    "terrablender": [
+      "ashen_acid_vents_j6czsz6r.AshenAcidVents"
+    ]
+  },
+  "mixins": [
+    "ashen_acid_vents_j6czsz6r.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.18.4",
+    "minecraft": "~26.1",
+    "java": ">=25",
+    "fabric-api": "*",
+    "terrablender": ">=26.1.0.2"
+  },
+  "suggests": {
+    "another-mod": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/creativemode"
+      }
+    },
+    "creativemode:mod": {
+      "schemaVersion": 1,
+      "modId": "40e7a913-66d5-43cf-8e79-15449bc4694d",
+      "modSlug": "ashen-acid-vents-j6czsz6r",
+      "modVersion": 1
+    }
+  },
+  "jars": [
+    {
+      "file": "META-INF/jars/creativemode-telemetry.jar"
+    }
+  ]
+}

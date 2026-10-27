@@ -1,4 +1,4 @@
-# Nombres de estructuras — 0.30.1
+# Nombres de estructuras — 0.30.1, ampliados en 0.32.0
 
 | Planeta | Nombre visible | Diseño original / ID conservado | Alias para buscar |
 |---|---|---|---|
@@ -7,6 +7,7 @@
 | Marte | Santuario subterráneo de Marte | Soulfire Netherite Sanctum / `soulfire_netherite_sanctum` | `#space_fabric:santuario_marciano` |
 | Venus | Pueblo de Venus | Copper Crown Village / `copper_crown_village` | `#space_fabric:pueblo_venusiano` |
 | Venus | Pirámide de Venus | Sunstone Pyramid Bazaar / `sunstone_pyramid_bazaar` | `#space_fabric:piramide_venusiana` |
+| Venus | Caldera de azufre de Venus | Sulfur Crown Caldera / `venus_sulfur_caldera` | `#space_fabric:caldera_venusiana` |
 
 Escribe **`/estructuras`** para ver el catálogo en el chat. Al pulsar un nombre se
 prepara el comando de búsqueda con la dimensión correcta; tú decides ejecutarlo.
@@ -21,6 +22,7 @@ locate structure #space_fabric:pueblo_marciano
 locate structure #space_fabric:santuario_marciano
 locate structure #space_fabric:pueblo_venusiano
 locate structure #space_fabric:piramide_venusiana
+locate structure #space_fabric:caldera_venusiana
 ```
 
 El carácter **`#`** es necesario: son etiquetas españolas que apuntan a los

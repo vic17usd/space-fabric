@@ -14,7 +14,7 @@ public final class EnvironmentWorldgen {
     static { Registry.register(BuiltInRegistries.FEATURE, SpaceFabric.id("frozen_cave"), new FrozenCaveFeature()); }
     private EnvironmentWorldgen() { }
     public static void initialize() {
-        BiomeModifications.addFeature(BiomeSelectors.includeByKey(PlanetBiomes.key(Planet.VENUS)),
+        BiomeModifications.addFeature(context->PlanetBiomes.isVenus(context.getBiomeKey()),
                 GenerationStep.Decoration.VEGETAL_DECORATION,
                 ResourceKey.create(Registries.PLACED_FEATURE, SpaceFabric.id("sulfur_cluster")));
         for (var planet : new Planet[] {Planet.MARS, Planet.URANUS, Planet.NEPTUNE}) {

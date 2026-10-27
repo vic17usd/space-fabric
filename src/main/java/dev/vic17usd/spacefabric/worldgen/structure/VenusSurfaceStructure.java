@@ -24,12 +24,14 @@ public final class VenusSurfaceStructure extends Structure {
         Codec.intRange(1,128).fieldOf("height").forGetter(v->v.height),Codec.intRange(1,192).fieldOf("depth").forGetter(v->v.depth),
         Codec.intRange(0,32).optionalFieldOf("padding",16).forGetter(v->v.padding),
         Codec.intRange(0,16).optionalFieldOf("max_terrain_relief",8).forGetter(v->v.maxRelief),
+        Codec.BOOL.optionalFieldOf("natural_terrain",false).forGetter(v->v.naturalTerrain),
         Tile.CODEC.listOf().validate(list->list.isEmpty()||list.size()>256?DataResult.error(()->"Expected 1..256 tiles"):DataResult.success(list)).fieldOf("tiles").forGetter(v->v.tiles)
     ).apply(i,VenusSurfaceStructure::new));
     private final int width,height,depth,padding,maxRelief;
     private final List<Tile> tiles;
-    public VenusSurfaceStructure(StructureSettings settings,int width,int height,int depth,int padding,int maxRelief,List<Tile> tiles) {
-        super(settings);this.width=width;this.height=height;this.depth=depth;this.padding=padding;this.maxRelief=maxRelief;this.tiles=List.copyOf(tiles);
+    private final boolean naturalTerrain;
+    public VenusSurfaceStructure(StructureSettings settings,int width,int height,int depth,int padding,int maxRelief,boolean naturalTerrain,List<Tile> tiles) {
+        super(settings);this.width=width;this.height=height;this.depth=depth;this.padding=padding;this.maxRelief=maxRelief;this.tiles=List.copyOf(tiles);this.naturalTerrain=naturalTerrain;
     }
     public List<Tile> tiles(){return tiles;}
     @Override public StructureType<?> type(){return VenusSurfaceStructures.TYPE;}
@@ -48,10 +50,10 @@ public final class VenusSurfaceStructure extends Structure {
         var plot=new BoundingBox(bounds.minX(),context.heightAccessor().getMinY()+4,bounds.minZ(),bounds.maxX(),context.heightAccessor().getMaxY()-1,bounds.maxZ());
         return Optional.of(new GenerationStub(new BlockPos(bounds.getCenter().getX(),y,bounds.getCenter().getZ()),builder->{
             // Each affected chunk is flattened before any of its own building tiles are placed.
-            builder.addPiece(new VenusSurfacePiece(plot,y,padding));
+            if(!naturalTerrain)builder.addPiece(new VenusSurfacePiece(plot,y,padding));
             for(var tile:tiles) {
                 var template=context.structureTemplateManager().get(tile.template()).orElseThrow(()->new IllegalStateException("Missing Venus tile "+tile.template()));
-                builder.addPiece(new VenusSurfacePiece(tile.template(),template,origin.offset(rotate(new BlockPos(tile.x(),0,tile.z()),rotation)),rotation));
+                builder.addPiece(new VenusSurfacePiece(tile.template(),template,origin.offset(rotate(new BlockPos(tile.x(),0,tile.z()),rotation)),rotation,naturalTerrain));
             }
         }));
     }

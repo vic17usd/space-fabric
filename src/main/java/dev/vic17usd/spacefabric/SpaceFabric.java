@@ -35,6 +35,7 @@ public final class SpaceFabric implements ModInitializer {
         PlanetFluids.initialize();
         ModItems.initialize();
         ModBlocks.initialize();
+        dev.vic17usd.spacefabric.venus.VenusGeology.initialize();
         dev.vic17usd.spacefabric.earth.EarthMaterials.initialize();
         dev.vic17usd.spacefabric.entity.venus.ModVenusEntities.initialize();
         dev.vic17usd.spacefabric.entity.sanctum.ModSanctumEntities.initialize();

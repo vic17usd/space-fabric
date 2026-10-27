@@ -354,5 +354,18 @@
   "gui.space_fabric.habitat.slot_5": "Empty power cells",
   "gui.space_fabric.habitat.slot_6": "Empty canisters",
   "gui.space_fabric.habitat.slot_7": "Auxiliary output",
-  "gui.space_fabric.habitat.slot_8": "Auxiliary output"
+  "gui.space_fabric.habitat.slot_8": "Auxiliary output",
+  "block.space_fabric.venus_vent_basalt": "Vent Basalt",
+  "block.space_fabric.venus_sulfur_crust": "Sulfur Crust",
+  "block.space_fabric.venus_ember_crust": "Ember Crust",
+  "block.space_fabric.venus_acid_pocket": "Corrosive Pocket",
+  "block.space_fabric.venus_basalt_substrate": "Venusian Basalt Substrate",
+  "block.space_fabric.venus_cracked_stone": "Cracked Volcanic Stone",
+  "block.space_fabric.venus_obsidian_slag": "Obsidian Slag",
+  "block.space_fabric.venus_sulfur_crystal_block": "Sulfur Crystals",
+  "block.space_fabric.venus_acid_pool": "Corrosive Lagoon Surface",
+  "biome.space_fabric.venus": "Venus Volcanic Plains",
+  "biome.space_fabric.venus_fumaroles": "Fumarole Fields",
+  "biome.space_fabric.venus_obsidian_basins": "Obsidian Basins",
+  "structure.space_fabric.venus_sulfur_caldera": "Caldera de azufre de Venus"
 }

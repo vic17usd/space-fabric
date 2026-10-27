@@ -125,13 +125,13 @@ class WorldgenCodecTest {
         for(var block:List.of(Blocks.GRASS_BLOCK,Blocks.SAND,Blocks.SNOW_BLOCK,Blocks.SMOOTH_BASALT,
                 ModBlocks.MERCURY_REGOLITH,ModBlocks.MERCURY_SILICATE,ModBlocks.LUNAR_REGOLITH,
                 ModBlocks.VENUS_HOT_ROCK,ModBlocks.VULCANIZED_BASALT,ModBlocks.MARTIAN_STONE,
-                ModBlocks.IRON_OXIDE_REGOLITH,ModBlocks.TERRESTRIAL_BASALT)) {
+                ModBlocks.IRON_OXIDE_REGOLITH,ModBlocks.TERRESTRIAL_BASALT,dev.vic17usd.spacefabric.venus.VenusGeology.SUBSTRATE,dev.vic17usd.spacefabric.venus.VenusGeology.SLAG,dev.vic17usd.spacefabric.venus.VenusGeology.CRACKED)) {
             assertTrue(dev.vic17usd.spacefabric.space.SpaceTravel.naturalGround(block.defaultBlockState(),world,pos),
                     ()->"Missing landing terrain: "+BuiltInRegistries.BLOCK.getKey(block));
         }
         for(var block:List.of(ModBlocks.LANDING_PAD,Blocks.AIR,Blocks.WATER,Blocks.LAVA,Blocks.OAK_LOG,
                 Blocks.OAK_LEAVES,Blocks.OAK_PLANKS,Blocks.GLASS,Blocks.STONE_SLAB,Blocks.SNOW,
-                Blocks.POWDER_SNOW,Blocks.SHORT_GRASS,Blocks.FIRE)) {
+                Blocks.POWDER_SNOW,Blocks.SHORT_GRASS,Blocks.FIRE,dev.vic17usd.spacefabric.venus.VenusGeology.ACID_POOL,dev.vic17usd.spacefabric.venus.VenusGeology.ACID_POCKET)) {
             assertFalse(dev.vic17usd.spacefabric.space.SpaceTravel.naturalGround(block.defaultBlockState(),world,pos),
                     ()->"Unsafe landing terrain: "+BuiltInRegistries.BLOCK.getKey(block));
         }
@@ -1222,7 +1222,7 @@ class WorldgenCodecTest {
             boolean found=false;
             for(var category:net.minecraft.world.entity.MobCategory.values())
                 found |= biome.value().getMobSettings().getMobs(category).unwrap().stream().anyMatch(entry->entry.value().type()==type);
-            assertEquals(biome.is(dev.vic17usd.spacefabric.worldgen.PlanetBiomes.key(Planet.VENUS)),found);
+            assertEquals(biome.is(dev.vic17usd.spacefabric.worldgen.PlanetBiomes.VENUS_TAG),found);
         }
     }
 
@@ -1717,7 +1717,8 @@ class WorldgenCodecTest {
         var holder=registries.lookupOrThrow(Registries.STRUCTURE).getOrThrow(net.minecraft.resources.ResourceKey.create(Registries.STRUCTURE,SpaceFabric.id(name)));
         var structure=assertInstanceOf(dev.vic17usd.spacefabric.worldgen.structure.VenusSurfaceStructure.class,holder.value());
         assertTrue(structure.biomes().contains(registries.lookupOrThrow(Registries.BIOME).getOrThrow(dev.vic17usd.spacefabric.worldgen.PlanetBiomes.key(Planet.VENUS))));
-        assertEquals(1,structure.biomes().size());
+        assertEquals(3,structure.biomes().size());
+        assertTrue(structure.biomes().stream().allMatch(b->b.is(dev.vic17usd.spacefabric.worldgen.PlanetBiomes.VENUS_TAG)));
         int total=0;var positions=new java.util.HashSet<net.minecraft.core.BlockPos>();
         for(var tile:structure.tiles()) {
             try(var input=getClass().getResourceAsStream("/data/space_fabric/structure/"+tile.template().getPath()+".nbt")) {
@@ -1791,15 +1792,40 @@ class WorldgenCodecTest {
             var restoredLegacy=new dev.vic17usd.spacefabric.worldgen.structure.VenusSurfacePiece(context,legacyTag);
             assertEquals(legacy.origin(),restoredLegacy.origin());assertEquals(0,restoredLegacy.blend());
             assertEquals(117,restoredLegacy.getBoundingBox().getYSpan());
-            for(var name:List.of("copper_crown_village","sunstone_pyramid_bazaar")) {
+            for(var name:List.of("copper_crown_village","sunstone_pyramid_bazaar","venus_sulfur_caldera")) {
                 var holder=access.lookupOrThrow(Registries.STRUCTURE).getOrThrow(net.minecraft.resources.ResourceKey.create(Registries.STRUCTURE,SpaceFabric.id(name)));
                 net.minecraft.world.level.levelgen.structure.StructureStart start=null;
                 var height=net.minecraft.world.level.LevelHeightAccessor.create(Planet.VENUS.minY(),Planet.VENUS.height());
                 for(int attempt=0;attempt<64&&(start==null||!start.isValid());attempt++) {
                     var chunk=new net.minecraft.world.level.ChunkPos((attempt%8)*32,(attempt/8)*32);
-                    start=holder.value().generate(holder,PlanetDimensions.key(Planet.VENUS),access,generator,generator.getBiomeSource(),random,templates,42,chunk,0,height,biome->biome.is(dev.vic17usd.spacefabric.worldgen.PlanetBiomes.key(Planet.VENUS)));
+                    start=holder.value().generate(holder,PlanetDimensions.key(Planet.VENUS),access,generator,generator.getBiomeSource(),random,templates,42,chunk,0,height,biome->biome.is(dev.vic17usd.spacefabric.worldgen.PlanetBiomes.VENUS_TAG));
                 }
                 assertNotNull(start);assertTrue(start.isValid(),"No gentle Venus site in the bounded generation test");
+                if(name.equals("venus_sulfur_caldera")) {
+                    assertEquals(56,start.getPieces().size());
+                    assertTrue(start.getPieces().stream().allMatch(p->((dev.vic17usd.spacefabric.worldgen.structure.VenusSurfacePiece)p).natural()));
+                    assertTrue(start.getPieces().stream().noneMatch(p->((dev.vic17usd.spacefabric.worldgen.structure.VenusSurfacePiece)p).isPlot()));
+                    for(var original:start.getPieces()) {
+                        var restored=new dev.vic17usd.spacefabric.worldgen.structure.VenusSurfacePiece(context,original.createTag(context));
+                        assertTrue(restored.natural());assertEquals(((dev.vic17usd.spacefabric.worldgen.structure.VenusSurfacePiece)original).origin(),restored.origin());
+                    }
+                    var sample=(dev.vic17usd.spacefabric.worldgen.structure.VenusSurfacePiece)start.getPieces().getFirst();
+                    assertVenusPlacedAcrossChunks(start,context,generator,sample.origin().getY());
+                    String id=sample.createTag(context).getStringOr("Template","").split(":",2)[1];
+                    try(var input=getClass().getResourceAsStream("/data/space_fabric/structure/"+id+".nbt")) {
+                        var nbt=net.minecraft.nbt.NbtIo.readCompressed(input,net.minecraft.nbt.NbtAccounter.unlimitedHeap());
+                        var coords=((net.minecraft.nbt.CompoundTag)nbt.getListOrEmpty("blocks").get(0)).getListOrEmpty("pos");
+                        var local=new net.minecraft.core.BlockPos(((net.minecraft.nbt.IntTag)coords.get(0)).intValue(),((net.minecraft.nbt.IntTag)coords.get(1)).intValue(),((net.minecraft.nbt.IntTag)coords.get(2)).intValue());
+                        assertEquals(0,local.getY());
+                        var base=sample.origin().offset(dev.vic17usd.spacefabric.worldgen.structure.VenusSurfaceStructure.rotate(local,sample.getRotation()));
+                        var chunk=new net.minecraft.world.level.ChunkPos(base.getX()>>4,base.getZ()>>4);var rootWorld=new VoxelWorld(chunk.x(),chunk.z(),base.getY()-3);
+                        var clip=new net.minecraft.world.level.levelgen.structure.BoundingBox(chunk.getMinBlockX(),-64,chunk.getMinBlockZ(),chunk.getMaxBlockX(),319,chunk.getMaxBlockZ());
+                        sample.postProcess(rootWorld.level,null,generator,net.minecraft.util.RandomSource.create(42),clip,chunk,net.minecraft.core.BlockPos.ZERO);
+                        assertTrue(rootWorld.state(base.below()).is(ModBlocks.VULCANIZED_BASALT));
+                        assertTrue(rootWorld.state(base.below(2)).is(ModBlocks.VULCANIZED_BASALT));
+                    }
+                    continue;
+                }
                 assertEquals(name.equals("copper_crown_village")?66:105,start.getPieces().size());
                 var floor=assertInstanceOf(dev.vic17usd.spacefabric.worldgen.structure.VenusSurfacePiece.class,start.getPieces().getFirst());assertTrue(floor.isPlot());
                 assertEquals(16,floor.blend());
@@ -1823,12 +1849,14 @@ class WorldgenCodecTest {
         var box=start.getBoundingBox();
         var placed=new java.util.HashMap<net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState>();
         for(int cx=box.minX()>>4;cx<=box.maxX()>>4;cx++)for(int cz=box.minZ()>>4;cz<=box.maxZ()>>4;cz++) {
-            var world=new VoxelWorld(cx,cz,floorY-2);
+            var world=new VoxelWorld(cx,cz,((dev.vic17usd.spacefabric.worldgen.structure.VenusSurfacePiece)start.getPieces().getFirst()).natural()?floorY+4:floorY-2);
             var clip=new net.minecraft.world.level.levelgen.structure.BoundingBox(cx<<4,-64,cz<<4,(cx<<4)+15,319,(cz<<4)+15);
             for(var piece:start.getPieces())if(piece.getBoundingBox().intersects(clip))
                 piece.postProcess(world.level,null,generator,net.minecraft.util.RandomSource.create(42),clip,new net.minecraft.world.level.ChunkPos(cx,cz),net.minecraft.core.BlockPos.ZERO);
             placed.putAll(world.blocks);
         }
+        if(((dev.vic17usd.spacefabric.worldgen.structure.VenusSurfacePiece)start.getPieces().getFirst()).natural())
+            assertTrue(placed.values().stream().anyMatch(net.minecraft.world.level.block.state.BlockBehaviour.BlockStateBase::isAir),"Natural pieces must clear buried parts without storing empty volume");
         int checked=0;
         for(var original:start.getPieces()) {
             var piece=(dev.vic17usd.spacefabric.worldgen.structure.VenusSurfacePiece)original;
@@ -1846,7 +1874,7 @@ class WorldgenCodecTest {
                             ((net.minecraft.nbt.CompoundTag)palette.get(block.getIntOr("state",-1))).getStringOr("Name","")));
                     assertNotNull(placed.get(pos),"A chunk seam lost a building block at "+pos);
                     assertEquals(expected,placed.get(pos).getBlock());
-                    if(local.getY()<=1)assertFalse(placed.get(pos.below()).isAir(),"A ground-floor piece is floating at "+pos);
+                    if(local.getY()<=1)assertFalse(placed.getOrDefault(pos.below(),pos.getY()-1<=(((dev.vic17usd.spacefabric.worldgen.structure.VenusSurfacePiece)start.getPieces().getFirst()).natural()?floorY+4:floorY-2)?ModBlocks.MERCURY_SILICATE.defaultBlockState():Blocks.AIR.defaultBlockState()).isAir(),"A ground-floor piece is floating at "+pos);
                     checked++;
                 }
             }
@@ -2032,6 +2060,67 @@ class WorldgenCodecTest {
         assertEquals(3,menu.quickMoveStack(null,9).getCount());assertEquals(3,storage.getItem(0).getCount());assertTrue(inventory.getItem(9).isEmpty());
         assertEquals(2,menu.quickMoveStack(null,6).getCount());assertTrue(storage.getItem(6).isEmpty());
         assertEquals(2,inventory.getNonEquipmentItems().stream().filter(stack->stack.is(dev.vic17usd.spacefabric.colony.ColonyContent.EMPTY_CANISTER)).mapToInt(ItemStack::getCount).sum());
+    }
+
+    @Test void venusClimateActuallySelectsAllThreeBiomesAndPreservesOresAndFauna() throws IOException {
+        var access=(RegistryAccess)registries;
+        var stem=LevelStem.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("dimension/venus")).getOrThrow();
+        var generator=(net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator)stem.generator();
+        assertEquals(3,generator.getBiomeSource().possibleBiomes().size());
+        var found=new java.util.HashSet<net.minecraft.resources.ResourceKey<net.minecraft.world.level.biome.Biome>>();
+        for(long seed:new long[]{42,971,-200}) {
+            var random=net.minecraft.world.level.levelgen.RandomState.create(generator.generatorSettings().value(),access.lookupOrThrow(Registries.NOISE),seed);
+            for(int x=-8192;x<=8192;x+=512)for(int z=-8192;z<=8192;z+=512) {
+                var biome=generator.getBiomeSource().getNoiseBiome(x>>2,20,z>>2,random.sampler());
+                assertTrue(biome.is(dev.vic17usd.spacefabric.worldgen.PlanetBiomes.VENUS_TAG));found.add(biome.unwrapKey().orElseThrow());
+            }
+        }
+        assertEquals(3,found.size());
+        for(var key:found) {
+            var biome=access.lookupOrThrow(Registries.BIOME).getOrThrow(key).value();
+            assertTrue(biome.getGenerationSettings().features().stream().flatMap(net.minecraft.core.HolderSet::stream).anyMatch(f->f.is(OreGen.SULFUR)));
+            assertEquals(2,biome.getMobSettings().getMobs(net.minecraft.world.entity.MobCategory.CREATURE).unwrap().size());
+            assertEquals(4,biome.getMobSettings().getMobs(net.minecraft.world.entity.MobCategory.MONSTER).unwrap().size());
+            assertFalse(biome.hasPrecipitation());
+        }
+    }
+    @ParameterizedTest @ValueSource(strings={"VENTS","LAKE","FISSURE"})
+    void venusLandscapeFeaturesWriteBoundedGroundedTerrain(String value) {
+        var kind=dev.vic17usd.spacefabric.venus.VenusLandscapeFeature.Kind.valueOf(value);
+        var world=new VoxelWorld(-3,4,64);
+        for(int x=-48;x<-32;x++)for(int z=64;z<80;z++)world.blocks.put(new net.minecraft.core.BlockPos(x,64,z),dev.vic17usd.spacefabric.venus.VenusGeology.SUBSTRATE.defaultBlockState());
+        assertTrue(dev.vic17usd.spacefabric.venus.VenusLandscapeFeature.placePatch(world.level,new net.minecraft.core.BlockPos(-48,0,64),net.minecraft.util.RandomSource.create(42),kind));
+        assertTrue(world.blocks.size()<1500);
+        if(kind==dev.vic17usd.spacefabric.venus.VenusLandscapeFeature.Kind.LAKE) {
+            int count=0;
+            for(var entry:world.blocks.entrySet())if(entry.getValue().is(dev.vic17usd.spacefabric.venus.VenusGeology.ACID_POOL)) {
+                count++;assertTrue(world.state(entry.getKey().below()).isCollisionShapeFullBlock(world.level,entry.getKey().below()));
+                assertTrue(entry.getValue().getCollisionShape(world.level,entry.getKey()).isEmpty());
+            }
+            assertTrue(count>10);
+        }
+        if(kind==dev.vic17usd.spacefabric.venus.VenusLandscapeFeature.Kind.FISSURE)
+            assertTrue(world.blocks.values().stream().anyMatch(state->state.is(PlanetFluids.VISCOUS_LAVA_BLOCK)));
+    }
+    @ParameterizedTest @ValueSource(strings={"LAKE","FISSURE"})
+    void venusBasinsAndFissuresRejectSteepTerrainWithoutPartialWrites(String value) {
+        var world=new VoxelWorld(0,0,64);
+        for(int x=0;x<16;x++)for(int z=0;z<16;z++)for(int y=64;y<=64+x+z;y++)
+            world.blocks.put(new net.minecraft.core.BlockPos(x,y,z),dev.vic17usd.spacefabric.venus.VenusGeology.SUBSTRATE.defaultBlockState());
+        var before=java.util.Map.copyOf(world.blocks);
+        assertFalse(dev.vic17usd.spacefabric.venus.VenusLandscapeFeature.placePatch(world.level,net.minecraft.core.BlockPos.ZERO,net.minecraft.util.RandomSource.create(42),dev.vic17usd.spacefabric.venus.VenusLandscapeFeature.Kind.valueOf(value)));
+        assertEquals(before,world.blocks);
+    }
+    @Test void venusGeologyRegistersToolsAcidShapeAndResourceDrops() throws IOException {
+        for(var entry:dev.vic17usd.spacefabric.venus.VenusGeology.blocks().entrySet()) {
+            assertEquals(entry.getValue(),BuiltInRegistries.BLOCK.getValue(SpaceFabric.id(entry.getKey())));
+            assertNotNull(LootTable.DIRECT_CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("loot_table/blocks/"+entry.getKey())).getOrThrow());
+        }
+        var acid=dev.vic17usd.spacefabric.venus.VenusGeology.ACID_POOL.defaultBlockState();
+        assertEquals(.125,acid.getShape(net.minecraft.world.level.EmptyBlockGetter.INSTANCE,net.minecraft.core.BlockPos.ZERO).bounds().maxY);
+        assertTrue(acid.getCollisionShape(net.minecraft.world.level.EmptyBlockGetter.INSTANCE,net.minecraft.core.BlockPos.ZERO).isEmpty());
+        var slag=dev.vic17usd.spacefabric.venus.VenusGeology.SLAG.defaultBlockState();
+        assertFalse(new ItemStack(Items.IRON_PICKAXE).isCorrectToolForDrops(slag));assertTrue(new ItemStack(Items.DIAMOND_PICKAXE).isCorrectToolForDrops(slag));
     }
 
 }

@@ -23,7 +23,7 @@ public final class VenusSpawnRules {
         if(reason!=EntitySpawnReason.NATURAL&&reason!=EntitySpawnReason.CHUNK_GENERATION)return Mob.checkMobSpawnRules(type,level,reason,pos,random);
         if(reason==EntitySpawnReason.CHUNK_GENERATION)return false; // Natural runtime spawns enforce the shared live chunk count.
         boolean hostile=type.getCategory()==MobCategory.MONSTER;
-        if(!level.getLevel().dimension().equals(PlanetDimensions.key(Planet.VENUS))||!level.getBiome(pos).is(PlanetBiomes.key(Planet.VENUS))
+        if(!level.getLevel().dimension().equals(PlanetDimensions.key(Planet.VENUS))||!level.getBiome(pos).is(PlanetBiomes.VENUS_TAG)
             ||!level.canSeeSky(pos)||level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,pos.getX(),pos.getZ())!=pos.getY()
             ||!level.getFluidState(pos).isEmpty()||!Mob.checkMobSpawnRules(type,level,reason,pos,random)
             ||hostile&&level.getDifficulty()==net.minecraft.world.Difficulty.PEACEFUL)return false;

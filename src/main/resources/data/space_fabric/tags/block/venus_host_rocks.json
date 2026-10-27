@@ -3,6 +3,11 @@
   "values": [
     "space_fabric:vulcanized_basalt",
     "space_fabric:venus_hot_rock",
-    "minecraft:basalt"
+    "minecraft:basalt",
+    "space_fabric:venus_vent_basalt",
+    "space_fabric:venus_ember_crust",
+    "space_fabric:venus_basalt_substrate",
+    "space_fabric:venus_cracked_stone",
+    "space_fabric:venus_obsidian_slag"
   ]
 }

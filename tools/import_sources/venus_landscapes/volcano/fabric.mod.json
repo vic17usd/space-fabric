@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "id": "sulfur-crown-caldera-dpjre4dw",
+  "version": "1",
+  "name": "Sulfur Crown Caldera",
+  "description": "a",
+  "authors": [
+    "vic17usd using CreativeMode.net"
+  ],
+  "contact": {
+    "homepage": "https://creativemode.net",
+    "sources": "https://creativemode.net/mod/sulfur-crown-caldera-dpjre4dw"
+  },
+  "license": "ARR - CreativeMode.net/mod-license",
+  "icon": "assets/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "sulfur_crown_caldera_dpjre4dw.SulfurCrownCaldera"
+    ],
+    "client": [
+      "sulfur_crown_caldera_dpjre4dw.SulfurCrownCalderaClient"
+    ],
+    "fabric-datagen": [
+      "sulfur_crown_caldera_dpjre4dw.SulfurCrownCalderaDataGenerator"
+    ]
+  },
+  "mixins": [
+    "sulfur_crown_caldera_dpjre4dw.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.18.4",
+    "minecraft": "~26.1",
+    "java": ">=25",
+    "fabric-api": "*"
+  },
+  "suggests": {
+    "another-mod": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/creativemode"
+      }
+    },
+    "creativemode:mod": {
+      "schemaVersion": 1,
+      "modId": "c43f0546-27a8-474c-aa88-fa87eb2c35c8",
+      "modSlug": "sulfur-crown-caldera-dpjre4dw",
+      "modVersion": 1
+    }
+  },
+  "jars": [
+    {
+      "file": "META-INF/jars/creativemode-telemetry.jar"
+    }
+  ]
+}

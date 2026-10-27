@@ -71,6 +71,6 @@ public final class OreGen {
     }
 
     private static void add(Planet planet, ResourceKey<PlacedFeature> feature, GenerationStep.Decoration step) {
-        BiomeModifications.addFeature(BiomeSelectors.includeByKey(PlanetBiomes.key(planet)), step, feature);
+        BiomeModifications.addFeature(planet==Planet.VENUS?context->PlanetBiomes.isVenus(context.getBiomeKey()):BiomeSelectors.includeByKey(PlanetBiomes.key(planet)), step, feature);
     }
 }

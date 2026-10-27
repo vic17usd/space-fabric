@@ -18,6 +18,7 @@ public final class ModCreativeTabs {
                     .displayItems((parameters, output) -> {
                         ModBlocks.all().values().forEach(output::accept);
                         ModItems.all().values().forEach(output::accept);
+                        dev.vic17usd.spacefabric.venus.VenusGeology.blocks().values().forEach(output::accept);
                         dev.vic17usd.spacefabric.colony.ColonyContent.blocks().values().forEach(output::accept);
                         dev.vic17usd.spacefabric.colony.ColonyContent.items().values().forEach(output::accept);
                         dev.vic17usd.spacefabric.earth.EarthMaterials.blocks().values().forEach(output::accept);

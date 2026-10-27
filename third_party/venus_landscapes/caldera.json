@@ -1,0 +1,34 @@
+{
+  "source_blocks": 67063,
+  "size": [
+    120,
+    94,
+    123
+  ],
+  "footprint_columns": 10461,
+  "solid_blocks": 295678,
+  "tiles": 56,
+  "explicit_cells": 295678,
+  "palette_remap": {
+    "minecraft:cracked_stone_bricks": "space_fabric:venus_cracked_stone",
+    "minecraft:deepslate_bricks": "space_fabric:venus_basalt_substrate",
+    "minecraft:black_concrete": "space_fabric:venus_obsidian_slag",
+    "minecraft:obsidian": "space_fabric:venus_obsidian_slag",
+    "minecraft:crying_obsidian": "space_fabric:venus_obsidian_slag",
+    "minecraft:lime_wool": "space_fabric:condensed_sulfuric_acid",
+    "minecraft:green_concrete": "space_fabric:condensed_sulfuric_acid",
+    "minecraft:emerald_block": "space_fabric:venus_sulfur_crystal_block",
+    "minecraft:gold_block": "space_fabric:venus_sulfur_crust",
+    "minecraft:yellow_wool": "space_fabric:venus_sulfur_crust",
+    "minecraft:yellow_concrete": "space_fabric:venus_sulfur_crust",
+    "minecraft:glowstone": "space_fabric:venus_sulfur_crystal_block",
+    "minecraft:sea_lantern": "space_fabric:venus_ember_crust",
+    "minecraft:glass": "space_fabric:venus_sulfur_crystal_block",
+    "minecraft:oxidized_copper": "space_fabric:venus_vent_basalt",
+    "minecraft:copper_block": "space_fabric:venus_vent_basalt",
+    "minecraft:redstone_block": "space_fabric:venus_ember_crust",
+    "minecraft:orange_wool": "space_fabric:venus_ember_crust",
+    "minecraft:netherrack": "space_fabric:venus_cracked_stone",
+    "minecraft:smooth_sandstone": "space_fabric:venus_sulfur_crust"
+  }
+}

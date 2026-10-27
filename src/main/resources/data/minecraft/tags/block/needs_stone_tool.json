@@ -32,6 +32,14 @@
     "space_fabric:fluorite_ore",
     "space_fabric:deepslate_fluorite_ore",
     "space_fabric:fluorite_block",
-    "space_fabric:sulfur_cluster"
+    "space_fabric:sulfur_cluster",
+    "space_fabric:venus_vent_basalt",
+    "space_fabric:venus_sulfur_crust",
+    "space_fabric:venus_ember_crust",
+    "space_fabric:venus_acid_pocket",
+    "space_fabric:venus_basalt_substrate",
+    "space_fabric:venus_cracked_stone",
+    "space_fabric:venus_sulfur_crystal_block",
+    "space_fabric:venus_acid_pool"
   ]
 }

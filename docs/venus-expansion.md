@@ -1,5 +1,8 @@
 # Fauna y asentamientos de Venus — 0.28.0 / Fabric 26.1
 
+Desde 0.32.0, la fauna y ambos asentamientos admiten también los campos de fumarolas
+y las cuencas de obsidiana. [Paisajes y caldera nuevos](venus-landscapes.md).
+
 Los cuatro archivos aportados están integrados en el JAR principal del mod.
 Sustituye el JAR por **space-fabric-0.28.0.jar en cliente y servidor** y reinicia.
 Los JAR originales sirven de fuentes de importación; el mod entrega sus contenidos

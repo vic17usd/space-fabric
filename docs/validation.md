@@ -292,3 +292,25 @@ Interiores de hábitats, versión 0.31.0:
 Pendientes: aspecto del panel/HUD, transición de niebla con ventanas, recorrido
 por esclusas y sincronización multijugador en una partida real. Los objetivos
 regulados no equivalen a una simulación termodinámica ni a presión volumétrica.
+
+Paisajes de Venus, versión 0.32.0:
+
+- Compilación completa: 436 pruebas JUnit y diez comprobaciones por CPU, sin
+  fallos. 949 JSON válidos.
+- La fuente multi_noise selecciona los tres biomas con tres semillas. Todos
+  mantienen minerales, seis especies, límites de grupos y ausencia de precipitación.
+- Caldera: generación nativa de inicio válido, 56 piezas sin parcela rectangular,
+  serialización de la marca Natural y colocación de sus 295.678 posiciones
+  por chunks, comparadas con sus plantillas, despeje del terreno que las enterraría
+  y apoyo sobre terreno más bajo. Se conservan las pruebas
+  de los dos asentamientos, sus apoyos y plantillas heredadas.
+- Fumarolas, lagunas y grietas se colocan sobre terreno de prueba con escrituras
+  limitadas al chunk. Lagunas/grietas rechazan relieve excesivo sin cambios parciales.
+- Se verifican registros, tablas de loot, herramientas, altura del depósito ácido,
+  colisión vacía y admisión de las rocas nuevas como suelo natural de aterrizaje.
+- Los nueve modelos nuevos se decodifican con el cliente nativo por CPU. Los PNG
+  y los modelos proceden de los JAR; la adaptación conserva los primeros sin cambios.
+
+Pendientes de partida real: aspecto del volcán y las transiciones de bioma,
+frecuencia efectiva, daño de contacto, partículas, recorrido de fauna y multijugador.
+Las comprobaciones no equivalen a observar el juego con GPU u optimizadores.

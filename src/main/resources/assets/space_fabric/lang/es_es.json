@@ -354,5 +354,18 @@
   "gui.space_fabric.habitat.slot_5": "Baterías descargadas",
   "gui.space_fabric.habitat.slot_6": "Bombonas vacías",
   "gui.space_fabric.habitat.slot_7": "Salida auxiliar",
-  "gui.space_fabric.habitat.slot_8": "Salida auxiliar"
+  "gui.space_fabric.habitat.slot_8": "Salida auxiliar",
+  "block.space_fabric.venus_vent_basalt": "Basalto de fumarola",
+  "block.space_fabric.venus_sulfur_crust": "Costra de azufre",
+  "block.space_fabric.venus_ember_crust": "Costra incandescente",
+  "block.space_fabric.venus_acid_pocket": "Depósito corrosivo",
+  "block.space_fabric.venus_basalt_substrate": "Sustrato basáltico venusiano",
+  "block.space_fabric.venus_cracked_stone": "Roca volcánica agrietada",
+  "block.space_fabric.venus_obsidian_slag": "Escoria de obsidiana",
+  "block.space_fabric.venus_sulfur_crystal_block": "Cristales de azufre",
+  "block.space_fabric.venus_acid_pool": "Superficie de laguna corrosiva",
+  "biome.space_fabric.venus": "Llanuras volcánicas de Venus",
+  "biome.space_fabric.venus_fumaroles": "Campos de fumarolas",
+  "biome.space_fabric.venus_obsidian_basins": "Cuencas de obsidiana",
+  "structure.space_fabric.venus_sulfur_caldera": "Caldera de azufre de Venus"
 }

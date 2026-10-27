@@ -14,6 +14,8 @@ public final class VenusGroundAssetsCheck {
         for(int i=0;i<21;i++)
             CuboidModel.fromStream(new StringReader(Files.readString(root.resolve("block/sulfur_cluster_"+i+".json"))));
         CuboidModel.fromStream(new StringReader(Files.readString(root.resolve("item/sulfur_cluster.json"))));
-        System.out.println("OK: three Venus ground models, 21 original outcrop pieces and assembled inventory model decoded in 26.1.");
+        for(var name:new String[]{"venus_vent_basalt","venus_sulfur_crust","venus_ember_crust","venus_acid_pocket","venus_basalt_substrate","venus_cracked_stone","venus_obsidian_slag","venus_sulfur_crystal_block","venus_acid_pool"})
+            CuboidModel.fromStream(new StringReader(Files.readString(root.resolve("block/"+name+".json"))));
+        System.out.println("OK: three Venus ground models, 21 original outcrop pieces assembled inventory model and nine new landscape models decoded in 26.1.");
     }
 }
