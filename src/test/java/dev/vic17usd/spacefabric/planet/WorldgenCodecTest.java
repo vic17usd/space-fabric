@@ -1133,12 +1133,14 @@ class WorldgenCodecTest {
         }
     }
 
-    @ParameterizedTest @ValueSource(strings={"acidstone_slime","obsidian_lavafang","ashplume_emberwalker","sulfurwing_copper_harbinger"})
+    @ParameterizedTest @ValueSource(strings={"acidstone_slime","obsidian_lavafang","ashplume_emberwalker","sulfurwing_copper_harbinger","copper_acidstinger_drone","sulfurwing_copperstinger"})
     void venusFaunaHaveAttributesEggsAndVenusOnlyHabitat(String name) {
         var livingType=switch(name){
             case "acidstone_slime" -> dev.vic17usd.spacefabric.entity.venus.ModVenusEntities.ACIDSTONE_SLIME;
             case "obsidian_lavafang" -> dev.vic17usd.spacefabric.entity.venus.ModVenusEntities.OBSIDIAN_LAVAFANG;
             case "ashplume_emberwalker" -> dev.vic17usd.spacefabric.entity.venus.ModVenusEntities.ASHPLUME_EMBERWALKER;
+            case "copper_acidstinger_drone" -> dev.vic17usd.spacefabric.entity.venus.ModVenusEntities.COPPER_ACIDSTINGER_DRONE;
+            case "sulfurwing_copperstinger" -> dev.vic17usd.spacefabric.entity.venus.ModVenusEntities.SULFURWING_COPPERSTINGER;
             default -> dev.vic17usd.spacefabric.entity.venus.ModVenusEntities.SULFURWING_COPPER_HARBINGER;
         };
         var gravity=net.minecraft.world.entity.ai.attributes.DefaultAttributes.getSupplier(livingType)
@@ -1152,6 +1154,8 @@ class WorldgenCodecTest {
                     case "acidstone_slime" -> dev.vic17usd.spacefabric.entity.venus.AcidstoneSlimeEntity.class;
                     case "obsidian_lavafang" -> dev.vic17usd.spacefabric.entity.venus.ObsidianLavafangEntity.class;
                     case "ashplume_emberwalker" -> dev.vic17usd.spacefabric.entity.venus.AshplumeEmberwalkerEntity.class;
+                    case "copper_acidstinger_drone" -> dev.vic17usd.spacefabric.entity.venus.CopperAcidstingerDroneEntity.class;
+                    case "sulfurwing_copperstinger" -> dev.vic17usd.spacefabric.entity.venus.SulfurwingCopperstingerEntity.class;
                     default -> dev.vic17usd.spacefabric.entity.venus.SulfurwingCopperHarbingerEntity.class;
                 }));
         var egg=BuiltInRegistries.ITEM.getValue(SpaceFabric.id(name+"_spawn_egg"));
@@ -1634,4 +1638,78 @@ class WorldgenCodecTest {
         Class.forName("net.minecraft.client.renderer.CloudRenderer",false,loader);
         Class.forName("net.minecraft.client.renderer.fog.FogRenderer",false,loader);
     }
+    @Test void venusPassiveSpawnerGroupsAreSmallAndBothImportedFliersAreHostile() {
+        var settings=registries.lookupOrThrow(Registries.BIOME).getOrThrow(dev.vic17usd.spacefabric.worldgen.PlanetBiomes.key(Planet.VENUS)).value().getMobSettings();
+        for(var spawn:settings.getMobs(net.minecraft.world.entity.MobCategory.CREATURE).unwrap()) {
+            assertEquals(1,spawn.value().minCount());assertEquals(2,spawn.value().maxCount());
+        }
+        for(var type:List.of(dev.vic17usd.spacefabric.entity.venus.ModVenusEntities.COPPER_ACIDSTINGER_DRONE,dev.vic17usd.spacefabric.entity.venus.ModVenusEntities.SULFURWING_COPPERSTINGER)) {
+            assertEquals(net.minecraft.world.entity.MobCategory.MONSTER,type.getCategory());
+            var attributes=net.minecraft.world.entity.ai.attributes.DefaultAttributes.getSupplier(type);
+            assertTrue(attributes.getValue(net.minecraft.world.entity.ai.attributes.Attributes.FLYING_SPEED)>0);
+            assertTrue(attributes.getValue(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE)>0);
+            assertEquals("airborne",type==dev.vic17usd.spacefabric.entity.venus.ModVenusEntities.COPPER_ACIDSTINGER_DRONE?
+                dev.vic17usd.spacefabric.entity.venus.CopperAcidstingerDroneRigProfile.MEDIUM:dev.vic17usd.spacefabric.entity.venus.SulfurwingCopperstingerRigProfile.MEDIUM);
+        }
+    }
+    @ParameterizedTest @ValueSource(strings={"copper_crown_village","sunstone_pyramid_bazaar"})
+    void venusTemplatesAreTiledWithoutLostBlocksFlammablesOrWater(String name) throws IOException {
+        var holder=registries.lookupOrThrow(Registries.STRUCTURE).getOrThrow(net.minecraft.resources.ResourceKey.create(Registries.STRUCTURE,SpaceFabric.id(name)));
+        var structure=assertInstanceOf(dev.vic17usd.spacefabric.worldgen.structure.VenusSurfaceStructure.class,holder.value());
+        assertTrue(structure.biomes().contains(registries.lookupOrThrow(Registries.BIOME).getOrThrow(dev.vic17usd.spacefabric.worldgen.PlanetBiomes.key(Planet.VENUS))));
+        assertEquals(1,structure.biomes().size());
+        int total=0;var positions=new java.util.HashSet<net.minecraft.core.BlockPos>();
+        for(var tile:structure.tiles()) {
+            try(var input=getClass().getResourceAsStream("/data/space_fabric/structure/"+tile.template().getPath()+".nbt")) {
+                assertNotNull(input);var nbt=net.minecraft.nbt.NbtIo.readCompressed(input,net.minecraft.nbt.NbtAccounter.unlimitedHeap());
+                var nativeTemplate=new net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate();nativeTemplate.load(registries.lookupOrThrow(Registries.BLOCK),nbt);
+                assertTrue(nativeTemplate.getSize().getX()<=16);assertTrue(nativeTemplate.getSize().getZ()<=16);
+                for(var entry:nbt.getListOrEmpty("palette")) {
+                    var id=net.minecraft.resources.Identifier.parse(((net.minecraft.nbt.CompoundTag)entry).getStringOr("Name",""));
+                    assertTrue(BuiltInRegistries.BLOCK.containsKey(id));
+                    assertFalse(id.getPath().endsWith("_wool")||id.getPath().endsWith("_planks")||id.getPath().endsWith("_log")||id.getPath().equals("water"));
+                }
+                for(var block:nbt.getListOrEmpty("blocks")) {
+                    var pos=((net.minecraft.nbt.CompoundTag)block).getListOrEmpty("pos");
+                    assertTrue(positions.add(new net.minecraft.core.BlockPos(((net.minecraft.nbt.IntTag)pos.get(0)).intValue()+tile.x(),((net.minecraft.nbt.IntTag)pos.get(1)).intValue(),((net.minecraft.nbt.IntTag)pos.get(2)).intValue()+tile.z())));
+                    total++;
+                }
+            }
+        }
+        assertEquals(name.equals("copper_crown_village")?202703:82273,total);
+        assertEquals(name.equals("copper_crown_village")?75:104,structure.tiles().size());
+    }
+    @Test void venusPlotPreparesOnlyItsCurrentChunkUsingVenusianGround() {
+        var world=new VoxelWorld(0,0,40);
+        var plot=new net.minecraft.world.level.levelgen.structure.BoundingBox(-10,-60,-10,40,319,40);
+        var piece=new dev.vic17usd.spacefabric.worldgen.structure.VenusSurfacePiece(plot,64);
+        piece.postProcess(world.level,null,null,net.minecraft.util.RandomSource.create(42),new net.minecraft.world.level.levelgen.structure.BoundingBox(0,-64,0,15,319,15),new net.minecraft.world.level.ChunkPos(0,0),net.minecraft.core.BlockPos.ZERO);
+        assertTrue(world.blocks.keySet().stream().allMatch(pos->pos.getX()>=0&&pos.getX()<16&&pos.getZ()>=0&&pos.getZ()<16));
+        assertEquals(ModBlocks.VULCANIZED_BASALT,world.state(new net.minecraft.core.BlockPos(8,64,8)).getBlock());
+        assertEquals(Blocks.BASALT,world.state(new net.minecraft.core.BlockPos(8,63,8)).getBlock());
+    }
+    @Test void nativeVenusGenerationAssemblesTiledSurfacePiecesAndPersistsTheirOrigin(@org.junit.jupiter.api.io.TempDir Path temporary) throws IOException {
+        var access=(RegistryAccess)registries;
+        var stem=LevelStem.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("dimension/venus")).getOrThrow();
+        var generator=(net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator)stem.generator();
+        var random=net.minecraft.world.level.levelgen.RandomState.create(generator.generatorSettings().value(),access.lookupOrThrow(Registries.NOISE),42);
+        var pack=new PathPackResources(new PackLocationInfo("venus_test",Component.literal("Venus generation"),PackSource.DEFAULT,Optional.empty()),Path.of("src/main/resources"));
+        try(var world=net.minecraft.world.level.storage.LevelStorageSource.createDefault(temporary).createAccess("venus-test");var resources=new MultiPackResourceManager(PackType.SERVER_DATA,List.of(ServerPacksSource.createVanillaPackSource(),pack))) {
+            var templates=new net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager(resources,world,net.minecraft.util.datafix.DataFixers.getDataFixer(),access.lookupOrThrow(Registries.BLOCK));
+            var context=new net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext(resources,access,templates);
+            for(var name:List.of("copper_crown_village","sunstone_pyramid_bazaar")) {
+                var holder=access.lookupOrThrow(Registries.STRUCTURE).getOrThrow(net.minecraft.resources.ResourceKey.create(Registries.STRUCTURE,SpaceFabric.id(name)));
+                var start=holder.value().generate(holder,PlanetDimensions.key(Planet.VENUS),access,generator,generator.getBiomeSource(),random,templates,42,new net.minecraft.world.level.ChunkPos(0,0),0,net.minecraft.world.level.LevelHeightAccessor.create(Planet.VENUS.minY(),Planet.VENUS.height()),biome->biome.is(dev.vic17usd.spacefabric.worldgen.PlanetBiomes.key(Planet.VENUS)));
+                assertTrue(start.isValid());assertEquals(name.equals("copper_crown_village")?76:105,start.getPieces().size());
+                var floor=assertInstanceOf(dev.vic17usd.spacefabric.worldgen.structure.VenusSurfacePiece.class,start.getPieces().getFirst());assertTrue(floor.isPlot());
+                for(var original:start.getPieces()) {
+                    var piece=assertInstanceOf(dev.vic17usd.spacefabric.worldgen.structure.VenusSurfacePiece.class,original);
+                    var restored=new dev.vic17usd.spacefabric.worldgen.structure.VenusSurfacePiece(context,piece.createTag(context));
+                    assertEquals(piece.origin(),restored.origin());assertEquals(piece.getRotation(),restored.getRotation());
+                    if(!piece.isPlot()){assertEquals(floor.origin().getY(),piece.origin().getY());assertTrue(piece.getBoundingBox().getXSpan()<=16);assertTrue(piece.getBoundingBox().getZSpan()<=16);}
+                }
+            }
+        }
+    }
+
 }

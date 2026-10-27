@@ -11,6 +11,8 @@ public final class SpaceFabricClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         dev.vic17usd.spacefabric.client.rocket.RocketFlightView.initialize();
+        net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry.register(dev.vic17usd.spacefabric.entity.venus.ModVenusEntities.COPPER_ACIDSTINGER_DRONE,dev.vic17usd.spacefabric.client.venus.CopperAcidstingerDroneEntityRenderer::new);
+        net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry.register(dev.vic17usd.spacefabric.entity.venus.ModVenusEntities.SULFURWING_COPPERSTINGER,dev.vic17usd.spacefabric.client.venus.SulfurwingCopperstingerEntityRenderer::new);
         dev.vic17usd.spacefabric.client.equipment.SuitEquipmentClient.initialize();
         dev.vic17usd.spacefabric.client.recipe.RecipeViewerClient.initialize();
 net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry.register(dev.vic17usd.spacefabric.entity.venus.ModVenusEntities.ACIDSTONE_SLIME,dev.vic17usd.spacefabric.client.venus.AcidstoneSlimeEntityRenderer::new);

@@ -15,27 +15,39 @@
     "creature": [
       {
         "type": "space_fabric:acidstone_slime",
-        "weight": 18,
+        "weight": 4,
         "minCount": 1,
-        "maxCount": 3
+        "maxCount": 2
       },
       {
         "type": "space_fabric:ashplume_emberwalker",
-        "weight": 16,
+        "weight": 4,
         "minCount": 1,
-        "maxCount": 3
+        "maxCount": 2
       }
     ],
     "monster": [
       {
         "type": "space_fabric:obsidian_lavafang",
-        "weight": 10,
+        "weight": 8,
         "minCount": 1,
         "maxCount": 2
       },
       {
         "type": "space_fabric:sulfurwing_copper_harbinger",
-        "weight": 4,
+        "weight": 2,
+        "minCount": 1,
+        "maxCount": 1
+      },
+      {
+        "type": "space_fabric:copper_acidstinger_drone",
+        "weight": 5,
+        "minCount": 1,
+        "maxCount": 2
+      },
+      {
+        "type": "space_fabric:sulfurwing_copperstinger",
+        "weight": 1,
         "minCount": 1,
         "maxCount": 1
       }

@@ -19,6 +19,7 @@ java {
 }
 
 jar {
+    from('third_party/venus_expansion') { include '**/LICENSE.txt'; include 'README.md'; into 'META-INF/licenses/venus_expansion' }
     from("third_party/venus_fauna") { include "**/LICENSE.txt"; include "README.md"; into "META-INF/licenses/venus_fauna" }
     from('third_party/martian_sanctum') {
         include '**/LICENSE.txt'
@@ -96,6 +97,12 @@ tasks.register('verifyRocketFlightScene', JavaExec) {
     mainClass = 'dev.vic17usd.spacefabric.client.rocket.RocketFlightSceneCheck'
 }
 tasks.named('check') { dependsOn tasks.named('verifyRocketFlightScene') }
+tasks.register('verifyVenusExpansionModels', JavaExec) {
+    dependsOn tasks.named('renderCheckClasses')
+    classpath = sourceSets.renderCheck.runtimeClasspath
+    mainClass = 'dev.vic17usd.spacefabric.client.venus.VenusExpansionModelCheck'
+}
+tasks.named('check') { dependsOn tasks.named('verifyVenusExpansionModels') }
 tasks.register('exportRocketJourneyPreview', JavaExec) {
     dependsOn tasks.named('renderCheckClasses')
     classpath = sourceSets.renderCheck.runtimeClasspath

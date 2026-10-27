@@ -29,7 +29,7 @@ public final class AcidstoneSlimeEntity extends AcidstoneSlimeRigEntity {
       super(type, level);
    }
 
-   @Override public int getMaxSpawnClusterSize() { return 3; }
+   @Override public int getMaxSpawnClusterSize() { return 2; }
    public static Builder createAttributes() {
       double scale = 0.9 / Math.max(0.001, 1.72F);
       return AcidstoneSlimeRigEntity.createAttributes().add(Attributes.MAX_HEALTH, 12.0).add(Attributes.MOVEMENT_SPEED, 0.12).add(Attributes.SCALE, scale);

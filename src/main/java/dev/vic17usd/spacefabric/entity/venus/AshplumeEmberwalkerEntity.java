@@ -42,7 +42,7 @@ public final class AshplumeEmberwalkerEntity extends AshplumeEmberwalkerRigEntit
       return Math.min(heightScale, envelopeScale);
    }
 
-   @Override public int getMaxSpawnClusterSize() { return 3; }
+   @Override public int getMaxSpawnClusterSize() { return 2; }
    public static Builder createAttributes() {
       return AshplumeEmberwalkerRigEntity.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.1).add(Attributes.SCALE, RUNTIME_SCALE);
    }

@@ -264,5 +264,9 @@
   "gui.space_fabric.journey_descent": "Approach · Automatic landing",
   "gui.space_fabric.journey_eta": "Arrival in %s s",
   "gui.space_fabric.journey_harness": "Look around freely · Disembark after landing",
-  "message.space_fabric.no_landing_return": "No safe landing at destination. Returning to the launch point."
+  "message.space_fabric.no_landing_return": "No safe landing at destination. Returning to the launch point.",
+  "entity.space_fabric.copper_acidstinger_drone": "Copper Acidstinger Drone",
+  "item.space_fabric.copper_acidstinger_drone_spawn_egg": "Spawn Egg: Copper Acidstinger Drone",
+  "entity.space_fabric.sulfurwing_copperstinger": "Sulfurwing Copperstinger",
+  "item.space_fabric.sulfurwing_copperstinger_spawn_egg": "Spawn Egg: Sulfurwing Copperstinger"
 }

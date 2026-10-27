@@ -1,0 +1,38 @@
+{
+  "animation_names": [
+    "hover_idle",
+    "thrust_fly",
+    "crystal_dart",
+    "panic_retreat"
+  ],
+  "asset_id": "copper-acidstinger-drone-qvloegth",
+  "outputs": {
+    "copper-acidstinger-drone-qvloegth.bbmodel": {
+      "bytes": 241921,
+      "sha256": "3d3233c63d41f78017e53704ee487ba9280f9a343b50facdf0e89cbdecd84031"
+    },
+    "copper-acidstinger-drone-qvloegth.mob.json": {
+      "bytes": 283750,
+      "sha256": "0b6a9913658be5532c2590c25887d24093218dbec57fb432ff4a55a5f9fd5ce1"
+    },
+    "copper-acidstinger-drone-qvloegth.png": {
+      "bytes": 39403,
+      "sha256": "8d099ff60bde095366d53f30d9a40a393be3fcd9d48d6c1ef2f1e53929d71f1c"
+    },
+    "copper-acidstinger-drone-qvloegth.preview.png": {
+      "bytes": 458454,
+      "sha256": "943bd758df5632f78f4a3dec61888dd9f074b30097c9998a7872afaa0cbd737c"
+    },
+    "copper-acidstinger-drone-qvloegth.render.png": {
+      "bytes": 282248,
+      "sha256": "bd269c402c9327998daa4aab369808b500274e4048fb438626428195e45421b8"
+    }
+  },
+  "schema_version": 1,
+  "source": {
+    "kind": "reference_image",
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "reference_sha256": "6fb0a0b9669390991c8d0b5067dc7d3413a4eecc92e4924ac6249bfffb9bfd51"
+  }
+}

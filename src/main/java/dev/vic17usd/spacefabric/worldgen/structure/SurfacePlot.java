@@ -26,6 +26,13 @@ public final class SurfacePlot {
     }
 
     public static void prepare(WorldGenLevel level, BoundingBox plot, int originY, BoundingBox clip) {
+        prepare(level,plot,originY,clip,ModBlocks.IRON_OXIDE_REGOLITH.defaultBlockState(),ModBlocks.MARTIAN_STONE.defaultBlockState());
+    }
+    public static void prepareVenus(WorldGenLevel level,BoundingBox plot,int originY,BoundingBox clip) {
+        prepare(level,plot,originY,clip,ModBlocks.VULCANIZED_BASALT.defaultBlockState(),Blocks.BASALT.defaultBlockState());
+    }
+    private static void prepare(WorldGenLevel level,BoundingBox plot,int originY,BoundingBox clip,
+            net.minecraft.world.level.block.state.BlockState surface,net.minecraft.world.level.block.state.BlockState foundation) {
         int lowX = Math.max(plot.minX(), clip.minX()), highX = Math.min(plot.maxX(), clip.maxX());
         int lowZ = Math.max(plot.minZ(), clip.minZ()), highZ = Math.min(plot.maxZ(), clip.maxZ());
         var cursor = new BlockPos.MutableBlockPos();
@@ -42,7 +49,7 @@ public final class SurfacePlot {
                 var existing = level.getBlockState(cursor);
                 if (y < originY - 4 && existing.canOcclude() && existing.getFluidState().isEmpty()) break;
                 if (y > clip.maxY()) continue;
-                var fill = y == originY - 1 ? ModBlocks.IRON_OXIDE_REGOLITH.defaultBlockState() : ModBlocks.MARTIAN_STONE.defaultBlockState();
+                var fill = y == originY - 1 ? surface : foundation;
                 if (!existing.equals(fill)) level.setBlock(cursor, fill, 18);
             }
         }
