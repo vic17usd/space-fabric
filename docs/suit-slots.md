@@ -1,4 +1,4 @@
-# Traje y armadura a la vez — 0.21.0 / Fabric 26.1
+# Traje y armadura a la vez — 0.22.0 / Fabric 26.1
 
 Los trajes espaciales disponen de **cuatro espacios propios**, independientes de
 los espacios de armadura de Minecraft. Puedes llevar, por ejemplo, armadura de
@@ -6,10 +6,18 @@ netherita y un traje venusiano completo simultáneamente.
 
 ## Equipar y quitar
 
-1. Pulsa **J**, o abre el inventario y pulsa **Traje espacial**, debajo de Recetas.
+1. Abre el inventario de supervivencia con **E**: los cuatro espacios del traje
+   están dentro del recuadro, en una columna a la derecha del personaje. Los de
+   armadura siguen a su izquierda. La mano secundaria pasa debajo de la cuadrícula
+   de fabricación y el libro de recetas se desplaza a su derecha.
 2. Coloca casco, pechera, pantalones y botas en sus espacios correspondientes.
 3. Deja tu armadura habitual en los espacios normales del inventario.
 4. Cierra con Escape. El traje sigue equipado y guardado aunque cierres la pantalla.
+
+También se conserva **J** para abrir la pantalla dedicada. En creativo se sigue
+usando esa pantalla con J o el botón Traje espacial; las nuevas casillas no se
+añaden a las pestañas creativas, cuyo protocolo vanilla solo admite sus casillas
+originales. Instala 0.22.0 tanto en cliente como en servidor.
 
 El clic derecho con una pieza en la mano la equipa en su espacio de traje si está
 vacío, sin reemplazar la armadura. Si está ocupado, retira primero la pieza desde
@@ -82,6 +90,10 @@ obsoleta que pueda duplicarse al cerrar.
 - `equipment/SuitProtection`: prioridad del traje independiente y compatibilidad.
 - `menu/SuitMenu` y `client/menu/SuitScreen`: contenedor y pantalla.
 - `client/equipment/SuitEquipmentClient`: tecla y botón.
+- `equipment/InventorySuitSlots` y `mixin/InventorySuitMixin`: casillas 46–49
+  del inventario nativo, restricciones y transferencia con Shift-clic.
+- `mixin/client/InventorySuitScreenMixin`: columna de traje, mano secundaria
+  y posición del libro; `CreativeSuitInventoryMixin` conserva los índices creativos.
 - `client/equipment/SuitLayer` y `mixin/client/SuitRendererMixin`: captura del traje
   sincronizado y renderizado nativo de la capa bajo la armadura.
 - `space_fabric:suit_inventory`: identificador del attachment y del menú.
@@ -90,6 +102,10 @@ Las pruebas usan los registros, tags, contenedor, encantamientos y codecs nativo
 protección con armadura de netherita, conjuntos incompletos y compatibilidad,
 guardado NBT y red, conteo al retirar, rutas de Shift-clic, tipos de espacios,
 política de muerte, desaparición y migración sin reemplazar armadura normal.
+También se instancia el inventario nativo transformado para comprobar sus 50
+casillas, sus índices y posiciones, y equipar/retirar trajes con Shift-clic mientras
+el casco de netherita permanece equipado. Se cargan ambas pantallas para comprobar
+la aplicación de los Mixins sin arrancar una sesión gráfica.
 También se comprueban los descriptores exactos del renderer al que se inyecta la
 capa. La compilación y las pruebas no arrancan una partida: la comprobación visual
 con armadura, multijugador, reconexión real y muerte dentro del juego sigue pendiente.

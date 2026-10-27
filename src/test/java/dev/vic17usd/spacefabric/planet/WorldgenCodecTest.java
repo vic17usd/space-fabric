@@ -1514,4 +1514,69 @@ class WorldgenCodecTest {
         assertClientTarget("net/minecraft/client/renderer/entity/player/AvatarRenderer","<init>","(Lnet/minecraft/client/renderer/entity/EntityRendererProvider$Context;Z)V");
         assertClientTarget("net/minecraft/client/renderer/entity/player/AvatarRenderer","extractRenderState","(Lnet/minecraft/world/entity/Avatar;Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;F)V");
     }
+    @Test void suitInventorySlotsKeepVanillaIdsAndUseNativeArmorIcons() {
+        var stored=new java.util.concurrent.atomic.AtomicReference<>(dev.vic17usd.spacefabric.equipment.SuitLoadout.empty());
+        var container=new dev.vic17usd.spacefabric.equipment.SuitContainer(stored::get,stored::set,p->true);
+        var pieces=suitLoadout("cryo").items();
+        for(int part=0;part<4;part++) {
+            var slot=dev.vic17usd.spacefabric.equipment.InventorySuitSlots.create(container,part);
+            assertEquals(77,slot.x);assertEquals(8+18*part,slot.y);assertEquals(1,slot.getMaxStackSize());
+            assertNotNull(slot.getNoItemIcon());assertTrue(slot.mayPlace(pieces.get(part)));
+            assertFalse(slot.mayPlace(pieces.get((part+1)%4)));
+            assertFalse(slot.mayPlace(new ItemStack(Items.NETHERITE_HELMET)));
+            slot.setByPlayer(pieces.get(part).copy());
+        }
+        assertEquals(dev.vic17usd.spacefabric.equipment.SuitTier.CRYO,stored.get().tier());
+        assertEquals(46,dev.vic17usd.spacefabric.equipment.InventorySuitSlots.START);
+        assertEquals(50,dev.vic17usd.spacefabric.equipment.InventorySuitSlots.END);
+    }
+    @Test void inventorySuitMixinsTargetNative26Point1Methods() throws IOException {
+        assertClientTarget("net/minecraft/world/inventory/InventoryMenu","<init>","(Lnet/minecraft/world/entity/player/Inventory;ZLnet/minecraft/world/entity/player/Player;)V");
+        assertClientTarget("net/minecraft/world/inventory/InventoryMenu$1","<init>","(Lnet/minecraft/world/inventory/InventoryMenu;Lnet/minecraft/world/Container;IIILnet/minecraft/world/entity/player/Player;)V");
+        assertClientTarget("net/minecraft/client/gui/screens/inventory/InventoryScreen","getRecipeBookButtonPosition","()Lnet/minecraft/client/gui/navigation/ScreenPosition;");
+        assertClientTarget("net/minecraft/client/gui/screens/inventory/InventoryScreen","extractBackground","(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IIF)V");
+        assertClientTarget("net/minecraft/client/gui/screens/inventory/CreativeModeInventoryScreen","selectTab","(Lnet/minecraft/world/item/CreativeModeTab;)V");
+        assertClientTarget("net/minecraft/client/gui/screens/inventory/CreativeModeInventoryScreen","slotClicked","(Lnet/minecraft/world/inventory/Slot;IILnet/minecraft/world/inventory/ContainerInput;)V");
+    }
+    @Test void nativeInventoryMenuActuallyAppendsSuitSlotsWithoutRenumberingArmorOrHotbar() {
+        var inventory=new net.minecraft.world.entity.player.Inventory(null,new net.minecraft.world.entity.EntityEquipment());
+        var menu=new net.minecraft.world.inventory.InventoryMenu(inventory,true,null);
+        assertEquals(50,menu.slots.size());
+        for(int i=0;i<50;i++)assertEquals(i,menu.slots.get(i).index);
+        assertEquals(8,menu.slots.get(5).x);assertEquals(8,menu.slots.get(5).y);
+        assertEquals(8,menu.slots.get(9).x);assertEquals(84,menu.slots.get(9).y);
+        assertEquals(8,menu.slots.get(36).x);assertEquals(142,menu.slots.get(36).y);
+        assertEquals(98,menu.slots.get(45).x);assertEquals(62,menu.slots.get(45).y);
+        for(int part=0;part<4;part++) {
+            assertEquals(77,menu.slots.get(46+part).x);
+            assertEquals(8+18*part,menu.slots.get(46+part).y);
+        }
+    }
+    @Test void nativeInventoryShiftClickEquipsSuitAlongsideCombatArmorWithoutDuplicating() {
+        var inventory=new net.minecraft.world.entity.player.Inventory(null,new net.minecraft.world.entity.EntityEquipment());
+        inventory.setItem(39,new ItemStack(Items.NETHERITE_HELMET));
+        inventory.setItem(9,new ItemStack(ModItems.CRYO_SUIT_HELMET));
+        var menu=new net.minecraft.world.inventory.InventoryMenu(inventory,true,null);
+        // Replace only the attachment owner with an in-memory store; run the transformed native menu.
+        var stored=new java.util.concurrent.atomic.AtomicReference<>(dev.vic17usd.spacefabric.equipment.SuitLoadout.empty());
+        var container=new dev.vic17usd.spacefabric.equipment.SuitContainer(stored::get,stored::set,p->true);
+        for(int part=0;part<4;part++) {
+            var slot=dev.vic17usd.spacefabric.equipment.InventorySuitSlots.create(container,part);
+            slot.index=46+part;menu.slots.set(46+part,slot);
+        }
+        assertFalse(menu.quickMoveStack(null,9).isEmpty());
+        assertTrue(container.getItem(0).is(ModItems.CRYO_SUIT_HELMET));assertTrue(inventory.getItem(9).isEmpty());
+        assertTrue(inventory.getItem(39).is(Items.NETHERITE_HELMET));
+        inventory.setItem(9,new ItemStack(ModItems.CRYO_SUIT_HELMET));
+        assertTrue(menu.quickMoveStack(null,9).isEmpty()); // Occupied suit slot stays occupied; armor stays intact.
+        assertEquals(1,inventory.countItem(ModItems.CRYO_SUIT_HELMET));
+        assertFalse(menu.quickMoveStack(null,46).isEmpty());
+        assertTrue(container.getItem(0).isEmpty());assertEquals(2,inventory.countItem(ModItems.CRYO_SUIT_HELMET));
+        assertTrue(inventory.getItem(39).is(Items.NETHERITE_HELMET));
+    }
+    @Test void inventorySuitClientMixinsApplyWithoutStartingAGraphicsSession() throws ClassNotFoundException {
+        var loader=Thread.currentThread().getContextClassLoader();
+        Class.forName("net.minecraft.client.gui.screens.inventory.InventoryScreen",false,loader);
+        Class.forName("net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen",false,loader);
+    }
 }

@@ -29,7 +29,7 @@ public final class SuitEquipmentClient {
         var key=KeyMappingHelper.registerKeyMapping(new KeyMapping("key.space_fabric.suit_inventory",GLFW.GLFW_KEY_J,KeyMapping.Category.INVENTORY));
         ClientTickEvents.END_CLIENT_TICK.register(client->{while(key.consumeClick())if(client.screen==null)open(client);});
         ScreenEvents.AFTER_INIT.register((client,screen,width,height)->{
-            if(screen instanceof InventoryScreen||screen instanceof CreativeModeInventoryScreen)
+            if(screen instanceof CreativeModeInventoryScreen)
                 Screens.getWidgets(screen).add(Button.builder(Component.translatable("gui.space_fabric.suit_inventory"),button->open(client)).bounds(width-86,30,80,20).build());
         });
     }
