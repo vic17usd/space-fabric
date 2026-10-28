@@ -11,7 +11,7 @@ cerramiento certificado, refrigeración y energía geotérmica.
 El diagnóstico y el interior visual de los hábitats se amplían en **0.31.0**:
 [panel, indicadores y niebla de interior](habitat-interiors.md).
 
-## Entrega 2: invernaderos, mantenimiento y almacenamiento — diseñada
+## Entrega 2: invernaderos, mantenimiento y almacenamiento — mantenimiento inicial implementado
 
 - Depósitos conectados y pasamuros certificados: transporte de líquidos/energía
   sin perforar el cierre de la habitación. Red acotada, descarga de chunks segura
@@ -19,9 +19,10 @@ El diagnóstico y el interior visual de los hábitats se amplían en **0.31.0**:
 - Invernadero: riego desde depósitos, iluminación, consumo de agua y crecimiento
   condicionado por presión/temperatura. Integración gradual de vegetación y gases,
   evitando que unas pocas plantas produzcan oxígeno ilimitado.
-- Venus: intercambiador de calor, filtros reemplazables y deterioro por ácido en
-  máquinas expuestas. La protección del cerramiento y el mantenimiento deben
-  indicar por qué falla un equipo y cómo repararlo.
+- Venus: filtros reemplazables, revestimientos y reparación de máquinas expuestas
+  implementados en **0.33.0**, con avisos y protección del recinto certificado.
+  [Guía y límites](venus-maintenance.md). Los intercambiadores y redes industriales
+  independientes quedan para la siguiente ampliación.
 - Marte: acumuladores nocturnos y limpieza de paneles tras tormentas de polvo.
   Registrar duración de tormentas y consumo; no dañar estructuras sin avisos de juego.
 

@@ -19,18 +19,23 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
-public final class FuelRefineryBlockEntity extends BaseContainerBlockEntity implements ExtendedMenuProvider<BlockPos>, WorldlyContainer {
+public final class FuelRefineryBlockEntity extends BaseContainerBlockEntity implements ExtendedMenuProvider<BlockPos>, WorldlyContainer,dev.vic17usd.spacefabric.maintenance.Maintainable {
     private NonNullList<ItemStack> items = NonNullList.withSize(4, ItemStack.EMPTY);
+    private final dev.vic17usd.spacefabric.maintenance.MachineWear maintenance=new dev.vic17usd.spacefabric.maintenance.MachineWear();
+    @Override public dev.vic17usd.spacefabric.maintenance.MachineWear maintenance(){return maintenance;}
     private final RefineryProcess process = new RefineryProcess();
     public final ContainerData data = new ContainerData() {
-        @Override public int get(int index) { return index == 0 ? process.progress() : process.duration(); }
+        @Override public int get(int index) { return switch(index){case 0->process.progress();case 1->process.duration();case 2->maintenance.integrity();case 3->maintenance.state().coating();case 4->maintenance.state().filter();default->maintenance.risk().ordinal();}; }
         @Override public void set(int index, int value) { }
-        @Override public int getCount() { return 2; }
+        @Override public int getCount() { return 6; }
     };
     public FuelRefineryBlockEntity(BlockPos pos, BlockState state) { super(ModMachines.FUEL_REFINERY, pos, state); }
     public static void tick(Level level, BlockPos pos, BlockState state, FuelRefineryBlockEntity refinery) {
-        if (refinery.process.tick(refinery)) refinery.setChanged();
+        if(!(level instanceof net.minecraft.server.level.ServerLevel server))return;
+        if(dev.vic17usd.spacefabric.maintenance.MachineExposure.tick(server,refinery,refinery.maintenance))refinery.setChanged();
+        refinery.processTick(level.getGameTime());
     }
+    public void processTick(long tick){if(maintenance.allowsWork(tick)&&process.tick(this))setChanged();}
     @Override public int getContainerSize() { return 4; }
     @Override protected NonNullList<ItemStack> getItems() { return items; }
     @Override protected void setItems(NonNullList<ItemStack> items) { this.items = items; }
@@ -44,10 +49,12 @@ public final class FuelRefineryBlockEntity extends BaseContainerBlockEntity impl
     @Override protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input); items = NonNullList.withSize(4, ItemStack.EMPTY);
         ContainerHelper.loadAllItems(input, items);
+        maintenance.restore(input.read("Maintenance",dev.vic17usd.spacefabric.maintenance.MachineWear.State.CODEC).orElse(dev.vic17usd.spacefabric.maintenance.MachineWear.State.FRESH));
         process.restore(input.getIntOr("Progress", 0), input.getIntOr("Recipe", 0));
     }
     @Override protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output); ContainerHelper.saveAllItems(output, items);
+        output.store("Maintenance",dev.vic17usd.spacefabric.maintenance.MachineWear.State.CODEC,maintenance.state());
         output.putInt("Progress", process.progress()); output.putInt("Recipe", process.recipe());
     }
 }

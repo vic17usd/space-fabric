@@ -314,3 +314,25 @@ Paisajes de Venus, versión 0.32.0:
 Pendientes de partida real: aspecto del volcán y las transiciones de bioma,
 frecuencia efectiva, daño de contacto, partículas, recorrido de fauna y multijugador.
 Las comprobaciones no equivalen a observar el juego con GPU u optimizadores.
+
+Corrosión y mantenimiento, versión 0.33.0:
+
+- Compilación completa: 451 pruebas JUnit sin fallos y diez comprobaciones por
+  CPU. 963 JSON válidos. Cuatro recetas nuevas y un avance nativo.
+- Modelo de desgaste: tiempo cargado, fases, daño absorbido por capa, reducción
+  por filtro, saturación, límites, reparación reversible y fracciones de segundo
+  conservadas al mover la máquina. Un recinto abierto o una cara exterior libre
+  impiden el aislamiento; las pruebas también invalidan un cierre modificado.
+- Las seis máquinas guardan inventario y mantenimiento en NBT. La operación
+  nativa CopyCustomDataFunction conserva solamente Maintenance en el objeto,
+  sin copiar Items. Se decodifican los seis loot tables con los registros reales.
+- La refinería conserva un lote parcial al guardar/cargar, permanece detenida
+  durante la avería y termina el lote después de reparar a velocidad reducida.
+- Se sincronizan estado de protección e integridad mediante datos nativos de
+  menú y telemetría del hábitat. Las pruebas cubren slots, Shift y paquetes con
+  campos nuevos. La condición de controlador averiado retira la vista despejada
+  en la comprobación del cliente existente.
+
+Pendientes en partida real: uso de los materiales con clic derecho, recogida y
+colocación, recepción de avisos, lectura visual de paneles y multijugador. Los
+ensayos por CPU no sustituyen la observación de esos recorridos.

@@ -39,6 +39,11 @@ public final class HabitatSystem {
         }
         return best;
     }
+    public static boolean sheltersMachine(ServerLevel level,BlockPos pos) {
+        var machines=ACTIVE.get(level);if(machines==null)return false;
+        for(var controller:machines.values())if(!controller.isRemoved()&&controller.getBlockPos().distManhattan(pos)<=3*SealScanner.MAX_RADIUS+1&&controller.sheltersMachine(pos))return true;
+        return false;
+    }
     static SealScanner.World world(ServerLevel level) {
         return pos->{
             if(pos.getY()<level.getMinY()||pos.getY()>=level.getMaxY())return SealScanner.Cell.UNLOADED;

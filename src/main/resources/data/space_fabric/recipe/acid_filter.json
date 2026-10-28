@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:charcoal",
+    "minecraft:paper",
+    "minecraft:iron_nugget",
+    "minecraft:copper_ingot"
+  ],
+  "result": {
+    "id": "space_fabric:acid_filter",
+    "count": 1
+  }
+}

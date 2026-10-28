@@ -5,6 +5,10 @@ verse despejada por dentro y cuyo soporte vital sea fácil de comprobar. Tambié
 se aplica a los hábitats ya construidos en Marte y Tierra. No requiere modelos
 3D nuevos ni reconstruir las habitaciones existentes.
 
+Desde **0.33.0**, la integridad del controlador aparece en el HUD y el panel;
+la avería por corrosión retira la regulación hasta repararlo.
+[Guía de mantenimiento](venus-maintenance.md).
+
 ## Cómo usarlo
 
 1. Instala `space-fabric-0.31.0.jar` en cliente y servidor, con Fabric API para 26.1.

@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "space_fabric:venus_acid_pool",
+    "space_fabric:venus_acid_pocket",
+    "space_fabric:condensed_sulfuric_acid",
+    "space_fabric:venus_vent_basalt"
+  ]
+}

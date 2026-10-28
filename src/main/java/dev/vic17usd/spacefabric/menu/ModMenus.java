@@ -9,6 +9,8 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.world.inventory.MenuType;
 
 public final class ModMenus {
+    public static final MenuType<ColonyMachineMenu> COLONY_MACHINE=Registry.register(BuiltInRegistries.MENU,SpaceFabric.id("colony_machine"),
+            new MenuType<>(ColonyMachineMenu::new,net.minecraft.world.flag.FeatureFlags.DEFAULT_FLAGS));
     public static final MenuType<HabitatMenu> HABITAT = Registry.register(BuiltInRegistries.MENU, SpaceFabric.id("habitat"),
             new MenuType<>(HabitatMenu::new, net.minecraft.world.flag.FeatureFlags.DEFAULT_FLAGS));
     public static final MenuType<SuitMenu> SUIT = Registry.register(BuiltInRegistries.MENU, SpaceFabric.id("suit_inventory"),

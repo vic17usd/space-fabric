@@ -14,18 +14,22 @@ import net.minecraft.world.item.ItemStack;
 public final class RefineryMenu extends AbstractContainerMenu {
     private final Container storage;
     private final ContainerData data;
-    public RefineryMenu(int id, Inventory inventory) { this(id, inventory, new SimpleContainer(4), new SimpleContainerData(2)); }
+    public RefineryMenu(int id, Inventory inventory) { this(id, inventory, new SimpleContainer(4), new SimpleContainerData(6)); }
     public RefineryMenu(int id, Inventory inventory, Container storage, ContainerData data) {
         super(ModMenus.REFINERY, id); this.storage = storage; this.data = data;
-        checkContainerSize(storage, 4); checkContainerDataCount(data, 2);
+        checkContainerSize(storage, 4); checkContainerDataCount(data, 6);
         for (int i = 0; i < 4; i++) {
             final int slot = i;
-            addSlot(new Slot(storage, slot, 26 + i * 36, 35) {
+            addSlot(new Slot(storage, slot, 26 + i * 44, 45) {
                 @Override public boolean mayPlace(ItemStack stack) { return RefineryProcess.accepts(slot, stack); }
             });
         }
-        addStandardInventorySlots(inventory, 8, 84); addDataSlots(data);
+        addStandardInventorySlots(inventory, 28, 104); addDataSlots(data);
     }
+    public int integrity(){return data.get(2);}
+    public int coating(){return data.get(3);}
+    public int filter(){return data.get(4);}
+    public int risk(){return data.get(5);}
     public int progress() { return data.get(0); }
     public int duration() { return data.get(1); }
     @Override public boolean stillValid(Player player) { return storage.stillValid(player); }

@@ -15,14 +15,17 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.*;
 
 /** Nine slots: inputs 0..2, products 3..5, returned vessels 6; spare storage 7..8. */
-public final class ColonyMachineBlockEntity extends BaseContainerBlockEntity implements WorldlyContainer {
+public final class ColonyMachineBlockEntity extends BaseContainerBlockEntity implements WorldlyContainer,dev.vic17usd.spacefabric.maintenance.Maintainable {
     private NonNullList<ItemStack> items=NonNullList.withSize(9,ItemStack.EMPTY);
+    private final dev.vic17usd.spacefabric.maintenance.MachineWear maintenance=new dev.vic17usd.spacefabric.maintenance.MachineWear();
+    @Override public dev.vic17usd.spacefabric.maintenance.MachineWear maintenance(){return maintenance;}
+    public boolean sheltersMachine(BlockPos pos){return level instanceof ServerLevel server&&validate(server)&&dev.vic17usd.spacefabric.maintenance.MachineExposure.enclosed(room,pos,HabitatSystem.world(server));}
     private final LifeSupport support=new LifeSupport();
     private SealScanner.Room room;
     private SealScanner.Room lastEnclosure;
     private int progress;
     private String recipe="",status="idle";
-    private long lastWork=Long.MIN_VALUE,lastValidation=Long.MIN_VALUE;
+    private long lastWork=Long.MIN_VALUE,lastValidation=Long.MIN_VALUE,lastSealScan=Long.MIN_VALUE;
     private boolean active;
     public ColonyMachineBlockEntity(BlockPos pos,BlockState state){super(ColonyContent.MACHINE_TYPE,pos,state);}
     public ColonyContent.Machine kind(){return ColonyContent.kind(getBlockState().getBlock());}
@@ -44,6 +47,7 @@ public final class ColonyMachineBlockEntity extends BaseContainerBlockEntity imp
             case "weak_wall" -> HabitatReadings.Condition.WEAK_WALL;
             case "blocked_vent" -> HabitatReadings.Condition.BLOCKED_VENT;
             case "unsupported" -> HabitatReadings.Condition.UNSUPPORTED;
+            case "maintenance_failure" -> HabitatReadings.Condition.MAINTENANCE_FAILURE;
             case "supplies" -> switch(support.failure()) {
                 case OXYGEN -> HabitatReadings.Condition.NEEDS_OXYGEN;
                 case POWER -> HabitatReadings.Condition.NEEDS_POWER;
@@ -53,7 +57,20 @@ public final class ColonyMachineBlockEntity extends BaseContainerBlockEntity imp
             default -> HabitatReadings.Condition.IDLE;
         };
         boolean venus=level!=null&&PlanetDimensions.find(level).orElse(null)==Planet.VENUS;
-        return new HabitatReadings(condition,support.oxygen(),support.energy(),support.coolant(),room!=null&&room.sealed()?room.air().size():0,venus);
+        return new HabitatReadings(condition,support.oxygen(),support.energy(),support.coolant(),room!=null&&room.sealed()?room.air().size():0,venus,maintenance.integrity(),maintenance.state().coating(),maintenance.state().filter());
+    }
+    public ContainerData machineData() {
+        return new ContainerData() {
+            public int getCount(){return 8;}public void set(int index,int value) { }
+            public int get(int index) {
+                return switch(index) {
+                    case 0->progress;
+                    case 1->ColonyRecipes.ALL.stream().filter(f->f.id().equals(recipe)).findFirst().map(ColonyRecipes.Formula::duration).orElse(0);
+                    case 2->Math.max(0,java.util.List.of("idle","inputs","output_full","sunlight","heat","processing","maintenance_failure").indexOf(status));
+                    case 3->maintenance.integrity();case 4->maintenance.state().coating();case 5->maintenance.state().filter();case 6->maintenance.risk().ordinal();default->kind().ordinal();
+                };
+            }
+        };
     }
     public Component status() {
         return kind()==ColonyContent.Machine.HABITAT?Component.translatable("colony.space_fabric.habitat_status",
@@ -62,12 +79,14 @@ public final class ColonyMachineBlockEntity extends BaseContainerBlockEntity imp
     }
     public static void tick(Level level,BlockPos pos,BlockState state,ColonyMachineBlockEntity machine) {
         if(!(level instanceof ServerLevel server))return;
+        if(machine.kind()==ColonyContent.Machine.HABITAT){HabitatSystem.register(server,machine);machine.refreshSeal(server);}
+        if(dev.vic17usd.spacefabric.maintenance.MachineExposure.tick(server,machine,machine.maintenance))machine.setChanged();
+        if(machine.maintenance.failed()){machine.active=false;machine.status="maintenance_failure";return;}
         if(machine.kind()==ColonyContent.Machine.HABITAT) {
-            HabitatSystem.register(server,machine);
             if(machine.lastWork==Long.MIN_VALUE||level.getGameTime()-machine.lastWork>=20) {
                 machine.lastWork=level.getGameTime();machine.tickHabitat(server);machine.setChanged();
             }
-        } else machine.tickProcessing(server);
+        } else if(machine.maintenance.allowsWork(level.getGameTime()))machine.tickProcessing(server);
     }
     private boolean validate(ServerLevel level) {
         if(room==null||!room.sealed())return false;
@@ -79,15 +98,21 @@ public final class ColonyMachineBlockEntity extends BaseContainerBlockEntity imp
     public boolean protects(BlockPos head) {
         return active && room!=null && room.air().contains(head) && level instanceof ServerLevel server && validate(server);
     }
+    private void refreshSeal(ServerLevel level) {
+        var planet=PlanetDimensions.find(level).orElse(Planet.EARTH);
+        if(planet!=Planet.EARTH&&planet!=Planet.MARS&&planet!=Planet.VENUS)return;
+        if(validate(level))return;
+        if(lastSealScan!=Long.MIN_VALUE&&level.getGameTime()-lastSealScan<20)return;
+        lastSealScan=level.getGameTime();room=SealScanner.scan(HabitatSystem.world(level),worldPosition.above(),planet==Planet.VENUS);
+        lastValidation=level.getGameTime();if(room.sealed())lastEnclosure=room;
+    }
+    @Override public void resumeAfterRepair(){lastWork=Long.MIN_VALUE;}
     private void tickHabitat(ServerLevel level) {
         var planet=PlanetDimensions.find(level).orElse(Planet.EARTH);
         if(planet!=Planet.EARTH&&planet!=Planet.MARS&&planet!=Planet.VENUS){active=false;status="unsupported";return;}
         boolean venus=planet==Planet.VENUS;
-        if(!validate(level)) {
-            room=SealScanner.scan(HabitatSystem.world(level),worldPosition.above(),venus);
-            lastValidation=level.getGameTime();
-        }
-        if(!room.sealed()){active=false;support.vent();status=room.status().name().toLowerCase(java.util.Locale.ROOT);return;}
+        refreshSeal(level);
+        if(room==null||!room.sealed()){active=false;support.vent();status=room==null?"idle":room.status().name().toLowerCase(java.util.Locale.ROOT);return;}
         lastEnclosure=room;
         refill(0,ColonyContent.OXYGEN_CANISTER,ColonyContent.EMPTY_CANISTER,6,0);
         refill(1,ColonyContent.CHARGED_POWER_CELL,ColonyContent.EMPTY_POWER_CELL,5,1);
@@ -121,7 +146,7 @@ public final class ColonyMachineBlockEntity extends BaseContainerBlockEntity imp
     @Override protected Component getDefaultName(){return getBlockState().getBlock().getName();}
     @Override protected AbstractContainerMenu createMenu(int id,Inventory inventory){return kind()==ColonyContent.Machine.HABITAT
             ?new dev.vic17usd.spacefabric.menu.HabitatMenu(id,inventory,this,dev.vic17usd.spacefabric.menu.HabitatMenu.data(this::readings))
-            :new DispenserMenu(id,inventory,this);}
+            :new dev.vic17usd.spacefabric.menu.ColonyMachineMenu(id,inventory,this,machineData());}
     @Override public boolean canPlaceItem(int slot,ItemStack stack){return ColonyRecipes.accepts(kind(),slot,stack);}
     @Override public int[] getSlotsForFace(Direction face){return face==Direction.DOWN?new int[]{3,4,5,6,7,8}:face==Direction.UP?new int[]{0}:new int[]{1,2};}
     @Override public boolean canPlaceItemThroughFace(int slot,ItemStack stack,Direction face){return canPlaceItem(slot,stack);}
@@ -130,10 +155,11 @@ public final class ColonyMachineBlockEntity extends BaseContainerBlockEntity imp
         super.loadAdditional(input);items=NonNullList.withSize(9,ItemStack.EMPTY);ContainerHelper.loadAllItems(input,items);
         progress=Math.clamp(input.getIntOr("Progress",0),0,400);recipe=input.getStringOr("Recipe","");
         support.restore(input.getIntOr("Oxygen",0),input.getIntOr("Energy",0),input.getIntOr("Coolant",0),input.getIntOr("Volume",0),input.getBooleanOr("Pressurized",false));
-        active=false;room=null;lastEnclosure=null;lastWork=lastValidation=Long.MIN_VALUE;
+        maintenance.restore(input.read("Maintenance",dev.vic17usd.spacefabric.maintenance.MachineWear.State.CODEC).orElse(dev.vic17usd.spacefabric.maintenance.MachineWear.State.FRESH));
+        active=false;room=null;lastEnclosure=null;lastWork=lastValidation=lastSealScan=Long.MIN_VALUE;
     }
     @Override protected void saveAdditional(ValueOutput output) {
-        super.saveAdditional(output);ContainerHelper.saveAllItems(output,items);output.putInt("Progress",progress);output.putString("Recipe",recipe);
+        super.saveAdditional(output);output.store("Maintenance",dev.vic17usd.spacefabric.maintenance.MachineWear.State.CODEC,maintenance.state());ContainerHelper.saveAllItems(output,items);output.putInt("Progress",progress);output.putString("Recipe",recipe);
         output.putInt("Oxygen",support.oxygen());output.putInt("Energy",support.energy());output.putInt("Coolant",support.coolant());
         output.putInt("Volume",room!=null&&room.sealed()?room.air().size():0);output.putBoolean("Pressurized",support.pressurized());
     }

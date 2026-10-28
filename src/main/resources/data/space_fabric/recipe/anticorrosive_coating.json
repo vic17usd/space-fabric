@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:quartz",
+    "minecraft:clay_ball",
+    "minecraft:slime_ball",
+    "minecraft:copper_ingot"
+  ],
+  "result": {
+    "id": "space_fabric:anticorrosive_coating",
+    "count": 1
+  }
+}

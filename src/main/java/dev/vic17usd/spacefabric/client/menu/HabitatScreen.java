@@ -22,6 +22,7 @@ public final class HabitatScreen extends SpaceContainerScreen<HabitatMenu> {
     @Override protected void extractLabels(GuiGraphicsExtractor gui,int mouseX,int mouseY) {
         var r=menu.readings();gui.text(font,title,8,7,0xFFE5F5FF);
         gui.text(font,HabitatPresentation.warning(r),8,21,HabitatPresentation.stateColor(r));
+        gui.text(font,Component.translatable("maintenance.space_fabric.short_integrity",r.integrity()/100),199,7,MaintenancePresentation.color(r.integrity()));
         gui.text(font,Component.translatable("gui.space_fabric.habitat.inputs"),12,36,0xFFB5D6E5);
         gui.text(font,HabitatPresentation.pressure(r),82,37,0xFFE5F5FF);
         gui.text(font,HabitatPresentation.temperature(r),82,48,0xFFE5F5FF);
@@ -33,6 +34,7 @@ public final class HabitatScreen extends SpaceContainerScreen<HabitatMenu> {
     }
     @Override protected void extractTooltip(GuiGraphicsExtractor gui,int mouseX,int mouseY) {
         super.extractTooltip(gui,mouseX,mouseY);
+        if(mouseX>=leftPos+170&&mouseX<leftPos+240&&mouseY>=topPos+5&&mouseY<topPos+18){var r=menu.readings();gui.setComponentTooltipForNextFrame(font,MaintenancePresentation.tooltip(r.integrity(),r.coating(),r.filter()),mouseX,mouseY);}
         if(hoveredSlot!=null&&!hoveredSlot.hasItem()&&hoveredSlot.index<9)
             gui.setTooltipForNextFrame(font,Component.translatable("gui.space_fabric.habitat.slot_"+hoveredSlot.index),mouseX,mouseY);
     }

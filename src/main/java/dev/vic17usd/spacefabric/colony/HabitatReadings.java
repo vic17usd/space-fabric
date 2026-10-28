@@ -1,11 +1,13 @@
 package dev.vic17usd.spacefabric.colony;
 
 /** Server readings. Pressure/temperature are regulated setpoints, never invented sensor history. */
-public record HabitatReadings(Condition condition, int oxygen, int energy, int coolant, int volume, boolean venus) {
+public record HabitatReadings(Condition condition, int oxygen, int energy, int coolant, int volume, boolean venus,int integrity,int coating,int filter) {
     public enum Condition { IDLE, PRESSURIZED, LEAK, TOO_LARGE, UNLOADED, WEAK_WALL, BLOCKED_VENT,
-        UNSUPPORTED, NEEDS_OXYGEN, NEEDS_POWER, NEEDS_COOLANT }
+        UNSUPPORTED, NEEDS_OXYGEN, NEEDS_POWER, NEEDS_COOLANT, MAINTENANCE_FAILURE }
     public enum Reserve { NONE, OXYGEN, ENERGY, COOLANT }
+    public HabitatReadings(Condition condition,int oxygen,int energy,int coolant,int volume,boolean venus){this(condition,oxygen,energy,coolant,volume,venus,10000,0,0);}
     public HabitatReadings {
+        integrity=Math.clamp(integrity,0,10000);coating=Math.clamp(coating,0,4800);filter=Math.clamp(filter,0,1200);
         oxygen=Math.clamp(oxygen,0,LifeSupport.CAPACITY);
         energy=Math.clamp(energy,0,LifeSupport.CAPACITY);
         coolant=Math.clamp(coolant,0,LifeSupport.CAPACITY);

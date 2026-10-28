@@ -585,11 +585,15 @@ class WorldgenCodecTest {
         var original = new dev.vic17usd.spacefabric.machine.FuelRefineryBlockEntity(pos, state);
         original.setItem(0, new ItemStack(Items.COAL)); original.setItem(1, new ItemStack(Items.BLAZE_POWDER));
         original.setItem(2, new ItemStack(ModItems.EMPTY_FUEL_CELL));
-        for (int tick = 0; tick < 100; tick++) dev.vic17usd.spacefabric.machine.FuelRefineryBlockEntity.tick(null, pos, state, original);
+        for (int tick = 0; tick < 100; tick++) original.processTick(tick);
         var restored = assertInstanceOf(dev.vic17usd.spacefabric.machine.FuelRefineryBlockEntity.class,
                 net.minecraft.world.level.block.entity.BlockEntity.loadStatic(pos, state, original.saveWithFullMetadata(registries), registries));
         assertEquals(100, restored.data.get(0));
-        for (int tick = 0; tick < 100; tick++) dev.vic17usd.spacefabric.machine.FuelRefineryBlockEntity.tick(null, pos, state, restored);
+        restored.maintenance().restore(new dev.vic17usd.spacefabric.maintenance.MachineWear.State(10000,2400,0,true,13));
+        for(int tick=0;tick<200;tick++)restored.processTick(tick);
+        assertEquals(100,restored.data.get(0));assertTrue(restored.getItem(3).isEmpty());assertEquals(1,restored.getItem(0).getCount());
+        assertTrue(restored.maintenance().apply(dev.vic17usd.spacefabric.maintenance.MachineWear.Action.REPAIR));
+        for(int tick=0;tick<200;tick++)restored.processTick(tick);
         assertTrue(restored.getItem(3).is(ModItems.ROCKET_FUEL_CELL));
         assertTrue(restored.getItem(0).isEmpty()); assertTrue(restored.getItem(2).isEmpty());
     }
@@ -2038,7 +2042,7 @@ class WorldgenCodecTest {
             try {
                 buffer.writeUtf("space_fabric:venus",256);buffer.writeBoolean(true);buffer.writeBlockPos(net.minecraft.core.BlockPos.ZERO);
                 buffer.writeVarInt(dev.vic17usd.spacefabric.colony.HabitatReadings.Condition.PRESSURIZED.ordinal());
-                buffer.writeVarInt(2400);buffer.writeVarInt(2400);buffer.writeVarInt(2400);buffer.writeVarInt(1);buffer.writeBoolean(true);
+                buffer.writeVarInt(2400);buffer.writeVarInt(2400);buffer.writeVarInt(2400);buffer.writeVarInt(1);buffer.writeBoolean(true);buffer.writeVarInt(10000);buffer.writeVarInt(0);buffer.writeVarInt(0);
                 buffer.writeBoolean(true);buffer.writeBoolean(true);
                 buffer.writeVarInt(airOverflow?513:1);
                 if(!airOverflow){buffer.writeBlockPos(net.minecraft.core.BlockPos.ZERO);buffer.writeVarInt(4097);}
@@ -2121,6 +2125,57 @@ class WorldgenCodecTest {
         assertTrue(acid.getCollisionShape(net.minecraft.world.level.EmptyBlockGetter.INSTANCE,net.minecraft.core.BlockPos.ZERO).isEmpty());
         var slag=dev.vic17usd.spacefabric.venus.VenusGeology.SLAG.defaultBlockState();
         assertFalse(new ItemStack(Items.IRON_PICKAXE).isCorrectToolForDrops(slag));assertTrue(new ItemStack(Items.DIAMOND_PICKAXE).isCorrectToolForDrops(slag));
+    }
+
+    @ParameterizedTest @ValueSource(strings={"acid_filter","anticorrosive_coating","machine_repair_kit","recharge_acid_filter"})
+    void maintenanceRecipesAndMaterialsDecodeAndAppearInTheRecipeBrowser(String id) throws IOException {
+        assertNotNull(Recipe.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("recipe/"+id)).getOrThrow());
+        var item=BuiltInRegistries.ITEM.getValue(SpaceFabric.id(id.equals("recharge_acid_filter")?"acid_filter":id));
+        assertFalse(viewerCatalog().find(item,false).isEmpty());
+    }
+    @Test void maintenanceAdvancementUsesTheNativeInventoryTrigger() throws IOException {
+        assertNotNull(net.minecraft.advancements.Advancement.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("advancement/colony/maintenance")).getOrThrow());
+    }
+    @Test void allSixMachinesPersistWearAndCopyOnlyMaintenanceToTheirDroppedItems() throws IOException {
+        var blocks=List.of(dev.vic17usd.spacefabric.colony.ColonyContent.HABITAT_CONTROLLER,dev.vic17usd.spacefabric.colony.ColonyContent.ELECTROLYZER,
+                dev.vic17usd.spacefabric.colony.ColonyContent.SOLAR_CHARGER,dev.vic17usd.spacefabric.colony.ColonyContent.GEOTHERMAL_GENERATOR,dev.vic17usd.spacefabric.colony.ColonyContent.SAMPLE_ANALYZER,ModBlocks.FUEL_REFINERY);
+        var saved=new dev.vic17usd.spacefabric.maintenance.MachineWear.State(4321,1200,345,true,13);
+        for(var block:blocks) {
+            var state=block.defaultBlockState();var pos=net.minecraft.core.BlockPos.ZERO;
+            var entity=((net.minecraft.world.level.block.EntityBlock)block).newBlockEntity(pos,state);
+            ((dev.vic17usd.spacefabric.maintenance.Maintainable)entity).maintenance().restore(saved);
+            ((net.minecraft.world.Container)entity).setItem(0,new ItemStack(Items.DIAMOND,3));
+            var nbt=entity.saveWithFullMetadata(registries);
+            var restored=net.minecraft.world.level.block.entity.BlockEntity.loadStatic(pos,state,nbt,registries);
+            assertEquals(saved,((dev.vic17usd.spacefabric.maintenance.Maintainable)restored).maintenance().state());
+            assertEquals(3,((net.minecraft.world.Container)restored).getItem(0).getCount());
+            var provider=new net.minecraft.world.level.storage.loot.providers.nbt.NbtProvider() {
+                public net.minecraft.nbt.Tag get(net.minecraft.world.level.storage.loot.LootContext ignored){return nbt;}
+                public com.mojang.serialization.MapCodec<? extends net.minecraft.world.level.storage.loot.providers.nbt.NbtProvider> codec(){throw new UnsupportedOperationException();}
+            };
+            var function=net.minecraft.world.level.storage.loot.functions.CopyCustomDataFunction.copyData(provider).copy("Maintenance","SpaceFabricMaintenance").build();
+            var dropped=function.apply(new ItemStack(block),null);
+            assertEquals(saved,dev.vic17usd.spacefabric.maintenance.MaintenanceActions.packed(dropped));
+            var packed=dropped.get(net.minecraft.core.component.DataComponents.CUSTOM_DATA).copyTag();
+            assertFalse(packed.contains("Items"));assertFalse(packed.getCompoundOrEmpty("SpaceFabricMaintenance").contains("Items"));
+            assertInstanceOf(dev.vic17usd.spacefabric.maintenance.MaintenanceBlockItem.class,block.asItem());
+            assertNotNull(LootTable.DIRECT_CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("loot_table/blocks/"+BuiltInRegistries.BLOCK.getKey(block).getPath())).getOrThrow());
+        }
+    }
+    @Test void maintenanceMenusSynchronizeIntegrityAndPreserveTheirOriginalStorage() {
+        var state=dev.vic17usd.spacefabric.colony.ColonyContent.ELECTROLYZER.defaultBlockState();
+        var entity=new dev.vic17usd.spacefabric.colony.ColonyMachineBlockEntity(net.minecraft.core.BlockPos.ZERO,state);
+        entity.maintenance().restore(new dev.vic17usd.spacefabric.maintenance.MachineWear.State(5000,2400,900,true,0));
+        var inventory=new net.minecraft.world.entity.player.Inventory(null,new net.minecraft.world.entity.EntityEquipment());
+        var menu=new dev.vic17usd.spacefabric.menu.ColonyMachineMenu(1,inventory,entity,entity.machineData());
+        assertEquals(5000,menu.integrity());assertEquals(2400,menu.coating());assertEquals(900,menu.filter());assertEquals(45,menu.slots.size());
+        inventory.setItem(9,new ItemStack(dev.vic17usd.spacefabric.colony.ColonyContent.CHARGED_POWER_CELL,2));
+        assertEquals(2,menu.quickMoveStack(null,9).getCount());assertEquals(2,entity.getItem(1).getCount());
+        assertFalse(menu.getSlot(3).mayPlace(new ItemStack(Items.DIAMOND)));
+        var refinery=new dev.vic17usd.spacefabric.machine.FuelRefineryBlockEntity(net.minecraft.core.BlockPos.ZERO,ModBlocks.FUEL_REFINERY.defaultBlockState());
+        refinery.maintenance().restore(new dev.vic17usd.spacefabric.maintenance.MachineWear.State(10000,0,0,false,0));
+        var refineryMenu=new dev.vic17usd.spacefabric.menu.RefineryMenu(2,inventory,refinery,refinery.data);
+        assertEquals(0,refineryMenu.integrity());assertEquals(40,refineryMenu.slots.size());
     }
 
 }

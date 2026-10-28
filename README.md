@@ -1,5 +1,9 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión 0.33.0 añade **corrosión y mantenimiento de máquinas en Venus**:
+filtros reemplazables, revestimiento, kits de reparación, desgaste persistente
+y avisos de avería en los paneles. [Uso y balance](docs/venus-maintenance.md).
+
 La versión 0.32.0 amplía **los paisajes de Venus** con campos de fumarolas,
 cuencas de obsidiana, lagunas corrosivas, grietas de lava y una gran caldera de
 azufre basada en el diseño aportado. [Regiones, bloques y comandos](docs/venus-landscapes.md).
@@ -116,9 +120,9 @@ Consulta la [guía completa de bloques y materiales](docs/materials.md).
 Consulta la [guía de terreno y registro de biomas](docs/terrain.md).
 Consulta la [tabla de dimensiones y claves Java](docs/dimensions.md).
 
-Descarga del prototipo compilado: [space-fabric-0.32.0.jar](dist/space-fabric-0.32.0.jar)
+Descarga del prototipo compilado: [space-fabric-0.33.0.jar](dist/space-fabric-0.33.0.jar)
 (en GitHub, pulsa **Download raw file**).
-[Checksum SHA-256](dist/space-fabric-0.32.0.jar.sha256).
+[Checksum SHA-256](dist/space-fabric-0.33.0.jar.sha256).
 Fauna original: **17usdd using [CreativeMode.net](https://creativemode.net)**;
 [páginas oficiales y atribución](third_party/martian_fauna/README.md),
 [licencia de sus recursos](https://creativemode.net/mod-license).

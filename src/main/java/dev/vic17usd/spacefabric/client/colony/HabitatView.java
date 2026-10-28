@@ -43,7 +43,7 @@ public final class HabitatView {
         int width=Math.min(206,client.getWindow().getGuiScaledWidth()-12),x=client.getWindow().getGuiScaledWidth()-width-6,y=6;
         gui.fill(x,y,x+width,y+(r.venus()?100:85),0xBD101E2B);
         gui.fill(x,y,x+2,y+(r.venus()?100:85),HabitatPresentation.stateColor(r));
-        gui.text(client.font,Component.translatable("gui.space_fabric.habitat.title"),x+7,y+5,0xFFE5F5FF);
+        gui.text(client.font,Component.translatable("maintenance.space_fabric.hud_title",r.integrity()/100),x+7,y+5,0xFFE5F5FF);
         gui.text(client.font,HabitatPresentation.warning(r),x+7,y+17,HabitatPresentation.stateColor(r));
         gui.text(client.font,HabitatPresentation.pressure(r),x+7,y+29,0xFFE5F5FF);
         gui.text(client.font,HabitatPresentation.temperature(r),x+113,y+29,0xFFE5F5FF);

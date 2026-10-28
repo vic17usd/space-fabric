@@ -102,7 +102,7 @@ public final class ModBlocks {
                 factory.apply(properties.setId(ResourceKey.create(Registries.BLOCK, id))));
         Registry.register(BuiltInRegistries.ITEM, id, (path.equals("sulfur_cluster")
                 ? new dev.vic17usd.spacefabric.item.SulfurClusterItem(block, new Item.Properties().setId(ResourceKey.create(Registries.ITEM, id)).useBlockDescriptionPrefix())
-                : new BlockItem(block, new Item.Properties().setId(ResourceKey.create(Registries.ITEM, id)).useBlockDescriptionPrefix())));
+                : block instanceof FuelRefineryBlock?new dev.vic17usd.spacefabric.maintenance.MaintenanceBlockItem(block,new Item.Properties().setId(ResourceKey.create(Registries.ITEM,id)).useBlockDescriptionPrefix()):new BlockItem(block, new Item.Properties().setId(ResourceKey.create(Registries.ITEM, id)).useBlockDescriptionPrefix())));
         BLOCKS.put(path, block);
         return block;
     }

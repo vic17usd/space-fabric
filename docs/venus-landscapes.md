@@ -103,8 +103,8 @@ La dimensión mantiene su identificador. El cielo y la niebla del interior de lo
 hábitats siguen las reglas de 0.31, también en los biomas nuevos.
 
 Esta entrega añade geografía, fumarolas visibles y contacto corrosivo; todavía no
-hay erupciones dinámicas, terremotos, corrosión de máquinas ni simulación de fluidos
-químicos. El calor de contacto reutiliza las botas térmicas y trajes existentes.
+hay erupciones dinámicas, terremotos ni simulación de fluidos químicos. La
+[corrosión de máquinas](venus-maintenance.md) se añade en 0.33.0. El calor de contacto reutiliza las botas térmicas y trajes existentes.
 
 Para regenerar recursos desde las fuentes guardadas:
 

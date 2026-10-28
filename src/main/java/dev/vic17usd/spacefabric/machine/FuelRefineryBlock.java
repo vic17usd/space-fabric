@@ -19,8 +19,18 @@ public final class FuelRefineryBlock extends BaseEntityBlock {
     @Override protected MapCodec<FuelRefineryBlock> codec() { return CODEC; }
     @Override protected RenderShape getRenderShape(BlockState state) { return RenderShape.MODEL; }
     @Override public BlockEntity newBlockEntity(BlockPos pos, BlockState state) { return new FuelRefineryBlockEntity(pos, state); }
+    @Override protected InteractionResult useItemOn(net.minecraft.world.item.ItemStack stack,BlockState state,Level level,BlockPos pos,Player player,net.minecraft.world.InteractionHand hand,BlockHitResult hit) {
+        if(dev.vic17usd.spacefabric.maintenance.MaintenanceActions.action(stack)!=null)
+            return dev.vic17usd.spacefabric.maintenance.MaintenanceActions.interact(stack,level,pos,player);
+        return super.useItemOn(stack,state,level,pos,player,hand,hit);
+    }
+    @Override public void setPlacedBy(Level level,BlockPos pos,BlockState state,net.minecraft.world.entity.LivingEntity placer,net.minecraft.world.item.ItemStack stack) {
+        super.setPlacedBy(level,pos,state,placer,stack);dev.vic17usd.spacefabric.maintenance.MaintenanceActions.restore(level,pos,stack);
+    }
     @Override protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
-        if (!level.isClientSide() && level.getBlockEntity(pos) instanceof FuelRefineryBlockEntity refinery) player.openMenu(refinery);
+        if (!level.isClientSide() && level.getBlockEntity(pos) instanceof FuelRefineryBlockEntity refinery) {
+            if(player.isSecondaryUseActive())dev.vic17usd.spacefabric.maintenance.MaintenanceActions.inspect(refinery,player);else player.openMenu(refinery);
+        }
         return InteractionResult.SUCCESS;
     }
     @Override public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {

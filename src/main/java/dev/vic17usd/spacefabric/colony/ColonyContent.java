@@ -44,7 +44,7 @@ public final class ColonyContent {
     private static Block block(String name,Function<BlockBehaviour.Properties,Block> factory,BlockBehaviour.Properties properties) {
         var id=SpaceFabric.id(name);var block=Registry.register(BuiltInRegistries.BLOCK,id,factory.apply(properties.setId(ResourceKey.create(Registries.BLOCK,id))));
         Item item=name.equals("airlock_door")?new DoubleHighBlockItem(block,new Item.Properties().setId(ResourceKey.create(Registries.ITEM,id)).useBlockDescriptionPrefix()):
-                new BlockItem(block,new Item.Properties().setId(ResourceKey.create(Registries.ITEM,id)).useBlockDescriptionPrefix());
+                (block instanceof ColonyMachineBlock?new dev.vic17usd.spacefabric.maintenance.MaintenanceBlockItem(block,new Item.Properties().setId(ResourceKey.create(Registries.ITEM,id)).useBlockDescriptionPrefix()):new BlockItem(block,new Item.Properties().setId(ResourceKey.create(Registries.ITEM,id)).useBlockDescriptionPrefix()));
         Registry.register(BuiltInRegistries.ITEM,id,item);BLOCKS.put(name,block);return block;
     }
     private static Item item(String name,Item.Properties properties) {
