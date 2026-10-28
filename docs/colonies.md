@@ -1,14 +1,17 @@
-# Colonias de Marte y Venus — 0.29.0, actualizada en 0.33.0
+# Colonias de Marte y Venus — 0.29.0, actualizada en 0.34.0
 
 Esta entrega construye el ciclo jugable inicial: hielo → agua → oxígeno e
 hidrógeno, baterías, habitaciones presurizadas y análisis de muestras. Incluye
 recetas, texturas originales, inventarios persistentes y avances. El diseño de
 las siguientes entregas está en [el plan de desarrollo](planet-development-roadmap.md).
 
-Instala `space-fabric-0.33.0.jar` en cliente y servidor con Fabric API para 26.1.
+Instala `space-fabric-0.34.0.jar` en cliente y servidor con Fabric API para 26.1.
 Los bloques se pueden fabricar en partidas existentes. El nuevo hielo subterráneo
 aparece en chunks nuevos de Marte; también se admite hielo vanilla y agua traída
 mediante cubos, así que el ciclo no depende de regenerar una dimensión.
+
+Desde 0.34.0 se amplía con [la industria venusiana](venus-industry.md): cuatro
+máquinas nuevas, gases, cerámica, refuerzos de base, máquina, traje y mejora de cohete.
 
 ## Construir el primer hábitat
 

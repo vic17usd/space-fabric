@@ -5,6 +5,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Blocks;
 import dev.vic17usd.spacefabric.item.ModItems;
+import dev.vic17usd.spacefabric.industry.IndustryContent;
 
 /** One source of truth for processing, automation and the recipe browser. */
 public final class ColonyRecipes {
@@ -46,6 +47,28 @@ public final class ColonyRecipes {
             list.add(new Formula("venus_"+list.size(),ColonyContent.Machine.ANALYZER,200,
                     List.of(p(0,sample),p(1,ColonyContent.CHARGED_POWER_CELL),p(2,ColonyContent.DATA_CARD)),
                     List.of(p(3,ColonyContent.VENUS_REPORT),p(5,ColonyContent.EMPTY_POWER_CELL))));
+        // Preserve the old formula IDs: saved progress and the browser refer to them.
+        list.add(new Formula("venus_atmosphere",ColonyContent.Machine.ATMOSPHERIC_COLLECTOR,200,
+                List.of(p(0,ColonyContent.EMPTY_CANISTER),p(1,ColonyContent.CHARGED_POWER_CELL)),
+                List.of(p(3,IndustryContent.ATMOSPHERE),p(5,ColonyContent.EMPTY_POWER_CELL))));
+        list.add(new Formula("venus_separation",ColonyContent.Machine.GAS_SEPARATOR,200,
+                List.of(p(0,IndustryContent.ATMOSPHERE),p(1,ColonyContent.CHARGED_POWER_CELL),p(2,ColonyContent.EMPTY_CANISTER)),
+                List.of(p(3,IndustryContent.CARBON_DIOXIDE),p(4,IndustryContent.NITROGEN),p(5,ColonyContent.EMPTY_POWER_CELL))));
+        list.add(new Formula("sulfur_refining",ColonyContent.Machine.SULFUR_PROCESSOR,200,
+                List.of(new Part(0,ModItems.SULFUR_CRYSTAL,2),p(1,ColonyContent.CHARGED_POWER_CELL),p(2,IndustryContent.NITROGEN)),
+                List.of(new Part(3,IndustryContent.REFINED_SULFUR,2),p(5,ColonyContent.EMPTY_POWER_CELL),p(6,ColonyContent.EMPTY_CANISTER))));
+        list.add(new Formula("acid_recovery",ColonyContent.Machine.SULFUR_PROCESSOR,200,
+                List.of(p(0,ModItems.ACID_CONDENSATE),p(1,ColonyContent.CHARGED_POWER_CELL),p(2,ColonyContent.HYDROGEN_CANISTER)),
+                List.of(p(3,IndustryContent.REFINED_SULFUR),p(4,ColonyContent.WATER_CANISTER),p(5,ColonyContent.EMPTY_POWER_CELL))));
+        list.add(new Formula("pyroxene_ceramic",ColonyContent.Machine.CERAMIC_KILN,300,
+                List.of(p(0,ModItems.PYROXENE),p(1,ColonyContent.CHARGED_POWER_CELL),p(2,IndustryContent.CARBON_DIOXIDE)),
+                List.of(new Part(3,IndustryContent.CERAMIC,2),p(5,ColonyContent.EMPTY_POWER_CELL),p(6,ColonyContent.EMPTY_CANISTER))));
+        list.add(new Formula("venus_composite",ColonyContent.Machine.CERAMIC_KILN,300,
+                List.of(p(0,IndustryContent.CERAMIC),p(1,ColonyContent.CHARGED_POWER_CELL),p(2,ModItems.DENSE_IRON_CHUNK)),
+                List.of(p(3,IndustryContent.COMPOSITE_PLATE),p(5,ColonyContent.EMPTY_POWER_CELL))));
+        list.add(new Formula("carbon_dioxide_electrolysis",ColonyContent.Machine.ELECTROLYZER,200,
+                List.of(p(0,IndustryContent.CARBON_DIOXIDE),p(1,ColonyContent.CHARGED_POWER_CELL)),
+                List.of(p(3,ColonyContent.OXYGEN_CANISTER),p(4,IndustryContent.CARBON_POWDER),p(5,ColonyContent.EMPTY_POWER_CELL))));
         return List.copyOf(list);
     }
     public static boolean accepts(ColonyContent.Machine machine,int slot,ItemStack stack) {

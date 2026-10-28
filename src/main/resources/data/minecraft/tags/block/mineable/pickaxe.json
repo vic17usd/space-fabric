@@ -64,6 +64,11 @@
     "space_fabric:venus_cracked_stone",
     "space_fabric:venus_obsidian_slag",
     "space_fabric:venus_sulfur_crystal_block",
-    "space_fabric:venus_acid_pool"
+    "space_fabric:venus_acid_pool",
+    "space_fabric:venus_atmospheric_collector",
+    "space_fabric:venus_gas_separator",
+    "space_fabric:venus_sulfur_processor",
+    "space_fabric:venus_ceramic_kiln",
+    "space_fabric:venus_composite_hull"
   ]
 }

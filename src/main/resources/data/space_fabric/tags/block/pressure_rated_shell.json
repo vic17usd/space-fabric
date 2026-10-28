@@ -8,6 +8,11 @@
     "space_fabric:water_electrolyzer",
     "space_fabric:solar_charger",
     "space_fabric:geothermal_generator",
-    "space_fabric:sample_analyzer"
+    "space_fabric:sample_analyzer",
+    "space_fabric:venus_atmospheric_collector",
+    "space_fabric:venus_gas_separator",
+    "space_fabric:venus_sulfur_processor",
+    "space_fabric:venus_ceramic_kiln",
+    "space_fabric:venus_composite_hull"
   ]
 }

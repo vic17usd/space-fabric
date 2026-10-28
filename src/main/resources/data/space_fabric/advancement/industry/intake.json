@@ -1,0 +1,45 @@
+{
+  "parent": "space_fabric:colony/venus",
+  "display": {
+    "icon": {
+      "id": "space_fabric:venus_atmospheric_collector"
+    },
+    "title": {
+      "translate": "advancements.space_fabric.industry.intake.title"
+    },
+    "description": {
+      "translate": "advancements.space_fabric.industry.intake.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "obtained": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "space_fabric:venus_atmospheric_collector"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "obtained"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "space_fabric:venus_atmospheric_collector",
+      "space_fabric:venus_gas_separator",
+      "space_fabric:venus_sulfur_processor",
+      "space_fabric:venus_ceramic_kiln"
+    ]
+  }
+}

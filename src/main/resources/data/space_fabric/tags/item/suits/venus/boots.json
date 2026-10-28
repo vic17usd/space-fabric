@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "space_fabric:venus_suit_boots"
+    "space_fabric:venus_suit_boots",
+    "space_fabric:reinforced_venus_suit_boots"
   ]
 }

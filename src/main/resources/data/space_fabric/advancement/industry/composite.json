@@ -1,0 +1,48 @@
+{
+  "parent": "space_fabric:industry/sulfur",
+  "display": {
+    "icon": {
+      "id": "space_fabric:venus_composite_plate"
+    },
+    "title": {
+      "translate": "advancements.space_fabric.industry.composite.title"
+    },
+    "description": {
+      "translate": "advancements.space_fabric.industry.composite.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "obtained": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "space_fabric:venus_composite_plate"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "obtained"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "space_fabric:venus_composite_hull",
+      "space_fabric:venus_machine_lining",
+      "space_fabric:venus_rocket_kit_industry",
+      "space_fabric:reinforced_venus_suit_helmet",
+      "space_fabric:reinforced_venus_suit_chestplate",
+      "space_fabric:reinforced_venus_suit_leggings",
+      "space_fabric:reinforced_venus_suit_boots"
+    ]
+  }
+}

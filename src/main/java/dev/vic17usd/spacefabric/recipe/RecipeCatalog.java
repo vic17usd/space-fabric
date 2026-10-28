@@ -42,8 +42,12 @@ public final class RecipeCatalog {
                 List.of(new ItemStack(ModItems.ROCKET_FUEL_CELL)),new ItemStack(ModBlocks.FUEL_REFINERY)));
         }
         for(var formula:dev.vic17usd.spacefabric.colony.ColonyRecipes.ALL) {
+            var inputs=new ArrayList<List<ItemStack>>();
+            for(int slot=0;slot<3;slot++) {
+                int index=slot;inputs.add(formula.inputs().stream().filter(p->p.slot()==index).map(p->p.stack()).toList());
+            }
             cards.add(new RecipeCard("space_fabric:colony/"+formula.id(),"colony",3,formula.duration(),0,
-                    formula.inputs().stream().map(p->List.of(p.stack())).toList(),formula.outputs().stream().map(p->p.stack()).toList(),
+                    List.copyOf(inputs),formula.outputs().stream().map(p->p.stack()).toList(),
                     new ItemStack(dev.vic17usd.spacefabric.colony.ColonyContent.block(formula.machine()))));
         }
         return new RecipeCatalog(cards);

@@ -9,6 +9,25 @@ import static org.junit.jupiter.api.Assertions.*;
 class MachineWearTest {
     private static void seconds(MachineWear wear,int seconds){for(int i=0;i<seconds*20;i++)wear.tick();}
     private static MachineWear exposed(){var wear=new MachineWear();wear.sample(MachineWear.Risk.ATMOSPHERE,0);return wear;}
+    @Test void permanentLiningHalvesAttackWithoutReducingFilterSaturationOrRepairingDamage() {
+        var wear=new MachineWear();wear.restore(new MachineWear.State(8000,0,0,false,7));
+        assertTrue(wear.apply(MachineWear.Action.REINFORCE));assertFalse(wear.apply(MachineWear.Action.REINFORCE));
+        assertEquals(8000,wear.state().damage());assertEquals(7,wear.state().phase());
+        wear.apply(MachineWear.Action.REPAIR);assertTrue(wear.state().reinforced());
+        wear.sample(MachineWear.Risk.SOURCE,0);seconds(wear,100);
+        assertEquals(6300,wear.state().damage());
+        wear.apply(MachineWear.Action.FILTER);seconds(wear,100);
+        assertEquals(6500,wear.state().damage());assertEquals(800,wear.state().filter());
+        var moved=new MachineWear();moved.restore(wear.state());assertTrue(moved.state().reinforced());
+        moved.apply(MachineWear.Action.COAT);assertTrue(moved.state().reinforced());
+    }
+    @Test void reinforcedFilteringStillHasWearAndAnOldSaveDefaultsToAnOrdinaryCasing() {
+        var wear=exposed();wear.apply(MachineWear.Action.REINFORCE);seconds(wear,10);assertEquals(20,wear.state().damage());
+        wear.apply(MachineWear.Action.FILTER);seconds(wear,10);assertEquals(30,wear.state().damage());
+        var old=MachineWear.State.CODEC.parse(com.mojang.serialization.JsonOps.INSTANCE,
+                com.google.gson.JsonParser.parseString("{\"damage\":100,\"phase\":3}")).getOrThrow();
+        assertFalse(old.reinforced());assertEquals(100,old.damage());assertEquals(3,old.phase());
+    }
     @Test void exposureOnlyAdvancesLoadedCorrosiveTimeAndNeverCatchesUpOnClockGaps() {
         var wear=new MachineWear();assertFalse(wear.tick());assertEquals(MachineWear.State.FRESH,wear.state());
         wear.sample(MachineWear.Risk.ATMOSPHERE,900000);seconds(wear,1);assertEquals(4,wear.state().damage());

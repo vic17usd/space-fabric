@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "HPH",
+    "ORO",
+    "HFH"
+  ],
+  "key": {
+    "H": "space_fabric:pressure_hull",
+    "P": "space_fabric:pyroxene",
+    "O": "minecraft:obsidian",
+    "R": "space_fabric:venus_research_report",
+    "F": "minecraft:blast_furnace"
+  },
+  "result": {
+    "id": "space_fabric:venus_ceramic_kiln",
+    "count": 1
+  }
+}

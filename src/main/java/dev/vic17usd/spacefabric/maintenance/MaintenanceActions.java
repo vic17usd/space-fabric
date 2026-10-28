@@ -14,7 +14,8 @@ public final class MaintenanceActions {
     public static final String PACKED="SpaceFabricMaintenance";
     private MaintenanceActions() { }
     public static MachineWear.Action action(ItemStack stack) {
-        return stack.is(MaintenanceContent.REPAIR_KIT)?MachineWear.Action.REPAIR:stack.is(MaintenanceContent.COATING)?MachineWear.Action.COAT:stack.is(MaintenanceContent.FILTER)?MachineWear.Action.FILTER:null;
+        return stack.is(MaintenanceContent.REPAIR_KIT)?MachineWear.Action.REPAIR:stack.is(MaintenanceContent.COATING)?MachineWear.Action.COAT:stack.is(MaintenanceContent.FILTER)?MachineWear.Action.FILTER:
+                stack.is(dev.vic17usd.spacefabric.industry.IndustryContent.MACHINE_LINING)?MachineWear.Action.REINFORCE:null;
     }
     public static InteractionResult interact(ItemStack stack,Level level,BlockPos pos,Player player) {
         var action=action(stack);if(action==null||!(level.getBlockEntity(pos) instanceof Maintainable))return InteractionResult.PASS;
@@ -45,5 +46,6 @@ public final class MaintenanceActions {
         var wear=((Maintainable)blockEntity).maintenance();var state=wear.state();
         player.sendSystemMessage(Component.translatable("maintenance.space_fabric.inspect",blockEntity.getBlockState().getBlock().getName(),wear.integrity()/100,
                 state.coating(),MachineWear.MAX_COATING,state.filter(),MachineWear.FILTER_CHARGE,Component.translatable("maintenance.space_fabric.risk_"+wear.risk().name().toLowerCase(java.util.Locale.ROOT))));
+        if(state.reinforced())player.sendSystemMessage(Component.translatable("maintenance.space_fabric.reinforced"));
     }
 }

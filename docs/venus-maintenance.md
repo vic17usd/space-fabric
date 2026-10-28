@@ -3,6 +3,11 @@
 Instala `space-fabric-0.33.0.jar` en cliente y servidor con Fabric API para 26.1.
 Funciona en partidas existentes; no requiere generar terreno nuevo.
 
+En **0.34.0**, el mismo sistema cubre también las cuatro máquinas de
+[industria venusiana](venus-industry.md). El refuerzo cerámico permanente reduce
+el ataque químico antes del filtro y se conserva al recoger el bloque. El polvo
+de carbono industrial ofrece otra receta para reciclar filtros saturados.
+
 Afecta al controlador de hábitat, electrolizador, cargador solar, generador
 geotérmico, analizador de muestras y refinería de combustible de Space Fabric.
 La corrosión ambiental nueva se produce en Venus, incluso si la máquina está

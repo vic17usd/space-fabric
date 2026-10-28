@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "space_fabric:venus_composite_plate",
+    "space_fabric:pyroxene_ceramic",
+    "space_fabric:refined_sulfur",
+    "space_fabric:anticorrosive_coating"
+  ],
+  "result": {
+    "id": "space_fabric:venus_machine_lining",
+    "count": 1
+  }
+}

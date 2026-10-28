@@ -8,13 +8,15 @@ public final class MachineWear {
     public static final int MAX_DAMAGE=10000,MAX_COATING=4800,COATING_CHARGE=2400,FILTER_CHARGE=1200,REPAIR=2500;
     public enum Risk { NONE(0),ATMOSPHERE(4),HAZE(8),SOURCE(16); public final int load;Risk(int load){this.load=load;} }
     public enum Stage { HEALTHY,SERVICE,DEGRADED,CRITICAL,FAILED }
-    public enum Action { REPAIR,COAT,FILTER }
-    public record State(int damage,int coating,int filter,boolean installed,int phase) {
+    public enum Action { REPAIR,COAT,FILTER,REINFORCE }
+    public record State(int damage,int coating,int filter,boolean installed,int phase,boolean reinforced) {
+        public State(int damage,int coating,int filter,boolean installed,int phase){this(damage,coating,filter,installed,phase,false);}
         public static final State FRESH=new State(0,0,0,false,0);
         public static final Codec<State> CODEC=RecordCodecBuilder.create(i->i.group(
                 Codec.INT.optionalFieldOf("damage",0).forGetter(State::damage),Codec.INT.optionalFieldOf("coating",0).forGetter(State::coating),
                 Codec.INT.optionalFieldOf("filter",0).forGetter(State::filter),Codec.BOOL.optionalFieldOf("installed",false).forGetter(State::installed),
-                Codec.INT.optionalFieldOf("phase",0).forGetter(State::phase)).apply(i,State::new));
+                Codec.INT.optionalFieldOf("phase",0).forGetter(State::phase),
+                Codec.BOOL.optionalFieldOf("reinforced",false).forGetter(State::reinforced)).apply(i,State::new));
         public State {
             damage=Math.clamp(damage,0,MAX_DAMAGE);coating=Math.clamp(coating,0,MAX_COATING);filter=Math.clamp(filter,0,FILTER_CHARGE);
             installed=installed||filter>0;phase=Math.clamp(phase,0,19);
@@ -36,11 +38,13 @@ public final class MachineWear {
     public boolean tick() {
         if(risk==Risk.NONE)return false;
         int phase=state.phase+1;
-        if(phase<20){state=new State(state.damage,state.coating,state.filter,state.installed,phase);return true;}
+        if(phase<20){state=new State(state.damage,state.coating,state.filter,state.installed,phase,state.reinforced);return true;}
         int load=risk.load,filter=state.filter;
-        if(filter>0){filter=Math.max(0,filter-load/4);load/=4;}
+        if(state.reinforced)load=Math.max(1,load/2);
+        // A stronger shell reduces wear, not the gas burden passing through the filter.
+        if(filter>0){filter=Math.max(0,filter-risk.load/4);load=Math.max(1,load/4);}
         int absorbed=Math.min(load,state.coating);
-        state=new State(state.damage+load-absorbed,state.coating-absorbed,filter,state.installed,0);return true;
+        state=new State(state.damage+load-absorbed,state.coating-absorbed,filter,state.installed,0,state.reinforced);return true;
     }
     public boolean apply(Action action) {
         int damage=state.damage,coating=state.coating,filter=state.filter;
@@ -48,7 +52,8 @@ public final class MachineWear {
             case REPAIR -> {if(damage==0)return false;damage=Math.max(0,damage-REPAIR);}
             case COAT -> {if(coating>MAX_COATING-COATING_CHARGE)return false;coating+=COATING_CHARGE;}
             case FILTER -> {if(filter>0)return false;filter=FILTER_CHARGE;}
+            case REINFORCE -> {if(state.reinforced)return false;}
         }
-        state=new State(damage,coating,filter,state.installed||action==Action.FILTER,state.phase);return true;
+        state=new State(damage,coating,filter,state.installed||action==Action.FILTER,state.phase,state.reinforced||action==Action.REINFORCE);return true;
     }
 }

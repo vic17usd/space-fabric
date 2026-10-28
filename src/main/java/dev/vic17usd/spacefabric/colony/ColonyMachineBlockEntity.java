@@ -4,7 +4,6 @@ import dev.vic17usd.spacefabric.planet.*;
 import net.minecraft.core.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.world.*;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.*;
@@ -66,7 +65,7 @@ public final class ColonyMachineBlockEntity extends BaseContainerBlockEntity imp
                 return switch(index) {
                     case 0->progress;
                     case 1->ColonyRecipes.ALL.stream().filter(f->f.id().equals(recipe)).findFirst().map(ColonyRecipes.Formula::duration).orElse(0);
-                    case 2->Math.max(0,java.util.List.of("idle","inputs","output_full","sunlight","heat","processing","maintenance_failure").indexOf(status));
+                    case 2->Math.max(0,java.util.List.of("idle","inputs","output_full","sunlight","heat","processing","maintenance_failure","collector_environment","collector_intake").indexOf(status));
                     case 3->maintenance.integrity();case 4->maintenance.state().coating();case 5->maintenance.state().filter();case 6->maintenance.risk().ordinal();default->kind().ordinal();
                 };
             }
@@ -127,15 +126,17 @@ public final class ColonyMachineBlockEntity extends BaseContainerBlockEntity imp
         stack.shrink(1);if(old.isEmpty())items.set(output,new ItemStack(empty));else old.grow(1);
     }
     private void tickProcessing(ServerLevel level) {
+        processTick(ColonyEnvironment.read(level,worldPosition,kind()));
+    }
+    /** Server processing path, also usable by native inventory/persistence tests without a game server. */
+    public void processTick(ColonyEnvironment environment) {
+        if(maintenance.failed()){status="maintenance_failure";return;}
         var formula=ColonyRecipes.ALL.stream().filter(f->f.machine()==kind()&&f.accepts(this)).findFirst().orElse(null);
         if(formula==null){if(progress!=0){progress=0;setChanged();}recipe="";status="inputs";return;}
         if(!recipe.equals(formula.id())){recipe=formula.id();progress=0;}
         if(!formula.fits(this)){status="output_full";return;}
-        if(kind()==ColonyContent.Machine.SOLAR) {
-            long phase=Math.floorMod(level.getDefaultClockTime(),24000);
-            if(PlanetDimensions.find(level).orElse(null)==Planet.VENUS||phase>=12000||!level.canSeeSky(worldPosition.above())||level.isRainingAt(worldPosition.above())) {status="sunlight";return;}
-        }
-        if(kind()==ColonyContent.Machine.GEOTHERMAL&&!level.getFluidState(worldPosition.below()).is(FluidTags.LAVA)){status="heat";return;}
+        var blocker=environment.blocker(kind());
+        if(!blocker.isEmpty()){status=blocker;return;}
         status="processing";progress++;setChanged();
         if(progress>=formula.duration()&&formula.commit(this)){progress=0;}
     }

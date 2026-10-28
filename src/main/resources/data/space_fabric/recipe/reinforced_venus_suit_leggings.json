@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": "space_fabric:refined_sulfur",
+  "base": "space_fabric:venus_suit_leggings",
+  "addition": "space_fabric:venus_composite_plate",
+  "result": {
+    "id": "space_fabric:reinforced_venus_suit_leggings"
+  }
+}

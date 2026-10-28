@@ -11,6 +11,10 @@ cerramiento certificado, refrigeración y energía geotérmica.
 El diagnóstico y el interior visual de los hábitats se amplían en **0.31.0**:
 [panel, indicadores y niebla de interior](habitat-interiors.md).
 
+La industria de Venus se amplía en **0.34.0** con captura y separación de gases,
+refinado de azufre, cerámica y compuestos para bases, mantenimiento, trajes y
+la mejora de cohete existente. [Cadena implementada](venus-industry.md).
+
 ## Entrega 2: invernaderos, mantenimiento y almacenamiento — mantenimiento inicial implementado
 
 - Depósitos conectados y pasamuros certificados: transporte de líquidos/energía

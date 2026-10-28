@@ -111,8 +111,11 @@ public final class RecipeViewerScreen extends Screen {
             gui.text(font,font.plainSubstrByWidth(category.getString(),172),left+8,top+83,0xFF56D8BC);
             for(int i=0;i<card.inputs().size();i++)
                 slot(gui,card.inputs().get(i),left+16+(i%Math.clamp(card.width(),1,3))*20,top+102+(i/Math.clamp(card.width(),1,3))*20,mouseX,mouseY);
-            gui.text(font,"→",left+94,top+126,0xFFE6F5FF);
-            slot(gui,card.outputs(),left+120,top+122,mouseX,mouseY);
+            gui.text(font,"→",left+94,top+(card.kind().equals("colony")?108:126),0xFFE6F5FF);
+            if(card.kind().equals("colony")) {
+                // Machine outputs are simultaneous products, not interchangeable alternatives.
+                for(int i=0;i<card.outputs().size();i++)slot(gui,List.of(card.outputs().get(i)),left+118+(i%2)*20,top+102+(i/2)*20,mouseX,mouseY);
+            } else slot(gui,card.outputs(),left+120,top+122,mouseX,mouseY);
             if(!card.station().isEmpty())slot(gui,List.of(card.station()),left+160,top+102,mouseX,mouseY);
             if(card.duration()>0)gui.text(font,Component.translatable("gui.space_fabric.viewer.time",card.duration()/20F,card.experience()),left+8,top+Math.min(169,panelHeight-70),0xFFABCCD8);
             if(panelHeight>=270)gui.text(font,font.plainSubstrByWidth(card.id(),172),left+8,top+190,0xFF7896A4);

@@ -1,5 +1,9 @@
 # Resultado de validación de esta base
 
+Última entrega: **0.34.0**, 479 pruebas JUnit aprobadas, diez comprobaciones por
+CPU y 1.024 JSON válidos. Los apartados siguientes conservan el historial de
+la base y sus ampliaciones; la validación industrial está al final del documento.
+
 Verificado con JDK 25, Gradle 9.8.2, Loom 1.19.3, Minecraft 26.1,
 Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
 
@@ -336,3 +340,34 @@ Corrosión y mantenimiento, versión 0.33.0:
 Pendientes en partida real: uso de los materiales con clic derecho, recogida y
 colocación, recepción de avisos, lectura visual de paneles y multijugador. Los
 ensayos por CPU no sustituyen la observación de esos recorridos.
+
+Industria exclusiva de Venus, versión 0.34.0:
+
+- Compilación completa: **479 pruebas JUnit, sin fallos, errores ni omisiones**,
+  diez comprobaciones por CPU y **1.024 JSON** válidos con referencias internas.
+- Cuatro máquinas, doce recetas y cuatro avances nuevos se interpretan con
+  registros/codecs nativos de 26.1. Las siete fórmulas industriales usan el mismo
+  motor que las trece anteriores, con entradas y salidas atómicas.
+- El procesamiento del colector se pausa con planeta incorrecto, toma bloqueada
+  o salida ocupada; conserva suministros y progreso. El horno requiere calor,
+  guarda un lote parcial mediante NBT de una BlockEntity real y lo termina al
+  restaurar. El servidor obtiene las condiciones del mundo y su heightmap;
+  estas pruebas inyectan una lectura ambiental, sin construir un ServerLevel.
+- Las siete fórmulas conservan la cantidad de recipientes y devuelven la batería
+  descargada. La receta alternativa de cohete realmente se ensambla y devuelve
+  ambas bombonas de nitrógeno vacías. Se mantiene la receta original.
+- La herrería nativa produce las cuatro piezas reforzadas con doble durabilidad
+  y conserva daño, nombre y encantamientos. Tags, slots independientes y mezcla
+  de piezas venusianas originales/reforzadas mantienen la categoría Venus.
+- La mejora de carcasa reduce el ataque previo al filtro, evita la reaplicación,
+  conserva el ritmo de saturación y no repara daño. Los guardados anteriores sin
+  el campo nuevo siguen cargando. Las diez máquinas conservan mantenimiento y
+  refuerzo en NBT y en la copia nativa al objeto, sin copiar su inventario.
+- El visor conserva las entradas vacías y lista todos los productos del proceso.
+  Los cinco modelos de bloque nuevos se decodifican con el cliente nativo por
+  CPU, con texturas presentes; el validador comprueba modelos, PNG y traducciones.
+
+Pendientes en partida real: toma bajo cristal/hojas/techos, colocación del horno,
+recorrido completo de producción, interacción y aspecto de menús/objetos,
+uso de la herrería con otros mods y sincronización multijugador. No se abrió un
+cliente con GPU ni se ejecutó un mundo interactivo para esta entrega.

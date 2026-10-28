@@ -2136,10 +2136,11 @@ class WorldgenCodecTest {
     @Test void maintenanceAdvancementUsesTheNativeInventoryTrigger() throws IOException {
         assertNotNull(net.minecraft.advancements.Advancement.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("advancement/colony/maintenance")).getOrThrow());
     }
-    @Test void allSixMachinesPersistWearAndCopyOnlyMaintenanceToTheirDroppedItems() throws IOException {
-        var blocks=List.of(dev.vic17usd.spacefabric.colony.ColonyContent.HABITAT_CONTROLLER,dev.vic17usd.spacefabric.colony.ColonyContent.ELECTROLYZER,
-                dev.vic17usd.spacefabric.colony.ColonyContent.SOLAR_CHARGER,dev.vic17usd.spacefabric.colony.ColonyContent.GEOTHERMAL_GENERATOR,dev.vic17usd.spacefabric.colony.ColonyContent.SAMPLE_ANALYZER,ModBlocks.FUEL_REFINERY);
-        var saved=new dev.vic17usd.spacefabric.maintenance.MachineWear.State(4321,1200,345,true,13);
+    @Test void allMachinesPersistWearAndCopyOnlyMaintenanceToTheirDroppedItems() throws IOException {
+        var blocks=new java.util.ArrayList<net.minecraft.world.level.block.Block>();
+        for(var kind:dev.vic17usd.spacefabric.colony.ColonyContent.Machine.values())blocks.add(dev.vic17usd.spacefabric.colony.ColonyContent.block(kind));
+        blocks.add(ModBlocks.FUEL_REFINERY);
+        var saved=new dev.vic17usd.spacefabric.maintenance.MachineWear.State(4321,1200,345,true,13,true);
         for(var block:blocks) {
             var state=block.defaultBlockState();var pos=net.minecraft.core.BlockPos.ZERO;
             var entity=((net.minecraft.world.level.block.EntityBlock)block).newBlockEntity(pos,state);
@@ -2176,6 +2177,115 @@ class WorldgenCodecTest {
         refinery.maintenance().restore(new dev.vic17usd.spacefabric.maintenance.MachineWear.State(10000,0,0,false,0));
         var refineryMenu=new dev.vic17usd.spacefabric.menu.RefineryMenu(2,inventory,refinery,refinery.data);
         assertEquals(0,refineryMenu.integrity());assertEquals(40,refineryMenu.slots.size());
+    }
+
+    @ParameterizedTest @ValueSource(strings={"venus_atmospheric_collector","venus_gas_separator","venus_sulfur_processor","venus_ceramic_kiln",
+            "venus_composite_hull","venus_machine_lining","recharge_acid_filter_industry","venus_rocket_kit_industry",
+            "reinforced_venus_suit_helmet","reinforced_venus_suit_chestplate","reinforced_venus_suit_leggings","reinforced_venus_suit_boots"})
+    void venusIndustryRecipesUseNativeCodecs(String name) throws IOException {
+        assertNotNull(Recipe.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("recipe/"+name)).getOrThrow());
+    }
+    @ParameterizedTest @ValueSource(strings={"intake","gases","sulfur","composite"})
+    void venusIndustryAdvancementsDecodeNatively(String name) throws IOException {
+        assertNotNull(net.minecraft.advancements.Advancement.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("advancement/industry/"+name)).getOrThrow());
+    }
+    private dev.vic17usd.spacefabric.colony.ColonyMachineBlockEntity industryMachine(String formulaId) {
+        var formula=dev.vic17usd.spacefabric.colony.ColonyRecipes.ALL.stream().filter(f->f.id().equals(formulaId)).findFirst().orElseThrow();
+        var machine=new dev.vic17usd.spacefabric.colony.ColonyMachineBlockEntity(net.minecraft.core.BlockPos.ZERO,
+                dev.vic17usd.spacefabric.colony.ColonyContent.block(formula.machine()).defaultBlockState());
+        formula.inputs().forEach(p->machine.setItem(p.slot(),p.stack()));return machine;
+    }
+    @Test void collectorPausesForWrongPlanetBlockedIntakeAndOutputThenFinishesExactlyOneBatch() {
+        var machine=industryMachine("venus_atmosphere");
+        var outdoors=new dev.vic17usd.spacefabric.colony.ColonyEnvironment(true,true,false,false);
+        machine.processTick(new dev.vic17usd.spacefabric.colony.ColonyEnvironment(false,true,true,false));
+        assertEquals(7,machine.machineData().get(2));assertEquals(0,machine.progress());
+        machine.processTick(new dev.vic17usd.spacefabric.colony.ColonyEnvironment(true,false,false,false));
+        assertEquals(8,machine.machineData().get(2));assertEquals(0,machine.progress());
+        for(int tick=0;tick<100;tick++)machine.processTick(outdoors);
+        assertEquals(100,machine.progress());assertEquals(1,machine.getItem(0).getCount());assertTrue(machine.getItem(3).isEmpty());
+        machine.setItem(5,new ItemStack(Items.BARRIER));
+        for(int tick=0;tick<200;tick++)machine.processTick(outdoors);
+        assertEquals(100,machine.progress());assertEquals(1,machine.getItem(1).getCount());
+        machine.setItem(5,ItemStack.EMPTY);
+        for(int tick=0;tick<100;tick++)machine.processTick(outdoors);
+        assertTrue(machine.getItem(3).is(dev.vic17usd.spacefabric.industry.IndustryContent.ATMOSPHERE));
+        assertTrue(machine.getItem(5).is(dev.vic17usd.spacefabric.colony.ColonyContent.EMPTY_POWER_CELL));
+        assertTrue(machine.getItem(0).isEmpty());assertTrue(machine.getItem(1).isEmpty());assertEquals(0,machine.progress());
+    }
+    @Test void kilnNeedsLavaAndRestoresPartialProductionAfterSaving() {
+        var machine=industryMachine("pyroxene_ceramic");
+        var hot=new dev.vic17usd.spacefabric.colony.ColonyEnvironment(true,true,false,true);
+        machine.processTick(new dev.vic17usd.spacefabric.colony.ColonyEnvironment(true,true,false,false));
+        assertEquals(4,machine.machineData().get(2));assertEquals(0,machine.progress());
+        for(int tick=0;tick<150;tick++)machine.processTick(hot);
+        var restored=assertInstanceOf(dev.vic17usd.spacefabric.colony.ColonyMachineBlockEntity.class,
+                net.minecraft.world.level.block.entity.BlockEntity.loadStatic(net.minecraft.core.BlockPos.ZERO,machine.getBlockState(),machine.saveWithFullMetadata(registries),registries));
+        assertEquals(150,restored.progress());
+        for(int tick=0;tick<150;tick++)restored.processTick(hot);
+        assertTrue(restored.getItem(3).is(dev.vic17usd.spacefabric.industry.IndustryContent.CERAMIC));assertEquals(2,restored.getItem(3).getCount());
+        assertTrue(restored.getItem(6).is(dev.vic17usd.spacefabric.colony.ColonyContent.EMPTY_CANISTER));
+    }
+    @Test void gasProcessesConserveEveryCanisterAndReturnTheirPowerCells() {
+        var vessels=java.util.Set.of(dev.vic17usd.spacefabric.colony.ColonyContent.EMPTY_CANISTER,dev.vic17usd.spacefabric.colony.ColonyContent.WATER_CANISTER,
+                dev.vic17usd.spacefabric.colony.ColonyContent.OXYGEN_CANISTER,dev.vic17usd.spacefabric.colony.ColonyContent.HYDROGEN_CANISTER,
+                dev.vic17usd.spacefabric.industry.IndustryContent.ATMOSPHERE,dev.vic17usd.spacefabric.industry.IndustryContent.CARBON_DIOXIDE,
+                dev.vic17usd.spacefabric.industry.IndustryContent.NITROGEN);
+        var environment=new dev.vic17usd.spacefabric.colony.ColonyEnvironment(true,true,false,true);
+        for(String id:List.of("venus_atmosphere","venus_separation","sulfur_refining","acid_recovery","pyroxene_ceramic","venus_composite","carbon_dioxide_electrolysis")) {
+            var formula=dev.vic17usd.spacefabric.colony.ColonyRecipes.ALL.stream().filter(f->f.id().equals(id)).findFirst().orElseThrow();
+            assertEquals(formula.inputs().stream().filter(p->vessels.contains(p.item())).mapToInt(p->p.count()).sum(),
+                    formula.outputs().stream().filter(p->vessels.contains(p.item())).mapToInt(p->p.count()).sum(),id);
+            var machine=industryMachine(id);
+            for(int tick=0;tick<formula.duration();tick++)machine.processTick(environment);
+            assertTrue(machine.getItem(5).is(dev.vic17usd.spacefabric.colony.ColonyContent.EMPTY_POWER_CELL));
+            formula.outputs().forEach(p->{assertTrue(machine.getItem(p.slot()).is(p.item()),id);assertEquals(p.count(),machine.getItem(p.slot()).getCount());});
+        }
+    }
+    @ParameterizedTest @ValueSource(strings={"helmet","chestplate","leggings","boots"})
+    void smithingReinforcesSuitsWithoutLosingDamageNameOrEnchantments(String part) throws IOException {
+        var base=new ItemStack(BuiltInRegistries.ITEM.getValue(SpaceFabric.id("venus_suit_"+part)));
+        base.setDamageValue(37);base.set(net.minecraft.core.component.DataComponents.CUSTOM_NAME,Component.literal("Expedición Venus"));
+        base.enchant(registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(net.minecraft.world.item.enchantment.Enchantments.UNBREAKING),2);
+        var recipe=assertInstanceOf(net.minecraft.world.item.crafting.SmithingTransformRecipe.class,
+                Recipe.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("recipe/reinforced_venus_suit_"+part)).getOrThrow());
+        var input=new net.minecraft.world.item.crafting.SmithingRecipeInput(new ItemStack(dev.vic17usd.spacefabric.industry.IndustryContent.REFINED_SULFUR),base,
+                new ItemStack(dev.vic17usd.spacefabric.industry.IndustryContent.COMPOSITE_PLATE));
+        assertTrue(recipe.matches(input,null));var upgraded=recipe.assemble(input);
+        assertTrue(upgraded.is(BuiltInRegistries.ITEM.getValue(SpaceFabric.id("reinforced_venus_suit_"+part))));
+        assertEquals(base.getMaxDamage()*2,upgraded.getMaxDamage());assertEquals(37,upgraded.getDamageValue());
+        assertEquals(base.get(net.minecraft.core.component.DataComponents.CUSTOM_NAME),upgraded.get(net.minecraft.core.component.DataComponents.CUSTOM_NAME));
+        assertEquals(base.get(net.minecraft.core.component.DataComponents.ENCHANTMENTS),upgraded.get(net.minecraft.core.component.DataComponents.ENCHANTMENTS));
+        assertEquals(base.get(net.minecraft.core.component.DataComponents.EQUIPPABLE),upgraded.get(net.minecraft.core.component.DataComponents.EQUIPPABLE));
+    }
+    @Test void reinforcedSuitUsesSeparateSuitSlotsAndKeepsItsVenusRating() {
+        var stacks=List.of(dev.vic17usd.spacefabric.industry.IndustryContent.HELMET,dev.vic17usd.spacefabric.industry.IndustryContent.CHESTPLATE,
+                dev.vic17usd.spacefabric.industry.IndustryContent.LEGGINGS,dev.vic17usd.spacefabric.industry.IndustryContent.BOOTS).stream().map(ItemStack::new).toList();
+        for(int slot=0;slot<4;slot++)assertEquals(slot,dev.vic17usd.spacefabric.equipment.SuitProtection.slot(stacks.get(slot)));
+        assertEquals(dev.vic17usd.spacefabric.equipment.SuitTier.VENUS,new dev.vic17usd.spacefabric.equipment.SuitLoadout(stacks).tier());
+        assertEquals(dev.vic17usd.spacefabric.equipment.SuitTier.VENUS,dev.vic17usd.spacefabric.equipment.SuitProtection.tier(
+                stacks.get(0),new ItemStack(ModItems.VENUS_SUIT_CHESTPLATE),stacks.get(2),stacks.get(3)));
+        assertTrue(stacks.get(3).is(net.minecraft.tags.TagKey.create(Registries.ITEM,SpaceFabric.id("thermal_boots"))));
+    }
+    @Test void industryRocketRecipeReturnsBothNitrogenVesselsAndKeepsTheExistingUpgrade() throws IOException {
+        var recipe=assertInstanceOf(net.minecraft.world.item.crafting.CraftingRecipe.class,
+                Recipe.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("recipe/venus_rocket_kit_industry")).getOrThrow());
+        var plate=new ItemStack(dev.vic17usd.spacefabric.industry.IndustryContent.COMPOSITE_PLATE);
+        var nitrogen=new ItemStack(dev.vic17usd.spacefabric.industry.IndustryContent.NITROGEN);
+        var input=net.minecraft.world.item.crafting.CraftingInput.of(3,3,List.of(plate,new ItemStack(dev.vic17usd.spacefabric.industry.IndustryContent.CERAMIC),plate,
+                nitrogen,new ItemStack(dev.vic17usd.spacefabric.colony.ColonyContent.VENUS_REPORT),nitrogen,plate,new ItemStack(ModItems.EMPTY_FUEL_CELL),plate));
+        assertTrue(recipe.matches(input,null));assertTrue(recipe.assemble(input).is(ModItems.VENUS_ROCKET_KIT));
+        var rest=recipe.getRemainingItems(input);assertTrue(rest.get(3).is(dev.vic17usd.spacefabric.colony.ColonyContent.EMPTY_CANISTER));
+        assertTrue(rest.get(5).is(dev.vic17usd.spacefabric.colony.ColonyContent.EMPTY_CANISTER));
+        assertNotNull(Recipe.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("recipe/venus_rocket_kit")).getOrThrow());
+    }
+    @Test void browserPreservesInputPositionsAndShowsAllMachineProducts() throws IOException {
+        var catalog=viewerCatalog();
+        var geo=catalog.find(dev.vic17usd.spacefabric.colony.ColonyContent.CHARGED_POWER_CELL,false).stream().filter(c->c.id().equals("space_fabric:colony/geothermal")).findFirst().orElseThrow();
+        assertTrue(geo.inputs().get(1).isEmpty());assertTrue(geo.inputs().get(2).getFirst().is(dev.vic17usd.spacefabric.colony.ColonyContent.WATER_CANISTER));
+        var separated=catalog.find(dev.vic17usd.spacefabric.industry.IndustryContent.NITROGEN,false).stream().filter(c->c.id().equals("space_fabric:colony/venus_separation")).findFirst().orElseThrow();
+        assertEquals(3,separated.outputs().size());assertTrue(separated.outputs().get(0).is(dev.vic17usd.spacefabric.industry.IndustryContent.CARBON_DIOXIDE));
+        assertTrue(separated.outputs().get(1).is(dev.vic17usd.spacefabric.industry.IndustryContent.NITROGEN));
     }
 
 }

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PCP",
+    "CSC",
+    "PCP"
+  ],
+  "key": {
+    "P": "space_fabric:venus_composite_plate",
+    "C": "space_fabric:pyroxene_ceramic",
+    "S": "space_fabric:refined_sulfur"
+  },
+  "result": {
+    "id": "space_fabric:venus_composite_hull",
+    "count": 8
+  }
+}

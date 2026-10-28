@@ -1,5 +1,10 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión 0.34.0 añade **industria exclusiva de Venus**: captación y separación
+de gases, refinado de azufre, cerámicas y compuestos. Sus productos refuerzan
+máquinas, paneles y trajes, y permiten fabricar la mejora del cohete venusiano.
+[Cadena de producción, montaje y recetas](docs/venus-industry.md).
+
 La versión 0.33.0 añade **corrosión y mantenimiento de máquinas en Venus**:
 filtros reemplazables, revestimiento, kits de reparación, desgaste persistente
 y avisos de avería en los paneles. [Uso y balance](docs/venus-maintenance.md).
@@ -120,9 +125,9 @@ Consulta la [guía completa de bloques y materiales](docs/materials.md).
 Consulta la [guía de terreno y registro de biomas](docs/terrain.md).
 Consulta la [tabla de dimensiones y claves Java](docs/dimensions.md).
 
-Descarga del prototipo compilado: [space-fabric-0.33.0.jar](dist/space-fabric-0.33.0.jar)
+Descarga del prototipo compilado: [space-fabric-0.34.0.jar](dist/space-fabric-0.34.0.jar)
 (en GitHub, pulsa **Download raw file**).
-[Checksum SHA-256](dist/space-fabric-0.33.0.jar.sha256).
+[Checksum SHA-256](dist/space-fabric-0.34.0.jar.sha256).
 Fauna original: **17usdd using [CreativeMode.net](https://creativemode.net)**;
 [páginas oficiales y atribución](third_party/martian_fauna/README.md),
 [licencia de sus recursos](https://creativemode.net/mod-license).
@@ -334,7 +339,7 @@ el carácter químico del entorno. Los trajes venusiano y abisal resisten la cor
 inmunidad, prioridad de presión e hipoxia a presión normal.
 También usa Fabric Loader JUnit y los codecs reales de Minecraft para interpretar
 los nueve tipos de dimensión, sus generadores y los cuatro tipos de daño; también
-comprueba refinería, persistencia del combustible, recetas, llegadas, estructuras, comerciantes y fauna: **248 casos**
+comprueba refinería, persistencia del combustible, recetas, llegadas, estructuras, comerciantes, fauna e industria: **479 casos**
 en total. `tools/validate_resources.py` comprueba además JSON y referencias internas.
 Estas pruebas no arrancan un mundo ni comprueban la sincronización del cliente.
 
