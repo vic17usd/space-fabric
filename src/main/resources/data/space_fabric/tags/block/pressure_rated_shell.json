@@ -21,6 +21,7 @@
     "space_fabric:gas_tank",
     "space_fabric:energy_bulkhead",
     "space_fabric:energy_tank",
-    "space_fabric:machine_interface"
+    "space_fabric:machine_interface",
+    "space_fabric:venus_heat_exchanger"
   ]
 }

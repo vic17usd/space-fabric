@@ -26,7 +26,7 @@ public final class HabitatNetwork {
                 if(!b.readBoolean())return absent(dimension);
                 var anchor=b.readBlockPos();
                 int condition=bounded(b,HabitatReadings.Condition.values().length-1);
-                var readings=new HabitatReadings(HabitatReadings.Condition.values()[condition],bounded(b,LifeSupport.CAPACITY),bounded(b,LifeSupport.CAPACITY),bounded(b,LifeSupport.CAPACITY),bounded(b,SealScanner.MAX_VOLUME),b.readBoolean(),bounded(b,10000),bounded(b,4800),bounded(b,1200));
+                var readings=new HabitatReadings(HabitatReadings.Condition.values()[condition],bounded(b,LifeSupport.CAPACITY),bounded(b,LifeSupport.CAPACITY),bounded(b,LifeSupport.CAPACITY),bounded(b,SealScanner.MAX_VOLUME),b.readBoolean(),bounded(b,10000),bounded(b,4800),bounded(b,1200),bounded(b,ThermalBudget.CAPACITY),b.readBoolean());
                 boolean update=b.readBoolean();Optional<SealScanner.Room> room=Optional.empty();
                 if(update&&b.readBoolean()) {
                     var air=new HashSet<BlockPos>();int count=bounded(b,SealScanner.MAX_VOLUME);
@@ -41,7 +41,7 @@ public final class HabitatNetwork {
                 b.writeUtf(state.dimension.toString(),256);b.writeBoolean(state.anchor.isPresent());
                 if(state.anchor.isEmpty())return;
                 b.writeBlockPos(state.anchor.get());var r=state.readings;
-                b.writeVarInt(r.condition().ordinal());b.writeVarInt(r.oxygen());b.writeVarInt(r.energy());b.writeVarInt(r.coolant());b.writeVarInt(r.volume());b.writeBoolean(r.venus());b.writeVarInt(r.integrity());b.writeVarInt(r.coating());b.writeVarInt(r.filter());
+                b.writeVarInt(r.condition().ordinal());b.writeVarInt(r.oxygen());b.writeVarInt(r.energy());b.writeVarInt(r.coolant());b.writeVarInt(r.volume());b.writeBoolean(r.venus());b.writeVarInt(r.integrity());b.writeVarInt(r.coating());b.writeVarInt(r.filter());b.writeVarInt(r.heat());b.writeBoolean(r.thermalTrip());
                 b.writeBoolean(state.geometryUpdate);
                 if(!state.geometryUpdate)return;
                 b.writeBoolean(state.room.isPresent());if(state.room.isEmpty())return;

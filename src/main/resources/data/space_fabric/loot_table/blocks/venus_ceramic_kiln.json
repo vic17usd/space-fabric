@@ -16,6 +16,21 @@
                   "source": "Maintenance",
                   "target": "SpaceFabricMaintenance",
                   "op": "replace"
+                },
+                {
+                  "source": "IndustrialHeat",
+                  "target": "IndustrialHeat",
+                  "op": "replace"
+                },
+                {
+                  "source": "ThermalTrip",
+                  "target": "ThermalTrip",
+                  "op": "replace"
+                },
+                {
+                  "source": "CoolingCharge",
+                  "target": "CoolingCharge",
+                  "op": "replace"
                 }
               ]
             }

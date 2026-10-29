@@ -1,0 +1,13 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "all": "space_fabric:block/venus_heat_exchanger",
+    "particle": "space_fabric:block/venus_heat_exchanger",
+    "up": "space_fabric:block/venus_heat_exchanger",
+    "down": "space_fabric:block/venus_heat_exchanger",
+    "north": "space_fabric:block/venus_heat_exchanger_front",
+    "south": "space_fabric:block/venus_heat_exchanger_front",
+    "east": "space_fabric:block/venus_heat_exchanger",
+    "west": "space_fabric:block/venus_heat_exchanger"
+  }
+}

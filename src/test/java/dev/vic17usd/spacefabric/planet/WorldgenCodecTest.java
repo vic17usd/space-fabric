@@ -1,5 +1,7 @@
 package dev.vic17usd.spacefabric.planet;
 
+import dev.vic17usd.spacefabric.colony.*;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.mojang.serialization.JsonOps;
@@ -2045,6 +2047,7 @@ class WorldgenCodecTest {
                 buffer.writeUtf("space_fabric:venus",256);buffer.writeBoolean(true);buffer.writeBlockPos(net.minecraft.core.BlockPos.ZERO);
                 buffer.writeVarInt(dev.vic17usd.spacefabric.colony.HabitatReadings.Condition.PRESSURIZED.ordinal());
                 buffer.writeVarInt(2400);buffer.writeVarInt(2400);buffer.writeVarInt(2400);buffer.writeVarInt(1);buffer.writeBoolean(true);buffer.writeVarInt(10000);buffer.writeVarInt(0);buffer.writeVarInt(0);
+                buffer.writeVarInt(0);buffer.writeBoolean(false);
                 buffer.writeBoolean(true);buffer.writeBoolean(true);
                 buffer.writeVarInt(airOverflow?513:1);
                 if(!airOverflow){buffer.writeBlockPos(net.minecraft.core.BlockPos.ZERO);buffer.writeVarInt(4097);}
@@ -2565,6 +2568,111 @@ class WorldgenCodecTest {
         var port=transportPort(0,0);var interfaceMenu=new dev.vic17usd.spacefabric.menu.MachineInterfaceMenu(2,inventory,port);inventory.setItem(9,new ItemStack(dev.vic17usd.spacefabric.colony.ColonyContent.EMPTY_CANISTER,4));
         assertEquals(4,interfaceMenu.quickMoveStack(null,2).getCount());assertEquals(4,port.getItem(0).getCount());assertFalse(interfaceMenu.getSlot(1).mayPlace(new ItemStack(dev.vic17usd.spacefabric.colony.ColonyContent.EMPTY_CANISTER)));
         var restored=assertInstanceOf(MachineInterfaceBlockEntity.class,net.minecraft.world.level.block.entity.BlockEntity.loadStatic(port.getBlockPos(),port.getBlockState(),port.saveWithFullMetadata(registries),registries));assertEquals(4,restored.getItem(0).getCount());
+    }
+
+    private dev.vic17usd.spacefabric.colony.ColonyMachineBlockEntity thermalMachine(dev.vic17usd.spacefabric.colony.ColonyContent.Machine kind,int x) {
+        return new dev.vic17usd.spacefabric.colony.ColonyMachineBlockEntity(new net.minecraft.core.BlockPos(x,0,0),dev.vic17usd.spacefabric.colony.ColonyContent.block(kind).defaultBlockState());
+    }
+    @Test void coolingProductionAndExchangerRecycleWaterAndAllPhysicalContainersThroughRealPorts() {
+        var water=new TransportBuffer(TransportChannel.LIQUID);water.insert(TransportResource.WATER,1000);
+        var cold=new TransportBuffer(TransportChannel.LIQUID);cold.select(TransportResource.CHILLED_COOLANT);
+        var power=new TransportBuffer(TransportChannel.ENERGY);power.insert(TransportResource.POWER,4800);
+        var graphs=List.of(transportGraph(water,10),transportGraph(cold,20),transportGraph(power,30));
+        var cooler=thermalMachine(ColonyContent.Machine.COOLER,2);var exchanger=thermalMachine(ColonyContent.Machine.EXCHANGER,1);
+        var first=transportPort(1,1);var second=transportPort(1,1);
+        assertTrue(first.supplyInputs(cooler,graphs,true));
+        for(int i=0;i<200;i++)cooler.processTick(new ColonyEnvironment(true,true,false,false));
+        assertTrue(first.exportOutputs(cooler,graphs));assertEquals(1000,cold.state().amount());
+        assertTrue(second.supplyInputs(exchanger,graphs,true));
+        for(int i=0;i<60;i++)exchanger.processTick(new ColonyEnvironment(true,true,false,false));
+        assertEquals(4800,exchanger.coolingCharge());assertTrue(second.exportOutputs(exchanger,graphs));
+        assertEquals(1000,water.state().amount());assertEquals(0,cold.state().amount());assertEquals(0,power.state().amount());
+        assertEquals(2,carrierCount(false,first,second,cooler,exchanger));assertEquals(2,carrierCount(true,first,second,cooler,exchanger));
+        // No free recharging: a charged exchanger cannot process a second batch yet.
+        exchanger.setItem(0,new ItemStack(dev.vic17usd.spacefabric.recovery.RecoveryContent.CHILLED_COOLANT));
+        exchanger.setItem(1,new ItemStack(ColonyContent.CHARGED_POWER_CELL));
+        for(int i=0;i<100;i++)exchanger.processTick(new ColonyEnvironment(true,true,false,false));
+        assertEquals(1,exchanger.completedBatches());assertEquals(1,exchanger.getItem(0).getCount());
+    }
+    @Test void exchangerOutputBackpressurePreservesInputsAndCannotInventCooling() {
+        var exchanger=thermalMachine(ColonyContent.Machine.EXCHANGER,0);
+        exchanger.setItem(0,new ItemStack(dev.vic17usd.spacefabric.recovery.RecoveryContent.CHILLED_COOLANT));exchanger.setItem(1,new ItemStack(ColonyContent.CHARGED_POWER_CELL));
+        exchanger.setItem(3,new ItemStack(Items.BARRIER));
+        for(int i=0;i<80;i++)exchanger.processTick(new ColonyEnvironment(true,true,false,false));
+        assertEquals(0,exchanger.coolingCharge());assertEquals(1,exchanger.getItem(0).getCount());
+        exchanger.setItem(3,ItemStack.EMPTY);
+        for(int i=0;i<60;i++)exchanger.processTick(new ColonyEnvironment(true,true,false,false));
+        assertEquals(4800,exchanger.coolingCharge());assertTrue(exchanger.getItem(3).is(ColonyContent.WATER_CANISTER));
+    }
+    @Test void exchangerCoolingIsBoundedAndIdleMissingOrBrokenTargetsDoNotConsumeReserve() {
+        var target=thermalMachine(ColonyContent.Machine.ANALYZER,0);target.restoreThermal(8000,false,0);
+        var exchanger=thermalMachine(ColonyContent.Machine.EXCHANGER,1);exchanger.restoreThermal(0,false,4800);
+        ThermalSystem.balance(List.of(target,exchanger),java.util.Map.of(),true,0);
+        assertEquals(7876,target.localThermal().heat());assertEquals(4680,exchanger.coolingCharge());
+        ThermalSystem.balance(List.of(exchanger),java.util.Map.of(),true,1);assertEquals(4680,exchanger.coolingCharge());
+        target.restoreThermal(0,false,0);
+        ThermalSystem.balance(List.of(target,exchanger),java.util.Map.of(),true,2);assertEquals(4680,exchanger.coolingCharge());
+        target.restoreThermal(8000,false,0);
+        exchanger.maintenance().restore(new dev.vic17usd.spacefabric.maintenance.MachineWear.State(10000,0,0,false,0));
+        ThermalSystem.balance(List.of(target,exchanger),java.util.Map.of(),true,3);
+        assertEquals(7996,target.localThermal().heat());assertEquals(4680,exchanger.coolingCharge());
+    }
+    @Test void thermalTripPausesRecipesWithoutConsumingInputsAndRecoversByCooling() {
+        var target=thermalMachine(ColonyContent.Machine.COOLER,0);target.restoreThermal(9500,true,0);
+        target.setItem(0,new ItemStack(ColonyContent.WATER_CANISTER));target.setItem(1,new ItemStack(ColonyContent.CHARGED_POWER_CELL));
+        for(int i=0;i<200;i++)target.processTick(new ColonyEnvironment(true,true,false,false));
+        assertEquals(0,target.progress());assertEquals(1,target.getItem(0).getCount());
+        var exchanger=thermalMachine(ColonyContent.Machine.EXCHANGER,1);exchanger.restoreThermal(9500,true,4800);
+        for(int i=0;i<37;i++)ThermalSystem.balance(List.of(target,exchanger),java.util.Map.of(),true,i);
+        assertFalse(target.thermal().tripped());
+        for(int i=0;i<200;i++)target.processTick(new ColonyEnvironment(true,true,false,false));
+        assertEquals(1,target.completedBatches());assertTrue(target.getItem(3).is(dev.vic17usd.spacefabric.recovery.RecoveryContent.CHILLED_COOLANT));
+    }
+    @Test void multipleAdjacentMachinesInOneRoomShareOneBudgetAndOneCoolingDebit() {
+        var habitat=thermalMachine(ColonyContent.Machine.HABITAT,0);habitat.restoreThermal(8000,false,0);
+        var machine=thermalMachine(ColonyContent.Machine.COOLER,2);
+        var exchanger=thermalMachine(ColonyContent.Machine.EXCHANGER,1);exchanger.restoreThermal(0,false,4800);
+        var ownership=java.util.Map.of(machine,habitat,exchanger,habitat);
+        ThermalSystem.balance(List.of(habitat,machine,exchanger),ownership,true,0);
+        assertTrue(habitat.localThermal()==machine.thermal());assertEquals(7888,habitat.localThermal().heat());assertEquals(4680,exchanger.coolingCharge());
+        assertFalse(habitat.protects(net.minecraft.core.BlockPos.ZERO)); // Heat management never grants pressure protection.
+    }
+    @Test void thermalStateAndColdReserveSurviveNativeNbtAndMenus() throws IOException {
+        var exchanger=thermalMachine(ColonyContent.Machine.EXCHANGER,0);exchanger.restoreThermal(8600,true,3220);
+        var restored=assertInstanceOf(ColonyMachineBlockEntity.class,net.minecraft.world.level.block.entity.BlockEntity.loadStatic(exchanger.getBlockPos(),exchanger.getBlockState(),exchanger.saveWithFullMetadata(registries),registries));
+        assertEquals(8600,restored.localThermal().heat());assertTrue(restored.localThermal().tripped());assertEquals(3220,restored.coolingCharge());
+        var inventory=new net.minecraft.world.entity.player.Inventory(null,new net.minecraft.world.entity.EntityEquipment());
+        var menu=new dev.vic17usd.spacefabric.menu.ColonyMachineMenu(1,inventory,restored,restored.machineData());
+        assertEquals(8600,menu.heat());assertTrue(menu.thermalTrip());assertEquals(3220,menu.coolingCharge());
+        assertNotNull(Recipe.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("recipe/venus_heat_exchanger")).getOrThrow());
+        assertNotNull(LootTable.DIRECT_CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("loot_table/blocks/venus_heat_exchanger")).getOrThrow());
+        assertNotNull(net.minecraft.advancements.Advancement.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("advancement/industry/thermal")).getOrThrow());
+    }
+
+    @Test void activeMachineHeatEntersItsBudgetOnceAndThermalTelemetryCarriesWarning() {
+        var target=thermalMachine(ColonyContent.Machine.GEOTHERMAL,0);target.restoreThermal(7000,false,0);
+        target.setItem(0,new ItemStack(ColonyContent.EMPTY_POWER_CELL));target.setItem(2,new ItemStack(ColonyContent.WATER_CANISTER));
+        target.processTick(new ColonyEnvironment(true,true,false,true));
+        ThermalSystem.balance(List.of(target),java.util.Map.of(),true,0);assertEquals(7026,target.localThermal().heat());
+        ThermalSystem.balance(List.of(target),java.util.Map.of(),true,1);assertEquals(7022,target.localThermal().heat());
+        var reading=new HabitatReadings(HabitatReadings.Condition.PRESSURIZED,9600,9600,9600,75,true,10000,0,0,7022,false);
+        var state=new HabitatNetwork.State(SpaceFabric.id("venus"),Optional.of(net.minecraft.core.BlockPos.ZERO),reading,false,Optional.empty());
+        var buffer=new net.minecraft.network.RegistryFriendlyByteBuf(io.netty.buffer.Unpooled.buffer(),(RegistryAccess)registries);
+        try {HabitatNetwork.State.CODEC.encode(buffer,state);assertEquals(state,HabitatNetwork.State.CODEC.decode(buffer));assertEquals(0,buffer.readableBytes());}finally{buffer.release();}
+    }
+    @Test void minedMachineCopiesOnlyThermalScalarsAndRestoresClampedStateOnPlacement() {
+        var machine=thermalMachine(ColonyContent.Machine.EXCHANGER,0);machine.restoreThermal(8600,true,3220);
+        machine.setItem(0,new ItemStack(Items.DIAMOND,3));var nbt=machine.saveWithFullMetadata(registries);
+        var provider=new net.minecraft.world.level.storage.loot.providers.nbt.NbtProvider(){
+            public net.minecraft.nbt.Tag get(net.minecraft.world.level.storage.loot.LootContext ignored){return nbt;}
+            public com.mojang.serialization.MapCodec<? extends net.minecraft.world.level.storage.loot.providers.nbt.NbtProvider> codec(){throw new UnsupportedOperationException();}
+        };
+        var drop=net.minecraft.world.level.storage.loot.functions.CopyCustomDataFunction.copyData(provider)
+                .copy("IndustrialHeat","IndustrialHeat").copy("ThermalTrip","ThermalTrip").copy("CoolingCharge","CoolingCharge").build().apply(new ItemStack(ColonyContent.HEAT_EXCHANGER),null);
+        assertFalse(drop.get(net.minecraft.core.component.DataComponents.CUSTOM_DATA).copyTag().contains("Items"));
+        var placed=thermalMachine(ColonyContent.Machine.EXCHANGER,0);placed.restoreThermal(drop);
+        assertEquals(8600,placed.localThermal().heat());assertTrue(placed.localThermal().tripped());assertEquals(3220,placed.coolingCharge());assertTrue(placed.getItem(0).isEmpty());
+        placed.restoreThermal(Integer.MAX_VALUE,true,Integer.MAX_VALUE);assertEquals(10000,placed.localThermal().heat());assertEquals(4800,placed.coolingCharge());
     }
 
 }

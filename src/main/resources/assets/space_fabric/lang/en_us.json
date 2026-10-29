@@ -558,5 +558,16 @@
   "transport.space_fabric.resume": "Enable interface",
   "transport.space_fabric.life_priority": "Life support first",
   "advancements.space_fabric.transport.title": "Connected industry",
-  "advancements.space_fabric.transport.description": "Craft an interface to connect machines and storage."
+  "advancements.space_fabric.transport.description": "Craft an interface to connect machines and storage.",
+  "block.space_fabric.venus_heat_exchanger": "Thermal Exchanger",
+  "block.space_fabric.venus_heat_exchanger.hint": "Place beside a machine or controller. Uses chilled coolant and power; returns water.",
+  "thermal.space_fabric.heat": "Heat: %s / 10000",
+  "thermal.space_fabric.charge": "Cooling: %s / 4800",
+  "thermal.space_fabric.warning": "High heat: check cooling",
+  "thermal.space_fabric.trip": "Industrial thermal shutdown",
+  "thermal.space_fabric.normal": "Industrial thermal recovery",
+  "thermal.space_fabric.notice": "%s (%s): %s",
+  "colony.space_fabric.overheating": "Thermal shutdown: cool to 5000",
+  "colony.space_fabric.cooling_ready": "Cooling reserve available",
+  "transport.space_fabric.status_overheated": "Industrial circuit overheated"
 }

@@ -20,6 +20,23 @@ public final class ColonyMachineBlockEntity extends BaseContainerBlockEntity imp
     @Override public dev.vic17usd.spacefabric.maintenance.MachineWear maintenance(){return maintenance;}
     public boolean sheltersMachine(BlockPos pos){return level instanceof ServerLevel server&&validate(server)&&dev.vic17usd.spacefabric.maintenance.MachineExposure.enclosed(room,pos,HabitatSystem.world(server));}
     private final LifeSupport support=new LifeSupport();
+    private final ThermalBudget thermal=new ThermalBudget();
+    private ColonyMachineBlockEntity thermalOwner;
+    private int coolingCharge;
+    private boolean workedSinceThermal;
+    public ThermalBudget localThermal(){return thermal;}
+    public ThermalBudget thermal(){return thermalOwner!=null&&!thermalOwner.isRemoved()?thermalOwner.thermal:thermal;}
+    void thermalOwner(ColonyMachineBlockEntity owner){thermalOwner=owner;}
+    boolean takeWorked(){boolean worked=workedSinceThermal;workedSinceThermal=false;return worked;}
+    public int coolingCharge(){return coolingCharge;}
+    boolean passiveCooling(){return active&&!maintenance.failed()&&support.coolant()>0;}
+    int extractCooling(int requested){int amount=maintenance.failed()?0:Math.min(coolingCharge,Math.max(0,requested));coolingCharge-=amount;if(amount>0)setChanged();return amount;}
+    public void restoreThermal(ItemStack stack){
+        var data=stack.get(net.minecraft.core.component.DataComponents.CUSTOM_DATA);
+        if(data==null)return;
+        var tag=data.copyTag();restoreThermal(tag.getIntOr("IndustrialHeat",0),tag.getBooleanOr("ThermalTrip",false),tag.getIntOr("CoolingCharge",0));
+    }
+    public void restoreThermal(int heat,boolean trip,int charge){thermal.restore(heat,trip);coolingCharge=Math.clamp(charge,0,ThermalSystem.CHARGE);setChanged();}
     private SealScanner.Room room;
     private SealScanner.Room lastEnclosure;
     private int progress;
@@ -58,17 +75,17 @@ public final class ColonyMachineBlockEntity extends BaseContainerBlockEntity imp
             default -> HabitatReadings.Condition.IDLE;
         };
         boolean venus=level!=null&&PlanetDimensions.find(level).orElse(null)==Planet.VENUS;
-        return new HabitatReadings(condition,support.oxygen(),support.energy(),support.coolant(),room!=null&&room.sealed()?room.air().size():0,venus,maintenance.integrity(),maintenance.state().coating(),maintenance.state().filter());
+        return new HabitatReadings(condition,support.oxygen(),support.energy(),support.coolant(),room!=null&&room.sealed()?room.air().size():0,venus,maintenance.integrity(),maintenance.state().coating(),maintenance.state().filter(),thermal().heat(),thermal().tripped());
     }
     public ContainerData machineData() {
         return new ContainerData() {
-            public int getCount(){return 8;}public void set(int index,int value) { }
+            public int getCount(){return 11;}public void set(int index,int value) { }
             public int get(int index) {
                 return switch(index) {
                     case 0->progress;
                     case 1->ColonyRecipes.ALL.stream().filter(f->f.id().equals(recipe)).findFirst().map(ColonyRecipes.Formula::duration).orElse(0);
-                    case 2->Math.max(0,java.util.List.of("idle","inputs","output_full","sunlight","heat","processing","maintenance_failure","collector_environment","collector_intake").indexOf(status));
-                    case 3->maintenance.integrity();case 4->maintenance.state().coating();case 5->maintenance.state().filter();case 6->maintenance.risk().ordinal();default->kind().ordinal();
+                    case 2->Math.max(0,java.util.List.of("idle","inputs","output_full","sunlight","heat","processing","maintenance_failure","collector_environment","collector_intake","overheating","cooling_ready").indexOf(status));
+                    case 3->maintenance.integrity();case 4->maintenance.state().coating();case 5->maintenance.state().filter();case 6->maintenance.risk().ordinal();case 7->kind().ordinal();case 8->thermal().heat();case 9->thermal().tripped()?1:0;default->coolingCharge;
                 };
             }
         };
@@ -80,6 +97,7 @@ public final class ColonyMachineBlockEntity extends BaseContainerBlockEntity imp
     }
     public static void tick(Level level,BlockPos pos,BlockState state,ColonyMachineBlockEntity machine) {
         if(!(level instanceof ServerLevel server))return;
+        ThermalSystem.register(server,machine);
         if(machine.kind()==ColonyContent.Machine.HABITAT){HabitatSystem.register(server,machine);machine.refreshSeal(server);}
         if(dev.vic17usd.spacefabric.maintenance.MachineExposure.tick(server,machine,machine.maintenance))machine.setChanged();
         if(machine.maintenance.failed()){machine.active=false;machine.status="maintenance_failure";return;}
@@ -89,7 +107,7 @@ public final class ColonyMachineBlockEntity extends BaseContainerBlockEntity imp
             }
         } else if(machine.maintenance.allowsWork(level.getGameTime()))machine.tickProcessing(server);
     }
-    private boolean validate(ServerLevel level) {
+    boolean validate(ServerLevel level) {
         if(room==null||!room.sealed())return false;
         if(lastValidation==level.getGameTime())return room.sealed();
         lastValidation=level.getGameTime();
@@ -139,16 +157,18 @@ public final class ColonyMachineBlockEntity extends BaseContainerBlockEntity imp
     /** Server processing path, also usable by native inventory/persistence tests without a game server. */
     public void processTick(ColonyEnvironment environment) {
         if(maintenance.failed()){status="maintenance_failure";return;}
+        if(environment.venus()&&kind()!=ColonyContent.Machine.EXCHANGER&&thermal().tripped()){status="overheating";return;}
+        if(kind()==ColonyContent.Machine.EXCHANGER&&coolingCharge>0){status="cooling_ready";return;}
         var formula=ColonyRecipes.ALL.stream().filter(f->f.machine()==kind()&&f.accepts(this)).findFirst().orElse(null);
         if(formula==null){if(progress!=0){progress=0;setChanged();}recipe="";status="inputs";return;}
         if(!recipe.equals(formula.id())){recipe=formula.id();progress=0;}
         if(!formula.fits(this)){status="output_full";return;}
         var blocker=environment.blocker(kind());
         if(!blocker.isEmpty()){status=blocker;return;}
-        status="processing";progress++;setChanged();
-        if(progress>=formula.duration()&&formula.commit(this)){progress=0;completedBatches=Math.min(Integer.MAX_VALUE-1,completedBatches)+1;}
+        status="processing";workedSinceThermal=true;progress++;setChanged();
+        if(progress>=formula.duration()&&formula.commit(this)){if(kind()==ColonyContent.Machine.EXCHANGER)coolingCharge=ThermalSystem.CHARGE;progress=0;completedBatches=Math.min(Integer.MAX_VALUE-1,completedBatches)+1;}
     }
-    @Override public void setRemoved(){HabitatSystem.remove(this);active=false;super.setRemoved();}
+    @Override public void setRemoved(){HabitatSystem.remove(this);ThermalSystem.remove(this);thermalOwner=null;active=false;super.setRemoved();}
     @Override public int getContainerSize(){return 9;}
     @Override protected NonNullList<ItemStack> getItems(){return items;}
     @Override protected void setItems(NonNullList<ItemStack> items){this.items=items;}
@@ -165,11 +185,12 @@ public final class ColonyMachineBlockEntity extends BaseContainerBlockEntity imp
         progress=Math.clamp(input.getIntOr("Progress",0),0,400);recipe=input.getStringOr("Recipe","");
         completedBatches=Math.max(0,input.getIntOr("CompletedBatches",0));
         support.restore(input.getIntOr("Oxygen",0),input.getIntOr("Energy",0),input.getIntOr("Coolant",0),input.getIntOr("Volume",0),input.getBooleanOr("Pressurized",false));
+        restoreThermal(input.getIntOr("IndustrialHeat",0),input.getBooleanOr("ThermalTrip",false),input.getIntOr("CoolingCharge",0));
         maintenance.restore(input.read("Maintenance",dev.vic17usd.spacefabric.maintenance.MachineWear.State.CODEC).orElse(dev.vic17usd.spacefabric.maintenance.MachineWear.State.FRESH));
         active=false;room=null;lastEnclosure=null;lastWork=lastValidation=lastSealScan=Long.MIN_VALUE;
     }
     @Override protected void saveAdditional(ValueOutput output) {
-        super.saveAdditional(output);output.store("Maintenance",dev.vic17usd.spacefabric.maintenance.MachineWear.State.CODEC,maintenance.state());ContainerHelper.saveAllItems(output,items);output.putInt("Progress",progress);output.putString("Recipe",recipe);
+        super.saveAdditional(output);output.putInt("IndustrialHeat",thermal.heat());output.putBoolean("ThermalTrip",thermal.tripped());output.putInt("CoolingCharge",coolingCharge);output.store("Maintenance",dev.vic17usd.spacefabric.maintenance.MachineWear.State.CODEC,maintenance.state());ContainerHelper.saveAllItems(output,items);output.putInt("Progress",progress);output.putString("Recipe",recipe);
         output.putInt("CompletedBatches",completedBatches);output.putInt("Oxygen",support.oxygen());output.putInt("Energy",support.energy());output.putInt("Coolant",support.coolant());
         output.putInt("Volume",room!=null&&room.sealed()?room.air().size():0);output.putBoolean("Pressurized",support.pressurized());
     }

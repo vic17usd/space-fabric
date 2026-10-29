@@ -1,11 +1,11 @@
-# Colonias de Marte y Venus — 0.29.0, actualizada en 0.37.0
+# Colonias de Marte y Venus — 0.29.0, actualizada en 0.38.0
 
 Esta entrega construye el ciclo jugable inicial: hielo → agua → oxígeno e
 hidrógeno, baterías, habitaciones presurizadas y análisis de muestras. Incluye
 recetas, texturas originales, inventarios persistentes y avances. El diseño de
 las siguientes entregas está en [el plan de desarrollo](planet-development-roadmap.md).
 
-Instala `space-fabric-0.37.0.jar` en cliente y servidor con Fabric API para 26.1.
+Instala `space-fabric-0.38.0.jar` en cliente y servidor con Fabric API para 26.1.
 Los bloques se pueden fabricar en partidas existentes. El nuevo hielo subterráneo
 aparece en chunks nuevos de Marte; también se admite hielo vanilla y agua traída
 mediante cubos, así que el ciclo no depende de regenerar una dimensión.
@@ -126,8 +126,10 @@ El visor **K** muestra tanto los crafteos como las fórmulas de las máquinas.
 Implementado: construcción, cierre de habitaciones, recursos y automatización
 por tolvas, generación de hielo, investigación inicial, recetas y avances.
 Los cultivos usan la mecánica vanilla en un espacio protegido e iluminado.
-Todavía no hay irrigación automática, fotosíntesis conectada al depósito, rovers,
-contratos de aldeanos ni simulación de redes industriales. La corrosión y el mantenimiento de las seis
+Todavía no hay irrigación automática, fotosíntesis conectada al depósito ni
+contratos generales de aldeanos. El rover se incorpora en 0.36.0 y las redes
+industriales en 0.37.0. El balance térmico y los intercambiadores llegan en 0.38.0:
+[refrigeración industrial](industrial-cooling.md). La corrosión y el mantenimiento de las seis
 máquinas se incorporan en 0.33.0: [filtros, protección y reparación](venus-maintenance.md). Desde 0.31.0, la niebla planetaria de suelo se retira cuando el jugador y la
 cámara están dentro de una sala regulada y verificada. El controlador y un
 indicador en pantalla muestran reservas, presión/temperatura reguladas y fallos.

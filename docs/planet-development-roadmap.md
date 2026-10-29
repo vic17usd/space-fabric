@@ -27,7 +27,8 @@ la mejora de cohete existente. [Cadena implementada](venus-industry.md).
 - Venus: filtros reemplazables, revestimientos y reparación de máquinas expuestas
   implementados en **0.33.0**, con avisos y protección del recinto certificado.
   [Guía y límites](venus-maintenance.md). Las redes industriales se incorporan en
-  0.37.0; los intercambiadores térmicos de base quedan para la siguiente ampliación.
+  0.37.0; los intercambiadores y el balance térmico industrial quedan implementados
+  en **0.38.0**. [Refrigeración industrial](industrial-cooling.md).
 - Marte: acumuladores nocturnos y limpieza de paneles tras tormentas de polvo.
   Registrar duración de tormentas y consumo; no dañar estructuras sin avisos de juego.
 

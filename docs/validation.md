@@ -1,8 +1,8 @@
 # Resultado de validación de esta base
 
-Última entrega: **0.37.0**, 514 pruebas JUnit aprobadas, once comprobaciones por
-CPU y 1.136 JSON válidos. Los apartados siguientes conservan el historial de
-la base y sus ampliaciones; la validación de automatización industrial está al final del documento.
+Última entrega: **0.38.0**, 525 pruebas JUnit aprobadas, once comprobaciones por
+CPU y 1.142 JSON válidos. Los apartados siguientes conservan el historial de
+la base y sus ampliaciones; la validación de refrigeración industrial está al final del documento.
 
 Verificado con JDK 25, Gradle 9.8.2, Loom 1.19.3, Minecraft 26.1,
 Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
@@ -465,3 +465,34 @@ montaje completo de una fábrica/base, controles de válvulas y redstone, aspect
 con GPU, descarga/recarga de chunks durante una sesión y multijugador. Los
 ensayos por CPU usan un mundo de topología de prueba; no arrancan ServerLevel
 ni equivalen a una sesión interactiva con jugadores.
+
+
+Refrigeración industrial, versión 0.38.0:
+
+- `./gradlew build --console=plain`: **525 pruebas JUnit**, cero fallos, errores
+  u omisiones; once comprobaciones de modelos/renderizado por CPU aprobadas.
+- `python3 tools/validate_resources.py`: **1.142 JSON** válidos, referencias de
+  modelos, PNG, loot y traducciones coherentes.
+- Nuevo bloque de intercambiador registrado en el tipo de entidad colonial,
+  inventario creativo, receta, avance, visor y etiquetas de herramienta/cerramiento.
+- Balance térmico por segundo: generación solo si hubo trabajo, disipación básica,
+  agrupación mediante la geometría de habitaciones verificadas y destinos adyacentes.
+  El servicio usa el registro de entidades cargadas y `getChunkNow`; no genera chunks.
+- Pruebas nuevas: umbrales e histéresis, saturación de entradas, reserva de frío,
+  salida bloqueada, parada sin consumo de ingredientes, recuperación, presupuesto
+  compartido sin doble débito, avería del intercambiador y ausencia de destino.
+- Ciclo nativo probado: depósito de agua → interfaz → unidad de refrigeración →
+  depósito de refrigerante → interfaz → intercambiador → retorno al depósito de
+  agua; conserva bombonas y baterías, y consume energía de ambas operaciones.
+- Guardado/carga NBT de calor, disparo térmico y frío; copia escalar de datos de
+  minería y restauración del objeto sin copiar inventarios. Menús y telemetría
+  incluyen lecturas térmicas con límites de tamaño.
+- La parada térmica afecta a los procesadores coloniales de Venus, exceptuando
+  el intercambiador para permitir la recuperación. La protección de hábitat sigue
+  dependiendo de la habitación, sus suministros y el mantenimiento.
+
+No se ha ejecutado una partida gráfica ni un servidor multijugador. La selección
+espacial de propietarios, los mensajes de transición, el montaje físico completo,
+los controles de inventario y la apariencia necesitan también comprobación en juego;
+las pruebas con el presupuesto compartido inyectan explícitamente la pertenencia
+al recinto. Los valores térmicos son unidades de juego, no temperaturas físicas.

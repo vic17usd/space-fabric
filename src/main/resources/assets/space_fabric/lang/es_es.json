@@ -558,5 +558,16 @@
   "transport.space_fabric.resume": "Activar interfaz",
   "transport.space_fabric.life_priority": "Prioridad: soporte vital",
   "advancements.space_fabric.transport.title": "Industria conectada",
-  "advancements.space_fabric.transport.description": "Fabrica una interfaz para conectar máquinas y depósitos."
+  "advancements.space_fabric.transport.description": "Fabrica una interfaz para conectar máquinas y depósitos.",
+  "block.space_fabric.venus_heat_exchanger": "Intercambiador térmico",
+  "block.space_fabric.venus_heat_exchanger.hint": "Junto a una máquina o controlador. Consume refrigerante enfriado y energía; devuelve agua.",
+  "thermal.space_fabric.heat": "Calor: %s / 10000",
+  "thermal.space_fabric.charge": "Frío: %s / 4800",
+  "thermal.space_fabric.warning": "Calor elevado: revisa la refrigeración",
+  "thermal.space_fabric.trip": "Industria detenida por calor",
+  "thermal.space_fabric.normal": "Temperatura industrial recuperada",
+  "thermal.space_fabric.notice": "%s (%s): %s",
+  "colony.space_fabric.overheating": "Parada térmica: enfría hasta 5000",
+  "colony.space_fabric.cooling_ready": "Reserva de frío disponible",
+  "transport.space_fabric.status_overheated": "Circuito industrial sobrecalentado"
 }

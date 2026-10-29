@@ -15,14 +15,14 @@ public final class ColonyMachineScreen extends SpaceContainerScreen<ColonyMachin
     }
     @Override protected void extractLabels(GuiGraphicsExtractor gui,int mouseX,int mouseY) {
         gui.text(font,title,8,7,0xFFE5F5FF);
-        String[] states={"idle","inputs","output_full","sunlight","heat","processing","maintenance_failure","collector_environment","collector_intake"};
+        String[] states={"idle","inputs","output_full","sunlight","heat","processing","maintenance_failure","collector_environment","collector_intake","overheating","cooling_ready"};
         gui.text(font,Component.translatable("colony.space_fabric."+states[Math.clamp(menu.status(),0,states.length-1)]),8,21,MaintenancePresentation.color(menu.integrity()));
         gui.text(font,Component.translatable("gui.space_fabric.habitat.inputs"),12,36,0xFFB5D6E5);
         gui.text(font,Component.translatable("maintenance.space_fabric.progress",menu.progress()/20,menu.duration()/20),82,39,0xFFB5D6E5);
         gui.text(font,MaintenancePresentation.integrity(menu.integrity()),82,66,MaintenancePresentation.color(menu.integrity()));
         gui.text(font,Component.translatable("maintenance.space_fabric.coating",menu.coating(),4800),82,82,0xFFB5D6E5);
         gui.text(font,Component.translatable("maintenance.space_fabric.filter",menu.filter(),1200),82,98,0xFFB5D6E5);
-        if(menu.integrity()>0&&menu.integrity()<=5000)gui.text(font,Component.translatable("maintenance.space_fabric.half_speed"),82,111,0xFFFFCD69);
+        gui.text(font,Component.translatable(menu.kind()==dev.vic17usd.spacefabric.colony.ColonyContent.Machine.EXCHANGER?"thermal.space_fabric.charge":"thermal.space_fabric.heat",menu.kind()==dev.vic17usd.spacefabric.colony.ColonyContent.Machine.EXCHANGER?menu.coolingCharge():menu.heat()),82,111,menu.thermalTrip()?0xFFFF8B78:0xFFFFCD69);
         gui.text(font,playerInventoryTitle,44,122,0xFFB5D6E5);
     }
 }

@@ -10,10 +10,10 @@ import net.minecraft.world.item.ItemStack;
 public final class ColonyMachineMenu extends AbstractContainerMenu {
     private final Container storage;
     private final ContainerData data;
-    public ColonyMachineMenu(int id,Inventory inventory){this(id,inventory,new SimpleContainer(9),new SimpleContainerData(8));}
+    public ColonyMachineMenu(int id,Inventory inventory){this(id,inventory,new SimpleContainer(9),new SimpleContainerData(11));}
     public ColonyMachineMenu(int id,Inventory inventory,Container storage,ContainerData data) {
         super(ModMenus.COLONY_MACHINE,id);this.storage=storage;this.data=data;
-        checkContainerSize(storage,9);checkContainerDataCount(data,8);
+        checkContainerSize(storage,9);checkContainerDataCount(data,11);
         for(int i=0;i<9;i++) {
             final int index=i;
             addSlot(new Slot(storage,i,12+i%3*18,48+i/3*18) {
@@ -30,6 +30,9 @@ public final class ColonyMachineMenu extends AbstractContainerMenu {
     public int coating(){return data.get(4);}
     public int filter(){return data.get(5);}
     public int risk(){return data.get(6);}
+    public int heat(){return data.get(8);}
+    public boolean thermalTrip(){return data.get(9)!=0;}
+    public int coolingCharge(){return data.get(10);}
     @Override public boolean stillValid(Player player){return storage.stillValid(player);}
     @Override public ItemStack quickMoveStack(Player player,int index) {
         if(index<0||index>=slots.size())return ItemStack.EMPTY;

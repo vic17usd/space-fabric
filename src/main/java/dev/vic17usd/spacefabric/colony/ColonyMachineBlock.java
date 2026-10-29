@@ -22,7 +22,10 @@ public final class ColonyMachineBlock extends BaseEntityBlock {
         return super.useItemOn(stack,state,level,pos,player,hand,hit);
     }
     @Override public void setPlacedBy(Level level,BlockPos pos,BlockState state,net.minecraft.world.entity.LivingEntity placer,net.minecraft.world.item.ItemStack stack) {
-        super.setPlacedBy(level,pos,state,placer,stack);dev.vic17usd.spacefabric.maintenance.MaintenanceActions.restore(level,pos,stack);
+        super.setPlacedBy(level,pos,state,placer,stack);
+        if(!level.isClientSide()&&level.getBlockEntity(pos) instanceof ColonyMachineBlockEntity machine){
+            machine.restoreThermal(stack);
+        }dev.vic17usd.spacefabric.maintenance.MaintenanceActions.restore(level,pos,stack);
     }
     @Override protected InteractionResult useWithoutItem(BlockState state,Level level,BlockPos pos,Player player,BlockHitResult hit) {
         if(!level.isClientSide() && level.getBlockEntity(pos) instanceof ColonyMachineBlockEntity machine) {

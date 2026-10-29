@@ -13,10 +13,10 @@ import net.minecraft.world.item.ItemStack;
 public final class HabitatMenu extends AbstractContainerMenu {
     private final Container storage;
     private final ContainerData data;
-    public HabitatMenu(int id,Inventory inventory) { this(id,inventory,new SimpleContainer(9),new SimpleContainerData(9)); }
+    public HabitatMenu(int id,Inventory inventory) { this(id,inventory,new SimpleContainer(9),new SimpleContainerData(11)); }
     public HabitatMenu(int id,Inventory inventory,Container storage,ContainerData data) {
         super(ModMenus.HABITAT,id);this.storage=storage;this.data=data;
-        checkContainerSize(storage,9);checkContainerDataCount(data,9);
+        checkContainerSize(storage,9);checkContainerDataCount(data,11);
         for(int i=0;i<9;i++) {
             final int index=i;
             addSlot(new Slot(storage,i,12+(i%3)*18,48+(i/3)*18) {
@@ -27,17 +27,17 @@ public final class HabitatMenu extends AbstractContainerMenu {
     }
     public static ContainerData data(Supplier<HabitatReadings> source) {
         return new ContainerData() {
-            public int getCount(){return 9;}
+            public int getCount(){return 11;}
             public void set(int index,int value) { }
             public int get(int index) {
                 var r=source.get();
-                return switch(index){case 0->r.condition().ordinal();case 1->r.oxygen();case 2->r.energy();case 3->r.coolant();case 4->r.volume();case 5->r.venus()?1:0;case 6->r.integrity();case 7->r.coating();case 8->r.filter();default->0;};
+                return switch(index){case 0->r.condition().ordinal();case 1->r.oxygen();case 2->r.energy();case 3->r.coolant();case 4->r.volume();case 5->r.venus()?1:0;case 6->r.integrity();case 7->r.coating();case 8->r.filter();case 9->r.heat();case 10->r.thermalTrip()?1:0;default->0;};
             }
         };
     }
     public HabitatReadings readings() {
         int id=data.get(0);var conditions=HabitatReadings.Condition.values();
-        return new HabitatReadings(id>=0&&id<conditions.length?conditions[id]:HabitatReadings.Condition.IDLE,data.get(1),data.get(2),data.get(3),data.get(4),data.get(5)!=0,data.get(6),data.get(7),data.get(8));
+        return new HabitatReadings(id>=0&&id<conditions.length?conditions[id]:HabitatReadings.Condition.IDLE,data.get(1),data.get(2),data.get(3),data.get(4),data.get(5)!=0,data.get(6),data.get(7),data.get(8),data.get(9),data.get(10)!=0);
     }
     @Override public boolean stillValid(Player player){return storage.stillValid(player);}
     @Override public ItemStack quickMoveStack(Player player,int index) {

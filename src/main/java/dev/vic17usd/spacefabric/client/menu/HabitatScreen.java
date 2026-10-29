@@ -25,7 +25,7 @@ public final class HabitatScreen extends SpaceContainerScreen<HabitatMenu> {
         gui.text(font,Component.translatable("maintenance.space_fabric.short_integrity",r.integrity()/100),199,7,MaintenancePresentation.color(r.integrity()));
         gui.text(font,Component.translatable("gui.space_fabric.habitat.inputs"),12,36,0xFFB5D6E5);
         gui.text(font,HabitatPresentation.pressure(r),82,37,0xFFE5F5FF);
-        gui.text(font,HabitatPresentation.temperature(r),82,48,0xFFE5F5FF);
+        gui.text(font,Component.translatable("thermal.space_fabric.heat",r.heat()),82,48,r.thermalTrip()?0xFFFF8B78:r.heat()>=ThermalBudget.WARNING?0xFFFFCD69:0xFFE5F5FF);
         reserve(gui,"oxygen",r.oxygen(),62);reserve(gui,"energy",r.energy(),82);
         if(r.venus())reserve(gui,"coolant",r.coolant(),102);
         else gui.text(font,Component.translatable("gui.space_fabric.habitat.cooling_not_needed"),82,102,0xFFB5D6E5);

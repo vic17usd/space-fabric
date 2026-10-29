@@ -158,3 +158,6 @@ comprueban bucles, límites, mezclas, descarga, envases, NBT, minería, menús,
 prioridad y un ciclo con electrolizador y soporte vital reales. Los modelos se
 interpretan por CPU. Queda pendiente observar una instalación completa dentro
 del juego, su aspecto, los controles de redstone y el funcionamiento multijugador.
+
+Desde **0.38.0**, estas redes también alimentan el intercambiador térmico y su
+circuito de retorno de agua. Consulta [la refrigeración industrial](industrial-cooling.md).
