@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "HCH",
+    "PRP",
+    "HBH"
+  ],
+  "key": {
+    "H": "space_fabric:pressure_hull",
+    "C": "minecraft:copper_ingot",
+    "P": "space_fabric:pyroxene_ceramic",
+    "R": "space_fabric:venus_research_report",
+    "B": "space_fabric:empty_power_cell"
+  },
+  "result": {
+    "id": "space_fabric:venus_cooling_unit",
+    "count": 1
+  }
+}

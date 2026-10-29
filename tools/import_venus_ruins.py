@@ -69,6 +69,28 @@ def prepare(source,cut,broken=False):
  for (x,y,z),s in sorted(blocks.items()):
   key=(x//16*16,z//16*16);tiles.setdefault(key,[]).append([x-key[0],y,z-key[1],s])
  return palette,dims,tiles,{'removed_plinth_layers':cut,'removed_base_blocks':source['block_count']-retained,'removed_detached_debris':removed,'added_support_blocks':added,'max_support_height':longest,'blocks':len(blocks)}
+
+def recovery_bay(palette,dims,tiles):
+ blocks={(x+tx,y,z+tz):s for (tx,tz),values in tiles.items() for x,y,z,s in values}
+ candidates=[]
+ for x in range(3,dims[0]-14):
+  for z in range(3,dims[2]-6):
+   if all((xx,0,zz) in blocks and all((xx,y,zz) not in blocks for y in range(1,4)) for xx in range(x,x+12) for zz in range(z,z+5)):
+    candidates.append((abs(x+6-dims[0]//2)+abs(z+2-dims[2]//2),x,z))
+ if not candidates:raise ValueError('Foundry needs a clear, accessible commissioning bay')
+ _,x,z=min(candidates);anchor=(x,1,z+2);markers={}
+ for i,name in enumerate(['foundry_console','geothermal_generator','venus_cooling_unit','venus_sulfur_processor']):
+  pos=(x+i*3,1,z+2);block='space_fabric:'+name
+  if block not in palette:palette.append(block)
+  blocks[pos]=palette.index(block)
+  markers[pos]={'id':'space_fabric:foundry_console','NaturalSite':True} if i==0 else {
+       'id':'space_fabric:colony_machine','Maintenance':{'damage':10000,'coating':0,'filter':0,'installed':False,'phase':0},'CompletedBatches':0}
+ if 'minecraft:lava' not in palette:palette.append('minecraft:lava')
+ blocks[(x+3,0,z+2)]=palette.index('minecraft:lava')
+ result={}
+ for (xx,y,zz),s in sorted(blocks.items()):
+  key=(xx//16*16,zz//16*16);result.setdefault(key,[]).append([xx-key[0],y,zz-key[1],s])
+ return result,markers,anchor
 def main():
  parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('attachments',nargs='?',type=Path);parser.add_argument('--stored-sources',action='store_true');args=parser.parse_args()
  if not args.stored_sources and args.attachments is None:parser.error('Provide attachments or --stored-sources')
@@ -95,11 +117,15 @@ def main():
     meta=json.loads(archive.read('fabric.mod.json'));license=next(n for n in archive.namelist() if n.startswith('LICENSE'))
     target=ROOT/f'third_party/venus_ruins/{meta["id"]}/LICENSE.txt';target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(archive.read(license))
     metadata={'jar':filename,'sha256':hashlib.sha256(jar.read_bytes()).hexdigest(),'source_page':meta.get('contact',{}).get('sources'),'authors':meta.get('authors',[]),'source_member':member}
-  palette,dims,tiles,adaptation=prepare(source,cut,name=='rustfall_foundry');entries=[]
+  palette,dims,tiles,adaptation=prepare(source,cut,name=='rustfall_foundry');entries=[];markers={};revision='ruins_v1'
+  if name=='rustfall_foundry':
+   tiles,markers,anchor=recovery_bay(palette,dims,tiles);revision='ruins_v2'
+   adaptation.update({'recovery_anchor':anchor,'recovery_machines':3,'blocks':adaptation['blocks']+4})
   for (x,z),blocks in sorted(tiles.items()):
    size=[min(16,dims[0]-x),dims[1],min(16,dims[2]-z)]
    doc={'format':'creativemode.structure','version':1,'palette':palette,'blocks':blocks,'bounds':{'min':[0,0,0],'max':[v-1 for v in size],'dimensions':size},'anchor':[0,0,0],'block_count':len(blocks)}
-   path=f'venus/ruins_v1/{name}/tile_{x}_{z}';target=D/f'structure/{path}.nbt';target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(gzip.compress(convert(doc),mtime=0));entries.append({'template':'space_fabric:'+path,'x':x,'z':z})
+   local_markers={(xx-x,y,zz-z):data for (xx,y,zz),data in markers.items() if x<=xx<x+16 and z<=zz<z+16}
+   path=f'venus/{revision}/{name}/tile_{x}_{z}';target=D/f'structure/{path}.nbt';target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(gzip.compress(convert(doc,block_entities=local_markers),mtime=0));entries.append({'template':'space_fabric:'+path,'x':x,'z':z})
   write(D/f'worldgen/structure/{name}.json',{'type':'space_fabric:venus_surface','biomes':'#space_fabric:has_structure/'+name,'step':'surface_structures','spawn_overrides':{},'terrain_adaptation':'none','width':dims[0],'height':dims[1],'depth':dims[2],'padding':16,'max_terrain_relief':8,'tiles':entries})
   write(D/f'tags/worldgen/biome/has_structure/{name}.json',{'replace':False,'values':['space_fabric:'+b for b in biomes]})
   write(D/f'tags/worldgen/structure/{alias}.json',{'replace':False,'values':['space_fabric:'+name]})

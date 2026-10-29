@@ -10,6 +10,10 @@ import net.minecraft.resources.Identifier;
 public final class SpaceFabricClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
+        dev.vic17usd.spacefabric.client.rover.RoverView.initialize();
+        net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry.register(dev.vic17usd.spacefabric.rover.RoverEntity.TYPE,dev.vic17usd.spacefabric.client.rover.RoverRenderer::new);
+        net.minecraft.client.gui.screens.MenuScreens.register(dev.vic17usd.spacefabric.menu.ModMenus.FOUNDRY,dev.vic17usd.spacefabric.client.menu.FoundryScreen::new);
+        net.minecraft.client.gui.screens.MenuScreens.register(dev.vic17usd.spacefabric.menu.ModMenus.ROVER,dev.vic17usd.spacefabric.client.menu.RoverScreen::new);
         dev.vic17usd.spacefabric.client.rocket.RocketFlightView.initialize();
         dev.vic17usd.spacefabric.client.colony.HabitatView.initialize();
         net.minecraft.client.gui.screens.MenuScreens.register(dev.vic17usd.spacefabric.menu.ModMenus.COLONY_MACHINE,dev.vic17usd.spacefabric.client.menu.ColonyMachineScreen::new);

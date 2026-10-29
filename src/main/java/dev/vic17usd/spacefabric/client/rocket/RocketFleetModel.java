@@ -17,7 +17,9 @@ public final class RocketFleetModel {
     private final List<Face> faces;
     public final Identifier texture;
     public RocketFleetModel(RocketVariant variant) {
-        String path="/assets/space_fabric/rocket_mesh/"+variant.path+".json";
+        this("/assets/space_fabric/rocket_mesh/"+variant.path+".json");
+    }
+    public RocketFleetModel(String path) {
         try(var input=RocketFleetModel.class.getResourceAsStream(path)) {
             if(input==null)throw new IllegalStateException("Missing rocket mesh: "+path);
             var json=JsonParser.parseReader(new InputStreamReader(input,StandardCharsets.UTF_8)).getAsJsonObject();

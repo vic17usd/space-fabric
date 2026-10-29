@@ -133,3 +133,9 @@ tasks.register('verifyHabitatView', JavaExec) {
     mainClass = 'dev.vic17usd.spacefabric.client.colony.HabitatViewCheck'
 }
 tasks.named('check') { dependsOn tasks.named('verifyHabitatView') }
+
+tasks.register('verifyRoverAssets', JavaExec) {
+    classpath = sourceSets.renderCheck.runtimeClasspath
+    mainClass = 'dev.vic17usd.spacefabric.client.rocket.RoverAssetsCheck'
+}
+tasks.named('check') { dependsOn tasks.named('verifyRoverAssets') }

@@ -15,7 +15,7 @@ import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityT
 
 public final class ColonyContent {
     // Append entries: ordinals are synchronized by the existing machine menu.
-    public enum Machine { HABITAT, ELECTROLYZER, SOLAR, GEOTHERMAL, ANALYZER, ATMOSPHERIC_COLLECTOR, GAS_SEPARATOR, SULFUR_PROCESSOR, CERAMIC_KILN }
+    public enum Machine { HABITAT, ELECTROLYZER, SOLAR, GEOTHERMAL, ANALYZER, ATMOSPHERIC_COLLECTOR, GAS_SEPARATOR, SULFUR_PROCESSOR, CERAMIC_KILN, COOLER }
     private static final Map<String,Block> BLOCKS=new LinkedHashMap<>();
     private static final Map<String,Item> ITEMS=new LinkedHashMap<>();
     static {Registry.register(BuiltInRegistries.BLOCK_TYPE,SpaceFabric.id("colony_machine"),ColonyMachineBlock.CODEC);}
@@ -32,6 +32,7 @@ public final class ColonyContent {
     public static final Block GAS_SEPARATOR=machine("venus_gas_separator");
     public static final Block SULFUR_PROCESSOR=machine("venus_sulfur_processor");
     public static final Block CERAMIC_KILN=machine("venus_ceramic_kiln");
+    public static final Block COOLING_UNIT=machine("venus_cooling_unit");
     public static final Block VENUS_COMPOSITE_HULL=block("venus_composite_hull",Block::new,BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(12,120));
     public static final Item EMPTY_CANISTER=item("empty_canister",new Item.Properties());
     public static final Item OXYGEN_CANISTER=item("oxygen_canister",new Item.Properties().stacksTo(16).craftRemainder(EMPTY_CANISTER));
@@ -45,7 +46,7 @@ public final class ColonyContent {
     public static final BlockEntityType<ColonyMachineBlockEntity> MACHINE_TYPE=Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE,
             SpaceFabric.id("colony_machine"),FabricBlockEntityTypeBuilder.create(ColonyMachineBlockEntity::new,
                     HABITAT_CONTROLLER,ELECTROLYZER,SOLAR_CHARGER,GEOTHERMAL_GENERATOR,SAMPLE_ANALYZER,
-                    ATMOSPHERIC_COLLECTOR,GAS_SEPARATOR,SULFUR_PROCESSOR,CERAMIC_KILN).build());
+                    ATMOSPHERIC_COLLECTOR,GAS_SEPARATOR,SULFUR_PROCESSOR,CERAMIC_KILN,COOLING_UNIT).build());
     private ColonyContent() { }
     private static Block machine(String name){return block(name,ColonyMachineBlock::new,BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(5,25));}
     private static Block block(String name,Function<BlockBehaviour.Properties,Block> factory,BlockBehaviour.Properties properties) {
@@ -62,10 +63,11 @@ public final class ColonyContent {
         if(block==SOLAR_CHARGER)return Machine.SOLAR;if(block==GEOTHERMAL_GENERATOR)return Machine.GEOTHERMAL;
         if(block==ATMOSPHERIC_COLLECTOR)return Machine.ATMOSPHERIC_COLLECTOR;if(block==GAS_SEPARATOR)return Machine.GAS_SEPARATOR;
         if(block==SULFUR_PROCESSOR)return Machine.SULFUR_PROCESSOR;if(block==CERAMIC_KILN)return Machine.CERAMIC_KILN;
+        if(block==COOLING_UNIT)return Machine.COOLER;
         return Machine.ANALYZER;
     }
     public static Block block(Machine kind){return switch(kind){case HABITAT->HABITAT_CONTROLLER;case ELECTROLYZER->ELECTROLYZER;case SOLAR->SOLAR_CHARGER;case GEOTHERMAL->GEOTHERMAL_GENERATOR;case ANALYZER->SAMPLE_ANALYZER;
-        case ATMOSPHERIC_COLLECTOR->ATMOSPHERIC_COLLECTOR;case GAS_SEPARATOR->GAS_SEPARATOR;case SULFUR_PROCESSOR->SULFUR_PROCESSOR;case CERAMIC_KILN->CERAMIC_KILN;};}
+        case ATMOSPHERIC_COLLECTOR->ATMOSPHERIC_COLLECTOR;case GAS_SEPARATOR->GAS_SEPARATOR;case SULFUR_PROCESSOR->SULFUR_PROCESSOR;case CERAMIC_KILN->CERAMIC_KILN;case COOLER->COOLING_UNIT;};}
     public static Map<String,Block> blocks(){return Collections.unmodifiableMap(BLOCKS);}
     public static Map<String,Item> items(){return Collections.unmodifiableMap(ITEMS);}
     public static void initialize(){HabitatSystem.initialize();HabitatNetwork.initialize();ColonyWorldgen.initialize();}

@@ -19,6 +19,7 @@ public final class RocketCabin {
         return dev.vic17usd.spacefabric.atmosphere.AtmosphereProfile.of(planet).pressureAt(y)<=10000;
     }
     public static boolean protects(Entity entity) {
+        if(entity.getVehicle() instanceof dev.vic17usd.spacefabric.rover.RoverEntity rover)return rover.protects();
         if(entity instanceof net.minecraft.server.level.ServerPlayer player
             &&((net.fabricmc.fabric.api.attachment.v1.AttachmentTarget)player).getAttachedOrCreate(TRANSFER_SEAL)>player.tickCount)return true;
         return entity.getVehicle() instanceof RocketEntity rocket && !rocket.isRemoved() && rocket.hull()>0

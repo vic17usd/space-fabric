@@ -13,6 +13,7 @@
     "space_fabric:venus_gas_separator",
     "space_fabric:venus_sulfur_processor",
     "space_fabric:venus_ceramic_kiln",
-    "space_fabric:venus_composite_hull"
+    "space_fabric:venus_composite_hull",
+    "space_fabric:venus_cooling_unit"
   ]
 }

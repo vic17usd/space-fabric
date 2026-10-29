@@ -1,8 +1,8 @@
 # Resultado de validación de esta base
 
-Última entrega: **0.35.0**, 483 pruebas JUnit aprobadas, diez comprobaciones por
-CPU y 1.037 JSON válidos. Los apartados siguientes conservan el historial de
-la base y sus ampliaciones; la validación de las nuevas construcciones está al final del documento.
+Última entrega: **0.36.0**, 498 pruebas JUnit aprobadas, once comprobaciones por
+CPU y 1.061 JSON válidos. Los apartados siguientes conservan el historial de
+la base y sus ampliaciones; la validación de consola y rover está al final del documento.
 
 Verificado con JDK 25, Gradle 9.8.2, Loom 1.19.3, Minecraft 26.1,
 Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
@@ -393,3 +393,38 @@ Construcciones de Venus, versión 0.35.0:
 Pendientes en partida real: lectura visual de la arquitectura y las parcelas,
 frecuencia efectiva, búsqueda completa de /locate y multijugador. No se abrió un
 cliente con GPU. Los nuevos edificios requieren chunks aún no generados.
+
+
+Consola, recuperación y rover, versión 0.36.0:
+
+- Compilación completa: **498 pruebas JUnit**, cero fallos, errores u omisiones,
+  once comprobaciones por CPU y **1.061 JSON** válidos.
+- Los marcadores NBT de la fundición nueva crean una consola natural y tres
+  BlockEntities reales con mantenimiento agotado. Las pruebas comprueban pausa
+  durante avería, reparación, filtro, producción y contador persistente de lotes.
+- Se conservan las plantillas `ruins_v1`. Los inicios nuevos usan `ruins_v2`, con
+  cuatro bloques funcionales añadidos y lava bajo el generador. La generación y
+  colocación por chunks siguen comprobándose con el motor nativo.
+- El registro de recompensas conserva la activación tras serializar/cargar y al
+  volver a registrar la misma ubicación. Se rechazan activaciones repetidas y
+  consolas sin instalación; cada ubicación natural conserva su propio estado.
+- El rover guarda casco, tres reservas e inventario mediante NBT nativo. El
+  objeto recogido conserva reservas y daño con ItemStack.CODEC; la carga no se
+  copia dentro del objeto. Se valida la fábrica real de colocación y se rechazan
+  ítems de otro tipo.
+- La recarga devuelve recipientes, rechaza cargas parciales y salidas bloqueadas.
+  Se prueban límites de energía/oxígeno/refrigerante, consumo ocupado y pausa
+  vacía, frenado, aceleración, marcha atrás y límites térmicos/de presión.
+- El menú filtra suministros, separa carga y envases, conserva sus 50 slots y
+  permite Shift sin duplicación. El asiento conserva su posición al rotar con
+  el vehículo mediante el contrato nativo de anclajes.
+- Los atlas PNG de ambos modelos coinciden byte por byte con los originales.
+  La comprobación nueva interpreta los modelos nativos de consola e inventario,
+  emite 3.624 vértices del rover, comprueba seis ruedas en tres ángulos y nueve
+  rayos de visión libres por el visor con suelo/techo/paredes interiores presentes.
+
+Pendientes en partida real: recuperación de principio a fin con inventarios de
+jugadores, entrega con inventario lleno, sustitución de consola, conducción en
+pendientes, colisiones, confort/interpolación de cámara, tecla V, aspecto con GPU
+u optimizadores y sincronización multijugador. Las pruebas de registro y menús
+no sustituyen esos recorridos interactivos.

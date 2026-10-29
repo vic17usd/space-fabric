@@ -1,5 +1,9 @@
 # Nuevas construcciones de Venus — 0.35.0
 
+Desde **0.36.0**, las fundiciones nuevas tienen consola y tres equipos averiados
+para [recuperar la instalación y conseguir un rover](venus-rover-and-recovery.md).
+La arquitectura de fundiciones ya guardadas se conserva.
+
 Se revisaron los catorce JAR aportados. Se eligieron cuatro construcciones nuevas
 para complementar los paisajes, el pueblo, la pirámide y la caldera existentes.
 Instala `space-fabric-0.35.0.jar` en cliente y servidor, sustituyendo el anterior.
@@ -50,8 +54,9 @@ usar los alias, con permisos de operador:
 
 **Se generan en zonas nuevas de Venus.** Los chunks explorados conservan su
 contenido. No se borran ni se trasladan las construcciones guardadas anteriormente.
-Estos diseños aportan arquitectura y exploración; la fundición no incorpora aún
-misiones de reparación ni una fábrica automatizada operativa.
+En 0.35.0 estos diseños aportaban arquitectura y exploración. La recuperación de
+la fundición se añade en 0.36.0 con cuatro bloques funcionales nuevos; la fábrica
+reparada sigue consumiendo sus propios suministros.
 
 Explóralos con traje venusiano. Para convertir un edificio en una base habitable,
 instala cerramiento certificado, controlador y suministros de soporte vital;

@@ -32,7 +32,7 @@ public final class VenusAcidFilmBlock extends net.minecraft.world.level.block.Ca
         if(!(level instanceof ServerLevel server)||!(entity instanceof LivingEntity living)||!living.isAlive()||living.tickCount%20!=0)return;
         if(living instanceof dev.vic17usd.spacefabric.entity.venus.VenusMob)return;
         if(living instanceof Player player) {
-            if(player.isCreative()||player.isSpectator())return;
+            if(player.isCreative()||player.isSpectator()||dev.vic17usd.spacefabric.space.RocketCabin.protects(player))return;
             if(SuitProtection.resistsAcid(player))return;
         }
         living.addEffect(new MobEffectInstance(MobEffects.POISON,60));

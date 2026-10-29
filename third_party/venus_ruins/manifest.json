@@ -165,7 +165,13 @@
       "removed_detached_debris": 16,
       "added_support_blocks": 1349,
       "max_support_height": 9,
-      "blocks": 27950
+      "blocks": 27954,
+      "recovery_anchor": [
+        49,
+        1,
+        54
+      ],
+      "recovery_machines": 3
     },
     "palette": [
       "minecraft:blackstone",
@@ -187,7 +193,12 @@
       "space_fabric:venus_ember_crust",
       "minecraft:obsidian",
       "minecraft:crying_obsidian",
-      "minecraft:polished_blackstone_bricks"
+      "minecraft:polished_blackstone_bricks",
+      "space_fabric:foundry_console",
+      "space_fabric:geothermal_generator",
+      "space_fabric:venus_cooling_unit",
+      "space_fabric:venus_sulfur_processor",
+      "minecraft:lava"
     ]
   }
 }

@@ -22,7 +22,7 @@ public abstract class RocketPilotRendererMixin {
     private void spaceFabric$recordPilot(Entity entity, float partialTick, CallbackInfoReturnable<EntityRenderState> callback) {
         // Se asigna también false: los snapshots reutilizados vuelven a verse al desmontar.
         ((RocketPilotRenderState) callback.getReturnValue()).spaceFabric$setInsideRocket(
-                entity instanceof Player && entity.getVehicle() instanceof RocketEntity);
+                entity instanceof Player && (entity.getVehicle() instanceof RocketEntity||entity.getVehicle() instanceof dev.vic17usd.spacefabric.rover.RoverEntity));
     }
 
     @Inject(method = "submit", at = @At("HEAD"), cancellable = true)

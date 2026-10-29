@@ -69,6 +69,9 @@ public final class ColonyRecipes {
         list.add(new Formula("carbon_dioxide_electrolysis",ColonyContent.Machine.ELECTROLYZER,200,
                 List.of(p(0,IndustryContent.CARBON_DIOXIDE),p(1,ColonyContent.CHARGED_POWER_CELL)),
                 List.of(p(3,ColonyContent.OXYGEN_CANISTER),p(4,IndustryContent.CARBON_POWDER),p(5,ColonyContent.EMPTY_POWER_CELL))));
+        list.add(new Formula("chilled_coolant",ColonyContent.Machine.COOLER,200,
+                List.of(p(0,ColonyContent.WATER_CANISTER),p(1,ColonyContent.CHARGED_POWER_CELL)),
+                List.of(p(3,dev.vic17usd.spacefabric.recovery.RecoveryContent.CHILLED_COOLANT),p(5,ColonyContent.EMPTY_POWER_CELL))));
         return List.copyOf(list);
     }
     public static boolean accepts(ColonyContent.Machine machine,int slot,ItemStack stack) {

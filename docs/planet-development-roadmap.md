@@ -35,6 +35,13 @@ con reservas y permite reparar una avería sin perder inventarios por duplicaci�
 
 ## Entrega 3: rover marciano — diseño y recurso 3D pendiente
 
+El **rover venusiano está implementado en 0.36.0**, usando el modelo aportado,
+conductor único, nueve espacios de carga, energía, soporte vital, refrigeración,
+cabina con visor y seis ruedas animadas. También funciona en Marte dentro de sus
+límites ambientales. [Controles y recuperación](venus-rover-and-recovery.md).
+La variante marciana con acompañante y modelo específico descrita abajo queda
+como ampliación, sin requerirse para usar el vehículo venusiano actual.
+
 Vehículo terrestre con conductor, acompañante y carga. Aceleración y frenado
 controlados por el servidor, ruedas visuales, gravedad local, colisiones y
 persistencia. Batería y reserva de oxígeno para una cabina sellada; al agotarse,

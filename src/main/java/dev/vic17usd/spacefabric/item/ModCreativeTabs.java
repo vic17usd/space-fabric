@@ -23,6 +23,9 @@ public final class ModCreativeTabs {
                         dev.vic17usd.spacefabric.colony.ColonyContent.blocks().values().forEach(output::accept);
                         dev.vic17usd.spacefabric.colony.ColonyContent.items().values().forEach(output::accept);
                         dev.vic17usd.spacefabric.industry.IndustryContent.items().values().forEach(output::accept);
+                        output.accept(dev.vic17usd.spacefabric.recovery.RecoveryContent.CONSOLE);
+                        output.accept(dev.vic17usd.spacefabric.recovery.RecoveryContent.CHILLED_COOLANT);
+                        output.accept(dev.vic17usd.spacefabric.recovery.RecoveryContent.ROVER);
                         dev.vic17usd.spacefabric.earth.EarthMaterials.blocks().values().forEach(output::accept);
                         dev.vic17usd.spacefabric.earth.EarthMaterials.items().values().forEach(output::accept);
                         output.accept(PlanetFluids.VISCOUS_LAVA_BUCKET);

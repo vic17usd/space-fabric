@@ -1,0 +1,44 @@
+{
+  "parent": "space_fabric:industry/composite",
+  "display": {
+    "icon": {
+      "id": "space_fabric:venus_rover"
+    },
+    "title": {
+      "translate": "advancements.space_fabric.rover.title"
+    },
+    "description": {
+      "translate": "advancements.space_fabric.rover.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "obtained": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "space_fabric:venus_rover"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "obtained"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "space_fabric:foundry_console",
+      "space_fabric:venus_cooling_unit",
+      "space_fabric:venus_rover"
+    ]
+  }
+}

@@ -2185,7 +2185,7 @@ class WorldgenCodecTest {
     void venusIndustryRecipesUseNativeCodecs(String name) throws IOException {
         assertNotNull(Recipe.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("recipe/"+name)).getOrThrow());
     }
-    @ParameterizedTest @ValueSource(strings={"intake","gases","sulfur","composite"})
+    @ParameterizedTest @ValueSource(strings={"intake","gases","sulfur","composite","rover"})
     void venusIndustryAdvancementsDecodeNatively(String name) throws IOException {
         assertNotNull(net.minecraft.advancements.Advancement.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("advancement/industry/"+name)).getOrThrow());
     }
@@ -2311,7 +2311,7 @@ class WorldgenCodecTest {
                 }
             }
         }
-        assertEquals(switch(name){case "venusian_ash_outpost"->10250;case "venusian_sulfur_vault"->24710;case "venus_basalt_haven"->9110;default->27950;},count);
+        assertEquals(switch(name){case "venusian_ash_outpost"->10250;case "venusian_sulfur_vault"->24710;case "venus_basalt_haven"->9110;default->27954;},count);
         // All architectural components must connect to the ground or a block resting on it.
         var queue=new java.util.ArrayDeque<net.minecraft.core.BlockPos>();var reached=new java.util.HashSet<net.minecraft.core.BlockPos>();
         positions.stream().filter(p->p.getY()<=1).forEach(p->{queue.add(p);reached.add(p);});
@@ -2325,4 +2325,90 @@ class WorldgenCodecTest {
         assertEquals(positions.size(),reached.size(),"Unsupported detached architecture");
     }
 
+    @ParameterizedTest @ValueSource(strings={"foundry_console","venus_cooling_unit","venus_rover"})
+    void recoveryAndRoverRecipesUseNativeRegistrations(String name) throws IOException {
+        assertNotNull(Recipe.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("recipe/"+name)).getOrThrow());
+    }
+    @Test void foundryMarkersCreateActualDamagedBlockEntitiesAndNeedRepairedCommissioning() throws IOException {
+        var structure=assertInstanceOf(dev.vic17usd.spacefabric.worldgen.structure.VenusSurfaceStructure.class,registries.lookupOrThrow(Registries.STRUCTURE).getOrThrow(
+                net.minecraft.resources.ResourceKey.create(Registries.STRUCTURE,SpaceFabric.id("rustfall_foundry"))).value());
+        int consoles=0,machines=0;
+        for(var tile:structure.tiles()) {
+            assertTrue(tile.template().getPath().startsWith("venus/ruins_v2/"));
+            try(var stream=getClass().getResourceAsStream("/data/space_fabric/structure/"+tile.template().getPath()+".nbt")) {
+                var nbt=net.minecraft.nbt.NbtIo.readCompressed(stream,net.minecraft.nbt.NbtAccounter.unlimitedHeap());
+                for(var entry:nbt.getListOrEmpty("blocks")) {
+                    var block=(net.minecraft.nbt.CompoundTag)entry;if(!block.contains("nbt"))continue;
+                    var data=block.getCompoundOrEmpty("nbt");var palette=(net.minecraft.nbt.CompoundTag)nbt.getListOrEmpty("palette").get(block.getIntOr("state",-1));
+                    var state=BuiltInRegistries.BLOCK.getValue(net.minecraft.resources.Identifier.parse(palette.getStringOr("Name",""))).defaultBlockState();
+                    var pos=net.minecraft.core.BlockPos.ZERO;
+                    var entity=net.minecraft.world.level.block.entity.BlockEntity.loadStatic(pos,state,data,registries);
+                    assertNotNull(entity);
+                    if(entity instanceof dev.vic17usd.spacefabric.recovery.FoundryConsoleBlockEntity) {
+                        consoles++;assertTrue(entity.saveWithFullMetadata(registries).getBooleanOr("NaturalSite",false));
+                    } else {
+                        var machine=assertInstanceOf(dev.vic17usd.spacefabric.colony.ColonyMachineBlockEntity.class,entity);machines++;
+                        assertTrue(machine.maintenance().failed());assertEquals(0,machine.completedBatches());
+                        var formula=dev.vic17usd.spacefabric.colony.ColonyRecipes.ALL.stream().filter(f->f.machine()==machine.kind()).findFirst().orElseThrow();
+                        formula.inputs().forEach(p->machine.setItem(p.slot(),p.stack()));
+                        var environment=new dev.vic17usd.spacefabric.colony.ColonyEnvironment(true,true,false,true);
+                        for(int i=0;i<400;i++)machine.processTick(environment);assertEquals(0,machine.completedBatches());
+                        for(int i=0;i<3;i++)machine.maintenance().apply(dev.vic17usd.spacefabric.maintenance.MachineWear.Action.REPAIR);
+                        assertEquals(dev.vic17usd.spacefabric.recovery.FoundryConsoleBlockEntity.Status.FILTER,
+                                dev.vic17usd.spacefabric.recovery.FoundryConsoleBlockEntity.classify(machine.maintenance().integrity(),0,0));
+                        machine.maintenance().apply(dev.vic17usd.spacefabric.maintenance.MachineWear.Action.FILTER);
+                        for(int i=0;i<formula.duration();i++)machine.processTick(environment);
+                        assertEquals(1,machine.completedBatches());
+                        assertEquals(dev.vic17usd.spacefabric.recovery.FoundryConsoleBlockEntity.Status.READY,
+                                dev.vic17usd.spacefabric.recovery.FoundryConsoleBlockEntity.classify(machine.maintenance().integrity(),machine.maintenance().state().filter(),machine.completedBatches()));
+                        var restored=assertInstanceOf(dev.vic17usd.spacefabric.colony.ColonyMachineBlockEntity.class,net.minecraft.world.level.block.entity.BlockEntity.loadStatic(pos,state,machine.saveWithFullMetadata(registries),registries));
+                        assertEquals(1,restored.completedBatches());
+                    }
+                }
+            }
+        }
+        assertEquals(1,consoles);assertEquals(3,machines);
+        // Previously saved structure pieces still resolve their original architecture.
+        try(var legacy=getClass().getResourceAsStream("/data/space_fabric/structure/venus/ruins_v1/rustfall_foundry/tile_48_48.nbt")){assertNotNull(legacy);}
+    }
+    @Test void roverSuppliesAreAtomicReturnContainersAndDoNotBypassOutputCapacity() {
+        var rover=new dev.vic17usd.spacefabric.rover.RoverEntity(dev.vic17usd.spacefabric.rover.RoverEntity.TYPE,null);
+        rover.inventory().setItem(0,new ItemStack(dev.vic17usd.spacefabric.colony.ColonyContent.CHARGED_POWER_CELL,2));
+        rover.inventory().setItem(12,new ItemStack(Items.BARRIER));assertFalse(rover.absorb(0));assertEquals(0,rover.systems().energy());assertEquals(2,rover.inventory().getItem(0).getCount());
+        rover.inventory().setItem(12,ItemStack.EMPTY);assertTrue(rover.absorb(0));assertEquals(2400,rover.systems().energy());assertEquals(1,rover.inventory().getItem(0).getCount());assertTrue(rover.inventory().getItem(12).is(dev.vic17usd.spacefabric.colony.ColonyContent.EMPTY_POWER_CELL));
+        rover.inventory().setItem(1,new ItemStack(dev.vic17usd.spacefabric.colony.ColonyContent.OXYGEN_CANISTER));
+        rover.inventory().setItem(2,new ItemStack(dev.vic17usd.spacefabric.recovery.RecoveryContent.CHILLED_COOLANT));
+        assertTrue(rover.absorb(1));assertTrue(rover.absorb(2));assertEquals(2,rover.inventory().getItem(13).getCount());
+        assertEquals(4800,rover.systems().oxygen());assertEquals(4800,rover.systems().coolant());
+        rover.restoreSystems(new dev.vic17usd.spacefabric.rover.RoverSystems.State(23900,0,0,100));assertFalse(rover.absorb(0));assertEquals(1,rover.inventory().getItem(0).getCount());
+        assertFalse(rover.absorb(-1));assertFalse(rover.absorb(3));assertTrue(rover.getControllingPassenger()==null);
+        var rider=new dev.vic17usd.spacefabric.space.RocketEntity(dev.vic17usd.spacefabric.space.ModSpaceEntities.ROCKET,null);
+        rover.setPos(12,64,-25);rover.setYRot(90);
+        var feet=rover.getPassengerRidingPosition(rider).subtract(rider.getVehicleAttachmentPoint(rover));
+        assertEquals(10.85,feet.x,1e-5);assertEquals(64.35,feet.y,1e-5);assertEquals(-25,feet.z,1e-5);
+    }
+    @Test void roverNativeEntityNbtAndPackedItemPreserveAllResourcesDamageAndCargo() throws Exception {
+        var rover=new dev.vic17usd.spacefabric.rover.RoverEntity(dev.vic17usd.spacefabric.rover.RoverEntity.TYPE,null);
+        var saved=new dev.vic17usd.spacefabric.rover.RoverSystems.State(1234,3456,789,37);rover.restoreSystems(saved);rover.inventory().setItem(7,new ItemStack(ModItems.SULFUR_CRYSTAL,9));
+        var write=rover.getClass().getDeclaredMethod("addAdditionalSaveData",net.minecraft.world.level.storage.ValueOutput.class);write.setAccessible(true);
+        var read=rover.getClass().getDeclaredMethod("readAdditionalSaveData",net.minecraft.world.level.storage.ValueInput.class);read.setAccessible(true);
+        var output=net.minecraft.world.level.storage.TagValueOutput.createWithContext(net.minecraft.util.ProblemReporter.DISCARDING,registries);write.invoke(rover,output);
+        var restored=new dev.vic17usd.spacefabric.rover.RoverEntity(dev.vic17usd.spacefabric.rover.RoverEntity.TYPE,null);restored.inventory().setItem(5,new ItemStack(Items.DIAMOND));
+        read.invoke(restored,net.minecraft.world.level.storage.TagValueInput.create(net.minecraft.util.ProblemReporter.DISCARDING,registries,output.buildResult()));
+        assertEquals(saved,restored.systems());assertEquals(9,restored.inventory().getItem(7).getCount());assertTrue(restored.inventory().getItem(5).isEmpty());assertEquals(net.minecraft.world.phys.Vec3.ZERO,restored.getDeltaMovement());
+        var packed=dev.vic17usd.spacefabric.rover.RoverItem.packed(saved);var ops=registries.createSerializationContext(JsonOps.INSTANCE);
+        packed=ItemStack.CODEC.parse(ops,ItemStack.CODEC.encodeStart(ops,packed).getOrThrow()).getOrThrow();
+        assertEquals(saved,dev.vic17usd.spacefabric.rover.RoverItem.create(null,packed).systems());
+        assertFalse(packed.get(net.minecraft.core.component.DataComponents.CUSTOM_DATA).copyTag().contains("Items"));
+        assertThrows(IllegalArgumentException.class,()->dev.vic17usd.spacefabric.rover.RoverItem.create(null,new ItemStack(Items.STICK)));
+    }
+    @Test void roverMenuFiltersSuppliesAndKeepsCargoAndReturnsSeparate() {
+        var rover=new dev.vic17usd.spacefabric.rover.RoverEntity(dev.vic17usd.spacefabric.rover.RoverEntity.TYPE,null);
+        var inventory=new net.minecraft.world.entity.player.Inventory(null,new net.minecraft.world.entity.EntityEquipment());
+        inventory.setItem(9,new ItemStack(dev.vic17usd.spacefabric.recovery.RecoveryContent.CHILLED_COOLANT,2));
+        var menu=new dev.vic17usd.spacefabric.menu.RoverMenu(1,inventory,rover);assertEquals(50,menu.slots.size());
+        assertEquals(2,menu.quickMoveStack(null,14).getCount());assertEquals(2,rover.inventory().getItem(2).getCount());
+        assertFalse(menu.getSlot(12).mayPlace(new ItemStack(Items.DIAMOND)));assertFalse(menu.getSlot(13).mayPlace(new ItemStack(Items.DIAMOND)));
+        assertFalse(menu.getSlot(0).mayPlace(new ItemStack(Items.IRON_INGOT)));assertTrue(menu.getSlot(3).mayPlace(new ItemStack(Items.IRON_INGOT)));
+    }
 }

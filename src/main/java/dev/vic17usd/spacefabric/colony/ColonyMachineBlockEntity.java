@@ -23,6 +23,8 @@ public final class ColonyMachineBlockEntity extends BaseContainerBlockEntity imp
     private SealScanner.Room room;
     private SealScanner.Room lastEnclosure;
     private int progress;
+    private int completedBatches;
+    public int completedBatches(){return completedBatches;}
     private String recipe="",status="idle";
     private long lastWork=Long.MIN_VALUE,lastValidation=Long.MIN_VALUE,lastSealScan=Long.MIN_VALUE;
     private boolean active;
@@ -138,7 +140,7 @@ public final class ColonyMachineBlockEntity extends BaseContainerBlockEntity imp
         var blocker=environment.blocker(kind());
         if(!blocker.isEmpty()){status=blocker;return;}
         status="processing";progress++;setChanged();
-        if(progress>=formula.duration()&&formula.commit(this)){progress=0;}
+        if(progress>=formula.duration()&&formula.commit(this)){progress=0;completedBatches=Math.min(Integer.MAX_VALUE-1,completedBatches)+1;}
     }
     @Override public void setRemoved(){HabitatSystem.remove(this);active=false;super.setRemoved();}
     @Override public int getContainerSize(){return 9;}
@@ -155,13 +157,14 @@ public final class ColonyMachineBlockEntity extends BaseContainerBlockEntity imp
     @Override protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);items=NonNullList.withSize(9,ItemStack.EMPTY);ContainerHelper.loadAllItems(input,items);
         progress=Math.clamp(input.getIntOr("Progress",0),0,400);recipe=input.getStringOr("Recipe","");
+        completedBatches=Math.max(0,input.getIntOr("CompletedBatches",0));
         support.restore(input.getIntOr("Oxygen",0),input.getIntOr("Energy",0),input.getIntOr("Coolant",0),input.getIntOr("Volume",0),input.getBooleanOr("Pressurized",false));
         maintenance.restore(input.read("Maintenance",dev.vic17usd.spacefabric.maintenance.MachineWear.State.CODEC).orElse(dev.vic17usd.spacefabric.maintenance.MachineWear.State.FRESH));
         active=false;room=null;lastEnclosure=null;lastWork=lastValidation=lastSealScan=Long.MIN_VALUE;
     }
     @Override protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);output.store("Maintenance",dev.vic17usd.spacefabric.maintenance.MachineWear.State.CODEC,maintenance.state());ContainerHelper.saveAllItems(output,items);output.putInt("Progress",progress);output.putString("Recipe",recipe);
-        output.putInt("Oxygen",support.oxygen());output.putInt("Energy",support.energy());output.putInt("Coolant",support.coolant());
+        output.putInt("CompletedBatches",completedBatches);output.putInt("Oxygen",support.oxygen());output.putInt("Energy",support.energy());output.putInt("Coolant",support.coolant());
         output.putInt("Volume",room!=null&&room.sealed()?room.air().size():0);output.putBoolean("Pressurized",support.pressurized());
     }
 }

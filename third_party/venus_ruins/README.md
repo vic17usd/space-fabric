@@ -16,3 +16,8 @@ selected. The two oversized towers were deferred; the remaining eight designs ar
 already integrated in previous releases (landscapes, settlements and ground blocks).
 Original structure JSONs are retained under `tools/structure_sources/venus/ruins`.
 Regenerate with `python3 tools/import_venus_ruins.py --stored-sources`.
+
+In 0.36.0, new Rustfall Foundry starts use `ruins_v2` templates with one recovery
+console, three damaged machines and the generator's lava heat source. The original
+`ruins_v1` templates remain unchanged for saved pieces. Functional code and the
+two newly supplied Blockbench models are integrated separately by Space Fabric.

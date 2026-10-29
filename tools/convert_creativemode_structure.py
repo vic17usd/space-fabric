@@ -53,7 +53,19 @@ def entity_entry(specification, dimensions, block_map, implicit_ground=None):
     return named(9, "pos", coordinates) + named(9, "blockPos", int_list(position)) + named(10, "nbt", nbt) + b"\0"
 
 
-def convert(document, entities=None, implicit_ground=None):
+def compound(values):
+    """Small, explicit NBT subset for our generated block-entity markers."""
+    payload=b""
+    for key,value in values.items():
+        if isinstance(value,bool):payload+=named(1,key,bytes([int(value)]))
+        elif isinstance(value,int):payload+=named(3,key,integer(value))
+        elif isinstance(value,str):payload+=named(8,key,string(value))
+        elif isinstance(value,dict):payload+=named(10,key,compound(value))
+        else:raise ValueError("Unsupported block entity NBT type")
+    return payload+b"\0"
+
+
+def convert(document, entities=None, implicit_ground=None, block_entities=None):
     if document.get("format") != "creativemode.structure" or document.get("version") != 1:
         raise ValueError("Se requiere creativemode.structure versión 1")
     palette = document["palette"]
@@ -83,7 +95,10 @@ def convert(document, entities=None, implicit_ground=None):
             raise ValueError("Bloque duplicado, fuera de límites o con índice de paleta inválido")
         seen.add(position)
         local = [position[i] - lower[i] for i in range(3)]
-        entries.append(named(9, "pos", int_list(local)) + named(3, "state", integer(state)) + b"\0")
+        extra=(block_entities or {}).get(tuple(local))
+        entry=named(9, "pos", int_list(local))+named(3,"state",integer(state))
+        if extra is not None:entry+=named(10,"nbt",compound(extra))
+        entries.append(entry+b"\0")
     body = named(3, "DataVersion", integer(DATA_VERSION))
     body += named(9, "size", int_list(dimensions))
     body += named(9, "palette", tag_list(10, [named(8, "Name", string(name)) + b"\0" for name in palette]))

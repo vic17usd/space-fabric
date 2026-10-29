@@ -25,7 +25,7 @@ public final class CondensedAcidBlock extends Block {
         if (!(level instanceof ServerLevel) || !(entity instanceof LivingEntity living) || living.tickCount % 20 != 0) return;
         if (!living.isAlive()) return;
         if (living instanceof Player player) {
-            if (player.isCreative() || player.isSpectator()) return;
+            if (player.isCreative() || player.isSpectator() || dev.vic17usd.spacefabric.space.RocketCabin.protects(player)) return;
             var boots = player.getItemBySlot(EquipmentSlot.FEET);
             if (boots.isDamageableItem()) boots.hurtAndBreak(1, player, EquipmentSlot.FEET);
             if (SuitProtection.resistsAcid(player)) return;
