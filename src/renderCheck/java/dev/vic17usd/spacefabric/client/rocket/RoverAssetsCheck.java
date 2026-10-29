@@ -54,7 +54,7 @@ public final class RoverAssetsCheck {
         for(var ray:List.of(new Vector3f(1,0,0),new Vector3f(-1,0,0),new Vector3f(0,1,0),new Vector3f(0,-1,0),new Vector3f(0,0,-1)))
             if(!hit(body,ray))throw new AssertionError("Missing cabin surface: "+ray);
         var airBody=new ArrayList<Vector3f>();
-        for(String part:new String[]{"body","glass"}){
+        for(String part:new String[]{"body","glass","lights"}){
             var mesh=new RocketFleetModel("/assets/space_fabric/model_mesh/venus_aerostat_"+part+".json");
             VertexConsumer sink=(VertexConsumer)Proxy.newProxyInstance(VertexConsumer.class.getClassLoader(),new Class<?>[]{VertexConsumer.class},(proxy,method,v)->{
                 if(!method.getName().equals("addVertex")||v.length!=11)throw new AssertionError(method);

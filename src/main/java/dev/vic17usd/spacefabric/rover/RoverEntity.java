@@ -99,6 +99,10 @@ public final class RoverEntity extends Entity implements MenuProvider {
         setDeltaMovement(forward.x,Math.max(-1.5,dy),forward.z);move(MoverType.SELF,getDeltaMovement());
         if(horizontalCollision)speed*=.3;
         if(onGround())setDeltaMovement(getDeltaMovement().multiply(1,0,1));
+        if(aerial()&&pilot!=null&&tickCount%40==0){
+            ((ServerLevel)level()).playSound(null,blockPosition(),net.minecraft.sounds.SoundEvents.BEACON_AMBIENT,net.minecraft.sounds.SoundSource.PLAYERS,.12F,.65F);
+            if(getDeltaMovement().y<0)((ServerLevel)level()).sendParticles(pilot,net.minecraft.core.particles.ParticleTypes.END_ROD,false,false,getX(),getY()-.1,getZ(),1,.8,.05,.8,0);
+        }
         resetFallDistance();getPassengers().forEach(Entity::resetFallDistance);
         var after=state.tick(pilot!=null,Math.abs(speed)>.005,planet(),tickCount);
         if(aerial()&&!onGround())after=new RoverSystems.State(after.energy()-1,after.oxygen(),after.coolant(),after.hull());

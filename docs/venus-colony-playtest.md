@@ -1,8 +1,8 @@
-# Comprobaciones de la colonia en partida — 0.39.0
+# Comprobaciones de la colonia en partida — 0.40.0
 
 Estas comprobaciones están preparadas para ejecución dentro de Minecraft; no
 se presentan como resultados observados. Usa un mundo de pruebas con cliente y
-servidor 0.39.0. El perfil planetario de exposición mantiene la escala 1:72.
+servidor 0.40.0. El perfil planetario de exposición mantiene la escala 1:72.
 
 1. Construye un hábitat válido de Venus y equipa el traje antes de entrar. Abastece
    el controlador. Comprueba el diagnóstico de presión, oxígeno y refrigeración.
@@ -34,3 +34,16 @@ servidor 0.39.0. El perfil planetario de exposición mantiene la escala 1:72.
    duración, número de jugadores, TPS y averías. Para una prueba de cuatro horas
    del mundo completo, prepara depósitos y filtros suficientes: la prueba automática
    de componentes repone sus entradas y no certifica esa autonomía en partida.
+
+10. Fabrica un navegador, guarda dos balizas y cambia el destino con Shift + uso
+    en aire. Acércate a una consola natural: debe registrarse una vez sin buscar
+    instalaciones remotas. Guarda/reconecta y confirma dimensiones y selección.
+11. Usa el navegador sobre el controlador para abrir el panel nativo de libro.
+    Cambia suministros y reabre: los datos se actualizan. Comprueba que la autonomía
+    se describe como reserva local y que una fuga muestra estado inválido.
+12. Recupera caja negra con tarjeta, toma una muestra en la estación y entrega
+    cada objeto a un controlador operativo. Repite, reconecta y prueba con otro
+    jugador: cada UUID recibe una recompensa por proyecto. Los envases se conservan.
+13. Comprueba luces, indicador de vuelo y sonido del aerostato con y sin Sodium.
+    Observa fuentes volcánicas y dos especies pacíficas cerca de hábitats corrosivos;
+    verifica que huir del jugador conserva prioridad y que los pulsos no dañan terreno.

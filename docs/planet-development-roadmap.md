@@ -102,3 +102,11 @@ una plataforma a Y=240 no se tratará automáticamente como ese ambiente real.
 Cada cambio de terreno tendrá pruebas de varias semillas y límites de coste por
 chunk. Las construcciones antiguas conservarán sus plantillas e identificadores,
 como ya ocurre con los conjuntos venusianos anteriores a 0.28.
+
+## Operaciones de Venus — 0.40.0
+
+Navegador con destinos descubiertos, panel de diagnóstico por habitación,
+recuperación de caja negra y entrega de muestras, instrumentos/luces del aerostato,
+actividad local de fumarolas y preferencia de hábitat de las especies pacíficas.
+[Guía](venus-operations.md). La validación gráfica y multijugador continúa pendiente;
+[lista de pruebas](venus-colony-playtest.md).

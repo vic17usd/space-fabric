@@ -17,6 +17,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 public final class RoverRenderer extends EntityRenderer<RoverEntity,RoverRenderer.State> {
     public static final String[] PARTS={"body","glass","left_front","left_middle","left_rear","right_front","right_middle","right_rear"};
     private final RocketFleetModel[] parts=new RocketFleetModel[8];
+    private final RocketFleetModel landingLights=new RocketFleetModel("/assets/space_fabric/model_mesh/venus_aerostat_lights.json");
     private final RocketFleetModel aerostat=new RocketFleetModel("/assets/space_fabric/model_mesh/venus_aerostat_body.json"),
         aerostatGlass=new RocketFleetModel("/assets/space_fabric/model_mesh/venus_aerostat_glass.json");
     private final double[][] pivots=new double[8][3];
@@ -36,6 +37,7 @@ public final class RoverRenderer extends EntityRenderer<RoverEntity,RoverRendere
     @Override public void submit(State state,PoseStack poses,SubmitNodeCollector collector,CameraRenderState camera) {
         poses.pushPose();poses.mulPose(Axis.YP.rotationDegrees(-state.yaw));
         if(state.aerial){
+            collector.submitCustomGeometry(poses,RenderTypes.entityCutout(landingLights.texture),(pose,output)->landingLights.renderGeometry(pose,output,15728880,OverlayTexture.NO_OVERLAY));
             collector.submitCustomGeometry(poses,RenderTypes.entityCutout(aerostat.texture),(pose,output)->aerostat.renderGeometry(pose,output,state.lightCoords,OverlayTexture.NO_OVERLAY));
             collector.submitCustomGeometry(poses,RenderTypes.entityTranslucent(aerostatGlass.texture),(pose,output)->aerostatGlass.renderGeometry(pose,output,state.lightCoords,OverlayTexture.NO_OVERLAY));
             poses.popPose();super.submit(state,poses,collector,camera);return;

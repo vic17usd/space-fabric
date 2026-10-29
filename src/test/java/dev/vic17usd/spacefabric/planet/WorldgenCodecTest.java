@@ -2836,4 +2836,43 @@ class WorldgenCodecTest {
         assertTrue(recycler.completedBatches()*2400<=28800/2);
     }
 
+    @Test void navigatorPersistsOnlyBoundedDiscoveredWaypointsAndPreservesTheirDimensions() {
+        var stack=new ItemStack(ExpansionContent.NAVIGATOR);
+        for(int i=0;i<40;i++)OperationsNavigator.remember(stack,new OperationsNavigator.Point("space_fabric:venus",new net.minecraft.core.BlockPos(i,300,0),"Site "+i));
+        assertEquals(32,OperationsNavigator.points(stack).size());assertEquals(39,OperationsNavigator.points(stack).getFirst().pos().getX());
+        OperationsNavigator.remember(stack,new OperationsNavigator.Point("minecraft:overworld",net.minecraft.core.BlockPos.ZERO,"Home"));
+        var saved=ItemStack.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),ItemStack.CODEC.encodeStart(registries.createSerializationContext(JsonOps.INSTANCE),stack).getOrThrow()).getOrThrow();
+        assertEquals("minecraft:overworld",OperationsNavigator.points(saved).getFirst().dimension());assertEquals(32,OperationsNavigator.points(saved).size());
+        assertInstanceOf(net.minecraft.world.item.WrittenBookItem.class,saved.getItem());
+    }
+    @Test void navigatorDeduplicatesCoordinatesButKeepsSameCoordinateInAnotherDimension() {
+        var stack=new ItemStack(ExpansionContent.NAVIGATOR);var pos=net.minecraft.core.BlockPos.ZERO;
+        OperationsNavigator.remember(stack,new OperationsNavigator.Point("space_fabric:venus",pos,"First"));OperationsNavigator.remember(stack,new OperationsNavigator.Point("space_fabric:venus",pos,"Renamed"));
+        assertEquals(1,OperationsNavigator.points(stack).size());OperationsNavigator.remember(stack,new OperationsNavigator.Point("minecraft:overworld",pos,"Earth"));assertEquals(2,OperationsNavigator.points(stack).size());
+    }
+    @Test void navigatorComputesCardinalBearingsWithoutLocatingOrLoadingWorlds() {
+        var p=net.minecraft.core.BlockPos.ZERO;
+        assertEquals("N",OperationsNavigator.bearing(p,p.north()));assertEquals("E",OperationsNavigator.bearing(p,p.east()));assertEquals("S",OperationsNavigator.bearing(p,p.south()));assertEquals("O",OperationsNavigator.bearing(p,p.west()));
+    }
+    @Test void dashboardAutonomyUsesTheLimitingLocalSupplyAndDoesNotInventAnOxygenConsumer() {
+        assertEquals(10,OperationsSystem.autonomy(2400,150,2400,2,true));assertEquals(1,OperationsSystem.autonomy(2400,2400,5,2,true));
+        assertEquals(100,OperationsSystem.autonomy(0,500,0,0,false));assertEquals(0,OperationsSystem.autonomy(2400,0,2400,1,true));
+    }
+    @Test void extendedFieldProjectsKeepExactlyOneRewardAfterLedgerReload() {
+        var player=java.util.UUID.randomUUID();var ledger=new ExpeditionLedger();assertTrue(ledger.claim(player,4));assertTrue(ledger.claim(player,5));assertFalse(ledger.claim(player,6));
+        var loaded=ExpeditionLedger.CODEC.parse(JsonOps.INSTANCE,ExpeditionLedger.CODEC.encodeStart(JsonOps.INSTANCE,ledger).getOrThrow()).getOrThrow();assertFalse(loaded.claim(player,4));assertFalse(loaded.claim(player,5));assertTrue(loaded.claim(java.util.UUID.randomUUID(),4));
+    }
+    @Test void navigatorRecipeAndNativeBookComponentAreValidAndFieldSamplesAreNotCraftable() throws IOException {
+        assertNotNull(Recipe.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("recipe/venus_navigator")).getOrThrow());
+        var stack=new ItemStack(ExpansionContent.NAVIGATOR);assertNotNull(stack.get(net.minecraft.core.component.DataComponents.WRITTEN_BOOK_CONTENT));
+        assertTrue(getClass().getResourceAsStream("/data/space_fabric/recipe/venus_black_box.json")==null);assertTrue(getClass().getResourceAsStream("/data/space_fabric/recipe/venus_air_sample.json")==null);
+    }
+
+    @Test void navigatorDiscoveryAndCyclingPreserveTheChosenDestinationAndHistory() {
+        var stack=new ItemStack(ExpansionContent.NAVIGATOR);var first=new OperationsNavigator.Point("space_fabric:venus",net.minecraft.core.BlockPos.ZERO,"Home");
+        var second=new OperationsNavigator.Point("space_fabric:venus",net.minecraft.core.BlockPos.ZERO.east(),"Site");
+        OperationsNavigator.remember(stack,first);OperationsNavigator.discover(stack,second);assertEquals(first,OperationsNavigator.selected(stack).orElseThrow());
+        OperationsNavigator.cycle(stack);assertEquals(second,OperationsNavigator.selected(stack).orElseThrow());assertEquals(first,OperationsNavigator.points(stack).getFirst());
+        OperationsNavigator.cycle(stack);assertEquals(first,OperationsNavigator.selected(stack).orElseThrow());
+    }
 }

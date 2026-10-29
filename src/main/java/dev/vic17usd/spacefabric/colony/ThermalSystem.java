@@ -12,6 +12,7 @@ public final class ThermalSystem {
     public static final int CHARGE=4800, RATE=120;
     private static final Map<ServerLevel,Map<BlockPos,ColonyMachineBlockEntity>> ACTIVE=new IdentityHashMap<>();
     private ThermalSystem() { }
+    public static List<ColonyMachineBlockEntity> loaded(ServerLevel level){var map=ACTIVE.get(level);return map==null?List.of():map.values().stream().filter(m->!m.isRemoved()&&level.getChunkSource().getChunkNow(m.getBlockPos().getX()>>4,m.getBlockPos().getZ()>>4)!=null).toList();}
     static void register(ServerLevel level,ColonyMachineBlockEntity machine){ACTIVE.computeIfAbsent(level,k->new HashMap<>()).put(machine.getBlockPos(),machine);}
     static void remove(ColonyMachineBlockEntity machine){if(machine.getLevel() instanceof ServerLevel level){var map=ACTIVE.get(level);if(map!=null)map.remove(machine.getBlockPos(),machine);}}
     public static int generation(ColonyContent.Machine kind) {

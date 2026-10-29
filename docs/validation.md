@@ -1,8 +1,8 @@
 # Resultado de validación de esta base
 
-Última entrega: **0.39.0**, 541 pruebas JUnit aprobadas, once comprobaciones por
-CPU y 1.186 JSON válidos. Los apartados siguientes conservan el historial de
-la base y sus ampliaciones; la validación de ampliación de la colonia está al final del documento.
+Última entrega: **0.40.0**, 548 pruebas JUnit aprobadas, once comprobaciones por
+CPU y 1.194 JSON válidos. Los apartados siguientes conservan el historial de
+la base y sus ampliaciones; la validación de navegación y operaciones está al final del documento.
 
 Verificado con JDK 25, Gradle 9.8.2, Loom 1.19.3, Minecraft 26.1,
 Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
@@ -536,3 +536,33 @@ No se ha realizado una sesión gráfica ni multijugador. Se incluye una lista
 reproducible de comprobaciones pendientes en `docs/venus-colony-playtest.md`.
 No se afirma haber validado entrada de jugador, vuelo, mensajes, recompensas por
 clic, toda la instalación física o rendimiento de una colonia real con GPU.
+
+
+Navegación y operaciones de Venus, versión 0.40.0:
+
+- `./gradlew cleanTest build --console=plain`: **548 pruebas JUnit**, cero fallos,
+  errores u omisiones, y once comprobaciones por CPU. Se ejecutó secuencialmente
+  tras detectar un conflicto de archivos temporales entre comprobaciones solapadas.
+- `python3 tools/validate_resources.py`: **1.194 JSON** válidos y referencias
+  internas, PNG, modelos y traducciones coherentes.
+- Navegador: componente de libro nativo, receta, lista NBT de hasta 32 puntos,
+  dimensiones separadas, deduplicación, persistencia, selección sin reordenar el
+  historial y descubrimiento sin cambiar el destino elegido. Rumbos cardinales
+  y cálculo de autonomía local comprobados con los métodos usados por el servidor.
+- Proyectos adicionales: ampliación compatible del ledger a cinco recompensas,
+  gasto único y persistencia de las dos nuevas entradas por UUID. La obtención y
+  entrega por interacción dependen de jugador/posición/propietario y no se han
+  observado en un servidor vivo; las pruebas del ledger no equivalen a ese recorrido.
+- Revisión del camino nativo del libro: el servidor admite el componente
+  WRITTEN_BOOK_CONTENT, se difunde el inventario antes de abrirlo y la interacción
+  de máquina enruta el navegador antes de abrir el menú normal del controlador.
+- Renderizado: el comprobador del aerostato también emite las lentes delanteras
+  y verifica límites de la malla. Son emisivas; no generan luz dinámica en el mundo.
+- El indicador de vuelo mide desplazamiento vertical observado por tick de cliente.
+  Sonidos y emisiones locales consultan posiciones cargadas. El objetivo de hábitat
+  de fauna pacífica conserva prioridad inferior a sus comportamientos existentes.
+
+Siguen pendientes las comprobaciones gráficas, de sonidos, comportamiento completo
+de fauna, vuelo y multijugador de `docs/venus-colony-playtest.md`. No se afirma haber
+certificado rendimiento de una colonia real ni cuatro horas de mundo ejecutándose;
+las dos pruebas largas previas son simulaciones de componentes/recursos.

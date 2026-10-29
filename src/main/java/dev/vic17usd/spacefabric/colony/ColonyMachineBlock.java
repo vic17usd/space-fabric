@@ -17,6 +17,7 @@ public final class ColonyMachineBlock extends BaseEntityBlock {
     @Override protected RenderShape getRenderShape(BlockState state){return RenderShape.MODEL;}
     @Override public BlockEntity newBlockEntity(BlockPos pos,BlockState state){return new ColonyMachineBlockEntity(pos,state);}
     @Override protected InteractionResult useItemOn(net.minecraft.world.item.ItemStack stack,BlockState state,Level level,BlockPos pos,Player player,net.minecraft.world.InteractionHand hand,BlockHitResult hit) {
+        if(stack.is(ExpansionContent.NAVIGATOR))return stack.getItem().useOn(new net.minecraft.world.item.context.UseOnContext(player,hand,hit));
         if(dev.vic17usd.spacefabric.maintenance.MaintenanceActions.action(stack)!=null)
             return dev.vic17usd.spacefabric.maintenance.MaintenanceActions.interact(stack,level,pos,player);
         return super.useItemOn(stack,state,level,pos,player,hand,hit);

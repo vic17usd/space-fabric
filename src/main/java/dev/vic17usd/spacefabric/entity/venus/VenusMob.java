@@ -5,7 +5,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.*;
 /** Habitantes resistentes al ambiente venusiano; conservan el modificador global de gravedad. */
 public abstract class VenusMob extends PathfinderMob {
- protected VenusMob(EntityType<? extends PathfinderMob> type,Level level){super(type,level);}
+ protected VenusMob(EntityType<? extends PathfinderMob> type,Level level){super(type,level);if(this instanceof AcidstoneSlimeEntity||this instanceof AshplumeEmberwalkerEntity)goalSelector.addGoal(5,new VenusHabitatGoal(this));}
  @Override public boolean canBreatheUnderwater(){return true;}
  @Override public boolean isInvulnerableTo(ServerLevel level,DamageSource source){
  return source.is(DamageTypes.HOT_FLOOR)||source.is(DamageTypes.IN_FIRE)||source.is(DamageTypes.LAVA)

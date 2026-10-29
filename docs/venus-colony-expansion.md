@@ -181,3 +181,6 @@ Los modelos se interpretan y emiten por CPU, incluyendo rayos del visor del
 aerostato y límites de colisión. No se ha observado una partida gráfica, el
 montaje completo ni una sesión multijugador. La simulación anterior no equivale a
 cuatro horas ejecutando el mundo. [Comprobaciones pendientes en partida](venus-colony-playtest.md).
+
+Desde **0.40.0**, el navegador ofrece un diario de destinos y un panel de colonia,
+y se añaden dos proyectos de campo. [Operaciones y controles](venus-operations.md).
