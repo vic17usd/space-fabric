@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "id": "space_fabric:venus_expedition_console"
+    },
+    "title": {
+      "translate": "venus.guide.expedition"
+    },
+    "description": {
+      "translate": "venus.guide.expedition.detail"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "observed": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "parent": "space_fabric:venus_guide/food"
+}

@@ -85,7 +85,7 @@ recuperan como objetos.
 | Electrolizador, electrólisis | Agua + batería cargada + bombona vacía | Oxígeno + hidrógeno + batería descargada | 10 s |
 | Analizador | Mineral + batería cargada + tarjeta de datos | Informe + batería descargada | 10 s |
 | Cargador solar | Batería descargada, sol directo | Batería cargada | 20 s |
-| Generador geotérmico | Batería descargada + agua, lava debajo | Batería cargada + bombona vacía | 5 s |
+| Generador geotérmico | Batería descargada + agua, lava debajo | Batería cargada + agua devuelta (desde 0.41) | 5 s |
 
 El hielo subterráneo marciano forma vetas entre Y=8 y Y=48, exclusivamente en
 Marte. El electrolizador también acepta hielo, hielo compacto, hielo azul y

@@ -1,8 +1,8 @@
-# Comprobaciones de la colonia en partida — 0.40.0
+# Comprobaciones de la colonia en partida — 0.41.0
 
 Estas comprobaciones están preparadas para ejecución dentro de Minecraft; no
 se presentan como resultados observados. Usa un mundo de pruebas con cliente y
-servidor 0.40.0. El perfil planetario de exposición mantiene la escala 1:72.
+servidor 0.41.0. El perfil planetario de exposición mantiene la escala 1:72.
 
 1. Construye un hábitat válido de Venus y equipa el traje antes de entrar. Abastece
    el controlador. Comprueba el diagnóstico de presión, oxígeno y refrigeración.
@@ -47,3 +47,23 @@ servidor 0.40.0. El perfil planetario de exposición mantiene la escala 1:72.
 13. Comprueba luces, indicador de vuelo y sonido del aerostato con y sin Sodium.
     Observa fuentes volcánicas y dos especies pacíficas cerca de hábitats corrosivos;
     verifica que huir del jugador conserva prioridad y que los pulsos no dañan terreno.
+
+14. Antes de viajar, fabrica el navegador con tarjeta de datos. Usa `/venus guia`
+    y `/venus recursos 15 2 75`: debe indicar una bombona de O₂, seis baterías y
+    dos de agua para soporte local. Anota además los costes de industria y traje.
+15. Llega a Venus protegido y comprueba el aviso de bienvenida. Completa las
+    observaciones de refugio, generación, carga térmica, interfaz y trigo. Revisa
+    el diario y los avances; reconecta y vuelve desde otra dimensión. El progreso
+    permanece, no repite la bienvenida ni concede objetos. Con otro UUID empieza
+    una guía independiente. Comprueba también el caso de observar etapas en otro orden.
+16. Genera los tres emplazamientos nuevos y recorre su pasillo central. Prueba
+    los cuatro botones del vestíbulo: abre solo la puerta exterior con la interior
+    cerrada y comprueba que la sala mantiene el sellado. Abre ambas: debe perderlo.
+    No retires el traje en el vestíbulo. Revisa cofres, literas y acceso a máquinas.
+17. Sobre lava, automatiza un generador con un depósito de agua y acumulador.
+    Recircula una misma bombona: cada lote devuelve agua y batería cargada. Llena
+    el depósito de salida y después el acumulador, por separado: debe detenerse
+    sin perder envases. Retira la lava y comprueba la pausa.
+18. Fabrica placas con dos lingotes de hierro, cerámica y batería; compara con
+    un trozo de hierro denso. Tiempos esperados: 20 y 15 segundos. Guarda a mitad
+    de lote y reconecta; no debe reiniciarse, duplicar productos ni perder batería.

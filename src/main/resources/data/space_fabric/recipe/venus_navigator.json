@@ -11,7 +11,7 @@
     "R": "minecraft:redstone",
     "P": "minecraft:paper",
     "M": "minecraft:compass",
-    "B": "space_fabric:venus_research_report"
+    "B": "space_fabric:blank_data_card"
   },
   "result": {
     "id": "space_fabric:venus_navigator",

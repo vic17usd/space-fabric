@@ -14,7 +14,7 @@ for name,color in [('venus_navigator',(67,217,170)),('venus_black_box',(223,137,
  else:dr.rectangle((11,8,21,24),fill=color);dr.rectangle((14,2,18,7),fill=(217,230,233))
  im.resize((64,64),Image.Resampling.NEAREST).save(A/f'textures/item/{name}.png')
  write(A/f'models/item/{name}.json',{'parent':'minecraft:item/generated','textures':{'layer0':'space_fabric:item/'+name}});write(A/f'items/{name}.json',{'model':{'type':'minecraft:model','model':'space_fabric:item/'+name}})
-write(D/'recipe/venus_navigator.json',{'type':'minecraft:crafting_shaped','category':'misc','pattern':['CRC','PMP','CBC'],'key':{'C':'minecraft:copper_ingot','R':'minecraft:redstone','P':'minecraft:paper','M':'minecraft:compass','B':'space_fabric:venus_research_report'},'result':{'id':'space_fabric:venus_navigator','count':1}})
+write(D/'recipe/venus_navigator.json',{'type':'minecraft:crafting_shaped','category':'misc','pattern':['CRC','PMP','CBC'],'key':{'C':'minecraft:copper_ingot','R':'minecraft:redstone','P':'minecraft:paper','M':'minecraft:compass','B':'space_fabric:blank_data_card'},'result':{'id':'space_fabric:venus_navigator','count':1}})
 t={
 'item.space_fabric.venus_navigator':('Navegador de expediciones','Expedition Navigator'),'item.space_fabric.venus_black_box':('Datos de caja negra','Black Box Data'),'item.space_fabric.venus_air_sample':('Muestra atmosférica sellada','Sealed Atmospheric Sample'),
 'operations.space_fabric.guide':('Clic derecho:\n\nAire: diario\nShift+aire: destino\nShift+bloque: baliza\nControlador: panel\n\nDetecta consolas\ncercanas (32 bloques).','Use item:\n\nAir: journal\nSneak+air: target\nSneak+block: waypoint\nController: dashboard\n\nDetects consoles\nwithin 32 blocks.'),

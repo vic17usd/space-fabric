@@ -1,8 +1,8 @@
 # Resultado de validación de esta base
 
-Última entrega: **0.40.0**, 548 pruebas JUnit aprobadas, once comprobaciones por
-CPU y 1.194 JSON válidos. Los apartados siguientes conservan el historial de
-la base y sus ampliaciones; la validación de navegación y operaciones está al final del documento.
+Última entrega: **0.41.0**, 571 pruebas JUnit aprobadas, once comprobaciones por
+CPU y 1.205 JSON válidos. Los apartados siguientes conservan el historial de
+la base y sus ampliaciones; la validación de progresión e interiores está al final del documento.
 
 Verificado con JDK 25, Gradle 9.8.2, Loom 1.19.3, Minecraft 26.1,
 Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
@@ -566,3 +566,38 @@ Siguen pendientes las comprobaciones gráficas, de sonidos, comportamiento compl
 de fauna, vuelo y multijugador de `docs/venus-colony-playtest.md`. No se afirma haber
 certificado rendimiento de una colonia real ni cuatro horas de mundo ejecutándose;
 las dos pruebas largas previas son simulaciones de componentes/recursos.
+
+Progresión e interiores de Venus, versión 0.41.0:
+
+- `./gradlew test --console=plain`: **571 pruebas JUnit**, cero fallos, errores
+  u omisiones. `./gradlew build --console=plain` completa compilación, JAR y las
+  **once comprobaciones por CPU** de modelos, recursos y cámaras.
+- `python3 tools/validate_resources.py`: **1.205 JSON** válidos y referencias
+  internas coherentes. El esquema SVG de interiores también es XML válido.
+- 23 casos nuevos: cálculo de reservas contrastado con 900 segundos de soporte
+  real de componentes para dos ocupantes; límites y redondeo; 100 ciclos
+  geotérmicos recirculando una bombona y una batería física, con extracción de
+  energía producida; ausencia de lava y retorno bloqueado; compuesto con hierro
+  común guardado a mitad de lote y su presencia en el visor.
+- Progreso personal: observaciones fuera de orden, llegada única, separación por
+  UUID, persistencia y rechazo de máscaras inválidas. Los siete avances usan el
+  codec nativo, criterio imposible concedido por el servidor y ningún premio de
+  objetos. Receta de navegador fabricable antes de viajar y desbloqueo válidos.
+- Las tres plantillas contienen estados nativos válidos, mitades de puerta,
+  botones y cofres con botín limitado. El escáner real certifica su sala, conserva
+  el cierre al abrir solo la puerta exterior y detecta exposición al abrir ambas.
+  Se comprueba pasillo central libre, cubierta de aterrizaje despejada de 7×7×8,
+  ausencia de camas explosivas y controladores
+  inicialmente sin O₂, energía ni agua. Las tres tablas de cofre decodifican con
+  el codec nativo; el botín no se ha abierto dentro de una partida.
+- Se conservan las pruebas de generación en tres semillas de las instalaciones,
+  expediciones y recursos de cuatro horas de la entrega anterior. La simulación
+  de los 100 ciclos nuevos aísla inventarios y red: no es una simulación de calor,
+  corrosión o un mundo servidor completo.
+- No se ha ejecutado cliente gráfico ni sesión multijugador. El clic del chat,
+  comandos reales con jugadores, páginas, avances, botones/redstone, decoración,
+  recuperación de equipos y ritmo de supervivencia quedan en la lista manual
+  actualizada, puntos 14–18. No se atribuye a esta validación una partida observada.
+
+[Balance, guía e interiores](venus-progression.md) ·
+[Comprobaciones pendientes en juego](venus-colony-playtest.md).

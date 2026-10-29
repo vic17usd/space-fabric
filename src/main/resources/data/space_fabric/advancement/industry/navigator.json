@@ -1,0 +1,20 @@
+{
+  "parent": "space_fabric:colony/root",
+  "criteria": {
+    "card": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "space_fabric:blank_data_card"
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "recipes": [
+      "space_fabric:venus_navigator"
+    ]
+  }
+}

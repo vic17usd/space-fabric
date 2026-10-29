@@ -46,6 +46,7 @@ public final class OperationsNavigator extends WrittenBookItem {
         if(player instanceof ServerPlayer server){
             if(player.isSecondaryUseActive())cycle(stack);
             var pages=new ArrayList<Component>();pages.add(Component.translatable("operations.space_fabric.guide"));
+            pages.addAll(VenusOnboarding.pages(server));
             for(var p:points(stack))pages.add(direction(p,level.dimension().identifier().toString(),player.blockPosition()));
             for(String key:new String[]{"project_blackbox","project_sample","project_delivery"})pages.add(Component.translatable("operations.space_fabric."+key));book(stack,"Navegador",pages);server.containerMenu.broadcastChanges();
         }

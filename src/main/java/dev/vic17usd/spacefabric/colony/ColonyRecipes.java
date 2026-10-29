@@ -38,7 +38,7 @@ public final class ColonyRecipes {
                 List.of(p(3,ColonyContent.OXYGEN_CANISTER),p(4,ColonyContent.HYDROGEN_CANISTER),p(5,ColonyContent.EMPTY_POWER_CELL))));
         list.add(new Formula("solar",ColonyContent.Machine.SOLAR,400,List.of(p(0,ColonyContent.EMPTY_POWER_CELL)),List.of(p(4,ColonyContent.CHARGED_POWER_CELL))));
         list.add(new Formula("geothermal",ColonyContent.Machine.GEOTHERMAL,100,List.of(p(0,ColonyContent.EMPTY_POWER_CELL),p(2,ColonyContent.WATER_CANISTER)),
-                List.of(p(4,ColonyContent.CHARGED_POWER_CELL),p(6,ColonyContent.EMPTY_CANISTER))));
+                List.of(p(4,ColonyContent.CHARGED_POWER_CELL),p(6,ColonyContent.WATER_CANISTER))));
         for(var sample:List.of(ModItems.MARTIAN_OLIVINE,ModItems.SULFATE_DUST))
             list.add(new Formula("mars_"+list.size(),ColonyContent.Machine.ANALYZER,200,
                     List.of(p(0,sample),p(1,ColonyContent.CHARGED_POWER_CELL),p(2,ColonyContent.DATA_CARD)),
@@ -65,6 +65,10 @@ public final class ColonyRecipes {
                 List.of(new Part(3,IndustryContent.CERAMIC,2),p(5,ColonyContent.EMPTY_POWER_CELL),p(6,ColonyContent.EMPTY_CANISTER))));
         list.add(new Formula("venus_composite",ColonyContent.Machine.CERAMIC_KILN,300,
                 List.of(p(0,IndustryContent.CERAMIC),p(1,ColonyContent.CHARGED_POWER_CELL),p(2,ModItems.DENSE_IRON_CHUNK)),
+                List.of(p(3,IndustryContent.COMPOSITE_PLATE),p(5,ColonyContent.EMPTY_POWER_CELL))));
+        // Local construction does not require a prior trip to Mercury. Dense iron remains more efficient.
+        list.add(new Formula("venus_composite_iron",ColonyContent.Machine.CERAMIC_KILN,400,
+                List.of(p(0,IndustryContent.CERAMIC),p(1,ColonyContent.CHARGED_POWER_CELL),new Part(2,Items.IRON_INGOT,2)),
                 List.of(p(3,IndustryContent.COMPOSITE_PLATE),p(5,ColonyContent.EMPTY_POWER_CELL))));
         list.add(new Formula("carbon_dioxide_electrolysis",ColonyContent.Machine.ELECTROLYZER,200,
                 List.of(p(0,IndustryContent.CARBON_DIOXIDE),p(1,ColonyContent.CHARGED_POWER_CELL)),

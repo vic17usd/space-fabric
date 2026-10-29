@@ -6,8 +6,8 @@ Las instalaciones de 0.39.0 siguen conservando sus identificadores y objetivos.
 
 ## Navegador de supervivencia
 
-Fabrica el **navegador de expediciones** con cobre, redstone, papel, brújula e
-informe venusiano. La receta aparece en K. Usa la interfaz nativa de libro para
+Fabrica el **navegador de expediciones** con cobre, redstone, papel, brújula y
+tarjeta de datos (desde 0.41; antes requería informe venusiano). La receta aparece en K. Usa la interfaz nativa de libro para
 el diario y el panel de diagnóstico; no requiere otra biblioteca de pantallas.
 
 - Clic en aire: abrir el diario con coordenadas, rumbo y distancia al objetivo.
@@ -108,3 +108,5 @@ real del libro, sus páginas/traducciones, el indicador, los sonidos, la selecci
 de hábitat de los mobs y la obtención/entrega por interacción necesitan comprobación
 en juego. La validación nativa y de componentes no equivale a esa observación.
 Consulta [el plan de pruebas en partida](venus-colony-playtest.md).
+
+Desde 0.41, el diario incorpora la [guía de llegada y cálculo de reservas](venus-progression.md).

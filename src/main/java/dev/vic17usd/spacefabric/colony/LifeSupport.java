@@ -28,7 +28,8 @@ public final class LifeSupport {
         if(newVolume<=0 || newVolume>SealScanner.MAX_VOLUME){vent();failure=Failure.VOLUME;return false;}
         if(volume!=newVolume){pressurized=false;volume=newVolume;}
         int startup=pressurized?0:2*volume;
-        int breath=Math.max(0,occupants), power=venus?15:5, cooling=venus?5:0;
+        int breath=Math.max(0,occupants), power=venus?ColonyBalance.VENUS_POWER_PER_SECOND:ColonyBalance.TEMPERATE_POWER_PER_SECOND,
+                cooling=venus?ColonyBalance.VENUS_COOLANT_PER_SECOND:0;
         failure=oxygen<startup+breath?Failure.OXYGEN:energy<power?Failure.POWER:coolant<cooling?Failure.COOLANT:Failure.NONE;
         if(failure!=Failure.NONE){pressurized=false;return false;}
         respired=(int)Math.min(CAPACITY,(long)respired+breath);

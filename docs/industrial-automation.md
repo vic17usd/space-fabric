@@ -97,7 +97,7 @@ bombonas ni baterías gratis: necesita la reserva inicial de envases vacíos.
 |---|---|
 | Controlador de hábitat | Oxígeno, energía y, en Venus, agua refrigerante |
 | Electrolizador | Agua y energía de entrada; oxígeno e hidrógeno en líneas separadas de salida |
-| Generador geotérmico | Agua de entrada y energía de salida; sigue necesitando lava debajo |
+| Generador geotérmico | Agua de entrada, energía y agua de salida desde 0.41; recircula por el depósito y sigue necesitando lava debajo |
 | Cargador solar | Energía de salida; conserva sus requisitos de sol y planeta |
 | Colector atmosférico | Energía de entrada y atmósfera venusiana de salida; toma superior al aire libre |
 | Separador de gases | Atmósfera venusiana y energía de entrada; CO₂ y N₂ por líneas separadas |

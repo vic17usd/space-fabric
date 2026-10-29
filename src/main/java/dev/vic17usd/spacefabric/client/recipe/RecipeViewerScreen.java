@@ -128,6 +128,8 @@ public final class RecipeViewerScreen extends Screen {
         super.extractRenderState(gui,mouseX,mouseY,delta);
         if(!hovered.isEmpty()) {
             var tooltip=new ArrayList<>(Screen.getTooltipFromItem(minecraft,hovered));tooltip.add(Component.translatable("gui.space_fabric.viewer.click_help"));
+            if(card!=null&&card.id().equals("space_fabric:colony/geothermal"))tooltip.add(Component.translatable("balance.space_fabric.geothermal"));
+            if(card!=null&&(card.id().equals("space_fabric:colony/venus_composite")||card.id().equals("space_fabric:colony/venus_composite_iron")))tooltip.add(Component.translatable("balance.space_fabric.composite"));
             gui.setTooltipForNextFrame(font,tooltip,Optional.empty(),mouseX,mouseY);
         }
     }

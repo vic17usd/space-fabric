@@ -16,6 +16,15 @@ public final class TransportService {
     private TransportService() { }
     public static void register(ServerLevel level,MachineInterfaceBlockEntity port){ACTIVE.computeIfAbsent(level,k->new LinkedHashMap<>()).put(port.getBlockPos(),port);}
     public static void remove(MachineInterfaceBlockEntity port){if(port.getLevel() instanceof ServerLevel level){var map=ACTIVE.get(level);if(map!=null)map.remove(port.getBlockPos(),port);}}
+    /** Read-only tutorial observation of a loaded port that actually reached its supply-ready state. */
+    public static Set<ColonyMachineBlockEntity> servingMachines(ServerLevel level) {
+        var result=Collections.newSetFromMap(new IdentityHashMap<ColonyMachineBlockEntity,Boolean>());
+        var ports=ACTIVE.get(level);if(ports==null)return result;
+        for(var p:ports.values())if(!p.isRemoved()
+                &&level.getChunkSource().getChunkNow(p.getBlockPos().getX()>>4,p.getBlockPos().getZ()>>4)!=null
+                &&p.enabled()&&p.status()==MachineInterfaceBlockEntity.Status.WORKING){var target=p.target();if(target!=null)result.add(target);}
+        return result;
+    }
     public static TransportGraph.World world(ServerLevel level) {
         return new TransportGraph.World() {
             private final Map<BlockPos,TransportGraph.Node> cache=new HashMap<>();

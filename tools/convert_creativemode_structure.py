@@ -65,7 +65,7 @@ def compound(values):
     return payload+b"\0"
 
 
-def convert(document, entities=None, implicit_ground=None, block_entities=None):
+def convert(document, entities=None, implicit_ground=None, block_entities=None, block_states=None):
     if document.get("format") != "creativemode.structure" or document.get("version") != 1:
         raise ValueError("Se requiere creativemode.structure versión 1")
     palette = document["palette"]
@@ -86,6 +86,9 @@ def convert(document, entities=None, implicit_ground=None, block_entities=None):
         raise ValueError("Paleta con identificadores duplicados")
     seen = set()
     entries = []
+    states = [(name, ()) for name in palette]
+    state_indices = {state: index for index, state in enumerate(states)}
+    properties_by_pos = block_states or {}
     for block in blocks:
         if not isinstance(block, list) or len(block) != 4 or any(type(v) is not int for v in block):
             raise ValueError("Cada bloque debe contener [x, y, z, índice de paleta]")
@@ -95,13 +98,28 @@ def convert(document, entities=None, implicit_ground=None, block_entities=None):
             raise ValueError("Bloque duplicado, fuera de límites o con índice de paleta inválido")
         seen.add(position)
         local = [position[i] - lower[i] for i in range(3)]
+        properties = properties_by_pos.get(tuple(local), {})
+        if not isinstance(properties, dict) or any(
+                not isinstance(k, str) or not isinstance(v, str)
+                or not re.fullmatch(r"[a-z0-9_]+", k) or not re.fullmatch(r"[a-z0-9_]+", v)
+                for k, v in properties.items()):
+            raise ValueError("Invalid block-state properties")
+        if properties:
+            state_key = (palette[state], tuple(sorted(properties.items())))
+            if state_key not in state_indices:
+                state_indices[state_key] = len(states)
+                states.append(state_key)
+            state = state_indices[state_key]
         extra=(block_entities or {}).get(tuple(local))
         entry=named(9, "pos", int_list(local))+named(3,"state",integer(state))
         if extra is not None:entry+=named(10,"nbt",compound(extra))
         entries.append(entry+b"\0")
     body = named(3, "DataVersion", integer(DATA_VERSION))
     body += named(9, "size", int_list(dimensions))
-    body += named(9, "palette", tag_list(10, [named(8, "Name", string(name)) + b"\0" for name in palette]))
+    body += named(9, "palette", tag_list(10, [
+        named(8, "Name", string(name))
+        + (named(10, "Properties", compound(dict(properties))) if properties else b"") + b"\0"
+        for name, properties in states]))
     body += named(9, "blocks", tag_list(10, entries))
     block_map = {tuple(block[i] - lower[i] for i in range(3)): palette[block[3]] for block in blocks}
     entities = entities or []

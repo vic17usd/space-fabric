@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "id": "space_fabric:venus_navigator"
+    },
+    "title": {
+      "translate": "venus.guide.arrival"
+    },
+    "description": {
+      "translate": "venus.guide.safety"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false,
+    "background": "minecraft:gui/advancements/backgrounds/stone"
+  },
+  "criteria": {
+    "observed": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

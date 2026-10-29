@@ -20,6 +20,7 @@ espacio. Una avería detiene la máquina y permite continuar después de reparar
 | Procesador de azufre | Condensado ácido | Cargada | Hidrógeno | Azufre refinado + agua + batería descargada | 10 s |
 | Horno de cerámica venusiana | Piroxeno | Cargada | CO₂ | 2 cerámicas de piroxeno + batería descargada + bombona vacía | 15 s |
 | Horno de cerámica venusiana | Cerámica de piroxeno | Cargada | Trozo de hierro denso | Placa de compuesto + batería descargada | 15 s |
+| Horno de cerámica venusiana, desde 0.41 | Cerámica de piroxeno | Cargada | 2 lingotes de hierro | Placa de compuesto + batería descargada | 20 s |
 | Electrolizador existente | CO₂ | Cargada | — | Oxígeno + polvo de carbono + batería descargada | 10 s |
 
 Tiempos a 20 TPS y con integridad superior al 50 %. Las siete fórmulas se añaden

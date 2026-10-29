@@ -2875,4 +2875,168 @@ class WorldgenCodecTest {
         OperationsNavigator.cycle(stack);assertEquals(second,OperationsNavigator.selected(stack).orElseThrow());assertEquals(first,OperationsNavigator.points(stack).getFirst());
         OperationsNavigator.cycle(stack);assertEquals(first,OperationsNavigator.selected(stack).orElseThrow());
     }
+
+    @Test void venusPackingListCoversActualStartupAndTwoOccupantsForFifteenMinutes() {
+        var plan=ColonyBalance.supplies(900,2,75);var support=new LifeSupport();int oxygen=0,power=0,water=0;
+        for(int second=0;second<900;second++) {
+            if(support.oxygen()<(second==0?152:2)){assertTrue(support.fill(0));oxygen++;}
+            if(support.energy()<ColonyBalance.VENUS_POWER_PER_SECOND){assertTrue(support.fill(1));power++;}
+            if(support.coolant()<ColonyBalance.VENUS_COOLANT_PER_SECOND){assertTrue(support.fill(2));water++;}
+            assertTrue(support.tick(75,2,true));
+        }
+        assertEquals(new ColonyBalance.Supplies(1,6,2),plan);
+        assertEquals(plan.oxygen(),oxygen);assertEquals(plan.power(),power);assertEquals(plan.water(),water);
+        assertEquals(2400-1950,support.oxygen());assertEquals(6*2400-13500,support.energy());
+    }
+    @Test void venusPackingListRoundsUpAndRejectsUnsafeOrUnboundedRequests() {
+        assertEquals(new ColonyBalance.Supplies(2,15,5),ColonyBalance.supplies(2400,1,1));
+        assertEquals(97,ColonyBalance.supplies(14400,16,512).oxygen());
+        assertThrows(IllegalArgumentException.class,()->ColonyBalance.supplies(0,1,75));
+        assertThrows(IllegalArgumentException.class,()->ColonyBalance.supplies(14401,1,75));
+        assertThrows(IllegalArgumentException.class,()->ColonyBalance.supplies(60,0,75));
+        assertThrows(IllegalArgumentException.class,()->ColonyBalance.supplies(60,17,75));
+        assertThrows(IllegalArgumentException.class,()->ColonyBalance.supplies(60,1,513));
+    }
+    @Test void geothermalLoopExportsRealPowerAndReusesOnePhysicalWaterCanisterForOneHundredBatches() {
+        var machine=thermalMachine(ColonyContent.Machine.GEOTHERMAL,0);var port=transportPort(1,1);
+        var water=new TransportBuffer(TransportChannel.LIQUID);water.insert(TransportResource.WATER,1000);
+        var power=new TransportBuffer(TransportChannel.ENERGY);power.select(TransportResource.POWER);
+        var graphs=List.of(transportGraph(water,0),transportGraph(power,10));
+        var environment=new ColonyEnvironment(true,false,false,true);
+        for(int batch=0;batch<100;batch++) {
+            assertTrue(port.supplyInputs(machine,graphs,true));
+            for(int tick=0;tick<100;tick++)machine.processTick(environment);
+            assertEquals(batch+1,machine.completedBatches());
+            assertTrue(port.exportOutputs(machine,graphs));assertEquals(1000,water.state().amount());
+            assertEquals(2400,power.available(TransportResource.POWER));power.extract(TransportResource.POWER,2400);
+            assertEquals(1,carrierCount(false,port,machine));assertEquals(1,carrierCount(true,port,machine));
+        }
+        assertEquals(100,machine.completedBatches());assertEquals(0,power.state().amount());
+    }
+    @Test void geothermalCannotConsumeWaterOrChargeCellsWithoutHeatOrWithABlockedWaterReturn() {
+        var machine=industryMachine("geothermal");
+        for(int tick=0;tick<200;tick++)machine.processTick(new ColonyEnvironment(true,false,false,false));
+        assertEquals(0,machine.completedBatches());assertEquals(1,machine.getItem(2).getCount());
+        machine.setItem(6,new ItemStack(ColonyContent.WATER_CANISTER,16));
+        for(int tick=0;tick<200;tick++)machine.processTick(new ColonyEnvironment(true,false,false,true));
+        assertEquals(0,machine.completedBatches());assertTrue(machine.getItem(0).is(ColonyContent.EMPTY_POWER_CELL));
+        assertEquals(1,machine.getItem(2).getCount());assertTrue(machine.getItem(4).isEmpty());
+    }
+    @Test void ordinaryIronCompositeRecipeSurvivesMidBatchSaveAndKeepsDenseIronMoreEfficient() throws IOException {
+        var recipe=ColonyRecipes.ALL.stream().filter(f->f.id().equals("venus_composite_iron")).findFirst().orElseThrow();
+        var dense=ColonyRecipes.ALL.stream().filter(f->f.id().equals("venus_composite")).findFirst().orElseThrow();
+        assertTrue(recipe.duration()>dense.duration());
+        var machine=industryMachine(recipe.id());var environment=new ColonyEnvironment(true,false,false,true);
+        for(int tick=0;tick<200;tick++)machine.processTick(environment);
+        var loaded=assertInstanceOf(ColonyMachineBlockEntity.class,net.minecraft.world.level.block.entity.BlockEntity.loadStatic(
+                machine.getBlockPos(),machine.getBlockState(),machine.saveWithFullMetadata(registries),registries));
+        assertEquals(200,loaded.progress());assertTrue(loaded.lastCompletedRecipe().isEmpty());
+        for(int tick=0;tick<200;tick++)loaded.processTick(environment);
+        assertTrue(loaded.getItem(3).is(dev.vic17usd.spacefabric.industry.IndustryContent.COMPOSITE_PLATE));
+        assertEquals(1,loaded.getItem(3).getCount());assertTrue(loaded.getItem(2).isEmpty());
+        assertTrue(loaded.getItem(5).is(ColonyContent.EMPTY_POWER_CELL));assertEquals(recipe.id(),loaded.lastCompletedRecipe());
+        var restored=assertInstanceOf(ColonyMachineBlockEntity.class,net.minecraft.world.level.block.entity.BlockEntity.loadStatic(
+                loaded.getBlockPos(),loaded.getBlockState(),loaded.saveWithFullMetadata(registries),registries));
+        assertEquals(recipe.id(),restored.lastCompletedRecipe());
+        assertTrue(viewerCatalog().find(dev.vic17usd.spacefabric.industry.IndustryContent.COMPOSITE_PLATE,false).stream()
+                .anyMatch(c->c.id().equals("space_fabric:colony/venus_composite_iron")));
+    }
+    @Test void tutorialProgressPersistsIndependentObservationsWithoutRepeatedArrivalOrRecipeLocks() {
+        var p=java.util.UUID.randomUUID();var other=java.util.UUID.randomUUID();var progress=new VenusProgress();
+        assertTrue(progress.observe(p,VenusProgress.Step.POWER));assertEquals(VenusProgress.Step.ARRIVAL,progress.next(p).orElseThrow());
+        assertTrue(progress.observe(p,VenusProgress.Step.ARRIVAL));assertFalse(progress.observe(p,VenusProgress.Step.ARRIVAL));
+        var loaded=VenusProgress.CODEC.parse(JsonOps.INSTANCE,VenusProgress.CODEC.encodeStart(JsonOps.INSTANCE,progress).getOrThrow()).getOrThrow();
+        assertFalse(loaded.observe(p,VenusProgress.Step.ARRIVAL));assertTrue(loaded.reached(p,VenusProgress.Step.POWER));
+        assertFalse(loaded.reached(other,VenusProgress.Step.POWER));assertEquals(VenusProgress.Step.SHELTER,loaded.next(p).orElseThrow());
+        for(var step:VenusProgress.Step.values())loaded.observe(p,step);
+        assertTrue(loaded.next(p).isEmpty());assertEquals(VenusProgress.Step.ARRIVAL,loaded.next(other).orElseThrow());
+        assertTrue(VenusProgress.CODEC.parse(JsonOps.INSTANCE,JsonParser.parseString("{\"players\":[{\"player\":\"x\",\"flags\":128}]}")).error().isPresent());
+    }
+    @ParameterizedTest @ValueSource(strings={"arrival","shelter","power","cooling","automation","food","expedition"})
+    void tutorialAdvancementsDecodeNativelyAndCannotBeClaimedForFreeItems(String name) throws IOException {
+        var json=resource("advancement/venus_guide/"+name);
+        assertNotNull(net.minecraft.advancements.Advancement.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),json).getOrThrow());
+        assertEquals("minecraft:impossible",json.getAsJsonObject().getAsJsonObject("criteria").getAsJsonObject("observed").get("trigger").getAsString());
+        assertFalse(json.getAsJsonObject().has("rewards"));
+    }
+    @Test void navigatorCanBeCraftedBeforeReachingVenusAndUnlockAdvancementDecodes() throws IOException {
+        var recipe=Recipe.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("recipe/venus_navigator")).getOrThrow();
+        var c=new ItemStack(Items.COPPER_INGOT);var p=new ItemStack(Items.PAPER);
+        var input=net.minecraft.world.item.crafting.CraftingInput.of(3,3,List.of(c,new ItemStack(Items.REDSTONE),c,
+                p,new ItemStack(Items.COMPASS),p,c,new ItemStack(ColonyContent.DATA_CARD),c));
+        var crafting=assertInstanceOf(net.minecraft.world.item.crafting.ShapedRecipe.class,recipe);
+        assertTrue(crafting.matches(input,null));assertTrue(crafting.assemble(input).is(ExpansionContent.NAVIGATOR));
+        assertNotNull(net.minecraft.advancements.Advancement.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("advancement/industry/navigator")).getOrThrow());
+    }
+    private net.minecraft.nbt.CompoundTag venusStation(String name) throws IOException {
+        try(var in=getClass().getResourceAsStream("/data/space_fabric/structure/venus/colony/"+name+".nbt")) {
+            assertNotNull(in);return net.minecraft.nbt.NbtIo.readCompressed(in,net.minecraft.nbt.NbtAccounter.unlimitedHeap());
+        }
+    }
+    private java.util.Map<net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState> stationStates(net.minecraft.nbt.CompoundTag tag) {
+        var result=new java.util.HashMap<net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState>();
+        var palette=tag.getListOrEmpty("palette");
+        for(var entry:tag.getListOrEmpty("blocks")) {
+            var block=(net.minecraft.nbt.CompoundTag)entry;var xyz=block.getListOrEmpty("pos");
+            var state=net.minecraft.nbt.NbtUtils.readBlockState(registries.lookupOrThrow(Registries.BLOCK),palette.getCompoundOrEmpty(block.getIntOr("state",-1)));
+            result.put(new net.minecraft.core.BlockPos(xyz.getIntOr(0,0),xyz.getIntOr(1,0),xyz.getIntOr(2,0)),state);
+        }
+        return result;
+    }
+    @ParameterizedTest @ValueSource(strings={"venus_research_station","venus_recovery_shelter","venus_cloud_station"})
+    void redesignedStationHasAWorkingTwoDoorPressureVestibuleAndClearCentralWalkway(String name) throws IOException {
+        var states=stationStates(venusStation(name));var door=net.minecraft.world.level.block.state.properties.BlockStateProperties.OPEN;
+        SealScanner.World world=p->HabitatSystem.classify(states.getOrDefault(p,Blocks.AIR.defaultBlockState()),net.minecraft.world.level.EmptyBlockGetter.INSTANCE,p);
+        var vent=new net.minecraft.core.BlockPos(3,3,6);var room=SealScanner.scan(world,vent,true);
+        assertEquals(SealScanner.Status.SEALED,room.status(),name);assertTrue(room.air().size()<=SealScanner.MAX_VOLUME);
+        assertFalse(room.air().contains(new net.minecraft.core.BlockPos(6,2,2)));
+        for(int z=1;z<=10;z++)for(int y=2;y<=3;y++) {
+            var state=states.get(new net.minecraft.core.BlockPos(6,y,z));assertTrue(state.isAir()||state.is(ColonyContent.AIRLOCK_DOOR));
+        }
+        for(int y=2;y<=3;y++){var pos=new net.minecraft.core.BlockPos(6,y,1);states.put(pos,states.get(pos).setValue(door,true));}
+        assertTrue(SealScanner.scan(world,vent,true).sealed(),"Opening only the outer door must preserve the main room");
+        for(int y=2;y<=3;y++){var pos=new net.minecraft.core.BlockPos(6,y,4);states.put(pos,states.get(pos).setValue(door,true));}
+        assertFalse(SealScanner.scan(world,vent,true).sealed(),"Opening both doors must expose the room");
+    }
+    private static <T extends Comparable<T>> String propertyValue(net.minecraft.world.level.block.state.properties.Property<T> property,
+            net.minecraft.world.level.block.state.BlockState state) {return property.getName(state.getValue(property));}
+    @ParameterizedTest @ValueSource(strings={"venus_research_station","venus_recovery_shelter","venus_cloud_station"})
+    void stationFurnitureUsesValidNativeStatesAndSalvageNeverStartsLifeSupportForFree(String name) throws IOException {
+        var tag=venusStation(name);var states=stationStates(tag);var palette=tag.getListOrEmpty("palette");
+        for(var entry:palette) {
+            var encoded=(net.minecraft.nbt.CompoundTag)entry;var id=net.minecraft.resources.Identifier.parse(encoded.getStringOr("Name",""));
+            assertTrue(BuiltInRegistries.BLOCK.containsKey(id),id.toString());
+            var state=net.minecraft.nbt.NbtUtils.readBlockState(registries.lookupOrThrow(Registries.BLOCK),encoded);
+            for(var key:encoded.getCompoundOrEmpty("Properties").keySet()) {
+                var property=state.getBlock().getStateDefinition().getProperty(key);assertNotNull(property);
+                assertEquals(encoded.getCompoundOrEmpty("Properties").getStringOr(key,""),propertyValue(property,state));
+            }
+            assertFalse(state.getBlock() instanceof net.minecraft.world.level.block.BedBlock,"Vanilla beds could explode here");
+        }
+        int salvage=0,controllers=0;
+        for(var entry:tag.getListOrEmpty("blocks")) {
+            var block=(net.minecraft.nbt.CompoundTag)entry;var data=block.getCompoundOrEmpty("nbt");var xyz=block.getListOrEmpty("pos");
+            var pos=new net.minecraft.core.BlockPos(xyz.getIntOr(0,0),xyz.getIntOr(1,0),xyz.getIntOr(2,0));
+            if(data.getStringOr("id","").equals("minecraft:chest")) {
+                salvage++;assertTrue(data.getStringOr("LootTable","").startsWith("space_fabric:chests/venus_"));
+                assertFalse(data.contains("Items"));assertTrue(states.get(pos.above()).isAir());
+            }
+            if(data.getStringOr("id","").equals("space_fabric:colony_machine")) {
+                var machine=assertInstanceOf(ColonyMachineBlockEntity.class,net.minecraft.world.level.block.entity.BlockEntity.loadStatic(pos,states.get(pos),data,registries));
+                assertEquals(0,machine.support().oxygen());assertEquals(0,machine.support().energy());assertEquals(0,machine.support().coolant());
+                assertEquals(0,machine.coolingCharge());assertEquals(0,machine.completedBatches());
+                if(machine.kind()==ColonyContent.Machine.HABITAT)controllers++;
+            }
+        }
+        assertEquals(1,salvage);assertEquals(1,controllers);
+        if(name.equals("venus_cloud_station")) {
+            // A 7 x 7 x 8 landing volume: even the service block must stay outside the vehicle footprint.
+            for(int x=15;x<=21;x++)for(int z=15;z<=21;z++)for(int y=1;y<=8;y++)
+                assertTrue(states.getOrDefault(new net.minecraft.core.BlockPos(x,y,z),Blocks.AIR.defaultBlockState()).isAir(),"Landing volume obstructed");
+        }
+    }
+    @ParameterizedTest @ValueSource(strings={"laboratory","refuge","observatory"})
+    void stationSalvageLootUsesTheNativeChestCodec(String name) throws IOException {
+        assertNotNull(LootTable.DIRECT_CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("loot_table/chests/venus_"+name)).getOrThrow());
+    }
 }

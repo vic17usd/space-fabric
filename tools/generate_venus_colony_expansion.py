@@ -4,6 +4,7 @@ from pathlib import Path
 import json,gzip,math
 from PIL import Image,ImageDraw
 from convert_creativemode_structure import convert
+from venus_station_interiors import station
 ROOT=Path(__file__).resolve().parents[1]/'src/main/resources';A=ROOT/'assets/space_fabric';D=ROOT/'data/space_fabric'
 def write(p,data):p.parent.mkdir(parents=True,exist_ok=True);p.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n')
 def tag(ns,kind,name,values):
@@ -68,37 +69,11 @@ write(A/'models/item/venus_aerostat.json',{'parent':'minecraft:item/generated','
 # Compact research stations, with native template NBT and no executable imported content.
 SITES=[('venus_research_station','laboratorio_venusiano',1),('venus_recovery_shelter','recuperacion_venusiana',2),('venus_cloud_station','estacion_atmosferica',3)]
 for name,alias,mission in SITES:
- cloud=mission==3;n=29 if cloud else 13;blocks={};extra={}
- def put(x,y,z,block,nbt=None):
-  blocks[x,y,z]=block
-  if nbt is not None:extra[x,y,z]=nbt
- for x in range(n):
-  for z in range(n):put(x,0,z,sf('venus_composite_hull'))
- # A sealed 7x5x7 room, outdoor circulation and a broad aerostat landing deck.
- for x in range(1,8):
-  for y in range(1,6):
-   for z in range(1,8):
-    shell=x in (1,7) or y in (1,5) or z in (1,7)
-    put(x,y,z,sf('pressure_window') if shell and y in (3,4) and (x in (1,7) or z in (1,7)) else sf('venus_composite_hull') if shell else mc('air'))
- put(3,2,3,sf('habitat_controller'),{'id':sf('colony_machine'),'Respired':4800 if mission==2 else 0})
- role=['venus_greenhouse','venus_life_reclaimer','venus_atmospheric_collector'][mission-1]
- cx,cy,cz=(5,2,4) if not cloud else (10,1,3)
- put(cx,cy,cz,sf('venus_expedition_console'),{'id':sf('colony_machine'),'NaturalMission':mission})
- put(cx+1,cy,cz,sf(role),{'id':sf('colony_machine'),'Maintenance':{'damage':10000}})
- put(4,5,4,sf('venus_grow_lamp'))
- if cloud:put(16,1,16,sf('venus_service_dock'))
- # Two full-block removable panels provide access; players can retrofit their own certified airlock.
- put(4,2,1,sf('pressure_hull'));put(4,3,1,sf('pressure_hull'))
- if cloud:
-  for x in (2,8):
-   for z in (2,8):
-    for y in range(6,9):put(x,y,z,mc('iron_block'))
-  for x in range(1,10):
-   for z in range(1,10):
-    for y in range(9,12):put(x,y,z,sf('venus_composite_hull'))
- palette=list(dict.fromkeys(blocks.values()));height=12 if cloud else 6
+ cloud=mission==3;n=29 if cloud else 13
+ blocks,extra,properties=station(mission)
+ palette=list(dict.fromkeys(blocks.values()));height=12 if cloud else 7
  doc={'format':'creativemode.structure','version':1,'palette':palette,'blocks':[[*pos,palette.index(block)] for pos,block in sorted(blocks.items())],'bounds':{'min':[0,0,0],'max':[n-1,height-1,n-1],'dimensions':[n,height,n]},'anchor':[0,0,0],'block_count':len(blocks)}
- out=D/f'structure/venus/colony/{name}.nbt';out.parent.mkdir(parents=True,exist_ok=True);out.write_bytes(gzip.compress(convert(doc,block_entities=extra),mtime=0))
+ out=D/f'structure/venus/colony/{name}.nbt';out.parent.mkdir(parents=True,exist_ok=True);out.write_bytes(gzip.compress(convert(doc,block_entities=extra,block_states=properties),mtime=0))
  tag('space_fabric','worldgen/biome','has_structure/'+name,['space_fabric:venus','space_fabric:venus_fumaroles','space_fabric:venus_obsidian_basins'])
  tag('space_fabric','worldgen/structure',alias,['space_fabric:'+name])
  settings={'type':'minecraft:jigsaw' if cloud else 'space_fabric:venus_surface','biomes':'#space_fabric:has_structure/'+name,'step':'surface_structures','spawn_overrides':{},'terrain_adaptation':'none'}

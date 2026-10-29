@@ -110,3 +110,11 @@ recuperación de caja negra y entrega de muestras, instrumentos/luces del aerost
 actividad local de fumarolas y preferencia de hábitat de las especies pacíficas.
 [Guía](venus-operations.md). La validación gráfica y multijugador continúa pendiente;
 [lista de pruebas](venus-colony-playtest.md).
+
+## Progresión e interiores de Venus — 0.41.0
+
+Geotermia con agua recirculada, alternativa de compuesto con hierro común, guía
+de llegada con etapas persistentes y cálculo de reservas. Se rediseñan laboratorio,
+refugio y estación atmosférica con vestíbulos, zonas de trabajo y almacenes finitos.
+[Guía](venus-progression.md). El balance contra consumo y las esclusas tienen
+pruebas automáticas; el ajuste del ritmo en una partida completa sigue pendiente.

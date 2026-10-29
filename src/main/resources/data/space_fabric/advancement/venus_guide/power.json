@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "id": "space_fabric:geothermal_generator"
+    },
+    "title": {
+      "translate": "venus.guide.power"
+    },
+    "description": {
+      "translate": "venus.guide.power.detail"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "observed": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "parent": "space_fabric:venus_guide/shelter"
+}

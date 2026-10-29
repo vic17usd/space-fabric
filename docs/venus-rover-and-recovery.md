@@ -22,7 +22,7 @@ fundiciones ya guardadas; la ampliación aparece al generar instalaciones nuevas
 
 | Equipo | Entradas | Condición | Productos |
 |---|---|---|---|
-| Generador geotérmico | Batería descargada en primera entrada; agua en tercera | Lava debajo, ya preparada en la instalación | Batería cargada y bombona vacía |
+| Generador geotérmico | Batería descargada en primera entrada; agua en tercera | Lava debajo, ya preparada en la instalación | Batería cargada y agua devuelta desde 0.41 |
 | Unidad de refrigeración | Agua y batería cargada | Equipo reparado | Refrigerante enfriado y batería descargada |
 | Procesador de azufre | Dos cristales de azufre, batería cargada y nitrógeno | Equipo reparado | Dos azufres refinados, batería y bombona vacías |
 

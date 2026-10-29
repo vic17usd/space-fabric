@@ -148,7 +148,8 @@ En cada una:
 1. Repara el equipo al **70 % de integridad o más** y completa un lote real.
    Las salas se encuentran sin suministros: lleva oxígeno, energía y agua para
    poner el controlador en servicio. El refugio contiene una reserva inicial
-   limitada de residuos recuperables. Instala una esclusa al habilitar la entrada.
+   limitada de residuos recuperables. Los diseños de 0.39 requieren instalar
+   esclusa; los generados desde 0.41 incluyen un vestíbulo de dos puertas.
 2. En la consola original coloca un informe venusiano, una batería cargada y una
    tarjeta de datos en sus tres primeras casillas.
 3. **Shift + clic derecho con mano vacía** revisa los requisitos o reclama la
@@ -184,3 +185,7 @@ cuatro horas ejecutando el mundo. [Comprobaciones pendientes en partida](venus-c
 
 Desde **0.40.0**, el navegador ofrece un diario de destinos y un panel de colonia,
 y se añaden dos proyectos de campo. [Operaciones y controles](venus-operations.md).
+
+Desde **0.41.0**, las tres instalaciones reciben interiores diferenciados y
+vestíbulos con botones. Solo cambia la generación nueva.
+[Diseños, progresión y balance actualizados](venus-progression.md).
