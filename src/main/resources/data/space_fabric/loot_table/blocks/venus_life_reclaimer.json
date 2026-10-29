@@ -1,0 +1,47 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "space_fabric:venus_life_reclaimer",
+          "functions": [
+            {
+              "function": "minecraft:copy_custom_data",
+              "source": "block_entity",
+              "ops": [
+                {
+                  "source": "Maintenance",
+                  "target": "SpaceFabricMaintenance",
+                  "op": "replace"
+                },
+                {
+                  "source": "IndustrialHeat",
+                  "target": "IndustrialHeat",
+                  "op": "replace"
+                },
+                {
+                  "source": "ThermalTrip",
+                  "target": "ThermalTrip",
+                  "op": "replace"
+                },
+                {
+                  "source": "CoolingCharge",
+                  "target": "CoolingCharge",
+                  "op": "replace"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ]
+    }
+  ]
+}

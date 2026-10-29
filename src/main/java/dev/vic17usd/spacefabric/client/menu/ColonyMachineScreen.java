@@ -15,7 +15,7 @@ public final class ColonyMachineScreen extends SpaceContainerScreen<ColonyMachin
     }
     @Override protected void extractLabels(GuiGraphicsExtractor gui,int mouseX,int mouseY) {
         gui.text(font,title,8,7,0xFFE5F5FF);
-        String[] states={"idle","inputs","output_full","sunlight","heat","processing","maintenance_failure","collector_environment","collector_intake","overheating","cooling_ready"};
+        String[] states={"idle","inputs","output_full","sunlight","heat","processing","maintenance_failure","collector_environment","collector_intake","overheating","cooling_ready","greenhouse_room","greenhouse_light","recovery_wait","dock_off","dock_wait","dock_ready","survey_ready"};
         gui.text(font,Component.translatable("colony.space_fabric."+states[Math.clamp(menu.status(),0,states.length-1)]),8,21,MaintenancePresentation.color(menu.integrity()));
         gui.text(font,Component.translatable("gui.space_fabric.habitat.inputs"),12,36,0xFFB5D6E5);
         gui.text(font,Component.translatable("maintenance.space_fabric.progress",menu.progress()/20,menu.duration()/20),82,39,0xFFB5D6E5);

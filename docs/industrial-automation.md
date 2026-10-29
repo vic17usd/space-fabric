@@ -116,7 +116,8 @@ inventarios normales. Puedes usar tolvas dentro del recinto. La refinería de
 combustible actual trabaja con sólidos y celdas de combustible, y conserva su
 automatización por tolvas; estas tuberías no son una red general de objetos.
 Para cargar el rover, llena sus bombonas y baterías desde los depósitos y utiliza
-su inventario habitual. Esta entrega conecta máquinas de bloque, no añade un muelle.
+su inventario habitual. Desde **0.39.0** también puedes usar una estación de
+servicio conectada a estas redes: [montaje](venus-colony-expansion.md).
 
 La interfaz se puede pausar desde su panel o con redstone. Las máquinas
 averiadas no reciben nuevos suministros; se pueden retirar productos ya terminados.

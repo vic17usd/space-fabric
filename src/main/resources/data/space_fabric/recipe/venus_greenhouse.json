@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "GLG",
+    "PWP",
+    "HBH"
+  ],
+  "key": {
+    "G": "minecraft:glass",
+    "L": "space_fabric:venus_grow_lamp",
+    "P": "space_fabric:venus_composite_plate",
+    "W": "minecraft:wheat_seeds",
+    "H": "space_fabric:pressure_hull",
+    "B": "space_fabric:empty_power_cell"
+  },
+  "result": {
+    "id": "space_fabric:venus_greenhouse",
+    "count": 1
+  }
+}

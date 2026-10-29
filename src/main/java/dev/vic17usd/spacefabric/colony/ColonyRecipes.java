@@ -75,9 +75,20 @@ public final class ColonyRecipes {
         list.add(new Formula("exchanger_charge",ColonyContent.Machine.EXCHANGER,60,
                 List.of(p(0,dev.vic17usd.spacefabric.recovery.RecoveryContent.CHILLED_COOLANT),p(1,ColonyContent.CHARGED_POWER_CELL)),
                 List.of(p(3,ColonyContent.WATER_CANISTER),p(5,ColonyContent.EMPTY_POWER_CELL))));
+        list.add(new Formula("hydroponic_wheat",ColonyContent.Machine.GREENHOUSE,400,
+                List.of(p(0,Items.WHEAT_SEEDS),p(1,ColonyContent.CHARGED_POWER_CELL),p(2,ColonyContent.WATER_CANISTER)),
+                List.of(new Part(3,Items.WHEAT,2),p(4,Items.WHEAT_SEEDS),p(5,ColonyContent.EMPTY_POWER_CELL),p(6,ColonyContent.EMPTY_CANISTER))));
+        list.add(new Formula("algal_oxygen",ColonyContent.Machine.GREENHOUSE,400,
+                List.of(p(0,IndustryContent.CARBON_DIOXIDE),p(1,ColonyContent.CHARGED_POWER_CELL),p(2,ColonyContent.WATER_CANISTER)),
+                List.of(p(3,ColonyContent.OXYGEN_CANISTER),p(5,ColonyContent.EMPTY_POWER_CELL),p(6,ColonyContent.EMPTY_CANISTER))));
+        list.add(new Formula("breath_recovery",ColonyContent.Machine.RECLAIMER,200,
+                List.of(new Part(0,ColonyContent.EMPTY_CANISTER,2),p(1,ColonyContent.CHARGED_POWER_CELL),p(2,dev.vic17usd.spacefabric.maintenance.MaintenanceContent.FILTER)),
+                List.of(p(3,ColonyContent.WATER_CANISTER),p(4,IndustryContent.CARBON_DIOXIDE),p(5,ColonyContent.EMPTY_POWER_CELL),p(6,dev.vic17usd.spacefabric.maintenance.MaintenanceContent.SPENT_FILTER))));
         return List.copyOf(list);
     }
     public static boolean accepts(ColonyContent.Machine machine,int slot,ItemStack stack) {
+        if(machine==ColonyContent.Machine.DOCK)return slot==0?stack.is(ColonyContent.CHARGED_POWER_CELL):slot==1?stack.is(ColonyContent.OXYGEN_CANISTER):slot==2?stack.is(dev.vic17usd.spacefabric.recovery.RecoveryContent.CHILLED_COOLANT)||stack.is(ColonyContent.WATER_CANISTER):slot==8&&stack.is(IndustryContent.COMPOSITE_PLATE);
+        if(machine==ColonyContent.Machine.SURVEY)return slot==0?stack.is(ColonyContent.VENUS_REPORT):slot==1?stack.is(ColonyContent.CHARGED_POWER_CELL):slot==2&&stack.is(ColonyContent.DATA_CARD);
         if(machine==ColonyContent.Machine.HABITAT)return slot==0?stack.is(ColonyContent.OXYGEN_CANISTER):slot==1?stack.is(ColonyContent.CHARGED_POWER_CELL):slot==2&&stack.is(ColonyContent.WATER_CANISTER);
         return ALL.stream().filter(f->f.machine()==machine).flatMap(f->f.inputs().stream()).anyMatch(p->p.slot()==slot&&stack.is(p.item()));
     }

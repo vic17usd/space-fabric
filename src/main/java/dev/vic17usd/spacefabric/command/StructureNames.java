@@ -26,7 +26,10 @@ public final class StructureNames {
             new Entry("venusian_ash_outpost","puesto_ceniza_venusiano",Planet.VENUS),
             new Entry("venusian_sulfur_vault","boveda_venusiana",Planet.VENUS),
             new Entry("venus_basalt_haven","refugio_venusiano",Planet.VENUS),
-            new Entry("rustfall_foundry","fundicion_venusiana",Planet.VENUS));
+            new Entry("rustfall_foundry","fundicion_venusiana",Planet.VENUS),
+            new Entry("venus_research_station","laboratorio_venusiano",Planet.VENUS),
+            new Entry("venus_recovery_shelter","recuperacion_venusiana",Planet.VENUS),
+            new Entry("venus_cloud_station","estacion_atmosferica",Planet.VENUS));
     private StructureNames() { }
     public static void initialize() {
         CommandRegistrationCallback.EVENT.register((dispatcher,context,selection)->dispatcher.register(

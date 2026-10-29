@@ -2675,4 +2675,165 @@ class WorldgenCodecTest {
         placed.restoreThermal(Integer.MAX_VALUE,true,Integer.MAX_VALUE);assertEquals(10000,placed.localThermal().heat());assertEquals(4800,placed.coolingCharge());
     }
 
+    private void greenhouseInputs(ColonyMachineBlockEntity machine) {
+        machine.setItem(0,new ItemStack(Items.WHEAT_SEEDS));machine.setItem(1,new ItemStack(ColonyContent.CHARGED_POWER_CELL));machine.setItem(2,new ItemStack(ColonyContent.WATER_CANISTER));
+    }
+    @Test void greenhouseRequiresActualRegulationAndLightingAndReturnsSeedAndContainers() {
+        var greenhouse=thermalMachine(ColonyContent.Machine.GREENHOUSE,0);greenhouseInputs(greenhouse);
+        for(int i=0;i<500;i++)greenhouse.processTick(new ColonyEnvironment(true,false,false,false));
+        assertEquals(0,greenhouse.progress());assertEquals(1,greenhouse.getItem(2).getCount());
+        for(int i=0;i<500;i++)greenhouse.processTick(new ColonyEnvironment(true,false,false,false,true,false,null));
+        assertEquals(0,greenhouse.progress());
+        for(int i=0;i<400;i++)greenhouse.processTick(new ColonyEnvironment(true,false,false,false,true,true,null));
+        assertEquals(1,greenhouse.completedBatches());assertEquals(2,greenhouse.getItem(3).getCount());assertTrue(greenhouse.getItem(4).is(Items.WHEAT_SEEDS));
+        assertTrue(greenhouse.getItem(5).is(ColonyContent.EMPTY_POWER_CELL));assertTrue(greenhouse.getItem(6).is(ColonyContent.EMPTY_CANISTER));
+    }
+    @Test void algalOxygenConsumesWaterCarbonDioxideAndEnergyWithoutInventingContainers() {
+        var module=thermalMachine(ColonyContent.Machine.GREENHOUSE,0);
+        module.setItem(0,new ItemStack(dev.vic17usd.spacefabric.industry.IndustryContent.CARBON_DIOXIDE));module.setItem(1,new ItemStack(ColonyContent.CHARGED_POWER_CELL));module.setItem(2,new ItemStack(ColonyContent.WATER_CANISTER));
+        for(int i=0;i<400;i++)module.processTick(new ColonyEnvironment(true,false,false,false,true,true,null));
+        assertTrue(module.getItem(3).is(ColonyContent.OXYGEN_CANISTER));assertTrue(module.getItem(0).isEmpty());assertTrue(module.getItem(2).isEmpty());assertEquals(2,carrierCount(false,module));
+    }
+    private ColonyMachineBlockEntity reclaimer() {
+        var machine=thermalMachine(ColonyContent.Machine.RECLAIMER,0);
+        machine.setItem(0,new ItemStack(ColonyContent.EMPTY_CANISTER,2));machine.setItem(1,new ItemStack(ColonyContent.CHARGED_POWER_CELL));machine.setItem(2,new ItemStack(dev.vic17usd.spacefabric.maintenance.MaintenanceContent.FILTER));return machine;
+    }
+    @Test void reclaimerCanOnlyRecoverHalfOfConsumedRespirationAndCannotDoubleSpendBetweenMachines() {
+        var support=new LifeSupport();support.restoreRespired(4800);var first=reclaimer();var second=reclaimer();
+        var environment=new ColonyEnvironment(true,false,false,false,true,true,support);
+        for(int i=0;i<199;i++){first.processTick(environment);second.processTick(environment);}
+        first.processTick(environment);second.processTick(environment);
+        assertEquals(1,first.completedBatches());assertEquals(0,second.completedBatches());assertEquals(0,support.respired());assertEquals(2,second.getItem(0).getCount());
+        assertTrue(first.getItem(3).is(ColonyContent.WATER_CANISTER));assertTrue(first.getItem(4).is(dev.vic17usd.spacefabric.industry.IndustryContent.CARBON_DIOXIDE));
+        assertTrue(first.getItem(6).is(dev.vic17usd.spacefabric.maintenance.MaintenanceContent.SPENT_FILTER));assertEquals(2,carrierCount(false,first));
+        assertEquals(2400,LifeSupport.CELL); // One resulting oxygen canister replaces half the 4800 consumed units.
+    }
+    @Test void blockedReclaimerOutputDoesNotConsumeWasteFiltersOrInputs() {
+        var support=new LifeSupport();support.restoreRespired(4800);var machine=reclaimer();machine.setItem(3,new ItemStack(Items.BARRIER));
+        for(int i=0;i<250;i++)machine.processTick(new ColonyEnvironment(true,false,false,false,true,true,support));
+        assertEquals(4800,support.respired());assertEquals(2,machine.getItem(0).getCount());assertEquals(1,machine.getItem(2).getCount());
+    }
+    @Test void respirationCreditsPersistAndFailedLifeSupportNeverProducesRecyclableWaste() {
+        var habitat=thermalMachine(ColonyContent.Machine.HABITAT,0);
+        assertFalse(habitat.support().tick(75,2,true));assertEquals(0,habitat.support().respired());
+        habitat.support().fill(0);habitat.support().fill(1);habitat.support().fill(2);assertTrue(habitat.support().tick(75,2,true));assertEquals(2,habitat.support().respired());
+        var restored=assertInstanceOf(ColonyMachineBlockEntity.class,net.minecraft.world.level.block.entity.BlockEntity.loadStatic(habitat.getBlockPos(),habitat.getBlockState(),habitat.saveWithFullMetadata(registries),registries));
+        assertEquals(2,restored.support().respired());restored.support().restoreRespired(Integer.MAX_VALUE);assertEquals(9600,restored.support().respired());
+    }
+    @Test void vehicleDockRefillsRepairsAndUnloadsWithoutDuplicatingSuppliesOrCargo() {
+        var dock=thermalMachine(ColonyContent.Machine.DOCK,0);var rover=new dev.vic17usd.spacefabric.rover.RoverEntity(dev.vic17usd.spacefabric.rover.RoverEntity.TYPE,null);
+        rover.restoreSystems(new dev.vic17usd.spacefabric.rover.RoverSystems.State(0,0,0,60));rover.inventory().setItem(3,new ItemStack(Items.DIAMOND,23));
+        dock.setItem(0,new ItemStack(ColonyContent.CHARGED_POWER_CELL));dock.setItem(1,new ItemStack(ColonyContent.OXYGEN_CANISTER));dock.setItem(2,new ItemStack(dev.vic17usd.spacefabric.recovery.RecoveryContent.CHILLED_COOLANT));dock.setItem(8,new ItemStack(dev.vic17usd.spacefabric.industry.IndustryContent.COMPOSITE_PLATE,2));
+        assertFalse(RoverDockService.service(dock,rover));dock.toggleDock();assertTrue(RoverDockService.service(dock,rover));
+        assertEquals(2400,rover.systems().energy());assertEquals(4800,rover.systems().oxygen());assertEquals(4800,rover.systems().coolant());assertEquals(85,rover.systems().hull());
+        assertEquals(2,dock.getItem(4).getCount());assertTrue(dock.getItem(3).is(ColonyContent.EMPTY_POWER_CELL));assertEquals(23,dock.getItem(5).getCount());assertTrue(rover.inventory().getItem(3).isEmpty());assertEquals(1,dock.getItem(8).getCount());
+        assertTrue(RoverDockService.service(dock,rover));assertEquals(100,rover.systems().hull());assertTrue(dock.getItem(8).isEmpty());assertFalse(RoverDockService.service(dock,rover));
+    }
+    @Test void dockFullOutputsAndCargoStorageLeaveVehicleAndSupplyInputsUntouched() {
+        var dock=thermalMachine(ColonyContent.Machine.DOCK,0);dock.toggleDock();var rover=new dev.vic17usd.spacefabric.rover.RoverEntity(dev.vic17usd.spacefabric.rover.RoverEntity.TYPE,null);
+        dock.setItem(0,new ItemStack(ColonyContent.CHARGED_POWER_CELL));dock.setItem(3,new ItemStack(Items.BARRIER));
+        for(int i=5;i<8;i++)dock.setItem(i,new ItemStack(Items.IRON_INGOT,64));rover.inventory().setItem(3,new ItemStack(Items.DIAMOND));
+        assertFalse(RoverDockService.service(dock,rover));assertEquals(0,rover.systems().energy());assertEquals(1,dock.getItem(0).getCount());assertEquals(1,rover.inventory().getItem(3).getCount());
+        assertFalse(dock.canTakeItemThroughFace(8,ItemStack.EMPTY,net.minecraft.core.Direction.DOWN));
+    }
+    @Test void dockUsesExistingBulkNetworksAndKeepsRepairStockSeparateFromOutputs() {
+        var dock=thermalMachine(ColonyContent.Machine.DOCK,0);var port=transportPort(2,1);
+        var power=new TransportBuffer(TransportChannel.ENERGY);power.insert(TransportResource.POWER,2400);
+        var oxygen=new TransportBuffer(TransportChannel.GAS);oxygen.insert(TransportResource.OXYGEN,1000);
+        var cold=new TransportBuffer(TransportChannel.LIQUID);cold.insert(TransportResource.CHILLED_COOLANT,1000);
+        var graphs=List.of(transportGraph(power,0),transportGraph(oxygen,10),transportGraph(cold,20));
+        assertFalse(port.supplyInputs(dock,graphs,true));dock.toggleDock();assertTrue(port.supplyInputs(dock,graphs,true));assertEquals(0,power.state().amount());assertEquals(0,oxygen.state().amount());
+        var rover=new dev.vic17usd.spacefabric.rover.RoverEntity(dev.vic17usd.spacefabric.rover.RoverEntity.TYPE,null);assertTrue(RoverDockService.service(dock,rover));assertTrue(port.exportOutputs(dock,graphs));
+        assertEquals(2,carrierCount(false,port,dock));assertEquals(1,carrierCount(true,port,dock));
+    }
+    @Test void expeditionRewardsAreOncePerPlayerAndMissionAcrossLedgerReloads() {
+        var ledger=new ExpeditionLedger();var player=java.util.UUID.randomUUID();
+        assertTrue(ledger.claim(player,1));assertFalse(ledger.claim(player,1));assertFalse(ledger.claim(player,0));assertTrue(ledger.claim(player,2));
+        var restored=ExpeditionLedger.CODEC.parse(JsonOps.INSTANCE,ExpeditionLedger.CODEC.encodeStart(JsonOps.INSTANCE,ledger).getOrThrow()).getOrThrow();
+        assertTrue(restored.claimed(player,1));assertFalse(restored.claim(player,1));assertTrue(restored.claim(java.util.UUID.randomUUID(),1));
+    }
+    @Test void aerostatKeepsItsVehicleTypeAndResourceStateWhenPackedAndUnpacked() {
+        var state=new dev.vic17usd.spacefabric.rover.RoverSystems.State(1234,5678,4321,83);
+        var item=dev.vic17usd.spacefabric.rover.RoverItem.packed(state,true);var vehicle=dev.vic17usd.spacefabric.rover.RoverItem.create(null,item);
+        assertTrue(item.is(ExpansionContent.AEROSTAT));assertTrue(vehicle.aerial());assertEquals(state,vehicle.systems());assertEquals(7.4,vehicle.getBbHeight(),.001);
+        assertTrue(dev.vic17usd.spacefabric.atmosphere.VenusLayers.flightVertical(45,1,false,true,0)<0);assertTrue(dev.vic17usd.spacefabric.atmosphere.VenusLayers.flightVertical(0,0,true,true,0)>0);assertEquals(0,dev.vic17usd.spacefabric.atmosphere.VenusLayers.flightVertical(0,0,false,true,0));assertTrue(dev.vic17usd.spacefabric.atmosphere.VenusLayers.flightVertical(0,0,false,false,0)<0);
+    }
+    @Test void venusUpperAtmosphereHasDifferentPressureAndTemperatureButNoBreathableAir() {
+        var profile=dev.vic17usd.spacefabric.atmosphere.AtmosphereProfile.of(Planet.VENUS);
+        assertEquals(9200,profile.pressureAt(100));assertEquals(464,profile.maxTemperatureAt(100));assertEquals(50,profile.pressureAt(300),1e-8);assertEquals(27,profile.maxTemperatureAt(300),1e-8);assertEquals(0,profile.oxygenFraction());
+        double previous=profile.pressureAt(160);for(int y=161;y<=400;y++){assertTrue(profile.pressureAt(y)<=previous);previous=profile.pressureAt(y);}
+        assertTrue(dev.vic17usd.spacefabric.atmosphere.PressureExposure.danger(Planet.VENUS,300,dev.vic17usd.spacefabric.equipment.SuitTier.NONE).isPresent());
+    }
+    @Test void newColonyRecipesAndNaturalStructuresDecodeAndContainTheirRequiredMachines() throws Exception {
+        for(String name:new String[]{"venus_greenhouse","venus_life_reclaimer","venus_service_dock","venus_expedition_console","venus_grow_lamp","venus_aerostat"})assertNotNull(Recipe.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("recipe/"+name)).getOrThrow());
+        for(String name:new String[]{"venus_research_station","venus_recovery_shelter","venus_cloud_station"}){
+            var key=net.minecraft.resources.ResourceKey.create(Registries.STRUCTURE,SpaceFabric.id(name));assertNotNull(registries.lookupOrThrow(Registries.STRUCTURE).getOrThrow(key));
+            try(var input=getClass().getResourceAsStream("/data/space_fabric/structure/venus/colony/"+name+".nbt")){
+                assertNotNull(input);var nbt=net.minecraft.nbt.NbtIo.readCompressed(input,net.minecraft.nbt.NbtAccounter.unlimitedHeap());var template=new net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate();template.load(registries.lookupOrThrow(Registries.BLOCK),nbt);
+                assertEquals(1,template.filterBlocks(net.minecraft.core.BlockPos.ZERO,new net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings(),ColonyContent.SURVEY).size());
+                assertEquals(name.equals("venus_cloud_station")?29:13,template.getSize().getX());
+            }
+        }
+    }
+    @Test void fourHourComponentSoakKeepsSupportAliveAndCannotMakeRecoveryCreditsWithoutConsumption() {
+        var support=new LifeSupport();int oxygenCells=0,energyCells=0,waterCells=0,recoveries=0;
+        for(int second=0;second<14400;second++){
+            if(support.oxygen()<1000){assertTrue(support.fill(0));oxygenCells++;}
+            if(support.energy()<100){assertTrue(support.fill(1));energyCells++;}
+            if(support.coolant()<100){assertTrue(support.fill(2));waterCells++;}
+            assertTrue(support.tick(75,2,true));
+            if(support.respired()>=4800){assertTrue(support.reclaim());recoveries++;}
+            if(second%600==0){var copy=new LifeSupport();copy.restore(support.oxygen(),support.energy(),support.coolant(),75,support.pressurized());copy.restoreRespired(support.respired());support=copy;}
+        }
+        assertEquals(6,recoveries);assertEquals(0,support.respired());assertEquals(oxygenCells*2400-28800-150,support.oxygen());assertEquals(energyCells*2400-14400*15,support.energy());assertEquals(waterCells*2400-14400*5,support.coolant());
+    }
+
+    @Test void newResearchSitesGenerateOnSeveralSeedsAndCloudStationStaysAtItsAbsoluteHeight(@org.junit.jupiter.api.io.TempDir Path temporary) throws IOException {
+        var access=(RegistryAccess)registries;
+        var stem=LevelStem.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("dimension/venus")).getOrThrow();var generator=(net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator)stem.generator();
+        var pack=new PathPackResources(new PackLocationInfo("expedition_test",Component.literal("Expedition generation"),PackSource.DEFAULT,Optional.empty()),Path.of("src/main/resources"));
+        try(var world=net.minecraft.world.level.storage.LevelStorageSource.createDefault(temporary).createAccess("expedition-test");var resources=new MultiPackResourceManager(PackType.SERVER_DATA,List.of(ServerPacksSource.createVanillaPackSource(),pack))){
+            var templates=new net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager(resources,world,net.minecraft.util.datafix.DataFixers.getDataFixer(),access.lookupOrThrow(Registries.BLOCK));
+            var height=net.minecraft.world.level.LevelHeightAccessor.create(Planet.VENUS.minY(),Planet.VENUS.height());
+            for(long seed:new long[]{42,1729,8128})for(String name:new String[]{"venus_research_station","venus_recovery_shelter","venus_cloud_station"}){
+                var holder=access.lookupOrThrow(Registries.STRUCTURE).getOrThrow(net.minecraft.resources.ResourceKey.create(Registries.STRUCTURE,SpaceFabric.id(name)));
+                var random=net.minecraft.world.level.levelgen.RandomState.create(generator.generatorSettings().value(),access.lookupOrThrow(Registries.NOISE),seed);
+                net.minecraft.world.level.levelgen.structure.StructureStart start=null;
+                for(int attempt=0;attempt<32&&(start==null||!start.isValid());attempt++)start=holder.value().generate(holder,PlanetDimensions.key(Planet.VENUS),access,generator,generator.getBiomeSource(),random,templates,seed,new net.minecraft.world.level.ChunkPos(attempt*16,attempt*8),0,height,holder.value().biomes()::contains);
+                assertNotNull(start);assertTrue(start.isValid(),name+" seed "+seed);
+                if(name.equals("venus_cloud_station")){assertEquals(300,start.getPieces().getFirst().getBoundingBox().minY());assertTrue(start.getPieces().getFirst().getBoundingBox().maxY()<=312);}
+                else assertTrue(start.getPieces().stream().anyMatch(p->p instanceof dev.vic17usd.spacefabric.worldgen.structure.VenusSurfacePiece piece&&piece.isPlot()));
+            }
+        }
+    }
+    @Test void dockAndNaturalExpeditionStatePersistWithoutTurningCraftedConsolesIntoMissionSites() {
+        var dock=thermalMachine(ColonyContent.Machine.DOCK,0);dock.toggleDock();dock.setItem(8,new ItemStack(dev.vic17usd.spacefabric.industry.IndustryContent.COMPOSITE_PLATE,3));
+        var restored=assertInstanceOf(ColonyMachineBlockEntity.class,net.minecraft.world.level.block.entity.BlockEntity.loadStatic(dock.getBlockPos(),dock.getBlockState(),dock.saveWithFullMetadata(registries),registries));assertTrue(restored.dockEnabled());assertEquals(3,restored.getItem(8).getCount());
+        var console=thermalMachine(ColonyContent.Machine.SURVEY,0);assertEquals(0,console.naturalMission());var tag=console.saveWithFullMetadata(registries);tag.putInt("NaturalMission",3);
+        var natural=assertInstanceOf(ColonyMachineBlockEntity.class,net.minecraft.world.level.block.entity.BlockEntity.loadStatic(console.getBlockPos(),console.getBlockState(),tag,registries));assertEquals(3,natural.naturalMission());
+        var crafted=thermalMachine(ColonyContent.Machine.SURVEY,0);crafted.restoreThermal(new ItemStack(ColonyContent.SURVEY));assertEquals(0,crafted.naturalMission());
+    }
+
+    @Test void fourHourResourceNetworkSoakRecyclesCanistersAcrossHabitatRecoveryAndAlgae() {
+        var powerStores=new java.util.ArrayList<TransportBuffer>();var waterStores=new java.util.ArrayList<TransportBuffer>();var graphs=new java.util.ArrayList<TransportGraph>();
+        for(int i=0;i<11;i++){var buffer=new TransportBuffer(TransportChannel.ENERGY);buffer.insert(TransportResource.POWER,24000);powerStores.add(buffer);graphs.add(transportGraph(buffer,i*10));}
+        for(int i=0;i<3;i++){var buffer=new TransportBuffer(TransportChannel.LIQUID);buffer.insert(TransportResource.WATER,16000);waterStores.add(buffer);graphs.add(transportGraph(buffer,200+i*10));}
+        var oxygen=new TransportBuffer(TransportChannel.GAS);oxygen.insert(TransportResource.OXYGEN,16000);graphs.add(transportGraph(oxygen,300));
+        var co2=new TransportBuffer(TransportChannel.GAS);co2.select(TransportResource.CARBON_DIOXIDE);graphs.add(transportGraph(co2,400));
+        var habitat=thermalMachine(ColonyContent.Machine.HABITAT,0);var recycler=thermalMachine(ColonyContent.Machine.RECLAIMER,1);var algae=thermalMachine(ColonyContent.Machine.GREENHOUSE,2);
+        recycler.setItem(2,new ItemStack(dev.vic17usd.spacefabric.maintenance.MaintenanceContent.FILTER,6));
+        var habitatPort=transportPort(2,1);var recyclerPort=transportPort(2,1);var algaePort=transportPort(2,1);
+        var environment=new ColonyEnvironment(true,false,false,false,true,true,habitat.support());
+        for(int second=0;second<14400;second++){
+            habitatPort.exportOutputs(habitat,graphs);recyclerPort.exportOutputs(recycler,graphs);algaePort.exportOutputs(algae,graphs);
+            habitatPort.supplyInputs(habitat,graphs,true);recyclerPort.supplyInputs(recycler,graphs,true);algaePort.supplyInputs(algae,graphs,true);
+            habitat.refillFromItems(true);assertTrue(habitat.support().tick(75,2,true),"Resource exhaustion at second "+second);
+            for(int tick=0;tick<20;tick++){recycler.processTick(environment);algae.processTick(environment);}
+        }
+        assertEquals(5,recycler.completedBatches());assertEquals(5,algae.completedBatches());
+        assertEquals(6,carrierCount(false,habitat,recycler,algae,habitatPort,recyclerPort,algaePort));assertEquals(3,carrierCount(true,habitat,recycler,algae,habitatPort,recyclerPort,algaePort));
+        assertTrue(oxygen.state().amount()>0);assertTrue(waterStores.stream().mapToInt(b->b.state().amount()).sum()>0);assertTrue(powerStores.stream().mapToInt(b->b.state().amount()).sum()>0);
+        assertTrue(recycler.completedBatches()*2400<=28800/2);
+    }
+
 }

@@ -34,6 +34,11 @@ public abstract class PlanetFogMixin {
         }
         var planet = PlanetDimensions.find(level).orElse(null);
         if (planet != Planet.MARS && planet != Planet.VENUS) return;
+        if(planet==Planet.VENUS&&camera.position().y>=260){
+            FogData layer=callback.getReturnValue();float end=camera.position().y>340?128:64;
+            layer.environmentalStart=0;layer.environmentalEnd=end;layer.skyEnd=end;layer.cloudEnd=end;
+            layer.color.set(.78F,.69F,.43F,1);return;
+        }
         if (!level.canSeeSky(BlockPos.containing(camera.position()))) return;
         float intensity = level.getRainLevel(delta.getGameTimeDeltaPartialTick(false));
         if (intensity <= 0.01F) return;

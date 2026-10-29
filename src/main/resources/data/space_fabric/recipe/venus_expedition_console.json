@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "GRG",
+    "PCP",
+    "HHH"
+  ],
+  "key": {
+    "G": "minecraft:glass",
+    "R": "space_fabric:venus_research_report",
+    "P": "space_fabric:venus_composite_plate",
+    "C": "minecraft:redstone",
+    "H": "space_fabric:pressure_hull"
+  },
+  "result": {
+    "id": "space_fabric:venus_expedition_console",
+    "count": 1
+  }
+}

@@ -15,6 +15,11 @@
     "space_fabric:energy_bulkhead",
     "space_fabric:energy_tank",
     "space_fabric:machine_interface",
-    "space_fabric:venus_heat_exchanger"
+    "space_fabric:venus_heat_exchanger",
+    "space_fabric:venus_greenhouse",
+    "space_fabric:venus_life_reclaimer",
+    "space_fabric:venus_service_dock",
+    "space_fabric:venus_expedition_console",
+    "space_fabric:venus_grow_lamp"
   ]
 }

@@ -15,15 +15,16 @@ La industria de Venus se amplía en **0.34.0** con captura y separación de gase
 refinado de azufre, cerámica y compuestos para bases, mantenimiento, trajes y
 la mejora de cohete existente. [Cadena implementada](venus-industry.md).
 
-## Entrega 2: invernaderos, mantenimiento y almacenamiento — mantenimiento inicial implementado
+## Entrega 2: invernaderos, mantenimiento y almacenamiento — Venus implementado en 0.39.0
 
 - Depósitos conectados y pasamuros certificados **implementados en 0.37.0**:
   transporte de agua, gases y energía sin perforar el cierre de la habitación,
   con almacenamiento persistente, envases reciclados, redes acotadas y prioridad
   para el soporte vital. [Guía de automatización](industrial-automation.md).
-- Invernadero: riego desde depósitos, iluminación, consumo de agua y crecimiento
-  condicionado por presión/temperatura. Integración gradual de vegetación y gases,
-  evitando que unas pocas plantas produzcan oxígeno ilimitado.
+- Invernadero hidropónico y cultivo de algas **implementados en 0.39.0**: luz,
+  agua, energía, habitación regulada y entradas reales de CO₂. Recuperación parcial
+  de respiración con filtros y depósito de residuos por controlador.
+  [Colonia y circuitos](venus-colony-expansion.md).
 - Venus: filtros reemplazables, revestimientos y reparación de máquinas expuestas
   implementados en **0.33.0**, con avisos y protección del recinto certificado.
   [Guía y límites](venus-maintenance.md). Las redes industriales se incorporan en
@@ -67,7 +68,12 @@ carcasa de mayor resistencia. El rover no se obtiene solo con un cambio de textu
 Validación: mirar desde dentro y con F5, subir/bajar, guardar/reconectar, recargar,
 transportar carga y atravesar pendientes marcianas sin atravesar bloques.
 
-## Entrega 4: expediciones y contratos — diseñada
+## Entrega 4: expediciones y contratos — tres expediciones venusianas implementadas en 0.39.0
+
+Las consolas naturales del laboratorio, refugio de recuperación y estación
+atmosférica admiten objetivos de reparación/producción y recompensa única por
+jugador. Los contratos generales de la tabla y los rescates de NPC quedan como
+ampliaciones. La estación de servicio y el aerostato también están implementados.
 
 | Marte | Venus | Recompensa propuesta |
 |---|---|---|

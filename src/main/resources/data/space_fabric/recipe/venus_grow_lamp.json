@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "GCG",
+    "RLR",
+    "GCG"
+  ],
+  "key": {
+    "G": "minecraft:glass",
+    "C": "minecraft:copper_ingot",
+    "R": "minecraft:redstone",
+    "L": "minecraft:glowstone"
+  },
+  "result": {
+    "id": "space_fabric:venus_grow_lamp",
+    "count": 1
+  }
+}

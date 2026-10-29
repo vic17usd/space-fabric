@@ -26,6 +26,10 @@ public final class RoverEntity extends Entity implements MenuProvider {
     public static final EntityType<RoverEntity> TYPE=Registry.register(BuiltInRegistries.ENTITY_TYPE,SpaceFabric.id("venus_rover"),
             EntityType.Builder.of(RoverEntity::new,MobCategory.MISC).sized(4.04F,2.92F).clientTrackingRange(12).updateInterval(1).fireImmune()
                     .build(ResourceKey.create(Registries.ENTITY_TYPE,SpaceFabric.id("venus_rover"))));
+    public static final EntityType<RoverEntity> AEROSTAT_TYPE=Registry.register(BuiltInRegistries.ENTITY_TYPE,SpaceFabric.id("venus_aerostat"),
+            EntityType.Builder.of(RoverEntity::new,MobCategory.MISC).sized(5.8F,7.4F).clientTrackingRange(16).updateInterval(1).fireImmune()
+                    .build(ResourceKey.create(Registries.ENTITY_TYPE,SpaceFabric.id("venus_aerostat"))));
+    public boolean aerial(){return getType()==AEROSTAT_TYPE;}
     private static final EntityDataAccessor<Integer> ENERGY=SynchedEntityData.defineId(RoverEntity.class,EntityDataSerializers.INT),
             OXYGEN=SynchedEntityData.defineId(RoverEntity.class,EntityDataSerializers.INT),COOLANT=SynchedEntityData.defineId(RoverEntity.class,EntityDataSerializers.INT),
             HULL=SynchedEntityData.defineId(RoverEntity.class,EntityDataSerializers.INT);
@@ -85,16 +89,19 @@ public final class RoverEntity extends Entity implements MenuProvider {
         if(pilot!=null) {
             var input=pilot.getLastClientInput();throttle=(input.forward()?1:0)-(input.backward()?1:0);steer=(input.left()?1:0)-(input.right()?1:0);brake=input.jump();
         }
-        speed=RoverSystems.speed(speed,throttle,pilot!=null&&state.energy()>0&&state.hull()>0,brake);
+        speed=RoverSystems.speed(speed,throttle,pilot!=null&&state.energy()>0&&state.hull()>0,brake&&!aerial());
         if(Math.abs(speed)<.001)speed=0;
-        if(pilot!=null&&Math.abs(speed)>.005)setYRot(getYRot()-steer*2.2F*(speed<0?-1:1));
+        if(pilot!=null&&(aerial()||Math.abs(speed)>.005))setYRot(getYRot()-steer*2.2F*(speed<0?-1:1));
         var forward=new Vec3(0,0,speed).yRot((float)Math.toRadians(-getYRot()));
-        double dy=(onGround()?-.08:getDeltaMovement().y)-getGravity();
+        double dy=aerial()?dev.vic17usd.spacefabric.atmosphere.VenusLayers.flightVertical(pilot==null?0:pilot.getXRot(),throttle,brake,
+            state.energy()>0&&state.hull()>0&&planet()==Planet.VENUS,getDeltaMovement().y):(onGround()?-.08:getDeltaMovement().y)-getGravity();
+        if(aerial()&&getY()>=340)dy=Math.min(0,dy);
         setDeltaMovement(forward.x,Math.max(-1.5,dy),forward.z);move(MoverType.SELF,getDeltaMovement());
         if(horizontalCollision)speed*=.3;
         if(onGround())setDeltaMovement(getDeltaMovement().multiply(1,0,1));
         resetFallDistance();getPassengers().forEach(Entity::resetFallDistance);
         var after=state.tick(pilot!=null,Math.abs(speed)>.005,planet(),tickCount);
+        if(aerial()&&!onGround())after=new RoverSystems.State(after.energy()-1,after.oxygen(),after.coolant(),after.hull());
         if(tickCount%20==0&&!RoverSystems.rated(planet(),getY()))after=new RoverSystems.State(after.energy(),after.oxygen(),after.coolant(),after.hull()-5);
         restoreSystems(after);
         if(pilot!=null&&tickCount%20==0)pilot.sendOverlayMessage(Component.translatable(protects()?"rover.space_fabric.telemetry":"rover.space_fabric.warning",after.energy(),after.oxygen(),after.coolant(),after.hull()));
@@ -111,7 +118,7 @@ public final class RoverEntity extends Entity implements MenuProvider {
     @Override public boolean hurtServer(ServerLevel level,DamageSource source,float amount) {
         if(isRemoved()||!Float.isFinite(amount)||amount<=0)return false;
         if(source.getEntity() instanceof Player player&&player.isSecondaryUseActive()&&!isVehicle()&&Math.abs(speed)<.01) {
-            if(!player.isCreative())spawnAtLocation(level,RoverItem.packed(systems()));
+            if(!player.isCreative())spawnAtLocation(level,RoverItem.packed(systems(),aerial()));
             for(var stack:inventory.getItems())if(!stack.isEmpty())spawnAtLocation(level,stack.copy());
             inventory.clearContent();discard();return true;
         }
@@ -119,7 +126,7 @@ public final class RoverEntity extends Entity implements MenuProvider {
     }
     @Override protected void addAdditionalSaveData(ValueOutput output){output.store("RoverSystems",RoverSystems.State.CODEC,systems());ContainerHelper.saveAllItems(output,inventory.getItems());}
     @Override protected void readAdditionalSaveData(ValueInput input){restoreSystems(input.read("RoverSystems",RoverSystems.State.CODEC).orElse(RoverSystems.State.EMPTY));inventory.clearContent();ContainerHelper.loadAllItems(input,inventory.getItems());speed=0;setDeltaMovement(Vec3.ZERO);}
-    @Override public Component getDisplayName(){return Component.translatable("entity.space_fabric.venus_rover");}
+    @Override public Component getDisplayName(){return Component.translatable(aerial()?"entity.space_fabric.venus_aerostat":"entity.space_fabric.venus_rover");}
     @Override public AbstractContainerMenu createMenu(int id,Inventory inventory,Player player){return new dev.vic17usd.spacefabric.menu.RoverMenu(id,inventory,this);}
     public static void initialize(){ }
 }

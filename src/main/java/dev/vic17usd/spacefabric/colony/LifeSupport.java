@@ -6,7 +6,10 @@ public final class LifeSupport {
     public enum Failure { NONE, OXYGEN, POWER, COOLANT, VOLUME }
     private Failure failure=Failure.NONE;
     public Failure failure(){return failure;}
-    private int oxygen,energy,coolant,volume;
+    private int oxygen,energy,coolant,volume,respired;
+    public int respired(){return respired;}
+    public void restoreRespired(int value){respired=Math.clamp(value,0,CAPACITY);}
+    public boolean reclaim(){if(respired<4800)return false;respired-=4800;return true;}
     private boolean pressurized;
     public int oxygen(){return oxygen;} public int energy(){return energy;} public int coolant(){return coolant;}
     public boolean pressurized(){return pressurized;}
@@ -28,6 +31,7 @@ public final class LifeSupport {
         int breath=Math.max(0,occupants), power=venus?15:5, cooling=venus?5:0;
         failure=oxygen<startup+breath?Failure.OXYGEN:energy<power?Failure.POWER:coolant<cooling?Failure.COOLANT:Failure.NONE;
         if(failure!=Failure.NONE){pressurized=false;return false;}
+        respired=(int)Math.min(CAPACITY,(long)respired+breath);
         oxygen-=startup+breath;energy-=power;coolant-=cooling;pressurized=true;return true;
     }
 }

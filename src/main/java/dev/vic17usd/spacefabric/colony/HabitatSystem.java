@@ -39,6 +39,11 @@ public final class HabitatSystem {
         }
         return best;
     }
+    public static ColonyMachineBlockEntity machineController(ServerLevel level,BlockPos pos) {
+        var machines=ACTIVE.get(level);if(machines==null)return null;
+        return machines.values().stream().filter(m->!m.isRemoved()&&m.getBlockPos().distManhattan(pos)<=3*SealScanner.MAX_RADIUS+1&&m.validate(level)&&m.enclosure().boundary().containsKey(pos))
+            .min(Comparator.comparingLong(m->m.getBlockPos().asLong())).orElse(null);
+    }
     public static boolean sheltersMachine(ServerLevel level,BlockPos pos) {
         var machines=ACTIVE.get(level);if(machines==null)return false;
         for(var controller:machines.values())if(!controller.isRemoved()&&controller.getBlockPos().distManhattan(pos)<=3*SealScanner.MAX_RADIUS+1&&controller.sheltersMachine(pos))return true;

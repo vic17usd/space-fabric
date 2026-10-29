@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "space_fabric:venus",
+    "space_fabric:venus_fumaroles",
+    "space_fabric:venus_obsidian_basins"
+  ]
+}

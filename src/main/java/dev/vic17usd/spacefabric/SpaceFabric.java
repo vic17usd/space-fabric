@@ -50,6 +50,7 @@ public final class SpaceFabric implements ModInitializer {
         dev.vic17usd.spacefabric.industry.IndustryContent.initialize();
         dev.vic17usd.spacefabric.recovery.RecoveryContent.initialize();
         dev.vic17usd.spacefabric.transport.TransportContent.initialize();
+        dev.vic17usd.spacefabric.colony.ExpansionContent.initialize();
         dev.vic17usd.spacefabric.menu.ModMenus.initialize();
         ModCreativeTabs.initialize();
         dev.vic17usd.spacefabric.equipment.SuitEquipment.initialize();

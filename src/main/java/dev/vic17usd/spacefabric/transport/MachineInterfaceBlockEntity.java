@@ -50,7 +50,7 @@ public final class MachineInterfaceBlockEntity extends BaseContainerBlockEntity 
         if(present.isPresent())return present.get();
         var matching=choices.stream().filter(f->f.inputs().stream().anyMatch(p->p.slot()==0&&TransportResource.of(p.stack())!=TransportResource.NONE&&machine.getItem(p.slot()).is(p.item()))).findFirst();
         if(matching.isPresent())return matching.get();
-        return choices.stream().filter(f->f.id().equals("electrolysis")).findFirst().orElse(choices.getFirst());
+        return choices.stream().filter(f->f.id().equals("electrolysis")||machine.kind()==ColonyContent.Machine.GREENHOUSE&&f.id().equals("algal_oxygen")).findFirst().orElse(choices.getFirst());
     }
     private static boolean outputFits(ItemStack old,Item item,int count){return old.isEmpty()||old.is(item)&&old.getCount()+count<=old.getMaxStackSize();}
     /** Export completed supplies first; solid products and recipe ingredients remain untouched. */
@@ -91,6 +91,9 @@ public final class MachineInterfaceBlockEntity extends BaseContainerBlockEntity 
         if(machine.kind()==ColonyContent.Machine.HABITAT) {
             inputs=new ArrayList<>(List.of(new ColonyRecipes.Part(0,ColonyContent.OXYGEN_CANISTER,1),new ColonyRecipes.Part(1,ColonyContent.CHARGED_POWER_CELL,1)));
             if(venus)inputs.add(new ColonyRecipes.Part(2,ColonyContent.WATER_CANISTER,1));
+        } else if(machine.kind()==ColonyContent.Machine.DOCK) {
+            if(!machine.dockEnabled()){status=Status.DISABLED;return false;}
+            inputs=List.of(new ColonyRecipes.Part(0,ColonyContent.CHARGED_POWER_CELL,1),new ColonyRecipes.Part(1,ColonyContent.OXYGEN_CANISTER,1),new ColonyRecipes.Part(2,dev.vic17usd.spacefabric.recovery.RecoveryContent.CHILLED_COOLANT,1));
         } else {
             var formula=formula(machine);if(formula==null){status=Status.MATERIALS;return false;}
             resolved=formula.id();inputs=formula.inputs();

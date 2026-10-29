@@ -17,8 +17,10 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 public final class RoverRenderer extends EntityRenderer<RoverEntity,RoverRenderer.State> {
     public static final String[] PARTS={"body","glass","left_front","left_middle","left_rear","right_front","right_middle","right_rear"};
     private final RocketFleetModel[] parts=new RocketFleetModel[8];
+    private final RocketFleetModel aerostat=new RocketFleetModel("/assets/space_fabric/model_mesh/venus_aerostat_body.json"),
+        aerostatGlass=new RocketFleetModel("/assets/space_fabric/model_mesh/venus_aerostat_glass.json");
     private final double[][] pivots=new double[8][3];
-    public static final class State extends EntityRenderState {float yaw,roll;}
+    public static final class State extends EntityRenderState {float yaw,roll;boolean aerial;}
     public RoverRenderer(EntityRendererProvider.Context context) {
         super(context);shadowRadius=1.5F;
         for(int i=0;i<8;i++) {
@@ -30,9 +32,14 @@ public final class RoverRenderer extends EntityRenderer<RoverEntity,RoverRendere
         }
     }
     @Override public State createRenderState(){return new State();}
-    @Override public void extractRenderState(RoverEntity entity,State state,float delta){super.extractRenderState(entity,state,delta);state.yaw=entity.getYRot();state.roll=RoverView.wheelRoll(entity,delta);}
+    @Override public void extractRenderState(RoverEntity entity,State state,float delta){super.extractRenderState(entity,state,delta);state.aerial=entity.aerial();state.yaw=entity.getYRot();state.roll=RoverView.wheelRoll(entity,delta);}
     @Override public void submit(State state,PoseStack poses,SubmitNodeCollector collector,CameraRenderState camera) {
         poses.pushPose();poses.mulPose(Axis.YP.rotationDegrees(-state.yaw));
+        if(state.aerial){
+            collector.submitCustomGeometry(poses,RenderTypes.entityCutout(aerostat.texture),(pose,output)->aerostat.renderGeometry(pose,output,state.lightCoords,OverlayTexture.NO_OVERLAY));
+            collector.submitCustomGeometry(poses,RenderTypes.entityTranslucent(aerostatGlass.texture),(pose,output)->aerostatGlass.renderGeometry(pose,output,state.lightCoords,OverlayTexture.NO_OVERLAY));
+            poses.popPose();super.submit(state,poses,collector,camera);return;
+        }
         // Glass is submitted last so the opaque cabin and wheels can be seen through it.
         for(int pass=0;pass<8;pass++) {
             int i=pass==7?1:pass==0?0:pass+1;var part=parts[i];var pivot=pivots[i];

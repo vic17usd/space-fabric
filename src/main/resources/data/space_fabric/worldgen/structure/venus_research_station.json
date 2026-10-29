@@ -1,0 +1,19 @@
+{
+  "type": "space_fabric:venus_surface",
+  "biomes": "#space_fabric:has_structure/venus_research_station",
+  "step": "surface_structures",
+  "spawn_overrides": {},
+  "terrain_adaptation": "none",
+  "width": 13,
+  "height": 6,
+  "depth": 13,
+  "padding": 8,
+  "max_terrain_relief": 8,
+  "tiles": [
+    {
+      "template": "space_fabric:venus/colony/venus_research_station",
+      "x": 0,
+      "z": 0
+    }
+  ]
+}

@@ -39,6 +39,7 @@ public final class ColonyMachineMenu extends AbstractContainerMenu {
         var slot=slots.get(index);if(!slot.hasItem())return ItemStack.EMPTY;
         var stack=slot.getItem();var copy=stack.copy();boolean moved=false;
         if(index<9)moved=moveItemStackTo(stack,9,slots.size(),true);
+        else if(kind()==ColonyContent.Machine.DOCK&&ColonyRecipes.accepts(kind(),8,stack))moved=moveItemStackTo(stack,8,9,false);
         else for(int i=0;i<3;i++)if(ColonyRecipes.accepts(kind(),i,stack)){moved=moveItemStackTo(stack,i,i+1,false);break;}
         if(!moved)return ItemStack.EMPTY;
         if(stack.isEmpty())slot.setByPlayer(ItemStack.EMPTY);else slot.setChanged();slot.onTake(player,stack);return copy;

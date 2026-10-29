@@ -121,3 +121,6 @@ nativos y emite sus vértices reales: seis ruedas en tres ángulos, nueve rayos 
 visión libres y paredes interiores opacas. Quedan pendientes de observar en una
 partida real la conducción en pendientes, el confort de cámara, la recuperación
 completa con jugadores y la sincronización multijugador.
+
+Desde **0.39.0** existe una estación para recargar, reparar y descargar vehículos
+aparcados, además de un aerostato independiente. [Ampliación de la colonia](venus-colony-expansion.md).

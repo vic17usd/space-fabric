@@ -53,6 +53,20 @@ public final class RoverAssetsCheck {
         }
         for(var ray:List.of(new Vector3f(1,0,0),new Vector3f(-1,0,0),new Vector3f(0,1,0),new Vector3f(0,-1,0),new Vector3f(0,0,-1)))
             if(!hit(body,ray))throw new AssertionError("Missing cabin surface: "+ray);
+        var airBody=new ArrayList<Vector3f>();
+        for(String part:new String[]{"body","glass"}){
+            var mesh=new RocketFleetModel("/assets/space_fabric/model_mesh/venus_aerostat_"+part+".json");
+            VertexConsumer sink=(VertexConsumer)Proxy.newProxyInstance(VertexConsumer.class.getClassLoader(),new Class<?>[]{VertexConsumer.class},(proxy,method,v)->{
+                if(!method.getName().equals("addVertex")||v.length!=11)throw new AssertionError(method);
+                var point=new Vector3f((float)v[0],(float)v[1],(float)v[2]);
+                if(!point.isFinite()||Math.abs(point.x)>2.9||Math.abs(point.z)>2.9||point.y<0||point.y>7.4)throw new AssertionError("Aerostat bounds: "+point);
+                if(part.equals("body"))airBody.add(point);return null;
+            });
+            mesh.renderGeometry(new PoseStack().last(),sink,456,123);
+            if(mesh.faceCount()==0)throw new AssertionError("Empty aerostat mesh");
+        }
+        for(int yaw:new int[]{-25,0,25})for(int pitch:new int[]{-10,0,10})if(hit(airBody,new Vector3f((float)Math.tan(Math.toRadians(yaw)),(float)Math.tan(Math.toRadians(pitch)),1).normalize()))throw new AssertionError("Blocked aerostat visor");
+        for(var ray:List.of(new Vector3f(1,0,0),new Vector3f(-1,0,0),new Vector3f(0,1,0),new Vector3f(0,-1,0),new Vector3f(0,0,-1)))if(!hit(airBody,ray))throw new AssertionError("Open aerostat cabin");
         System.out.println("OK: original console/rover atlases, native cuboids, "+count+" mesh vertices, six animated axles and nine unobstructed visor rays verified without GPU.");
     }
     private static boolean hit(List<Vector3f> vertices,Vector3f ray) {

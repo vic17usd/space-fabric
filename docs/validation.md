@@ -1,8 +1,8 @@
 # Resultado de validación de esta base
 
-Última entrega: **0.38.0**, 525 pruebas JUnit aprobadas, once comprobaciones por
-CPU y 1.142 JSON válidos. Los apartados siguientes conservan el historial de
-la base y sus ampliaciones; la validación de refrigeración industrial está al final del documento.
+Última entrega: **0.39.0**, 541 pruebas JUnit aprobadas, once comprobaciones por
+CPU y 1.186 JSON válidos. Los apartados siguientes conservan el historial de
+la base y sus ampliaciones; la validación de ampliación de la colonia está al final del documento.
 
 Verificado con JDK 25, Gradle 9.8.2, Loom 1.19.3, Minecraft 26.1,
 Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
@@ -496,3 +496,43 @@ espacial de propietarios, los mensajes de transición, el montaje físico comple
 los controles de inventario y la apariencia necesitan también comprobación en juego;
 las pruebas con el presupuesto compartido inyectan explícitamente la pertenencia
 al recinto. Los valores térmicos son unidades de juego, no temperaturas físicas.
+
+
+Ampliación de la colonia de Venus, versión 0.39.0:
+
+- `./gradlew build --console=plain`: **541 pruebas JUnit**, cero fallos, errores
+  u omisiones. Once comprobaciones de modelos y renderizado por CPU aprobadas.
+- `python3 tools/validate_resources.py`: **1.186 JSON** válidos, referencias de
+  modelos, texturas, tablas de loot y traducciones coherentes.
+- Invernadero: receta de trigo y algas, dependencia de recinto regulado y luz,
+  pausa sin consumo y conservación de semillas/recipientes. El contexto de recinto
+  e iluminación se inyecta en las pruebas de producción; no es una partida real.
+- Recuperador: gasto único de 4.800 unidades de respiración compartidas, filtros,
+  salida bloqueada, persistencia de residuos, límite de recuperación y ausencia
+  de producción de residuos cuando el soporte vital falla.
+- Estación: apagada de fábrica, servicio mediante recipientes y reservas nativas
+  del rover, conservación de carga/componentes, reparación, salidas bloqueadas,
+  integración con las redes y persistencia del estado/repuestos. La selección
+  espacial del vehículo aparcado y las interacciones necesitan comprobación en juego.
+- Aerostato: tipo de entidad y estado empaquetado, control vertical acotado,
+  presión/temperatura por altura sin oxígeno respirable. Emisión de vértices
+  nativos, límites de la caja de colisión, nueve rayos libres por el visor y
+  superficies interiores opacas comprobados por CPU. Vuelo no observado con GPU.
+- Expediciones: registro persistente de premio por UUID/tipo, sin repetición tras
+  recargar el ledger; recetas, estructura, paleta y entidad de consola naturales.
+  Generación nativa de laboratorio/refugio/estación en semillas 42, 1729 y 8128;
+  la estación atmosférica produce una pieza con cota inferior Y=300. El pool
+  jigsaw usa tamaño 1 y altura inicial 301 para compensar su desplazamiento nativo.
+- Dos pruebas largas de cuatro horas simuladas: una avanza LifeSupport con dos
+  ocupantes, cuentas exactas de consumo y restauraciones periódicas; otra ejecuta
+  soporte vital, recuperador, algas e interfaces sobre depósitos reales de la
+  capa de transporte. Esta última conserva seis bombonas y tres baterías, termina
+  cinco ciclos de recuperación/fotosíntesis y mantiene suministros disponibles.
+  Ambas pruebas reponen recursos desde sus fuentes preparadas; no equivalen a
+  cuatro horas ejecutando todos los sistemas del mundo ni certifican autonomía
+  con calor, corrosión, entidades y chunks en una partida.
+
+No se ha realizado una sesión gráfica ni multijugador. Se incluye una lista
+reproducible de comprobaciones pendientes en `docs/venus-colony-playtest.md`.
+No se afirma haber validado entrada de jugador, vuelo, mensajes, recompensas por
+clic, toda la instalación física o rendimiento de una colonia real con GPU.

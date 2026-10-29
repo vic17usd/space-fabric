@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PPP",
+    "TRT",
+    "BCB"
+  ],
+  "key": {
+    "P": "space_fabric:venus_composite_plate",
+    "T": "space_fabric:empty_canister",
+    "R": "space_fabric:venus_research_report",
+    "B": "space_fabric:charged_power_cell",
+    "C": "space_fabric:venus_cooling_unit"
+  },
+  "result": {
+    "id": "space_fabric:venus_aerostat",
+    "count": 1
+  }
+}
