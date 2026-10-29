@@ -14,6 +14,13 @@
     "space_fabric:venus_sulfur_processor",
     "space_fabric:venus_ceramic_kiln",
     "space_fabric:venus_composite_hull",
-    "space_fabric:venus_cooling_unit"
+    "space_fabric:venus_cooling_unit",
+    "space_fabric:liquid_bulkhead",
+    "space_fabric:liquid_tank",
+    "space_fabric:gas_bulkhead",
+    "space_fabric:gas_tank",
+    "space_fabric:energy_bulkhead",
+    "space_fabric:energy_tank",
+    "space_fabric:machine_interface"
   ]
 }

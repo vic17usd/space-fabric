@@ -17,16 +17,17 @@ la mejora de cohete existente. [Cadena implementada](venus-industry.md).
 
 ## Entrega 2: invernaderos, mantenimiento y almacenamiento — mantenimiento inicial implementado
 
-- Depósitos conectados y pasamuros certificados: transporte de líquidos/energía
-  sin perforar el cierre de la habitación. Red acotada, descarga de chunks segura
-  y almacenamiento persistente, con prioridad para el soporte vital.
+- Depósitos conectados y pasamuros certificados **implementados en 0.37.0**:
+  transporte de agua, gases y energía sin perforar el cierre de la habitación,
+  con almacenamiento persistente, envases reciclados, redes acotadas y prioridad
+  para el soporte vital. [Guía de automatización](industrial-automation.md).
 - Invernadero: riego desde depósitos, iluminación, consumo de agua y crecimiento
   condicionado por presión/temperatura. Integración gradual de vegetación y gases,
   evitando que unas pocas plantas produzcan oxígeno ilimitado.
 - Venus: filtros reemplazables, revestimientos y reparación de máquinas expuestas
   implementados en **0.33.0**, con avisos y protección del recinto certificado.
-  [Guía y límites](venus-maintenance.md). Los intercambiadores y redes industriales
-  independientes quedan para la siguiente ampliación.
+  [Guía y límites](venus-maintenance.md). Las redes industriales se incorporan en
+  0.37.0; los intercambiadores térmicos de base quedan para la siguiente ampliación.
 - Marte: acumuladores nocturnos y limpieza de paneles tras tormentas de polvo.
   Registrar duración de tormentas y consumo; no dañar estructuras sin avisos de juego.
 

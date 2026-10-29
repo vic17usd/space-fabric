@@ -1,11 +1,11 @@
-# Colonias de Marte y Venus — 0.29.0, actualizada en 0.34.0
+# Colonias de Marte y Venus — 0.29.0, actualizada en 0.37.0
 
 Esta entrega construye el ciclo jugable inicial: hielo → agua → oxígeno e
 hidrógeno, baterías, habitaciones presurizadas y análisis de muestras. Incluye
 recetas, texturas originales, inventarios persistentes y avances. El diseño de
 las siguientes entregas está en [el plan de desarrollo](planet-development-roadmap.md).
 
-Instala `space-fabric-0.34.0.jar` en cliente y servidor con Fabric API para 26.1.
+Instala `space-fabric-0.37.0.jar` en cliente y servidor con Fabric API para 26.1.
 Los bloques se pueden fabricar en partidas existentes. El nuevo hielo subterráneo
 aparece en chunks nuevos de Marte; también se admite hielo vanilla y agua traída
 mediante cubos, así que el ciclo no depende de regenerar una dimensión.
@@ -34,7 +34,9 @@ En Marte se admiten cerramientos de bloques completos comunes. En Venus la
 paneles, ventanas, puertas de esclusa cerradas y carcasas de las máquinas coloniales.
 Los muebles normales pueden quedar dentro de esa envolvente certificada.
 Una losa, rejilla, puerta común o conducto abierto no equivale a una pared sellada.
-Mantén las tolvas dentro del cerramiento; todavía no existen pasamuros de tuberías.
+Mantén las tolvas dentro del cerramiento. Desde 0.37.0 puedes cruzar las paredes
+con [pasamuros sellados de líquidos, gases y energía](industrial-automation.md),
+incluidos depósitos e interfaces de alimentación automática.
 
 El escaneo tiene límites de 512 bloques de aire y 12 bloques por eje desde la
 entrada. Para Venus, la envolvente certificada también debe contener como máximo

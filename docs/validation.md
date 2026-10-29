@@ -1,8 +1,8 @@
 # Resultado de validación de esta base
 
-Última entrega: **0.36.0**, 498 pruebas JUnit aprobadas, once comprobaciones por
-CPU y 1.061 JSON válidos. Los apartados siguientes conservan el historial de
-la base y sus ampliaciones; la validación de consola y rover está al final del documento.
+Última entrega: **0.37.0**, 514 pruebas JUnit aprobadas, once comprobaciones por
+CPU y 1.136 JSON válidos. Los apartados siguientes conservan el historial de
+la base y sus ampliaciones; la validación de automatización industrial está al final del documento.
 
 Verificado con JDK 25, Gradle 9.8.2, Loom 1.19.3, Minecraft 26.1,
 Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
@@ -428,3 +428,40 @@ jugadores, entrega con inventario lleno, sustitución de consola, conducción en
 pendientes, colisiones, confort/interpolación de cámara, tecla V, aspecto con GPU
 u optimizadores y sincronización multijugador. Las pruebas de registro y menús
 no sustituyen esos recorridos interactivos.
+
+
+Automatización industrial, versión 0.37.0:
+
+- Compilación completa: **514 pruebas JUnit**, cero fallos, errores u omisiones,
+  once comprobaciones por CPU y **1.136 JSON** válidos.
+- Diez bloques con recetas y loot nativos, tres canales, depósitos con tipo y
+  cantidades persistentes, válvulas axiales y una interfaz para las máquinas
+  coloniales. Se comprueban etiquetas, herramientas y modelos de seis brazos.
+- Los pasamuros sustituyen paneles certificados sin un estado intermedio de
+  aire. La prueba de cierre usa los estados reales y la función de sustitución:
+  cerrar o alimentar la válvula con redstone mantiene el recinto; sustituirla
+  por una tubería estrecha o aire invalida inmediatamente el cierre guardado.
+- El grafo se prueba con ramas y ciclos, depósitos alcanzados por caminos
+  repetidos, tipos incompatibles incluso vacíos, válvulas cerradas, canales
+  distintos, límites de 128 nodos y áreas descargadas que rechazan toda lectura.
+  Una transferencia fallida no cambia las cantidades.
+- El presupuesto de 64 interfaces rota por grupos y atiende primero el soporte
+  vital seleccionado. La prueba nativa de escasez entrega la única batería
+  disponible al controlador antes que al refrigerador industrial.
+- Un ciclo con BlockEntities reales alimenta un electrolizador desde depósitos,
+  procesa su receta, almacena oxígeno/hidrógeno y abastece soporte vital venusiano.
+  Conserva cuatro bombonas y dos baterías físicas, con los consumos de agua y
+  energía esperados. Tener suministros nunca concede protección sin sala válida.
+- Los depósitos convierten cubos, bombonas y baterías con devolución de sus
+  recipientes. Capacidad, contenido incompatible, salidas bloqueadas y envases
+  faltantes impiden consumos indebidos. Los productos terminados esperan dentro
+  de la máquina mientras su depósito no tenga espacio.
+- El NBT nativo conserva contenido, filtros y slots. La función de loot real
+  copia solamente TransportTank al objeto: el inventario no se duplica. Los
+  menús filtran entradas/salidas, sincronizan cantidades y permiten Shift.
+
+Pendientes en partida real: sustitución de panel con devolución al jugador,
+montaje completo de una fábrica/base, controles de válvulas y redstone, aspecto
+con GPU, descarga/recarga de chunks durante una sesión y multijugador. Los
+ensayos por CPU usan un mundo de topología de prueba; no arrancan ServerLevel
+ni equivalen a una sesión interactiva con jugadores.

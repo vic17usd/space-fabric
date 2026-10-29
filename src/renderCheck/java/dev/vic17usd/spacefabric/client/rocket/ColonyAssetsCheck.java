@@ -24,6 +24,16 @@ public final class ColonyAssetsCheck {
         }
         for(String half:new String[]{"bottom","top"})for(String side:new String[]{"left","right"})for(String suffix:new String[]{"","_open"})
             CuboidModel.fromStream(new StringReader(Files.readString(root.resolve("models/block/airlock_door_"+half+"_"+side+suffix+".json"))));
+        for(var path:Files.list(root.resolve("models/block")).filter(p->{String n=p.getFileName().toString();return n.startsWith("liquid_")||n.startsWith("gas_")||n.startsWith("energy_")||n.equals("machine_interface.json");}).toList())
+            CuboidModel.fromStream(new StringReader(Files.readString(path)));
+        for(String channel:new String[]{"liquid","gas","energy"}) {
+            CuboidModel.fromStream(new StringReader(Files.readString(root.resolve("models/item/"+channel+"_conduit.json"))));
+            if(ImageIO.read(root.resolve("textures/block/"+channel+"_tank.png").toFile())==null)throw new AssertionError("Missing transport tank texture");
+            var state=com.google.gson.JsonParser.parseString(Files.readString(root.resolve("blockstates/"+channel+"_conduit.json"))).getAsJsonObject();
+            if(state.getAsJsonArray("multipart").size()!=7)throw new AssertionError("A conduit needs six connected arms and a core");
+            var valve=com.google.gson.JsonParser.parseString(Files.readString(root.resolve("blockstates/"+channel+"_bulkhead.json"))).getAsJsonObject();
+            if(valve.getAsJsonObject("variants").size()!=12)throw new AssertionError("Missing axial valve/redstone states");
+        }
         System.out.println("OK: native colony block models, all eight door variants and translucent pressure-window material verified without GPU.");
     }
 }

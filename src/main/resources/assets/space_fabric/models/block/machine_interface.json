@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "space_fabric:block/machine_interface",
+    "down": "space_fabric:block/machine_interface",
+    "up": "space_fabric:block/machine_interface",
+    "north": "space_fabric:block/machine_interface_target",
+    "south": "space_fabric:block/machine_interface",
+    "east": "space_fabric:block/machine_interface",
+    "west": "space_fabric:block/machine_interface"
+  }
+}

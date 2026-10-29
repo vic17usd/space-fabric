@@ -10,6 +10,8 @@ import net.minecraft.resources.Identifier;
 public final class SpaceFabricClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
+        net.minecraft.client.gui.screens.MenuScreens.register(dev.vic17usd.spacefabric.menu.ModMenus.TRANSPORT_TANK,dev.vic17usd.spacefabric.client.menu.TransportTankScreen::new);
+        net.minecraft.client.gui.screens.MenuScreens.register(dev.vic17usd.spacefabric.menu.ModMenus.MACHINE_INTERFACE,dev.vic17usd.spacefabric.client.menu.MachineInterfaceScreen::new);
         dev.vic17usd.spacefabric.client.rover.RoverView.initialize();
         net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry.register(dev.vic17usd.spacefabric.rover.RoverEntity.TYPE,dev.vic17usd.spacefabric.client.rover.RoverRenderer::new);
         net.minecraft.client.gui.screens.MenuScreens.register(dev.vic17usd.spacefabric.menu.ModMenus.FOUNDRY,dev.vic17usd.spacefabric.client.menu.FoundryScreen::new);

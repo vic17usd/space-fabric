@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "space_fabric:block/liquid_bulkhead",
+    "down": "space_fabric:block/liquid_bulkhead",
+    "up": "space_fabric:block/liquid_bulkhead",
+    "north": "space_fabric:block/liquid_bulkhead_closed",
+    "south": "space_fabric:block/liquid_bulkhead_closed",
+    "east": "space_fabric:block/liquid_bulkhead",
+    "west": "space_fabric:block/liquid_bulkhead"
+  }
+}

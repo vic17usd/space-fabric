@@ -7,6 +7,13 @@
     "space_fabric:deepslate_argentite_ore",
     "space_fabric:pentlandite_ore",
     "space_fabric:deepslate_pentlandite_ore",
-    "space_fabric:venus_composite_hull"
+    "space_fabric:venus_composite_hull",
+    "space_fabric:liquid_bulkhead",
+    "space_fabric:liquid_tank",
+    "space_fabric:gas_bulkhead",
+    "space_fabric:gas_tank",
+    "space_fabric:energy_bulkhead",
+    "space_fabric:energy_tank",
+    "space_fabric:machine_interface"
   ]
 }

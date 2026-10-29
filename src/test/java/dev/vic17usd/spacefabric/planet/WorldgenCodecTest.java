@@ -52,6 +52,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.item.crafting.Recipe;
 
+import dev.vic17usd.spacefabric.transport.*;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -2411,4 +2413,158 @@ class WorldgenCodecTest {
         assertFalse(menu.getSlot(12).mayPlace(new ItemStack(Items.DIAMOND)));assertFalse(menu.getSlot(13).mayPlace(new ItemStack(Items.DIAMOND)));
         assertFalse(menu.getSlot(0).mayPlace(new ItemStack(Items.IRON_INGOT)));assertTrue(menu.getSlot(3).mayPlace(new ItemStack(Items.IRON_INGOT)));
     }
+    @Test void allTransportBlocksHaveNativeRecipesLootAndExpectedPressureShapes() throws IOException {
+        var empty=net.minecraft.world.level.EmptyBlockGetter.INSTANCE;var origin=net.minecraft.core.BlockPos.ZERO;
+        for(var entry:TransportContent.blocks().entrySet()) {
+            String name=entry.getKey();var block=entry.getValue();
+            assertNotNull(Recipe.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("recipe/"+name)).getOrThrow());
+            assertNotNull(LootTable.DIRECT_CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("loot_table/blocks/"+name)).getOrThrow());
+            boolean pipe=block instanceof ConduitBlock;
+            assertEquals(pipe?dev.vic17usd.spacefabric.colony.SealScanner.Cell.OPEN:dev.vic17usd.spacefabric.colony.SealScanner.Cell.RATED,
+                    dev.vic17usd.spacefabric.colony.HabitatSystem.classify(block.defaultBlockState(),empty,origin));
+            if(!pipe){assertFalse(new ItemStack(Items.WOODEN_PICKAXE).isCorrectToolForDrops(block.defaultBlockState()));assertTrue(new ItemStack(Items.IRON_PICKAXE).isCorrectToolForDrops(block.defaultBlockState()));}
+        }
+        assertNotNull(net.minecraft.advancements.Advancement.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("advancement/industry/transport")).getOrThrow());
+    }
+    @Test void sealedBulkheadsStayAirtightWhenClosedOrPoweredButOrdinaryPipesBreachTheRoom() {
+        var pos=new net.minecraft.core.BlockPos(2,0,0);var changes=new java.util.HashMap<net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState>();
+        dev.vic17usd.spacefabric.colony.SealScanner.World world=p->{
+            var state=changes.get(p);
+            if(state==null)state=Math.abs(p.getX())<=2&&Math.abs(p.getY())<=2&&Math.abs(p.getZ())<=2&&(Math.abs(p.getX())==2||Math.abs(p.getY())==2||Math.abs(p.getZ())==2)
+                    ?dev.vic17usd.spacefabric.colony.ColonyContent.PRESSURE_HULL.defaultBlockState():Blocks.AIR.defaultBlockState();
+            return dev.vic17usd.spacefabric.colony.HabitatSystem.classify(state,net.minecraft.world.level.EmptyBlockGetter.INSTANCE,p);
+        };
+        for(var kind:TransportChannel.values()) {
+            changes.put(pos,dev.vic17usd.spacefabric.colony.ColonyContent.PRESSURE_HULL.defaultBlockState());
+            var room=dev.vic17usd.spacefabric.colony.SealScanner.scan(world,net.minecraft.core.BlockPos.ZERO,true);assertTrue(room.sealed());
+            var item=assertInstanceOf(SealedBulkheadItem.class,TransportContent.valve(kind).asItem());
+            var valve=item.replacement(changes.get(pos),net.minecraft.core.Direction.EAST,false);changes.put(pos,valve);assertTrue(room.unchanged(world));
+            assertEquals(net.minecraft.core.Direction.Axis.X,valve.getValue(SealedBulkheadBlock.AXIS));
+            assertNotNull(item.replacement(dev.vic17usd.spacefabric.colony.ColonyContent.VENUS_COMPOSITE_HULL.defaultBlockState(),net.minecraft.core.Direction.NORTH,false));
+            assertTrue(item.replacement(Blocks.CHEST.defaultBlockState(),net.minecraft.core.Direction.UP,false)==null);
+            for(var state:List.of(valve.setValue(SealedBulkheadBlock.ENABLED,false),valve.setValue(SealedBulkheadBlock.POWERED,true))) {
+                changes.put(pos,state);assertFalse(SealedBulkheadBlock.open(state));assertTrue(room.unchanged(world));
+            }
+            changes.put(pos,TransportContent.pipe(kind).defaultBlockState());assertFalse(room.unchanged(world));assertFalse(dev.vic17usd.spacefabric.colony.SealScanner.scan(world,net.minecraft.core.BlockPos.ZERO,true).sealed());
+            changes.put(pos,Blocks.AIR.defaultBlockState());assertFalse(dev.vic17usd.spacefabric.colony.SealScanner.scan(world,net.minecraft.core.BlockPos.ZERO,true).sealed());
+        }
+    }
+    private TransportTankBlockEntity transportTank(TransportChannel kind) {
+        return new TransportTankBlockEntity(net.minecraft.core.BlockPos.ZERO,TransportContent.tank(kind).defaultBlockState());
+    }
+    private TransportGraph transportGraph(TransportBuffer store,int coordinate) {
+        var pos=new net.minecraft.core.BlockPos(coordinate,0,0);
+        return TransportGraph.scan(new TransportGraph.World(){
+            public boolean loaded(net.minecraft.core.BlockPos p){return true;}
+            public TransportGraph.Node node(net.minecraft.core.BlockPos p){return p.equals(pos)?new TransportGraph.Node(store.channel(),java.util.Set.copyOf(java.util.Arrays.asList(net.minecraft.core.Direction.values())),new TransportGraph.Endpoint(pos,store,()->{})):null;}
+        },pos,store.channel(),net.minecraft.core.Direction.DOWN);
+    }
+    private MachineInterfaceBlockEntity transportPort(int cans,int cells) {
+        var port=new MachineInterfaceBlockEntity(net.minecraft.core.BlockPos.ZERO,TransportContent.INTERFACE.defaultBlockState());
+        if(cans>0)port.setItem(0,new ItemStack(dev.vic17usd.spacefabric.colony.ColonyContent.EMPTY_CANISTER,cans));
+        if(cells>0)port.setItem(1,new ItemStack(dev.vic17usd.spacefabric.colony.ColonyContent.EMPTY_POWER_CELL,cells));return port;
+    }
+    @Test void manualTanksConserveBucketsCanistersAndPowerCellsAndRejectBlockedOrWrongContent() {
+        var tank=transportTank(TransportChannel.LIQUID);tank.setItem(0,new ItemStack(Items.WATER_BUCKET));tank.setItem(1,new ItemStack(Items.BARRIER));
+        assertFalse(tank.processContainer());assertEquals(0,tank.buffer().state().amount());assertTrue(tank.getItem(0).is(Items.WATER_BUCKET));
+        tank.setItem(1,ItemStack.EMPTY);assertTrue(tank.processContainer());assertTrue(tank.getItem(1).is(Items.BUCKET));assertEquals(1000,tank.buffer().state().amount());
+        tank.setItem(1,ItemStack.EMPTY);tank.toggleMode();tank.setItem(0,new ItemStack(dev.vic17usd.spacefabric.colony.ColonyContent.EMPTY_CANISTER));
+        assertTrue(tank.processContainer());assertTrue(tank.getItem(1).is(dev.vic17usd.spacefabric.colony.ColonyContent.WATER_CANISTER));assertEquals(0,tank.buffer().state().amount());
+        tank.setItem(1,ItemStack.EMPTY);tank.toggleMode();tank.setItem(0,new ItemStack(dev.vic17usd.spacefabric.colony.ColonyContent.OXYGEN_CANISTER));
+        assertFalse(tank.processContainer());assertEquals(1,tank.getItem(0).getCount());assertEquals(0,tank.buffer().state().amount());
+        var gas=transportTank(TransportChannel.GAS);gas.setItem(0,new ItemStack(dev.vic17usd.spacefabric.industry.IndustryContent.NITROGEN));assertTrue(gas.processContainer());
+        gas.setItem(1,ItemStack.EMPTY);gas.setItem(0,new ItemStack(dev.vic17usd.spacefabric.colony.ColonyContent.OXYGEN_CANISTER));assertFalse(gas.processContainer());assertEquals(1000,gas.buffer().state().amount());assertEquals(TransportResource.NITROGEN,gas.buffer().state().resource());
+        var power=transportTank(TransportChannel.ENERGY);power.setItem(0,new ItemStack(dev.vic17usd.spacefabric.colony.ColonyContent.CHARGED_POWER_CELL));assertTrue(power.processContainer());assertEquals(2400,power.buffer().state().amount());
+        assertTrue(power.getItem(1).is(dev.vic17usd.spacefabric.colony.ColonyContent.EMPTY_POWER_CELL));power.setItem(1,ItemStack.EMPTY);power.toggleMode();power.setItem(0,new ItemStack(dev.vic17usd.spacefabric.colony.ColonyContent.EMPTY_POWER_CELL));assertTrue(power.processContainer());assertEquals(0,power.buffer().state().amount());assertTrue(power.getItem(1).is(dev.vic17usd.spacefabric.colony.ColonyContent.CHARGED_POWER_CELL));
+    }
+    @Test void tankNbtAndNativeMiningLootPreserveOnlyBulkContentsAndNeverCopyItsContainerInventory() throws IOException {
+        for(var kind:TransportChannel.values()) {
+            var tank=transportTank(kind);var resource=switch(kind){case LIQUID->TransportResource.WATER;case GAS->TransportResource.OXYGEN;case ENERGY->TransportResource.POWER;};
+            tank.buffer().insert(resource,resource.quantum*2);tank.setItem(0,new ItemStack(resource.fullItem(),2));tank.toggleMode();
+            var nbt=tank.saveWithFullMetadata(registries);
+            var restored=assertInstanceOf(TransportTankBlockEntity.class,net.minecraft.world.level.block.entity.BlockEntity.loadStatic(tank.getBlockPos(),tank.getBlockState(),nbt,registries));
+            assertEquals(tank.buffer().state(),restored.buffer().state());assertEquals(2,restored.getItem(0).getCount());assertEquals(1,restored.mode());
+            var provider=new net.minecraft.world.level.storage.loot.providers.nbt.NbtProvider(){
+                public net.minecraft.nbt.Tag get(net.minecraft.world.level.storage.loot.LootContext ignored){return nbt;}
+                public com.mojang.serialization.MapCodec<? extends net.minecraft.world.level.storage.loot.providers.nbt.NbtProvider> codec(){throw new UnsupportedOperationException();}
+            };
+            var drop=net.minecraft.world.level.storage.loot.functions.CopyCustomDataFunction.copyData(provider).copy("TransportTank","TransportTank").build().apply(new ItemStack(tank.getBlockState().getBlock()),null);
+            assertEquals(tank.buffer().state(),TransportTankItem.stored(drop));
+            var data=drop.get(net.minecraft.core.component.DataComponents.CUSTOM_DATA).copyTag();assertFalse(data.contains("Items"));assertFalse(data.getCompoundOrEmpty("TransportTank").contains("Items"));
+            var serialized=ItemStack.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),ItemStack.CODEC.encodeStart(registries.createSerializationContext(JsonOps.INSTANCE),drop).getOrThrow()).getOrThrow();
+            var placed=transportTank(kind);placed.buffer().restore(TransportTankItem.stored(serialized));assertEquals(tank.buffer().state(),placed.buffer().state());
+        }
+    }
+    private int carrierCount(boolean cells,net.minecraft.world.Container... containers) {
+        int result=0;
+        for(var container:containers)for(int i=0;i<container.getContainerSize();i++) {
+            var stack=container.getItem(i);var resource=TransportResource.of(stack);
+            boolean isCell=stack.is(dev.vic17usd.spacefabric.colony.ColonyContent.EMPTY_POWER_CELL)||resource==TransportResource.POWER;
+            boolean isCan=stack.is(dev.vic17usd.spacefabric.colony.ColonyContent.EMPTY_CANISTER)||resource!=TransportResource.NONE&&resource!=TransportResource.POWER&&!stack.is(Items.WATER_BUCKET);
+            if(cells?isCell:isCan)result+=stack.getCount();
+        }
+        return result;
+    }
+    @Test void actualElectrolyzerAndHabitatCanRunAClosedContainerLoopUsingBulkNetworks() {
+        var c=dev.vic17usd.spacefabric.colony.ColonyContent.class;
+        var water=new TransportBuffer(TransportChannel.LIQUID);water.insert(TransportResource.WATER,8000);
+        var energy=new TransportBuffer(TransportChannel.ENERGY);energy.insert(TransportResource.POWER,24000);
+        var oxygen=new TransportBuffer(TransportChannel.GAS);oxygen.select(TransportResource.OXYGEN);
+        var hydrogen=new TransportBuffer(TransportChannel.GAS);hydrogen.select(TransportResource.HYDROGEN);
+        var graphs=List.of(transportGraph(water,0),transportGraph(energy,10),transportGraph(oxygen,20),transportGraph(hydrogen,30));
+        var electrolyzer=new dev.vic17usd.spacefabric.colony.ColonyMachineBlockEntity(net.minecraft.core.BlockPos.ZERO,dev.vic17usd.spacefabric.colony.ColonyContent.ELECTROLYZER.defaultBlockState());
+        var habitat=new dev.vic17usd.spacefabric.colony.ColonyMachineBlockEntity(net.minecraft.core.BlockPos.ZERO,dev.vic17usd.spacefabric.colony.ColonyContent.HABITAT_CONTROLLER.defaultBlockState());
+        var producer=transportPort(2,1);var consumer=transportPort(2,1);
+        assertTrue(producer.supplyInputs(electrolyzer,graphs,true));
+        for(int tick=0;tick<200;tick++)electrolyzer.processTick(new dev.vic17usd.spacefabric.colony.ColonyEnvironment(true,true,false,false));
+        assertEquals(1,electrolyzer.completedBatches());assertTrue(producer.exportOutputs(electrolyzer,graphs));assertEquals(1000,oxygen.state().amount());assertEquals(1000,hydrogen.state().amount());
+        assertTrue(consumer.supplyInputs(habitat,graphs,true));habitat.refillFromItems(true);assertTrue(habitat.support().tick(27,1,true));
+        assertEquals(2345,habitat.support().oxygen());assertEquals(2385,habitat.support().energy());assertEquals(2395,habitat.support().coolant());
+        assertTrue(consumer.exportOutputs(habitat,graphs));assertEquals(6000,water.state().amount());assertEquals(19200,energy.state().amount());assertEquals(0,oxygen.state().amount());
+        assertEquals(4,carrierCount(false,producer,consumer,electrolyzer,habitat));assertEquals(2,carrierCount(true,producer,consumer,electrolyzer,habitat));
+        assertFalse(habitat.protects(net.minecraft.core.BlockPos.ZERO),"Resources never bypass the real room/active-controller checks");
+    }
+    @Test void aHabitatGetsTheOnlyPowerCellBeforeIndustrialConsumers() {
+        var water=new TransportBuffer(TransportChannel.LIQUID);water.insert(TransportResource.WATER,4000);
+        var energy=new TransportBuffer(TransportChannel.ENERGY);energy.insert(TransportResource.POWER,2400);
+        var oxygen=new TransportBuffer(TransportChannel.GAS);oxygen.insert(TransportResource.OXYGEN,1000);
+        var graphs=List.of(transportGraph(water,0),transportGraph(energy,10),transportGraph(oxygen,20));
+        var habitat=new dev.vic17usd.spacefabric.colony.ColonyMachineBlockEntity(net.minecraft.core.BlockPos.ZERO,dev.vic17usd.spacefabric.colony.ColonyContent.HABITAT_CONTROLLER.defaultBlockState());
+        var cooler=new dev.vic17usd.spacefabric.colony.ColonyMachineBlockEntity(net.minecraft.core.BlockPos.ZERO,dev.vic17usd.spacefabric.colony.ColonyContent.COOLING_UNIT.defaultBlockState());
+        record Client(MachineInterfaceBlockEntity port,dev.vic17usd.spacefabric.colony.ColonyMachineBlockEntity machine) { }
+        var ordered=TransportService.prioritize(List.of(new Client(transportPort(1,1),cooler),new Client(transportPort(2,1),habitat)),client->client.machine().kind()==dev.vic17usd.spacefabric.colony.ColonyContent.Machine.HABITAT,0);
+        ordered.forEach(client->client.port().supplyInputs(client.machine(),graphs,true));
+        assertTrue(habitat.getItem(1).is(dev.vic17usd.spacefabric.colony.ColonyContent.CHARGED_POWER_CELL));assertTrue(cooler.getItem(1).isEmpty());assertEquals(0,energy.state().amount());
+    }
+    @Test void blockedNetworksMissingCarriersAndBrokenMachinesNeverProducePhantomInputs() {
+        var water=new TransportBuffer(TransportChannel.LIQUID);water.insert(TransportResource.WATER,1000);
+        var energy=new TransportBuffer(TransportChannel.ENERGY);energy.insert(TransportResource.POWER,2400);
+        var graphs=List.of(transportGraph(water,0),transportGraph(energy,10));
+        var cooler=new dev.vic17usd.spacefabric.colony.ColonyMachineBlockEntity(net.minecraft.core.BlockPos.ZERO,dev.vic17usd.spacefabric.colony.ColonyContent.COOLING_UNIT.defaultBlockState());
+        var empty=transportPort(0,0);assertFalse(empty.supplyInputs(cooler,graphs,true));assertEquals(1000,water.state().amount());assertEquals(2400,energy.state().amount());
+        var port=transportPort(1,1);cooler.maintenance().restore(new dev.vic17usd.spacefabric.maintenance.MachineWear.State(10000,0,0,false,0));
+        assertFalse(port.supplyInputs(cooler,graphs,true));assertEquals(MachineInterfaceBlockEntity.Status.BROKEN,port.status());assertEquals(1,port.getItem(0).getCount());
+        cooler.maintenance().apply(dev.vic17usd.spacefabric.maintenance.MachineWear.Action.REPAIR);
+        assertFalse(port.supplyInputs(cooler,List.of(),true));assertEquals(1,port.getItem(0).getCount());assertEquals(1,port.getItem(1).getCount());assertTrue(cooler.getItem(0).isEmpty());
+        port.setItem(0,new ItemStack(Items.DIAMOND,10));port.setItem(1,new ItemStack(Items.DIAMOND,10));assertFalse(port.supplyInputs(cooler,graphs,true));assertEquals(10,port.getItem(0).getCount());assertEquals(1000,water.state().amount());
+    }
+    @Test void outputBackpressureKeepsFinishedGasInsideTheMachineUntilStorageHasRoom() {
+        var oxygen=new TransportBuffer(TransportChannel.GAS);oxygen.insert(TransportResource.OXYGEN,16000);
+        var graph=transportGraph(oxygen,0);var port=transportPort(0,0);
+        var electrolyzer=new dev.vic17usd.spacefabric.colony.ColonyMachineBlockEntity(net.minecraft.core.BlockPos.ZERO,dev.vic17usd.spacefabric.colony.ColonyContent.ELECTROLYZER.defaultBlockState());
+        electrolyzer.setItem(3,new ItemStack(dev.vic17usd.spacefabric.colony.ColonyContent.OXYGEN_CANISTER));
+        assertFalse(port.exportOutputs(electrolyzer,List.of(graph)));assertEquals(1,electrolyzer.getItem(3).getCount());assertTrue(port.getItem(0).isEmpty());
+        oxygen.extract(TransportResource.OXYGEN,1000);assertTrue(port.exportOutputs(electrolyzer,List.of(graph)));assertEquals(16000,oxygen.state().amount());assertTrue(electrolyzer.getItem(3).isEmpty());assertEquals(1,port.getItem(0).getCount());
+    }
+    @Test void transportMenusHaveCorrectStorageFiltersNativeSyncAndShiftTransfers() {
+        var inventory=new net.minecraft.world.entity.player.Inventory(null,new net.minecraft.world.entity.EntityEquipment());
+        var tank=transportTank(TransportChannel.GAS);tank.buffer().insert(TransportResource.NITROGEN,15000);var menu=new dev.vic17usd.spacefabric.menu.TransportTankMenu(1,inventory,tank);
+        var replica=new dev.vic17usd.spacefabric.menu.TransportTankMenu(1,inventory);for(int i=0;i<6;i++)replica.setData(i,menu.value(i));
+        assertEquals(15000,replica.value(1));assertEquals(16000,replica.value(2));assertEquals(TransportResource.NITROGEN,replica.resource());assertEquals(38,menu.slots.size());
+        assertFalse(replica.getSlot(0).mayPlace(new ItemStack(dev.vic17usd.spacefabric.colony.ColonyContent.WATER_CANISTER)));assertTrue(replica.getSlot(0).mayPlace(new ItemStack(dev.vic17usd.spacefabric.colony.ColonyContent.OXYGEN_CANISTER)));assertFalse(menu.getSlot(1).mayPlace(new ItemStack(Items.DIAMOND)));
+        var port=transportPort(0,0);var interfaceMenu=new dev.vic17usd.spacefabric.menu.MachineInterfaceMenu(2,inventory,port);inventory.setItem(9,new ItemStack(dev.vic17usd.spacefabric.colony.ColonyContent.EMPTY_CANISTER,4));
+        assertEquals(4,interfaceMenu.quickMoveStack(null,2).getCount());assertEquals(4,port.getItem(0).getCount());assertFalse(interfaceMenu.getSlot(1).mayPlace(new ItemStack(dev.vic17usd.spacefabric.colony.ColonyContent.EMPTY_CANISTER)));
+        var restored=assertInstanceOf(MachineInterfaceBlockEntity.class,net.minecraft.world.level.block.entity.BlockEntity.loadStatic(port.getBlockPos(),port.getBlockState(),port.saveWithFullMetadata(registries),registries));assertEquals(4,restored.getItem(0).getCount());
+    }
+
 }

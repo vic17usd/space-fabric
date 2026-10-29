@@ -115,9 +115,7 @@ public final class ColonyMachineBlockEntity extends BaseContainerBlockEntity imp
         refreshSeal(level);
         if(room==null||!room.sealed()){active=false;support.vent();status=room==null?"idle":room.status().name().toLowerCase(java.util.Locale.ROOT);return;}
         lastEnclosure=room;
-        refill(0,ColonyContent.OXYGEN_CANISTER,ColonyContent.EMPTY_CANISTER,6,0);
-        refill(1,ColonyContent.CHARGED_POWER_CELL,ColonyContent.EMPTY_POWER_CELL,5,1);
-        if(venus)refill(2,ColonyContent.WATER_CANISTER,ColonyContent.EMPTY_CANISTER,6,2);
+        refillFromItems(venus);
         int occupants=(int)level.players().stream().filter(p->p.isAlive()&&!p.isSpectator()&&room.air().contains(BlockPos.containing(p.getEyePosition()))).count();
         active=support.tick(room.air().size(),occupants,venus);status=active?"pressurized":"supplies";
     }
@@ -126,6 +124,14 @@ public final class ColonyMachineBlockEntity extends BaseContainerBlockEntity imp
         if(!stack.is(full)||!old.isEmpty()&&(!old.is(empty)||old.getCount()>=old.getMaxStackSize()))return;
         if(!support.fill(kind))return;
         stack.shrink(1);if(old.isEmpty())items.set(output,new ItemStack(empty));else old.grow(1);
+    }
+    /** Container conversion grants no protection: the room and operating controller remain mandatory. */
+    public void refillFromItems(boolean venus) {
+        if(maintenance.failed())return;
+        refill(0,ColonyContent.OXYGEN_CANISTER,ColonyContent.EMPTY_CANISTER,6,0);
+        refill(1,ColonyContent.CHARGED_POWER_CELL,ColonyContent.EMPTY_POWER_CELL,5,1);
+        if(venus)refill(2,ColonyContent.WATER_CANISTER,ColonyContent.EMPTY_CANISTER,6,2);
+        setChanged();
     }
     private void tickProcessing(ServerLevel level) {
         processTick(ColonyEnvironment.read(level,worldPosition,kind()));

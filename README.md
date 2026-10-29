@@ -1,5 +1,10 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión 0.37.0 añade **automatización industrial**: tuberías de líquidos y
+gases, cables, depósitos, acumuladores e interfaces que reciclan envases. Los
+pasamuros sustituyen paneles sin abrir una fuga y mantienen el cierre al usar
+válvulas o redstone. [Montaje y funcionamiento](docs/industrial-automation.md).
+
 La versión 0.36.0 integra **la consola 3D y el rover presurizado de Venus**:
 recuperación de fundiciones con recompensa única, refrigeración industrial,
 conducción, cabina con visor, seis ruedas animadas y carga persistente.
@@ -135,9 +140,9 @@ Consulta la [guía completa de bloques y materiales](docs/materials.md).
 Consulta la [guía de terreno y registro de biomas](docs/terrain.md).
 Consulta la [tabla de dimensiones y claves Java](docs/dimensions.md).
 
-Descarga del prototipo compilado: [space-fabric-0.36.0.jar](dist/space-fabric-0.36.0.jar)
+Descarga del prototipo compilado: [space-fabric-0.37.0.jar](dist/space-fabric-0.37.0.jar)
 (en GitHub, pulsa **Download raw file**).
-[Checksum SHA-256](dist/space-fabric-0.36.0.jar.sha256).
+[Checksum SHA-256](dist/space-fabric-0.37.0.jar.sha256).
 Fauna original: **17usdd using [CreativeMode.net](https://creativemode.net)**;
 [páginas oficiales y atribución](third_party/martian_fauna/README.md),
 [licencia de sus recursos](https://creativemode.net/mod-license).
@@ -349,7 +354,7 @@ el carácter químico del entorno. Los trajes venusiano y abisal resisten la cor
 inmunidad, prioridad de presión e hipoxia a presión normal.
 También usa Fabric Loader JUnit y los codecs reales de Minecraft para interpretar
 los nueve tipos de dimensión, sus generadores y los cuatro tipos de daño; también
-comprueba refinería, persistencia del combustible, recetas, llegadas, estructuras, comerciantes, fauna, industria y rover: **498 casos**
+comprueba refinería, persistencia del combustible, recetas, llegadas, estructuras, comerciantes, fauna, industria, rover y redes: **514 casos**
 en total. `tools/validate_resources.py` comprueba además JSON y referencias internas.
 Estas pruebas no arrancan un mundo ni comprueban la sincronización del cliente.
 

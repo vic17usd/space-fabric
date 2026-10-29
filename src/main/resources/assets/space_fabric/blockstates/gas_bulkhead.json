@@ -1,0 +1,48 @@
+{
+  "variants": {
+    "axis=x,enabled=false,powered=false": {
+      "model": "space_fabric:block/gas_bulkhead_closed",
+      "y": 90
+    },
+    "axis=x,enabled=false,powered=true": {
+      "model": "space_fabric:block/gas_bulkhead_closed",
+      "y": 90
+    },
+    "axis=x,enabled=true,powered=false": {
+      "model": "space_fabric:block/gas_bulkhead",
+      "y": 90
+    },
+    "axis=x,enabled=true,powered=true": {
+      "model": "space_fabric:block/gas_bulkhead_closed",
+      "y": 90
+    },
+    "axis=y,enabled=false,powered=false": {
+      "model": "space_fabric:block/gas_bulkhead_closed",
+      "x": 90
+    },
+    "axis=y,enabled=false,powered=true": {
+      "model": "space_fabric:block/gas_bulkhead_closed",
+      "x": 90
+    },
+    "axis=y,enabled=true,powered=false": {
+      "model": "space_fabric:block/gas_bulkhead",
+      "x": 90
+    },
+    "axis=y,enabled=true,powered=true": {
+      "model": "space_fabric:block/gas_bulkhead_closed",
+      "x": 90
+    },
+    "axis=z,enabled=false,powered=false": {
+      "model": "space_fabric:block/gas_bulkhead_closed"
+    },
+    "axis=z,enabled=false,powered=true": {
+      "model": "space_fabric:block/gas_bulkhead_closed"
+    },
+    "axis=z,enabled=true,powered=false": {
+      "model": "space_fabric:block/gas_bulkhead"
+    },
+    "axis=z,enabled=true,powered=true": {
+      "model": "space_fabric:block/gas_bulkhead_closed"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "CRC",
+    "PHP",
+    "CRC"
+  ],
+  "key": {
+    "C": "minecraft:copper_ingot",
+    "R": "minecraft:redstone",
+    "P": "space_fabric:pyroxene_ceramic",
+    "H": "space_fabric:pressure_hull"
+  },
+  "result": {
+    "id": "space_fabric:machine_interface",
+    "count": 1
+  }
+}
