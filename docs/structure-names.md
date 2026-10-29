@@ -1,4 +1,4 @@
-# Nombres de estructuras — 0.30.1, ampliados en 0.32.0
+# Nombres de estructuras — 0.30.1, ampliados en 0.35.0
 
 | Planeta | Nombre visible | Diseño original / ID conservado | Alias para buscar |
 |---|---|---|---|
@@ -8,6 +8,10 @@
 | Venus | Pueblo de Venus | Copper Crown Village / `copper_crown_village` | `#space_fabric:pueblo_venusiano` |
 | Venus | Pirámide de Venus | Sunstone Pyramid Bazaar / `sunstone_pyramid_bazaar` | `#space_fabric:piramide_venusiana` |
 | Venus | Caldera de azufre de Venus | Sulfur Crown Caldera / `venus_sulfur_caldera` | `#space_fabric:caldera_venusiana` |
+| Venus | Puesto de ceniza de Venus | Venusian Ash Outpost / `venusian_ash_outpost` | `#space_fabric:puesto_ceniza_venusiano` |
+| Venus | Bóveda de azufre de Venus | Venusian Sulfur Vault / `venusian_sulfur_vault` | `#space_fabric:boveda_venusiana` |
+| Venus | Refugio de basalto de Venus | Venus Basalt Haven / `venus_basalt_haven` | `#space_fabric:refugio_venusiano` |
+| Venus | Fundición abandonada de Venus | Rustfall Foundry / `rustfall_foundry` | `#space_fabric:fundicion_venusiana` |
 
 Escribe **`/estructuras`** para ver el catálogo en el chat. Al pulsar un nombre se
 prepara el comando de búsqueda con la dimensión correcta; tú decides ejecutarlo.

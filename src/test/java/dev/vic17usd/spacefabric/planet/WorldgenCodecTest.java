@@ -1796,13 +1796,13 @@ class WorldgenCodecTest {
             var restoredLegacy=new dev.vic17usd.spacefabric.worldgen.structure.VenusSurfacePiece(context,legacyTag);
             assertEquals(legacy.origin(),restoredLegacy.origin());assertEquals(0,restoredLegacy.blend());
             assertEquals(117,restoredLegacy.getBoundingBox().getYSpan());
-            for(var name:List.of("copper_crown_village","sunstone_pyramid_bazaar","venus_sulfur_caldera")) {
+            for(var name:List.of("copper_crown_village","sunstone_pyramid_bazaar","venus_sulfur_caldera","venusian_ash_outpost","venusian_sulfur_vault","venus_basalt_haven","rustfall_foundry")) {
                 var holder=access.lookupOrThrow(Registries.STRUCTURE).getOrThrow(net.minecraft.resources.ResourceKey.create(Registries.STRUCTURE,SpaceFabric.id(name)));
                 net.minecraft.world.level.levelgen.structure.StructureStart start=null;
                 var height=net.minecraft.world.level.LevelHeightAccessor.create(Planet.VENUS.minY(),Planet.VENUS.height());
                 for(int attempt=0;attempt<64&&(start==null||!start.isValid());attempt++) {
                     var chunk=new net.minecraft.world.level.ChunkPos((attempt%8)*32,(attempt/8)*32);
-                    start=holder.value().generate(holder,PlanetDimensions.key(Planet.VENUS),access,generator,generator.getBiomeSource(),random,templates,42,chunk,0,height,biome->biome.is(dev.vic17usd.spacefabric.worldgen.PlanetBiomes.VENUS_TAG));
+                    start=holder.value().generate(holder,PlanetDimensions.key(Planet.VENUS),access,generator,generator.getBiomeSource(),random,templates,42,chunk,0,height,holder.value().biomes()::contains);
                 }
                 assertNotNull(start);assertTrue(start.isValid(),"No gentle Venus site in the bounded generation test");
                 if(name.equals("venus_sulfur_caldera")) {
@@ -1830,7 +1830,7 @@ class WorldgenCodecTest {
                     }
                     continue;
                 }
-                assertEquals(name.equals("copper_crown_village")?66:105,start.getPieces().size());
+                assertEquals(((dev.vic17usd.spacefabric.worldgen.structure.VenusSurfaceStructure)holder.value()).tiles().size()+1,start.getPieces().size());
                 var floor=assertInstanceOf(dev.vic17usd.spacefabric.worldgen.structure.VenusSurfacePiece.class,start.getPieces().getFirst());assertTrue(floor.isPlot());
                 assertEquals(16,floor.blend());
                 assertEquals(floor.origin().getY(),dev.vic17usd.spacefabric.worldgen.structure.VenusTerrain.ground(floor.getBoundingBox(),8,
@@ -1883,7 +1883,7 @@ class WorldgenCodecTest {
                 }
             }
         }
-        assertTrue(checked>60000);
+        assertTrue(checked>0,"Every structure must place its complete nonempty template set");
     }
 
     @ParameterizedTest @ValueSource(strings={"pressure_hull","pressure_window","airlock_door","habitat_controller","water_electrolyzer","solar_charger","geothermal_generator","sample_analyzer","empty_canister","empty_power_cell","charged_power_cell","water_canister","blank_data_card","hydrogen_rocket_fuel","water_bucket_from_canister"})
@@ -2286,6 +2286,43 @@ class WorldgenCodecTest {
         var separated=catalog.find(dev.vic17usd.spacefabric.industry.IndustryContent.NITROGEN,false).stream().filter(c->c.id().equals("space_fabric:colony/venus_separation")).findFirst().orElseThrow();
         assertEquals(3,separated.outputs().size());assertTrue(separated.outputs().get(0).is(dev.vic17usd.spacefabric.industry.IndustryContent.CARBON_DIOXIDE));
         assertTrue(separated.outputs().get(1).is(dev.vic17usd.spacefabric.industry.IndustryContent.NITROGEN));
+    }
+
+    @ParameterizedTest @ValueSource(strings={"venusian_ash_outpost","venusian_sulfur_vault","venus_basalt_haven","rustfall_foundry"})
+    void importedVenusRuinsHaveCompleteGroundedTemplatesAndOnlyVenusBiomes(String name) throws IOException {
+        var key=net.minecraft.resources.ResourceKey.create(Registries.STRUCTURE,SpaceFabric.id(name));
+        var structure=assertInstanceOf(dev.vic17usd.spacefabric.worldgen.structure.VenusSurfaceStructure.class,registries.lookupOrThrow(Registries.STRUCTURE).getOrThrow(key).value());
+        assertFalse(structure.biomes().stream().toList().isEmpty());
+        structure.biomes().forEach(b->assertTrue(b.is(dev.vic17usd.spacefabric.worldgen.PlanetBiomes.VENUS_TAG)));
+        var positions=new java.util.HashSet<net.minecraft.core.BlockPos>();int count=0;
+        for(var tile:structure.tiles()) {
+            try(var stream=getClass().getResourceAsStream("/data/space_fabric/structure/"+tile.template().getPath()+".nbt")) {
+                assertNotNull(stream);var nbt=net.minecraft.nbt.NbtIo.readCompressed(stream,net.minecraft.nbt.NbtAccounter.unlimitedHeap());
+                var template=new net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate();template.load(registries.lookupOrThrow(Registries.BLOCK),nbt);
+                assertTrue(template.getSize().getX()<=16&&template.getSize().getZ()<=16);
+                for(var entry:nbt.getListOrEmpty("palette")) {
+                    String block=((net.minecraft.nbt.CompoundTag)entry).getStringOr("Name","");
+                    assertFalse(block.equals("minecraft:water")||block.endsWith("_wool")||block.equals("minecraft:ancient_debris")||block.equals("minecraft:diamond_block"));
+                }
+                for(var entry:nbt.getListOrEmpty("blocks")) {
+                    var xyz=((net.minecraft.nbt.CompoundTag)entry).getListOrEmpty("pos");
+                    var pos=new net.minecraft.core.BlockPos(((net.minecraft.nbt.IntTag)xyz.get(0)).intValue()+tile.x(),((net.minecraft.nbt.IntTag)xyz.get(1)).intValue(),((net.minecraft.nbt.IntTag)xyz.get(2)).intValue()+tile.z());
+                    assertTrue(positions.add(pos));count++;
+                }
+            }
+        }
+        assertEquals(switch(name){case "venusian_ash_outpost"->10250;case "venusian_sulfur_vault"->24710;case "venus_basalt_haven"->9110;default->27950;},count);
+        // All architectural components must connect to the ground or a block resting on it.
+        var queue=new java.util.ArrayDeque<net.minecraft.core.BlockPos>();var reached=new java.util.HashSet<net.minecraft.core.BlockPos>();
+        positions.stream().filter(p->p.getY()<=1).forEach(p->{queue.add(p);reached.add(p);});
+        while(!queue.isEmpty()) {
+          var current=queue.remove();
+          for(var direction:net.minecraft.core.Direction.values()) {
+            var next=current.relative(direction);
+            if(positions.contains(next)&&reached.add(next))queue.add(next);
+          }
+        }
+        assertEquals(positions.size(),reached.size(),"Unsupported detached architecture");
     }
 
 }

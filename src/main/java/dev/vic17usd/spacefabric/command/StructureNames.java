@@ -22,7 +22,11 @@ public final class StructureNames {
             new Entry("soulfire_netherite_sanctum","santuario_marciano",Planet.MARS),
             new Entry("copper_crown_village","pueblo_venusiano",Planet.VENUS),
             new Entry("sunstone_pyramid_bazaar","piramide_venusiana",Planet.VENUS),
-            new Entry("venus_sulfur_caldera","caldera_venusiana",Planet.VENUS));
+            new Entry("venus_sulfur_caldera","caldera_venusiana",Planet.VENUS),
+            new Entry("venusian_ash_outpost","puesto_ceniza_venusiano",Planet.VENUS),
+            new Entry("venusian_sulfur_vault","boveda_venusiana",Planet.VENUS),
+            new Entry("venus_basalt_haven","refugio_venusiano",Planet.VENUS),
+            new Entry("rustfall_foundry","fundicion_venusiana",Planet.VENUS));
     private StructureNames() { }
     public static void initialize() {
         CommandRegistrationCallback.EVENT.register((dispatcher,context,selection)->dispatcher.register(

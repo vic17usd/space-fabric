@@ -1,0 +1,193 @@
+{
+  "venusian_ash_outpost": {
+    "jar": "Venus estructura.jar",
+    "sha256": "1928bb4b1040cb8ab34ade7505a632db9807af98b95c61380a21f2304395f3fd",
+    "source_page": "https://creativemode.net/mod/venusian-ash-outpost-z5zevd3e",
+    "authors": [
+      "17u using CreativeMode.net"
+    ],
+    "source_member": "data/venusian-ash-outpost-z5zevd3e/structures/venusian_ash_outpost.json",
+    "size": [
+      116,
+      61,
+      120
+    ],
+    "tiles": 33,
+    "adaptation": {
+      "removed_plinth_layers": 17,
+      "removed_base_blocks": 72119,
+      "removed_detached_debris": 0,
+      "added_support_blocks": 325,
+      "max_support_height": 8,
+      "blocks": 10250
+    },
+    "palette": [
+      "minecraft:deepslate_bricks",
+      "minecraft:granite",
+      "minecraft:smooth_stone",
+      "minecraft:dark_prismarine",
+      "space_fabric:venus_cracked_stone",
+      "minecraft:terracotta",
+      "minecraft:orange_terracotta",
+      "minecraft:cyan_terracotta",
+      "minecraft:red_concrete",
+      "minecraft:yellow_concrete",
+      "minecraft:glass",
+      "minecraft:glowstone",
+      "minecraft:sea_lantern",
+      "minecraft:polished_basalt",
+      "minecraft:waxed_weathered_cut_copper",
+      "minecraft:waxed_oxidized_cut_copper",
+      "space_fabric:venus_ember_crust",
+      "minecraft:amethyst_block",
+      "minecraft:obsidian",
+      "minecraft:crying_obsidian",
+      "minecraft:polished_blackstone_bricks"
+    ]
+  },
+  "venusian_sulfur_vault": {
+    "jar": "Venus estructura 3.jar",
+    "sha256": "e71b9a4833767c39799d9bfd550d38df08fe6594a70049277976c9696af54ca2",
+    "source_page": "https://creativemode.net/mod/venusian-sulfur-vault-cjsj7wrf",
+    "authors": [
+      "17u using CreativeMode.net"
+    ],
+    "source_member": "data/venusian-sulfur-vault-cjsj7wrf/structures/venusian_sulfur_vault.json",
+    "size": [
+      69,
+      50,
+      80
+    ],
+    "tiles": 20,
+    "adaptation": {
+      "removed_plinth_layers": 2,
+      "removed_base_blocks": 7606,
+      "removed_detached_debris": 0,
+      "added_support_blocks": 187,
+      "max_support_height": 9,
+      "blocks": 24710
+    },
+    "palette": [
+      "minecraft:cracked_polished_blackstone_bricks",
+      "minecraft:deepslate_bricks",
+      "minecraft:granite",
+      "minecraft:smooth_stone",
+      "minecraft:smooth_sandstone",
+      "minecraft:dark_prismarine",
+      "minecraft:terracotta",
+      "minecraft:orange_terracotta",
+      "minecraft:yellow_terracotta",
+      "minecraft:yellow_concrete",
+      "minecraft:black_concrete",
+      "minecraft:glass",
+      "minecraft:glowstone",
+      "minecraft:polished_basalt",
+      "space_fabric:venus_sulfur_crystal_block",
+      "minecraft:waxed_weathered_cut_copper",
+      "minecraft:waxed_oxidized_cut_copper",
+      "space_fabric:venus_ember_crust",
+      "minecraft:obsidian",
+      "minecraft:crying_obsidian",
+      "space_fabric:venus_basalt_substrate",
+      "minecraft:polished_blackstone_bricks"
+    ]
+  },
+  "venus_basalt_haven": {
+    "jar": "Venus estructura 4.jar",
+    "sha256": "be862f543fa817d89d2cde6043192326d0883e42016e8917967fd381ca0b4864",
+    "source_page": "https://creativemode.net/mod/venus-basalt-haven-5mh45nk7",
+    "authors": [
+      "17u using CreativeMode.net"
+    ],
+    "source_member": "data/venus-basalt-haven-5mh45nk7/structures/venus_basalt_haven.json",
+    "size": [
+      55,
+      45,
+      63
+    ],
+    "tiles": 11,
+    "adaptation": {
+      "removed_plinth_layers": 18,
+      "removed_base_blocks": 30678,
+      "removed_detached_debris": 0,
+      "added_support_blocks": 51,
+      "max_support_height": 9,
+      "blocks": 9110
+    },
+    "palette": [
+      "minecraft:cracked_polished_blackstone_bricks",
+      "minecraft:deepslate_bricks",
+      "minecraft:granite",
+      "minecraft:smooth_stone",
+      "minecraft:nether_bricks",
+      "space_fabric:venus_cracked_stone",
+      "minecraft:lime_stained_glass",
+      "minecraft:polished_blackstone",
+      "minecraft:terracotta",
+      "minecraft:gray_terracotta",
+      "minecraft:cyan_terracotta",
+      "minecraft:white_concrete",
+      "minecraft:red_concrete",
+      "minecraft:yellow_concrete",
+      "minecraft:black_concrete",
+      "minecraft:glass",
+      "minecraft:glowstone",
+      "minecraft:sea_lantern",
+      "minecraft:polished_basalt",
+      "minecraft:waxed_weathered_cut_copper",
+      "minecraft:waxed_oxidized_cut_copper",
+      "space_fabric:venus_ember_crust",
+      "space_fabric:venus_sulfur_crystal_block",
+      "minecraft:blue_terracotta",
+      "minecraft:amethyst_block",
+      "minecraft:obsidian",
+      "minecraft:crying_obsidian",
+      "minecraft:polished_blackstone_bricks"
+    ]
+  },
+  "rustfall_foundry": {
+    "jar": "Venus instalaciones averiadas.jar",
+    "sha256": "aadcd913ee7326500d7a77dc98ef1c445b4c556cf72793797d978a427d77f400",
+    "source_page": "https://creativemode.net/mod/rustfall-foundry-hxuphupq",
+    "authors": [
+      "17u using CreativeMode.net"
+    ],
+    "source_member": "data/rustfall-foundry-hxuphupq/structures/rustfall_foundry.json",
+    "size": [
+      111,
+      66,
+      101
+    ],
+    "tiles": 49,
+    "adaptation": {
+      "removed_plinth_layers": 2,
+      "removed_base_blocks": 22422,
+      "removed_detached_debris": 16,
+      "added_support_blocks": 1349,
+      "max_support_height": 9,
+      "blocks": 27950
+    },
+    "palette": [
+      "minecraft:blackstone",
+      "minecraft:cracked_polished_blackstone_bricks",
+      "minecraft:deepslate_bricks",
+      "minecraft:granite",
+      "minecraft:polished_basalt",
+      "minecraft:smooth_stone",
+      "minecraft:prismarine",
+      "minecraft:dark_prismarine",
+      "space_fabric:venus_basalt_substrate",
+      "minecraft:polished_blackstone",
+      "minecraft:terracotta",
+      "minecraft:glass",
+      "minecraft:glowstone",
+      "minecraft:sea_lantern",
+      "minecraft:waxed_weathered_cut_copper",
+      "minecraft:waxed_oxidized_cut_copper",
+      "space_fabric:venus_ember_crust",
+      "minecraft:obsidian",
+      "minecraft:crying_obsidian",
+      "minecraft:polished_blackstone_bricks"
+    ]
+  }
+}

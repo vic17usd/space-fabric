@@ -1,0 +1,179 @@
+{
+  "type": "space_fabric:venus_surface",
+  "biomes": "#space_fabric:has_structure/venusian_ash_outpost",
+  "step": "surface_structures",
+  "spawn_overrides": {},
+  "terrain_adaptation": "none",
+  "width": 116,
+  "height": 61,
+  "depth": 120,
+  "padding": 16,
+  "max_terrain_relief": 8,
+  "tiles": [
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_ash_outpost/tile_0_32",
+      "x": 0,
+      "z": 32
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_ash_outpost/tile_0_48",
+      "x": 0,
+      "z": 48
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_ash_outpost/tile_0_64",
+      "x": 0,
+      "z": 64
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_ash_outpost/tile_16_32",
+      "x": 16,
+      "z": 32
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_ash_outpost/tile_16_48",
+      "x": 16,
+      "z": 48
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_ash_outpost/tile_16_64",
+      "x": 16,
+      "z": 64
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_ash_outpost/tile_32_32",
+      "x": 32,
+      "z": 32
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_ash_outpost/tile_32_48",
+      "x": 32,
+      "z": 48
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_ash_outpost/tile_32_64",
+      "x": 32,
+      "z": 64
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_ash_outpost/tile_32_96",
+      "x": 32,
+      "z": 96
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_ash_outpost/tile_32_112",
+      "x": 32,
+      "z": 112
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_ash_outpost/tile_48_32",
+      "x": 48,
+      "z": 32
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_ash_outpost/tile_48_48",
+      "x": 48,
+      "z": 48
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_ash_outpost/tile_48_64",
+      "x": 48,
+      "z": 64
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_ash_outpost/tile_48_80",
+      "x": 48,
+      "z": 80
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_ash_outpost/tile_48_96",
+      "x": 48,
+      "z": 96
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_ash_outpost/tile_48_112",
+      "x": 48,
+      "z": 112
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_ash_outpost/tile_64_32",
+      "x": 64,
+      "z": 32
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_ash_outpost/tile_64_48",
+      "x": 64,
+      "z": 48
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_ash_outpost/tile_64_64",
+      "x": 64,
+      "z": 64
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_ash_outpost/tile_64_96",
+      "x": 64,
+      "z": 96
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_ash_outpost/tile_64_112",
+      "x": 64,
+      "z": 112
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_ash_outpost/tile_80_48",
+      "x": 80,
+      "z": 48
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_ash_outpost/tile_96_16",
+      "x": 96,
+      "z": 16
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_ash_outpost/tile_96_32",
+      "x": 96,
+      "z": 32
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_ash_outpost/tile_96_48",
+      "x": 96,
+      "z": 48
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_ash_outpost/tile_96_64",
+      "x": 96,
+      "z": 64
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_ash_outpost/tile_96_80",
+      "x": 96,
+      "z": 80
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_ash_outpost/tile_112_16",
+      "x": 112,
+      "z": 16
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_ash_outpost/tile_112_32",
+      "x": 112,
+      "z": 32
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_ash_outpost/tile_112_48",
+      "x": 112,
+      "z": 48
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_ash_outpost/tile_112_64",
+      "x": 112,
+      "z": 64
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_ash_outpost/tile_112_80",
+      "x": 112,
+      "z": 80
+    }
+  ]
+}

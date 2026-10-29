@@ -1,0 +1,30 @@
+{
+  "structures": [
+    {
+      "structure": "space_fabric:venusian_ash_outpost",
+      "weight": 1
+    },
+    {
+      "structure": "space_fabric:venusian_sulfur_vault",
+      "weight": 1
+    },
+    {
+      "structure": "space_fabric:venus_basalt_haven",
+      "weight": 1
+    },
+    {
+      "structure": "space_fabric:rustfall_foundry",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 96,
+    "separation": 48,
+    "salt": 73502916,
+    "exclusion_zone": {
+      "other_set": "space_fabric:venus_settlements",
+      "chunk_count": 12
+    }
+  }
+}

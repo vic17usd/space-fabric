@@ -1,8 +1,8 @@
 # Resultado de validación de esta base
 
-Última entrega: **0.34.0**, 479 pruebas JUnit aprobadas, diez comprobaciones por
-CPU y 1.024 JSON válidos. Los apartados siguientes conservan el historial de
-la base y sus ampliaciones; la validación industrial está al final del documento.
+Última entrega: **0.35.0**, 483 pruebas JUnit aprobadas, diez comprobaciones por
+CPU y 1.037 JSON válidos. Los apartados siguientes conservan el historial de
+la base y sus ampliaciones; la validación de las nuevas construcciones está al final del documento.
 
 Verificado con JDK 25, Gradle 9.8.2, Loom 1.19.3, Minecraft 26.1,
 Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
@@ -371,3 +371,25 @@ Pendientes en partida real: toma bajo cristal/hojas/techos, colocación del horn
 recorrido completo de producción, interacción y aspecto de menús/objetos,
 uso de la herrería con otros mods y sincronización multijugador. No se abrió un
 cliente con GPU ni se ejecutó un mundo interactivo para esta entrega.
+
+
+Construcciones de Venus, versión 0.35.0:
+
+- Compilación completa: **483 pruebas JUnit**, cero fallos, errores u omisiones,
+  diez comprobaciones por CPU y **1.037 JSON** válidos.
+- Se auditan catorce JAR: cuatro diseños nuevos seleccionados, dos torres
+  aplazadas y ocho diseños ya integrados. Se conservan fuentes, hashes y licencias.
+- Cuatro registros de estructura, cuatro tags de bioma, cuatro alias españoles
+  y un conjunto con exclusión de candidatos cercanos a asentamientos anteriores.
+- Las 113 plantillas suman 72.020 bloques. El cliente/servidor nativo carga sus
+  paletas y tamaños; las pruebas detectan posiciones duplicadas, materiales
+  inapropiados y componentes desconectadas del suelo.
+- La prueba de generación existente ahora incluye los siete diseños de Venus.
+  Obtiene un inicio válido en sus biomas permitidos, conserva cota y rotación al
+  serializar, y ejecuta la colocación real por chunks sobre terreno simulado,
+  comparando cada bloque con la plantilla y verificando apoyo de las bases.
+- Se conservan los registros y plantillas de las versiones anteriores.
+
+Pendientes en partida real: lectura visual de la arquitectura y las parcelas,
+frecuencia efectiva, búsqueda completa de /locate y multijugador. No se abrió un
+cliente con GPU. Los nuevos edificios requieren chunks aún no generados.

@@ -452,5 +452,9 @@
   "advancements.space_fabric.industry.sulfur.title": "Chemistry under pressure",
   "advancements.space_fabric.industry.sulfur.description": "Refine sulfur using nitrogen as an inert gas.",
   "advancements.space_fabric.industry.composite.title": "Materials for Venus",
-  "advancements.space_fabric.industry.composite.description": "Make ceramic and a composite plate in the kiln."
+  "advancements.space_fabric.industry.composite.description": "Make ceramic and a composite plate in the kiln.",
+  "structure.space_fabric.venusian_ash_outpost": "Puesto de ceniza de Venus",
+  "structure.space_fabric.venusian_sulfur_vault": "Bóveda de azufre de Venus",
+  "structure.space_fabric.venus_basalt_haven": "Refugio de basalto de Venus",
+  "structure.space_fabric.rustfall_foundry": "Fundición abandonada de Venus"
 }
