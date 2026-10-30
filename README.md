@@ -1,5 +1,8 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión 0.44.2 reduce el minimapa circular a **76 píxeles** y lo acerca
+al borde inferior derecho. La flecha del personaje también es más pequeña.
+
 La versión 0.44.1 adapta el minimapa a un **diseño circular con borde dorado**,
 flecha de orientación y estrella para el destino. Conserva las localizaciones
 y los mapas guardados. [Diseño y controles](docs/planetary-atlas.md).
@@ -180,9 +183,9 @@ Consulta la [guía completa de bloques y materiales](docs/materials.md).
 Consulta la [guía de terreno y registro de biomas](docs/terrain.md).
 Consulta la [tabla de dimensiones y claves Java](docs/dimensions.md).
 
-Descarga del prototipo compilado: [space-fabric-0.44.1.jar](dist/space-fabric-0.44.1.jar)
+Descarga del prototipo compilado: [space-fabric-0.44.2.jar](dist/space-fabric-0.44.2.jar)
 (en GitHub, pulsa **Download raw file**).
-[Checksum SHA-256](dist/space-fabric-0.44.1.jar.sha256).
+[Checksum SHA-256](dist/space-fabric-0.44.2.jar.sha256).
 Fauna original: **17usdd using [CreativeMode.net](https://creativemode.net)**;
 [páginas oficiales y atribución](third_party/martian_fauna/README.md),
 [licencia de sus recursos](https://creativemode.net/mod-license).

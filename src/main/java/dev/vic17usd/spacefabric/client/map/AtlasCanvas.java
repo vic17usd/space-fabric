@@ -65,7 +65,7 @@ final class AtlasCanvas {
         }
     }
     private static boolean shape(int x,int y,boolean selected,boolean player,double yaw){
-        return player?AtlasStyle.player(x,y,yaw):AtlasStyle.marker(x,y,selected);
+        return player?AtlasStyle.player((int)Math.round(x*1.6),(int)Math.round(y*1.6),yaw):AtlasStyle.marker(x,y,selected);
     }
     private static void symbol(GuiGraphicsExtractor gui,int px,int py,int color,boolean selected,boolean player,double yaw,int left,int top,int size,boolean round){
         // Scanlines keep draw calls bounded. A dark halo separates symbols from pale ice or lava.

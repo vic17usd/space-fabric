@@ -1,6 +1,6 @@
-# Minimapa y atlas de los planetas — 0.44.1
+# Minimapa y atlas de los planetas — 0.44.2
 
-Instala 0.44.1 en **cliente y servidor**, sustituyendo el JAR anterior. Requiere
+Instala 0.44.2 en **cliente y servidor**, sustituyendo el JAR anterior. Requiere
 Minecraft 26.1, Java 25, Fabric y Fabric API; no añade otra dependencia de mapas.
 Funciona en partidas existentes. Cada planeta y la Luna tienen su mapa propio;
 la Tierra del mod y el Overworld también se guardan por separado.
@@ -24,12 +24,12 @@ y soporte vital adecuados al lugar donde estés.
 
 ## Minimapa
 
-Se muestra en la **esquina inferior derecha** como un radar circular de 104 píxeles
-de interfaz, con borde dorado, marcas de brújula y esquinas transparentes. Sigue
+Se muestra en la **esquina inferior derecha** como un radar circular de 76 píxeles
+de interfaz (antes 104), con margen derecho de ocho píxeles, borde dorado, marcas de brújula y esquinas transparentes. Sigue
 el concepto de la referencia: terreno dentro del círculo, símbolos de localización
 y orientación. El norte permanece arriba; el mapa sigue al jugador sin girar.
 
-La **flecha blanca** representa al jugador y gira según su mirada. Los puntos
+La **flecha blanca**, reducida aproximadamente un 38 %, representa al jugador y gira según su mirada. Los puntos
 normales son **rombos del color elegido**; el destino seleccionado es una
 **estrella dorada**, también en el mapa grande. Si queda fuera del minimapa,
 la estrella se proyecta al borde circular conservando la dirección. Los puntos

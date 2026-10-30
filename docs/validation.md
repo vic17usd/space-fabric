@@ -697,3 +697,13 @@ Minimapa circular, versión 0.44.1:
   terreno sintético; no es una captura de Minecraft ni valida la composición GPU.
 - Se mantienen el formato de guardado y los controles. Falta revisar en cliente
   gráfico el marco, las escalas de interfaz, los marcadores y Sodium.
+
+Minimapa compacto, versión 0.44.2:
+
+- Minimapa de 76×76 píxeles de interfaz, antes 104×104, anclado al borde inferior
+  derecho con margen horizontal de ocho píxeles. Coordenadas y título se ajustan
+  al nuevo ancho; la flecha del personaje usa escala 1/1,6 en ambas vistas.
+- `./gradlew build --console=plain`: 599 pruebas JUnit sin fallos, errores
+  ni omisiones; once comprobaciones de recursos y modelos por CPU.
+- 1.205 JSON válidos; JAR y versión comprobados. Ajuste visual pendiente de
+  observar en cliente gráfico y con Sodium. No cambia el formato de guardado.
