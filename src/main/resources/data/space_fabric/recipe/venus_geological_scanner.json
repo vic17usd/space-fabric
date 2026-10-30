@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "CQC",
+    "PRP",
+    " B "
+  ],
+  "key": {
+    "C": "minecraft:copper_ingot",
+    "Q": "minecraft:quartz",
+    "P": "space_fabric:venus_composite_plate",
+    "R": "minecraft:compass",
+    "B": "space_fabric:empty_power_cell"
+  },
+  "result": {
+    "id": "space_fabric:venus_geological_scanner",
+    "count": 1
+  }
+}

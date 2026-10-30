@@ -16,7 +16,7 @@ public final class ThermalSystem {
     static void register(ServerLevel level,ColonyMachineBlockEntity machine){ACTIVE.computeIfAbsent(level,k->new HashMap<>()).put(machine.getBlockPos(),machine);}
     static void remove(ColonyMachineBlockEntity machine){if(machine.getLevel() instanceof ServerLevel level){var map=ACTIVE.get(level);if(map!=null)map.remove(machine.getBlockPos(),machine);}}
     public static int generation(ColonyContent.Machine kind) {
-        return switch(kind){case HABITAT,SOLAR->0;case GEOTHERMAL->30;case CERAMIC_KILN->40;
+        return switch(kind){case HABITAT,SOLAR->0;case GEOTHERMAL->30;case DRILL->55;case CERAMIC_KILN->40;
             case ELECTROLYZER,GAS_SEPARATOR->14;case COOLER->12;case EXCHANGER->6;default->8;};
     }
     /** Contains only machines touching the validated room, with a deterministic owner for overlaps. */

@@ -1951,7 +1951,13 @@ class WorldgenCodecTest {
             var first=formula.outputs().getFirst();inventory.setItem(first.slot(),new ItemStack(Items.BARRIER));
             assertFalse(formula.commit(inventory));
             formula.inputs().forEach(p->assertEquals(p.count(),inventory.getItem(p.slot()).getCount()));
-            inventory.setItem(first.slot(),ItemStack.EMPTY);assertTrue(formula.commit(inventory));
+            inventory.setItem(first.slot(),ItemStack.EMPTY);
+            if(formula.machine()==ColonyContent.Machine.DRILL){
+                // Supply metadata is visible in K, but cannot manufacture anything without a world transaction.
+                assertFalse(formula.commit(inventory));formula.inputs().forEach(p->assertEquals(p.count(),inventory.getItem(p.slot()).getCount()));
+                assertTrue(catalog.find(first.item(),false).stream().anyMatch(card->card.id().endsWith(formula.id())));continue;
+            }
+            assertTrue(formula.commit(inventory));
             formula.inputs().forEach(p->assertTrue(inventory.getItem(p.slot()).isEmpty()));
             formula.outputs().forEach(p->{assertTrue(inventory.getItem(p.slot()).is(p.item()));assertEquals(p.count(),inventory.getItem(p.slot()).getCount());});
             assertFalse(formula.commit(inventory));
@@ -3109,5 +3115,126 @@ class WorldgenCodecTest {
     @ParameterizedTest @ValueSource(strings={"laboratory","refuge","observatory"})
     void stationSalvageLootUsesTheNativeChestCodec(String name) throws IOException {
         assertNotNull(LootTable.DIRECT_CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("loot_table/chests/venus_"+name)).getOrThrow());
+    }
+    private static final class BoreTestWorld implements dev.vic17usd.spacefabric.mining.MiningDrill.BoreWorld {
+        final java.util.Map<net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState> cells=new java.util.HashMap<>();
+        boolean loaded=true,allowed=true,changed;int reads,writes;
+        Runnable callback=()->{};
+        public int minY(){return -128;}
+        public boolean loaded(net.minecraft.core.BlockPos p){return loaded;}
+        public net.minecraft.world.level.block.state.BlockState state(net.minecraft.core.BlockPos p){reads++;return cells.getOrDefault(p,ModBlocks.VULCANIZED_BASALT.defaultBlockState());}
+        public boolean permitted(net.minecraft.core.BlockPos p,net.minecraft.world.level.block.state.BlockState s){callback.run();return allowed;}
+        public boolean replace(net.minecraft.core.BlockPos p,net.minecraft.world.level.block.state.BlockState s){
+            if(changed||!loaded||!state(p).equals(s))return false;cells.put(p,ModBlocks.VULCANIZED_BASALT.defaultBlockState());writes++;return true;
+        }
+    }
+    private ColonyMachineBlockEntity coreDrill(){
+        var m=industryMachine("venus_core_extraction");m.drill().owner(java.util.UUID.fromString("12345678-1234-1234-1234-123456789012"));m.drill().toggle();return m;
+    }
+    private net.minecraft.core.BlockPos boreTarget(){return new net.minecraft.core.BlockPos(-1,-1,-1);}
+    private BoreTestWorld boreWorld(){var w=new BoreTestWorld();w.cells.put(boreTarget(),ModBlocks.VENUSIAN_OLIVINE_ORE.defaultBlockState());return w;}
+    @Test void coreDrillConsumesOneRealOreAndReturnsOneMineralAndAllCarriers(){
+        var m=coreDrill();var w=boreWorld();
+        for(int i=0;i<199;i++)assertEquals("processing",m.drill().step(m,w,true));
+        assertEquals(0,w.writes);assertEquals(199,m.drill().progress());assertTrue(m.getItem(3).isEmpty());
+        m.drill().step(m,w,true);assertEquals(1,w.writes);assertEquals(ModBlocks.VULCANIZED_BASALT,w.state(boreTarget()).getBlock());
+        assertTrue(m.getItem(3).is(ModItems.VENUSIAN_OLIVINE));assertEquals(1,m.getItem(3).getCount());
+        assertTrue(m.getItem(5).is(ColonyContent.EMPTY_POWER_CELL));assertTrue(m.getItem(6).is(ColonyContent.WATER_CANISTER));
+        assertTrue(m.getItem(1).isEmpty());assertTrue(m.getItem(2).isEmpty());assertEquals(1,m.getItem(0).getDamageValue());assertEquals(1,m.completedBatches());
+        for(int i=0;i<300;i++)m.drill().step(m,w,true);assertEquals(1,w.writes);assertEquals(1,m.getItem(3).getCount());
+    }
+    @Test void coreDrillOutputAndCarrierBlockersPauseWithoutSpendingResources(){
+        var m=coreDrill();var w=boreWorld();
+        for(int slot:new int[]{3,4,7,8})m.setItem(slot,new ItemStack(Items.BARRIER,64));
+        assertEquals("output_full",m.drill().step(m,w,true));assertEquals(0,m.drill().progress());
+        m.setItem(3,ItemStack.EMPTY);m.setItem(6,new ItemStack(Items.BARRIER));assertEquals("output_full",m.drill().step(m,w,true));
+        m.setItem(6,ItemStack.EMPTY);m.restoreThermal(9500,true,0);assertEquals("overheating",m.drill().step(m,w,true));
+        assertEquals(0,w.writes);assertEquals(1,m.getItem(1).getCount());assertEquals(1,m.getItem(2).getCount());assertEquals(0,m.getItem(0).getDamageValue());
+    }
+    @Test void coreDrillDoesNotReadUnloadedCellsAndResumesTheSameCursor(){
+        var m=coreDrill();var w=boreWorld();w.loaded=false;
+        assertEquals("unloaded",m.drill().step(m,w,true));assertEquals(0,w.reads);assertEquals(0,m.drill().cursor());
+        w.loaded=true;for(int i=0;i<200;i++)m.drill().step(m,w,true);assertEquals(1,w.writes);
+    }
+    @Test void coreDrillHonorsProtectionAndRevalidatesAfterCallbacks(){
+        var m=coreDrill();var w=boreWorld();w.allowed=false;
+        for(int i=0;i<200;i++)m.drill().step(m,w,true);
+        assertEquals("drill_protected",m.drill().step(m,w,true));assertEquals(0,w.writes);assertTrue(m.getItem(3).isEmpty());
+        w.allowed=true;w.callback=()->m.setItem(1,ItemStack.EMPTY);
+        assertEquals("inputs",m.drill().step(m,w,true));assertEquals(0,w.writes);assertEquals(1,m.getItem(2).getCount());
+        m.setItem(1,new ItemStack(ColonyContent.CHARGED_POWER_CELL));w.callback=()->{};m.drill().step(m,w,true);assertEquals(1,w.writes);
+    }
+    @Test void coreDrillFailedReplacementDoesNotDuplicateOrSpendInputs(){
+        var m=coreDrill();var w=boreWorld();w.changed=true;
+        for(int i=0;i<199;i++)m.drill().step(m,w,true);assertEquals("drill_changed",m.drill().step(m,w,true));
+        assertEquals(0,m.drill().progress());assertEquals(0,w.writes);assertEquals(1,m.getItem(1).getCount());assertTrue(m.getItem(3).isEmpty());
+        w.changed=false;for(int i=0;i<200;i++)m.drill().step(m,w,true);assertEquals(1,w.writes);
+    }
+    @Test void coreDrillPersistsOwnerEnableCursorAndHalfFinishedExtraction(){
+        var m=coreDrill();var w=boreWorld();w.cells.clear();w.cells.put(new net.minecraft.core.BlockPos(0,-2,0),ModBlocks.PYROXENE_ORE.defaultBlockState());
+        for(int i=0;i<100;i++)m.drill().step(m,w,true);
+        int cursor=m.drill().cursor(),progress=m.drill().progress();assertTrue(cursor>0);assertTrue(progress>0);
+        var loaded=assertInstanceOf(ColonyMachineBlockEntity.class,net.minecraft.world.level.block.entity.BlockEntity.loadStatic(m.getBlockPos(),m.getBlockState(),m.saveWithFullMetadata(registries),registries));
+        assertEquals(m.drill().owner(),loaded.drill().owner());assertTrue(loaded.drill().enabled());assertEquals(cursor,loaded.drill().cursor());assertEquals(progress,loaded.drill().progress());
+        for(int i=progress;i<200;i++)loaded.drill().step(loaded,w,true);
+        assertEquals(1,w.writes);assertTrue(loaded.getItem(3).is(ModItems.PYROXENE));assertEquals(1,loaded.completedBatches());
+    }
+    @Test void coreDrillNeverGeneratesOresFromAProcessingFormulaOrTheWrongDimension(){
+        var m=coreDrill();var w=boreWorld();
+        assertEquals("collector_environment",m.drill().step(m,w,false));assertEquals(0,w.reads);
+        m.drill().toggle();assertEquals("drill_off",m.drill().step(m,w,true));assertEquals(0,w.reads);
+        for(int i=0;i<400;i++)m.processTick(new ColonyEnvironment(true,true,true,true));
+        assertEquals(0,m.completedBatches());assertEquals(1,m.getItem(1).getCount());assertEquals(1,m.getItem(2).getCount());assertTrue(m.getItem(5).isEmpty());
+    }
+    @Test void coreDrillHasBoundedSearchAndFiniteDepletedVolume(){
+        var m=coreDrill();var w=new BoreTestWorld();String status="";
+        for(int i=0;i<55;i++){int before=w.reads;status=m.drill().step(m,w,true);assertTrue(w.reads-before<=16);}
+        assertEquals("drill_depleted",status);assertEquals(864,m.drill().cursor());assertEquals(864,w.reads);
+        assertEquals(0,w.writes);assertEquals(1,m.getItem(1).getCount());assertEquals(0,m.getItem(0).getDamageValue());
+    }
+    @Test void coreDrillBreaksAnExhaustedBitWithoutGrantingAnotherExtraction(){
+        var m=coreDrill();var w=boreWorld();m.getItem(0).setDamageValue(255);
+        for(int i=0;i<200;i++)m.drill().step(m,w,true);assertTrue(m.getItem(0).isEmpty());assertEquals(1,w.writes);
+        m.setItem(1,new ItemStack(ColonyContent.CHARGED_POWER_CELL));m.setItem(2,new ItemStack(dev.vic17usd.spacefabric.recovery.RecoveryContent.CHILLED_COOLANT));
+        assertEquals("inputs",m.drill().step(m,w,true));assertEquals(1,w.writes);
+    }
+    @Test void coreDrillSupplyContractUsesExistingEnergyCoolantAndWaterNetworks(){
+        var m=thermalMachine(ColonyContent.Machine.DRILL,0);m.drill().toggle();m.setItem(0,new ItemStack(dev.vic17usd.spacefabric.mining.MiningContent.BIT));
+        var cold=new TransportBuffer(TransportChannel.LIQUID);cold.insert(TransportResource.CHILLED_COOLANT,1000);
+        var water=new TransportBuffer(TransportChannel.LIQUID);water.select(TransportResource.WATER);
+        var power=new TransportBuffer(TransportChannel.ENERGY);power.insert(TransportResource.POWER,2400);
+        var graphs=List.of(transportGraph(cold,10),transportGraph(water,20),transportGraph(power,30));var port=transportPort(1,1);
+        assertTrue(port.supplyInputs(m,graphs,true));assertTrue(m.getItem(1).is(ColonyContent.CHARGED_POWER_CELL));assertTrue(m.getItem(2).is(dev.vic17usd.spacefabric.recovery.RecoveryContent.CHILLED_COOLANT));
+        var w=boreWorld();for(int i=0;i<200;i++)m.drill().step(m,w,true);assertTrue(port.exportOutputs(m,graphs));
+        assertEquals(1000,water.state().amount());assertEquals(0,cold.state().amount());assertEquals(0,power.state().amount());
+        assertTrue(m.getItem(6).isEmpty());assertEquals(1,port.getItem(0).getCount());assertEquals(1,port.getItem(1).getCount());
+        assertTrue(m.getItem(3).is(ModItems.VENUSIAN_OLIVINE));assertEquals(1,m.getItem(0).getDamageValue());assertTrue(ThermalSystem.generation(ColonyContent.Machine.DRILL)>40);
+    }
+    @Test void scannerPointsPersistOnTheDeviceWithDimensionAndCoordinates(){
+        var scanner=new ItemStack(dev.vic17usd.spacefabric.mining.MiningContent.SCANNER);
+        OperationsNavigator.remember(scanner,new OperationsNavigator.Point("space_fabric:venus",new net.minecraft.core.BlockPos(20,-35,80),"Olivino"));
+        var encoded=ItemStack.CODEC.encodeStart(registries.createSerializationContext(net.minecraft.nbt.NbtOps.INSTANCE),scanner).getOrThrow();
+        var loaded=ItemStack.CODEC.parse(registries.createSerializationContext(net.minecraft.nbt.NbtOps.INSTANCE),encoded).getOrThrow();
+        assertEquals(1,OperationsNavigator.points(loaded).size());assertEquals("space_fabric:venus",OperationsNavigator.points(loaded).getFirst().dimension());assertEquals(-35,OperationsNavigator.points(loaded).getFirst().pos().getY());
+        assertFalse(miningRecognizesOre(Blocks.DIAMOND_ORE));assertFalse(miningRecognizesOre(ModBlocks.MARTIAN_OLIVINE_STONE));
+    }
+    private boolean miningRecognizesOre(net.minecraft.world.level.block.Block b){return dev.vic17usd.spacefabric.mining.MiningDrill.mineral(b);}
+    @ParameterizedTest @ValueSource(strings={"venus_core_drill","venus_drill_bit","venus_geological_scanner"})
+    void miningRecipesDecodeWithNativeCodecs(String name)throws IOException{
+        assertNotNull(Recipe.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("recipe/"+name)).getOrThrow());
+    }
+    @Test void miningAdvancementAndDrillLootDecodeNatively()throws IOException{
+        assertNotNull(net.minecraft.advancements.Advancement.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("advancement/industry/mining")).getOrThrow());
+        assertNotNull(LootTable.DIRECT_CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("loot_table/blocks/venus_core_drill")).getOrThrow());
+        assertTrue(ColonyContent.MACHINE_TYPE.isValid(ColonyContent.DRILL.defaultBlockState()));assertEquals(15,ColonyContent.Machine.DRILL.ordinal());
+        assertTrue(ColonyRecipes.accepts(ColonyContent.Machine.DRILL,0,new ItemStack(dev.vic17usd.spacefabric.mining.MiningContent.BIT)));assertFalse(ColonyRecipes.accepts(ColonyContent.Machine.DRILL,0,new ItemStack(Items.IRON_PICKAXE)));
+    }
+    @Test void recipeViewerShowsWorldExtractionForEachVenusMineral()throws IOException{
+        var catalog=viewerCatalog();
+        for(var item:List.of(ModItems.VENUSIAN_OLIVINE,ModItems.PYROXENE,ModItems.SULFUR_CRYSTAL)){
+            var card=catalog.find(item,false).stream().filter(c->c.id().startsWith("space_fabric:colony/venus_core_extraction/")).findFirst().orElseThrow();
+            assertTrue(card.station().is(ColonyContent.DRILL.asItem()));assertEquals(200,card.duration());assertEquals(3,card.outputs().size());
+            assertTrue(card.outputs().getFirst().is(item));assertTrue(card.inputs().getFirst().getFirst().is(dev.vic17usd.spacefabric.mining.MiningContent.BIT));
+        }
     }
 }

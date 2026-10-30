@@ -1,0 +1,22 @@
+{
+  "parent": "space_fabric:industry/thermal",
+  "criteria": {
+    "mining": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "space_fabric:venus_composite_plate"
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "recipes": [
+      "space_fabric:venus_geological_scanner",
+      "space_fabric:venus_drill_bit",
+      "space_fabric:venus_core_drill"
+    ]
+  }
+}

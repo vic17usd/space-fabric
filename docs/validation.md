@@ -707,3 +707,28 @@ Minimapa compacto, versión 0.44.2:
   ni omisiones; once comprobaciones de recursos y modelos por CPU.
 - 1.205 JSON válidos; JAR y versión comprobados. Ajuste visual pendiente de
   observar en cliente gráfico y con Sodium. No cambia el formato de guardado.
+
+Prospección y minería industrial, versión 0.45.0:
+
+- `./gradlew build --console=plain`: **617 pruebas JUnit**, cero fallos, errores
+  u omisiones. Once comprobaciones por CPU; la de colonia incluye la nueva textura
+  y el modelo nativo de la perforadora. **1.217 JSON** válidos.
+- Dieciocho casos añadidos: dos volúmenes completos sin celdas repetidas; extracción
+  de un bloque real y retorno de recipientes; salidas bloqueadas y calor; pausa
+  sin leer celdas descargadas; denegación y revalidación tras callbacks; sustitución
+  fallida; guardado del propietario, cursor y extracción parcial; dimensiones y
+  producción sin mundo rechazadas; búsqueda acotada y agotamiento; rotura de broca;
+  puertos reales de energía/frío/agua; puntos del escáner en ItemStack; tres recetas,
+  avance y loot nativos; consultas del visor para los tres minerales.
+- El contrato de suministro de la perforadora no puede ejecutarse mediante
+  Formula.commit ni el procesador de recetas: la transacción del mundo es obligatoria.
+  La prueba general de recetas distingue este contrato de las recetas de fabricación.
+- Escáner: 512 celdas por tick compartidas entre un máximo de dos trabajos activos
+  de Venus. Perforadora: 16 comprobaciones de búsqueda por tick de trabajo y volumen
+  finito de 864 posiciones. Ninguno solicita chunks remotos ni utiliza /locate.
+- La capa de servidor consulta propietario, dimensión, permisos, borde, spawn y el
+  evento BEFORE de Fabric. Las pruebas usan un mundo en memoria para observar
+  denegaciones y cambios; no se ha probado un mod de parcelas concreto.
+- No se ha ejecutado cliente gráfico ni partida multijugador. Sondeo interactivo,
+  importación visual al atlas, control por redstone, conexión física completa y
+  permisos con otros mods quedan pendientes del checklist de docs/venus-mining.md.

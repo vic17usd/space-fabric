@@ -21,7 +21,7 @@ public final class MaintenanceBlockItem extends BlockItem {
             if(charge>0)lines.accept(Component.translatable("thermal.space_fabric.charge",Math.clamp(charge,0,4800)));
         }
         var kind=dev.vic17usd.spacefabric.colony.ColonyContent.kind(getBlock());
-        if(kind==dev.vic17usd.spacefabric.colony.ColonyContent.Machine.ATMOSPHERIC_COLLECTOR||kind==dev.vic17usd.spacefabric.colony.ColonyContent.Machine.CERAMIC_KILN||kind==dev.vic17usd.spacefabric.colony.ColonyContent.Machine.EXCHANGER||kind==dev.vic17usd.spacefabric.colony.ColonyContent.Machine.GREENHOUSE||kind==dev.vic17usd.spacefabric.colony.ColonyContent.Machine.RECLAIMER||kind==dev.vic17usd.spacefabric.colony.ColonyContent.Machine.DOCK||kind==dev.vic17usd.spacefabric.colony.ColonyContent.Machine.SURVEY)
+        if(kind==dev.vic17usd.spacefabric.colony.ColonyContent.Machine.DRILL||kind==dev.vic17usd.spacefabric.colony.ColonyContent.Machine.ATMOSPHERIC_COLLECTOR||kind==dev.vic17usd.spacefabric.colony.ColonyContent.Machine.CERAMIC_KILN||kind==dev.vic17usd.spacefabric.colony.ColonyContent.Machine.EXCHANGER||kind==dev.vic17usd.spacefabric.colony.ColonyContent.Machine.GREENHOUSE||kind==dev.vic17usd.spacefabric.colony.ColonyContent.Machine.RECLAIMER||kind==dev.vic17usd.spacefabric.colony.ColonyContent.Machine.DOCK||kind==dev.vic17usd.spacefabric.colony.ColonyContent.Machine.SURVEY)
             lines.accept(Component.translatable("block.space_fabric."+net.minecraft.core.registries.BuiltInRegistries.BLOCK.getKey(getBlock()).getPath()+".hint"));
     }
 }

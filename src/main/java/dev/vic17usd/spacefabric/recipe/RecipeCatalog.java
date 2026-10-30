@@ -46,6 +46,12 @@ public final class RecipeCatalog {
             for(int slot=0;slot<3;slot++) {
                 int index=slot;inputs.add(formula.inputs().stream().filter(p->p.slot()==index).map(p->p.stack()).toList());
             }
+            if(formula.machine()==dev.vic17usd.spacefabric.colony.ColonyContent.Machine.DRILL){
+                for(var mineral:List.of(ModItems.VENUSIAN_OLIVINE,ModItems.PYROXENE,ModItems.SULFUR_CRYSTAL))
+                    cards.add(new RecipeCard("space_fabric:colony/"+formula.id()+"/"+BuiltInRegistries.ITEM.getKey(mineral).getPath(),"colony",3,formula.duration(),0,
+                        List.copyOf(inputs),List.of(new ItemStack(mineral),new ItemStack(dev.vic17usd.spacefabric.colony.ColonyContent.EMPTY_POWER_CELL),new ItemStack(dev.vic17usd.spacefabric.colony.ColonyContent.WATER_CANISTER)),
+                        new ItemStack(dev.vic17usd.spacefabric.colony.ColonyContent.DRILL)));
+            }
             cards.add(new RecipeCard("space_fabric:colony/"+formula.id(),"colony",3,formula.duration(),0,
                     List.copyOf(inputs),formula.outputs().stream().map(p->p.stack()).toList(),
                     new ItemStack(dev.vic17usd.spacefabric.colony.ColonyContent.block(formula.machine()))));

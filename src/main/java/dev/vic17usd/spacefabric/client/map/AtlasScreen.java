@@ -60,7 +60,7 @@ public final class AtlasScreen extends Screen {
         try {
             int count=0;
             var inventory=new ArrayList<>(minecraft.player.getInventory().getNonEquipmentItems());inventory.add(minecraft.player.getOffhandItem());
-            for(var stack:inventory)if(stack.is(ExpansionContent.NAVIGATOR)) {
+            for(var stack:inventory)if(stack.is(ExpansionContent.NAVIGATOR)||stack.is(dev.vic17usd.spacefabric.mining.MiningContent.SCANNER)) {
                 for(var p:OperationsNavigator.points(stack))if(p.dimension().equals(dimension)&&data.waypoints().size()<AtlasData.MAX_WAYPOINTS
                         &&data.waypoints().stream().noneMatch(w->w.x()==p.pos().getX()&&w.y()==p.pos().getY()&&w.z()==p.pos().getZ())) {
                     try{data.put(new AtlasData.Waypoint(UUID.randomUUID(),p.label(),p.pos().getX(),p.pos().getY(),p.pos().getZ(),0x65D9ED,true));count++;}

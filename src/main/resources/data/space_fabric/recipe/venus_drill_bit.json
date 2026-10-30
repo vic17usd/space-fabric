@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " D ",
+    "PDP",
+    " C "
+  ],
+  "key": {
+    "D": "minecraft:diamond",
+    "P": "space_fabric:venus_composite_plate",
+    "C": "space_fabric:pyroxene_ceramic"
+  },
+  "result": {
+    "id": "space_fabric:venus_drill_bit",
+    "count": 1
+  }
+}

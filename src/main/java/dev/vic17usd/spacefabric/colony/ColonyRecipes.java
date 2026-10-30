@@ -18,7 +18,7 @@ public final class ColonyRecipes {
             return outputs.stream().allMatch(p->{var old=inventory.getItem(p.slot());return old.isEmpty()||old.is(p.item())&&old.getCount()+p.count()<=old.getMaxStackSize();});
         }
         public boolean commit(Container inventory) {
-            if(!accepts(inventory)||!fits(inventory))return false;
+            if(machine==ColonyContent.Machine.DRILL||!accepts(inventory)||!fits(inventory))return false;
             inputs.forEach(p->inventory.removeItem(p.slot(),p.count()));
             outputs.forEach(p->{var old=inventory.getItem(p.slot());if(old.isEmpty())inventory.setItem(p.slot(),p.stack());else old.grow(p.count());});
             inventory.setChanged();return true;
@@ -88,6 +88,11 @@ public final class ColonyRecipes {
         list.add(new Formula("breath_recovery",ColonyContent.Machine.RECLAIMER,200,
                 List.of(new Part(0,ColonyContent.EMPTY_CANISTER,2),p(1,ColonyContent.CHARGED_POWER_CELL),p(2,dev.vic17usd.spacefabric.maintenance.MaintenanceContent.FILTER)),
                 List.of(p(3,ColonyContent.WATER_CANISTER),p(4,IndustryContent.CARBON_DIOXIDE),p(5,ColonyContent.EMPTY_POWER_CELL),p(6,dev.vic17usd.spacefabric.maintenance.MaintenanceContent.SPENT_FILTER))));
+        // Supply contract for transport and the browser. The drill never commits this formula:
+        // its world transaction returns one mineral and wears (rather than consumes) the bit.
+        list.add(new Formula("venus_core_extraction",ColonyContent.Machine.DRILL,200,
+                List.of(p(0,dev.vic17usd.spacefabric.mining.MiningContent.BIT),p(1,ColonyContent.CHARGED_POWER_CELL),p(2,dev.vic17usd.spacefabric.recovery.RecoveryContent.CHILLED_COOLANT)),
+                List.of(p(5,ColonyContent.EMPTY_POWER_CELL),p(6,ColonyContent.WATER_CANISTER))));
         return List.copyOf(list);
     }
     public static boolean accepts(ColonyContent.Machine machine,int slot,ItemStack stack) {

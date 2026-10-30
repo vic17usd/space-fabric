@@ -26,12 +26,19 @@ public final class ColonyMachineBlock extends BaseEntityBlock {
         super.setPlacedBy(level,pos,state,placer,stack);
         if(!level.isClientSide()&&level.getBlockEntity(pos) instanceof ColonyMachineBlockEntity machine){
             machine.restoreThermal(stack);
+            if(placer!=null&&machine.kind()==ColonyContent.Machine.DRILL)machine.drill().owner(placer.getUUID());
         }dev.vic17usd.spacefabric.maintenance.MaintenanceActions.restore(level,pos,stack);
     }
     @Override protected InteractionResult useWithoutItem(BlockState state,Level level,BlockPos pos,Player player,BlockHitResult hit) {
         if(!level.isClientSide() && level.getBlockEntity(pos) instanceof ColonyMachineBlockEntity machine) {
             player.sendOverlayMessage(machine.status());
             if(player.isSecondaryUseActive()&&player.mayBuild()&&level.mayInteract(player,pos)){
+                if(machine.kind()==ColonyContent.Machine.DRILL){
+                    machine.drill().owner(player.getUUID());
+                    if(player.getUUID().equals(machine.drill().owner())){machine.drill().toggle();machine.setChanged();player.sendSystemMessage(dev.vic17usd.spacefabric.mining.ProspectingSystem.text(machine.drill().enabled()?"drill_enabled":"drill_disabled"));}
+                    else player.sendSystemMessage(dev.vic17usd.spacefabric.mining.ProspectingSystem.text("not_owner"));
+                    return InteractionResult.SUCCESS;
+                }
                 if(machine.kind()==ColonyContent.Machine.DOCK){machine.toggleDock();player.sendOverlayMessage(net.minecraft.network.chat.Component.translatable(machine.dockEnabled()?"colony.space_fabric.dock_wait":"colony.space_fabric.dock_off"));return InteractionResult.SUCCESS;}
                 if(machine.kind()==ColonyContent.Machine.SURVEY&&player instanceof net.minecraft.server.level.ServerPlayer server){ExpeditionSystem.interact(server,machine);return InteractionResult.SUCCESS;}
             }

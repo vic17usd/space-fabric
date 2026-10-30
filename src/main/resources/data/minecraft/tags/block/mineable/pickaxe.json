@@ -87,6 +87,7 @@
     "space_fabric:venus_life_reclaimer",
     "space_fabric:venus_service_dock",
     "space_fabric:venus_expedition_console",
-    "space_fabric:venus_grow_lamp"
+    "space_fabric:venus_grow_lamp",
+    "space_fabric:venus_core_drill"
   ]
 }

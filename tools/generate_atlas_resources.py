@@ -7,7 +7,7 @@ root=Path(__file__).resolve().parents[1]/'src/main/resources/assets/space_fabric
 texts={
     'title':('Atlas planetario','Planetary Atlas'),
     'overworld':('Tierra · Overworld','Earth · Overworld'),
-    'new':('Aquí +','Here +'), 'import':('Navegador','Navigator'),
+    'new':('Aquí +','Here +'), 'import':('Importar','Import'),
     'markers':('Marcadores (%s/128)','Waypoints (%s/128)'),
     'edit':('Editar destino','Edit destination'), 'close':('Cerrar','Close'),
     'center':('Centrar','Recenter'), 'new_marker':('Guardar localización','Save location'),

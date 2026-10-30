@@ -22,6 +22,9 @@ public final class ColonyMachineBlockEntity extends BaseContainerBlockEntity imp
     private final LifeSupport support=new LifeSupport();
     private final ThermalBudget thermal=new ThermalBudget();
     private ColonyMachineBlockEntity thermalOwner;
+    private final dev.vic17usd.spacefabric.mining.MiningDrill drill=new dev.vic17usd.spacefabric.mining.MiningDrill();
+    public dev.vic17usd.spacefabric.mining.MiningDrill drill(){return drill;}
+    public void recordDrillBatch(){completedBatches=Math.min(Integer.MAX_VALUE-1,completedBatches)+1;lastCompletedRecipe="venus_core_extraction";setChanged();}
     private int coolingCharge;
     private boolean dockEnabled;
     private int naturalMission;
@@ -57,7 +60,7 @@ public final class ColonyMachineBlockEntity extends BaseContainerBlockEntity imp
     public ColonyMachineBlockEntity(BlockPos pos,BlockState state){super(ColonyContent.MACHINE_TYPE,pos,state);}
     public ColonyContent.Machine kind(){return ColonyContent.kind(getBlockState().getBlock());}
     public LifeSupport support(){return support;}
-    public int progress(){return progress;}
+    public int progress(){return kind()==ColonyContent.Machine.DRILL?drill.progress():progress;}
 
     public SealScanner.Room enclosure() { return room!=null&&room.sealed()?room:null; }
     /** Diagnostic coverage survives a breach, but can never grant atmospheric protection. */
@@ -91,9 +94,9 @@ public final class ColonyMachineBlockEntity extends BaseContainerBlockEntity imp
             public int getCount(){return 11;}public void set(int index,int value) { }
             public int get(int index) {
                 return switch(index) {
-                    case 0->progress;
-                    case 1->ColonyRecipes.ALL.stream().filter(f->f.id().equals(recipe)).findFirst().map(ColonyRecipes.Formula::duration).orElse(0);
-                    case 2->Math.max(0,java.util.List.of("idle","inputs","output_full","sunlight","heat","processing","maintenance_failure","collector_environment","collector_intake","overheating","cooling_ready","greenhouse_room","greenhouse_light","recovery_wait","dock_off","dock_wait","dock_ready","survey_ready").indexOf(status));
+                    case 0->kind()==ColonyContent.Machine.DRILL?drill.progress():progress;
+                    case 1->kind()==ColonyContent.Machine.DRILL?dev.vic17usd.spacefabric.mining.MiningDrill.DURATION:ColonyRecipes.ALL.stream().filter(f->f.id().equals(recipe)).findFirst().map(ColonyRecipes.Formula::duration).orElse(0);
+                    case 2->Math.max(0,java.util.List.of("idle","inputs","output_full","sunlight","heat","processing","maintenance_failure","collector_environment","collector_intake","overheating","cooling_ready","greenhouse_room","greenhouse_light","recovery_wait","dock_off","dock_wait","dock_ready","survey_ready","drill_off","drill_search","drill_depleted","drill_protected","drill_changed","drill_owner","drill_redstone","unloaded").indexOf(status));
                     case 3->maintenance.integrity();case 4->maintenance.state().coating();case 5->maintenance.state().filter();case 6->maintenance.risk().ordinal();case 7->kind().ordinal();case 8->thermal().heat();case 9->thermal().tripped()?1:0;default->coolingCharge;
                 };
             }
@@ -102,7 +105,7 @@ public final class ColonyMachineBlockEntity extends BaseContainerBlockEntity imp
     public Component status() {
         return kind()==ColonyContent.Machine.HABITAT?Component.translatable("colony.space_fabric.habitat_status",
                 Component.translatable("colony.space_fabric."+status),support.oxygen(),support.energy(),support.coolant(),room==null?0:room.air().size()):
-                Component.translatable("colony.space_fabric.machine_status",Component.translatable("colony.space_fabric."+status),progress);
+                Component.translatable("colony.space_fabric.machine_status",Component.translatable("colony.space_fabric."+status),progress());
     }
     public static void tick(Level level,BlockPos pos,BlockState state,ColonyMachineBlockEntity machine) {
         if(!(level instanceof ServerLevel server))return;
@@ -113,6 +116,11 @@ public final class ColonyMachineBlockEntity extends BaseContainerBlockEntity imp
         if(machine.kind()==ColonyContent.Machine.HABITAT) {
             if(machine.lastWork==Long.MIN_VALUE||level.getGameTime()-machine.lastWork>=20) {
                 machine.lastWork=level.getGameTime();machine.tickHabitat(server);machine.setChanged();
+            }
+        } else if(machine.kind()==ColonyContent.Machine.DRILL) {
+            if(machine.maintenance.allowsWork(level.getGameTime())){
+                machine.status=level.hasNeighborSignal(pos)?"drill_redstone":machine.drill.tick(server,machine);
+                if(machine.status.equals("processing"))machine.markWorked();machine.setChanged();
             }
         } else if(machine.kind()==ColonyContent.Machine.DOCK) {
             if(level.getGameTime()%20==0){machine.status=machine.dockEnabled?"dock_wait":"dock_off";
@@ -169,6 +177,7 @@ public final class ColonyMachineBlockEntity extends BaseContainerBlockEntity imp
     /** Server processing path, also usable by native inventory/persistence tests without a game server. */
     public void processTick(ColonyEnvironment environment) {
         if(maintenance.failed()){status="maintenance_failure";return;}
+        if(kind()==ColonyContent.Machine.DRILL){status="drill_off";return;}
         if(kind()==ColonyContent.Machine.SURVEY){status="survey_ready";return;}
         if(kind()==ColonyContent.Machine.DOCK)return;
         if(environment.venus()&&kind()!=ColonyContent.Machine.EXCHANGER&&thermal().tripped()){status="overheating";return;}
@@ -195,7 +204,7 @@ public final class ColonyMachineBlockEntity extends BaseContainerBlockEntity imp
     @Override public boolean canPlaceItemThroughFace(int slot,ItemStack stack,Direction face){return canPlaceItem(slot,stack);}
     @Override public boolean canTakeItemThroughFace(int slot,ItemStack stack,Direction face){return slot>=3&&(kind()!=ColonyContent.Machine.DOCK||slot!=8);}
     @Override protected void loadAdditional(ValueInput input) {
-        super.loadAdditional(input);items=NonNullList.withSize(9,ItemStack.EMPTY);ContainerHelper.loadAllItems(input,items);
+        super.loadAdditional(input);drill.load(input);items=NonNullList.withSize(9,ItemStack.EMPTY);ContainerHelper.loadAllItems(input,items);
         progress=Math.clamp(input.getIntOr("Progress",0),0,400);recipe=input.getStringOr("Recipe","");
         completedBatches=Math.max(0,input.getIntOr("CompletedBatches",0));
         lastCompletedRecipe=input.getStringOr("LastCompletedRecipe","");
@@ -206,7 +215,7 @@ public final class ColonyMachineBlockEntity extends BaseContainerBlockEntity imp
         active=false;room=null;lastEnclosure=null;lastWork=lastValidation=lastSealScan=Long.MIN_VALUE;
     }
     @Override protected void saveAdditional(ValueOutput output) {
-        super.saveAdditional(output);output.putInt("Respired",support.respired());output.putBoolean("DockEnabled",dockEnabled);output.putInt("NaturalMission",naturalMission);output.putInt("IndustrialHeat",thermal.heat());output.putBoolean("ThermalTrip",thermal.tripped());output.putInt("CoolingCharge",coolingCharge);output.store("Maintenance",dev.vic17usd.spacefabric.maintenance.MachineWear.State.CODEC,maintenance.state());ContainerHelper.saveAllItems(output,items);output.putInt("Progress",progress);output.putString("Recipe",recipe);
+        super.saveAdditional(output);drill.save(output);output.putInt("Respired",support.respired());output.putBoolean("DockEnabled",dockEnabled);output.putInt("NaturalMission",naturalMission);output.putInt("IndustrialHeat",thermal.heat());output.putBoolean("ThermalTrip",thermal.tripped());output.putInt("CoolingCharge",coolingCharge);output.store("Maintenance",dev.vic17usd.spacefabric.maintenance.MachineWear.State.CODEC,maintenance.state());ContainerHelper.saveAllItems(output,items);output.putInt("Progress",progress);output.putString("Recipe",recipe);
         output.putString("LastCompletedRecipe",lastCompletedRecipe);
         output.putInt("CompletedBatches",completedBatches);output.putInt("Oxygen",support.oxygen());output.putInt("Energy",support.energy());output.putInt("Coolant",support.coolant());
         output.putInt("Volume",room!=null&&room.sealed()?room.air().size():0);output.putBoolean("Pressurized",support.pressurized());

@@ -69,8 +69,8 @@ Al pulsar un marcador de la lista se selecciona y se centra el mapa en él.
 pertenece al planeta actual, la distancia al jugador. Los botones inferiores
 de la lista recorren las páginas cuando hay muchas localizaciones.
 
-El botón **Navegador** importa las localizaciones de ese planeta desde los
-navegadores de expedición de tu inventario o mano secundaria. Omite coordenadas
+El botón **Importar** importa las localizaciones de ese planeta desde los
+navegadores de expedición y escáneres geológicos de tu inventario o mano secundaria. Omite coordenadas
 ya registradas y respeta el límite de 128. Los datos originales del navegador
 se conservan. Puedes importarlos de nuevo para incorporar destinos nuevos.
 
