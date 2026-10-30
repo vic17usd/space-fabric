@@ -40,4 +40,19 @@ class RoverSystemsTest {
         assertTrue(Math.abs(RoverSystems.speed(speed,0,false,true))<Math.abs(speed));
         assertEquals(0,RoverSystems.speed(0,1,false,false));
     }
+    @Test void optimizedRoverHalvesTractionAndCoolingWhileStillConsumingOxygenAndAuxiliaryPower(){
+        var original=new RoverSystems.State(24000,9600,9600,100);var improved=original.optimize();
+        for(int tick=1;tick<=200;tick++){original=original.tick(true,true,Planet.VENUS,tick);improved=improved.tick(true,true,Planet.VENUS,tick);}
+        assertEquals(23790,original.energy());assertEquals(23890,improved.energy());assertEquals(9400,original.oxygen());assertEquals(9400,improved.oxygen());
+        assertEquals(9400,original.coolant());assertEquals(9500,improved.coolant());assertTrue(improved.optimized());
+        assertEquals(improved,improved.optimize());assertEquals(improved,improved.tick(false,true,Planet.VENUS,5000000));
+        assertFalse(new RoverSystems.State(0,1,1,100,true).protects(Planet.VENUS,64));
+    }
+    @Test void refillingAndRepairingAnOptimizedRoverPreserveTheUpgradeWithoutChangingCapacities(){
+        var state=new RoverSystems.State(0,0,0,50,true);
+        for(var supply:RoverSystems.Supply.values()){state=state.supply(supply);assertTrue(state.optimized());}
+        assertEquals(2400,state.energy());assertEquals(4800,state.oxygen());assertEquals(7200,state.coolant());assertEquals(75,state.hull());
+        var loaded=RoverSystems.State.CODEC.parse(com.mojang.serialization.JsonOps.INSTANCE,RoverSystems.State.CODEC.encodeStart(com.mojang.serialization.JsonOps.INSTANCE,state).getOrThrow()).getOrThrow();assertEquals(state,loaded);
+        var old=RoverSystems.State.CODEC.parse(com.mojang.serialization.JsonOps.INSTANCE,com.google.gson.JsonParser.parseString("{\"energy\":1200,\"hull\":90}")).getOrThrow();assertFalse(old.optimized());assertEquals(1200,old.energy());
+    }
 }

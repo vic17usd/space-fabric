@@ -56,6 +56,10 @@ public final class RecipeCatalog {
                     List.copyOf(inputs),formula.outputs().stream().map(p->p.stack()).toList(),
                     new ItemStack(dev.vic17usd.spacefabric.colony.ColonyContent.block(formula.machine()))));
         }
+        cards.add(new RecipeCard("space_fabric:research/modules","colony",3,0,0,
+            dev.vic17usd.spacefabric.research.ResearchCosts.forStage(4).stream().map(c->List.of(new ItemStack(c.item(),c.count()))).toList(),
+            List.of(new ItemStack(dev.vic17usd.spacefabric.research.ResearchContent.ROVER_MODULE),new ItemStack(dev.vic17usd.spacefabric.research.ResearchContent.SCANNER_LENS),new ItemStack(dev.vic17usd.spacefabric.colony.ColonyContent.EMPTY_POWER_CELL)),
+            new ItemStack(dev.vic17usd.spacefabric.colony.ColonyContent.SURVEY)));
         return new RecipeCatalog(cards);
     }
 }

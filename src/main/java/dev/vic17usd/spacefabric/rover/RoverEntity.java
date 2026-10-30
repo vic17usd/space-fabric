@@ -33,13 +33,18 @@ public final class RoverEntity extends Entity implements MenuProvider {
     private static final EntityDataAccessor<Integer> ENERGY=SynchedEntityData.defineId(RoverEntity.class,EntityDataSerializers.INT),
             OXYGEN=SynchedEntityData.defineId(RoverEntity.class,EntityDataSerializers.INT),COOLANT=SynchedEntityData.defineId(RoverEntity.class,EntityDataSerializers.INT),
             HULL=SynchedEntityData.defineId(RoverEntity.class,EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> OPTIMIZED=SynchedEntityData.defineId(RoverEntity.class,EntityDataSerializers.BOOLEAN);
     private final SimpleContainer inventory=new SimpleContainer(14);
     private final InterpolationHandler interpolation=new InterpolationHandler(this,3);
     private double speed;
     public RoverEntity(EntityType<? extends RoverEntity> type,Level level){super(type,level);}
-    @Override protected void defineSynchedData(SynchedEntityData.Builder data){data.define(ENERGY,0);data.define(OXYGEN,0);data.define(COOLANT,0);data.define(HULL,100);}
-    public RoverSystems.State systems(){return new RoverSystems.State(entityData.get(ENERGY),entityData.get(OXYGEN),entityData.get(COOLANT),entityData.get(HULL));}
-    public void restoreSystems(RoverSystems.State state){entityData.set(ENERGY,state.energy());entityData.set(OXYGEN,state.oxygen());entityData.set(COOLANT,state.coolant());entityData.set(HULL,state.hull());}
+    @Override protected void defineSynchedData(SynchedEntityData.Builder data){data.define(ENERGY,0);data.define(OXYGEN,0);data.define(COOLANT,0);data.define(HULL,100);data.define(OPTIMIZED,false);}
+    public RoverSystems.State systems(){return new RoverSystems.State(entityData.get(ENERGY),entityData.get(OXYGEN),entityData.get(COOLANT),entityData.get(HULL),entityData.get(OPTIMIZED));}
+    public void restoreSystems(RoverSystems.State state){entityData.set(ENERGY,state.energy());entityData.set(OXYGEN,state.oxygen());entityData.set(COOLANT,state.coolant());entityData.set(HULL,state.hull());entityData.set(OPTIMIZED,state.optimized());}
+    public boolean installEfficiency(){
+        if(aerial()||isVehicle()||Math.abs(speed)>.01||systems().optimized()||level()!=null&&level().isClientSide())return false;
+        restoreSystems(systems().optimize());return true;
+    }
     public SimpleContainer inventory(){return inventory;}
     public Planet planet(){return level()==null?Planet.EARTH:PlanetDimensions.find(level()).orElse(Planet.EARTH);}
     public boolean protects(){return !isRemoved()&&systems().protects(planet(),getY())&&!isUnderWater();}
@@ -74,6 +79,10 @@ public final class RoverEntity extends Entity implements MenuProvider {
         if(!(level() instanceof ServerLevel))return InteractionResult.SUCCESS;
         if(!player.isAlive()||player.isSpectator())return InteractionResult.PASS;
         var held=player.getItemInHand(hand);
+        if(held.is(dev.vic17usd.spacefabric.research.ResearchContent.ROVER_MODULE)){
+            if(!installEfficiency()){player.sendSystemMessage(dev.vic17usd.spacefabric.research.ResearchSystem.text("rover_hint"));return InteractionResult.FAIL;}
+            held.consume(1,player);player.sendSystemMessage(dev.vic17usd.spacefabric.research.ResearchSystem.text("rover_installed"));return InteractionResult.SUCCESS_SERVER;
+        }
         if(held.is(IndustryContent.COMPOSITE_PLATE)&&systems().hull()<100) {
             restoreSystems(systems().supply(RoverSystems.Supply.REPAIR));held.consume(1,player);return InteractionResult.SUCCESS_SERVER;
         }
@@ -105,8 +114,8 @@ public final class RoverEntity extends Entity implements MenuProvider {
         }
         resetFallDistance();getPassengers().forEach(Entity::resetFallDistance);
         var after=state.tick(pilot!=null,Math.abs(speed)>.005,planet(),tickCount);
-        if(aerial()&&!onGround())after=new RoverSystems.State(after.energy()-1,after.oxygen(),after.coolant(),after.hull());
-        if(tickCount%20==0&&!RoverSystems.rated(planet(),getY()))after=new RoverSystems.State(after.energy(),after.oxygen(),after.coolant(),after.hull()-5);
+        if(aerial()&&!onGround())after=new RoverSystems.State(after.energy()-1,after.oxygen(),after.coolant(),after.hull(),after.optimized());
+        if(tickCount%20==0&&!RoverSystems.rated(planet(),getY()))after=new RoverSystems.State(after.energy(),after.oxygen(),after.coolant(),after.hull()-5,after.optimized());
         restoreSystems(after);
         if(pilot!=null&&tickCount%20==0)pilot.sendOverlayMessage(Component.translatable(protects()?"rover.space_fabric.telemetry":"rover.space_fabric.warning",after.energy(),after.oxygen(),after.coolant(),after.hull()));
     }
@@ -126,7 +135,7 @@ public final class RoverEntity extends Entity implements MenuProvider {
             for(var stack:inventory.getItems())if(!stack.isEmpty())spawnAtLocation(level,stack.copy());
             inventory.clearContent();discard();return true;
         }
-        restoreSystems(new RoverSystems.State(systems().energy(),systems().oxygen(),systems().coolant(),systems().hull()-(int)Math.clamp(amount,1,25)));return true;
+        restoreSystems(new RoverSystems.State(systems().energy(),systems().oxygen(),systems().coolant(),systems().hull()-(int)Math.clamp(amount,1,25),systems().optimized()));return true;
     }
     @Override protected void addAdditionalSaveData(ValueOutput output){output.store("RoverSystems",RoverSystems.State.CODEC,systems());ContainerHelper.saveAllItems(output,inventory.getItems());}
     @Override protected void readAdditionalSaveData(ValueInput input){restoreSystems(input.read("RoverSystems",RoverSystems.State.CODEC).orElse(RoverSystems.State.EMPTY));inventory.clearContent();ContainerHelper.loadAllItems(input,inventory.getItems());speed=0;setDeltaMovement(Vec3.ZERO);}

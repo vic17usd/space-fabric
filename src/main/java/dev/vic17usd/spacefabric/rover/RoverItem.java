@@ -34,6 +34,6 @@ public final class RoverItem extends Item {
         super.appendHoverText(stack,context,display,lines,flag);var state=stored(stack);
         lines.accept(net.minecraft.network.chat.Component.translatable("rover.space_fabric.telemetry",state.energy(),state.oxygen(),state.coolant(),state.hull()));
         lines.accept(net.minecraft.network.chat.Component.translatable(stack.is(dev.vic17usd.spacefabric.colony.ExpansionContent.AEROSTAT)?"expansion.space_fabric.aerial_controls":"rover.space_fabric.controls"));
-        lines.accept(net.minecraft.network.chat.Component.translatable("rover.space_fabric.service"));
+        lines.accept(net.minecraft.network.chat.Component.translatable("rover.space_fabric.service"));if(state.optimized())lines.accept(dev.vic17usd.spacefabric.research.ResearchSystem.text("rover_installed"));
     }
 }

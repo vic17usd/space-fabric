@@ -744,3 +744,28 @@ Sección de controles, versión 0.45.1:
 - El atajo de despegue en el panel del cohete usa la tecla de salto configurada.
 - Compilación y empaquetado verificados; no se ha abierto un cliente gráfico para
   observar la lista, reasignación, conflictos o persistencia de las preferencias.
+
+Proyecto Aurora y mejoras, versión 0.46.0:
+
+- `./gradlew build --console=plain`: **630 pruebas JUnit**, cero fallos, errores
+  u omisiones; once comprobaciones de modelos y recursos existentes por CPU.
+  **1.225 JSON** válidos; las tres texturas nuevas y el contenido del JAR se verifican.
+- Trece casos nuevos: reglas de sitio, orden, altitud y estación vinculada; progreso
+  personal y codec de SavedData; pagos incompletos y materiales repetidos; costes de
+  todas las entregas; lente persistente conservando marcadores; rover sin acumulación,
+  reservas intactas, persistencia en entidad e ítem y exclusión de aerostatos; receta
+  del diario, avance, ausencia de recetas de mesa para módulos y visor K; paquetes
+  con etapas válidas e inválidas; componentes dañados y calientes; simulación de
+  consumo optimizado durante 200 ticks y conservación al rellenar/reparar/cargar.
+- Progreso y fabricación se validan en el servidor. Solo hay sincronización S2C;
+  ningún paquete permite reclamar etapas desde el cliente. Las expediciones 1–5 y
+  las siete observaciones iniciales conservan sus datos y reglas anteriores.
+- Rover: campo booleano opcional en el codec, falso por defecto para guardados
+  anteriores; sincronización nativa de la entidad. No cambia presión, temperaturas,
+  capacidades, consumo auxiliar u oxígeno. La lente conserva el presupuesto global
+  de lectura del sondeo; solo amplía el volumen y aumenta el tiempo necesario.
+- No se ha ejecutado una partida completa ni cliente gráfico o multijugador. Las
+  pruebas de reglas e inventarios no equivalen a observar la validación de una sala
+  real por ResearchSystem.stationReady durante una sesión. Falta recorrer los
+  sitios, restaurar sus componentes, validar las entregas e inspeccionar diario,
+  HUD e instalación de módulos con el checklist de docs/venus-research.md.

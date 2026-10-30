@@ -18,6 +18,6 @@ public final class GeologicalScannerItem extends Item {
         return InteractionResult.SUCCESS;
     }
     @Override public void appendHoverText(ItemStack stack,TooltipContext context,net.minecraft.world.item.component.TooltipDisplay display,java.util.function.Consumer<net.minecraft.network.chat.Component> lines,TooltipFlag flag){
-        super.appendHoverText(stack,context,display,lines,flag);lines.accept(ProspectingSystem.text("scanner_hint"));
+        super.appendHoverText(stack,context,display,lines,flag);lines.accept(dev.vic17usd.spacefabric.research.ResearchModuleItem.deep(stack)?dev.vic17usd.spacefabric.research.ResearchSystem.text("deep_installed"):ProspectingSystem.text("scanner_hint"));
     }
 }

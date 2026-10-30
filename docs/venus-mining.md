@@ -126,3 +126,9 @@ de Minecraft. Revisar en copias de una partida:
 4. Pausar con redstone, llenar salidas, sobrecalentar, reparar y descargar el chunk.
 5. Reconectar a mitad de una extracción y verificar que no duplica ni pierde recursos.
 6. En multijugador, probar propietario ausente y cancelación con el mod de parcelas usado.
+
+## Prospección mejorada
+
+Proyecto Aurora, desde 0.46.0, permite instalar una lente que amplía el escáner
+a 13×13 y 96 capas. Mantiene los presupuestos de trabajo, guardado y carga local.
+[Cadena de investigación e instalación](venus-research.md).

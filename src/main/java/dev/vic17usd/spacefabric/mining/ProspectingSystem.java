@@ -12,13 +12,15 @@ import net.minecraft.world.item.ItemStack;
 /** Incremental read-only scans. Budget is shared across players, no chunk generation or /locate. */
 public final class ProspectingSystem {
     public static final int RADIUS=4,DEPTH=64,BUDGET=512;
+    public static int radius(ItemStack device){return dev.vic17usd.spacefabric.research.ResearchModuleItem.deep(device)?6:RADIUS;}
+    public static int depth(ItemStack device){return dev.vic17usd.spacefabric.research.ResearchModuleItem.deep(device)?96:DEPTH;}
     private static final Map<ServerLevel,LinkedHashMap<UUID,Scan>> JOBS=new IdentityHashMap<>();
     private static final class Scan {
-        final UUID player;final ItemStack device;final BlockPos origin;
+        final UUID player;final ItemStack device;final BlockPos origin;final int radius,depth;
         final Map<net.minecraft.world.level.block.Block,BlockPos> nearest=new LinkedHashMap<>();
         final Map<net.minecraft.world.level.block.Block,Integer> counts=new HashMap<>();
         int cursor,unloaded;
-        Scan(ServerPlayer player,ItemStack device,BlockPos origin){this.player=player.getUUID();this.device=device;this.origin=origin.immutable();}
+        Scan(ServerPlayer player,ItemStack device,BlockPos origin){this.player=player.getUUID();this.device=device;this.origin=origin.immutable();radius=radius(device);depth=depth(device);}
     }
     private ProspectingSystem() { }
     public static Component text(String key,Object... args){return Component.translatable("mining.space_fabric."+key,args);}
@@ -49,16 +51,16 @@ public final class ProspectingSystem {
             var job=iterator.next();var player=level.getServer().getPlayerList().getPlayer(job.player);
             if(player==null||player.level()!=level||!player.isAlive()||!holds(player,job.device)){iterator.remove();continue;}
             int work=Math.min(slice,remaining);
-            while(work-->0&&job.cursor<BoreGeometry.count(RADIUS,DEPTH)){
+            while(work-->0&&job.cursor<BoreGeometry.count(job.radius,job.depth)){
                 int i=job.cursor++;remaining--;
-                var pos=job.origin.offset(BoreGeometry.dx(i,RADIUS),-BoreGeometry.down(i,RADIUS),BoreGeometry.dz(i,RADIUS));
+                var pos=job.origin.offset(BoreGeometry.dx(i,job.radius),-BoreGeometry.down(i,job.radius),BoreGeometry.dz(i,job.radius));
                 if(pos.getY()<level.getMinY())continue;
                 if(!level.getWorldBorder().isWithinBounds(pos)||level.getChunkSource().getChunkNow(pos.getX()>>4,pos.getZ()>>4)==null){job.unloaded++;continue;}
                 var block=level.getBlockState(pos).getBlock();if(!MiningDrill.mineral(block))continue;
                 job.counts.merge(block,1,Integer::sum);
                 var old=job.nearest.get(block);if(old==null||pos.distSqr(job.origin)<old.distSqr(job.origin))job.nearest.put(block,pos);
             }
-            if(job.cursor>=BoreGeometry.count(RADIUS,DEPTH)){
+            if(job.cursor>=BoreGeometry.count(job.radius,job.depth)){
                 player.sendSystemMessage(text(job.nearest.isEmpty()?"scan_empty":"scan_done",job.unloaded));
                 for(var entry:job.nearest.entrySet()){
                     var name=entry.getKey().getName();var pos=entry.getValue();

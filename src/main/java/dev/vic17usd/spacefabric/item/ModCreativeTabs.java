@@ -30,6 +30,9 @@ public final class ModCreativeTabs {
                         output.accept(dev.vic17usd.spacefabric.colony.ExpansionContent.NAVIGATOR);
                         output.accept(dev.vic17usd.spacefabric.mining.MiningContent.SCANNER);
                         output.accept(dev.vic17usd.spacefabric.mining.MiningContent.BIT);
+                        output.accept(dev.vic17usd.spacefabric.research.ResearchContent.LOG);
+                        output.accept(dev.vic17usd.spacefabric.research.ResearchContent.ROVER_MODULE);
+                        output.accept(dev.vic17usd.spacefabric.research.ResearchContent.SCANNER_LENS);
                         dev.vic17usd.spacefabric.transport.TransportContent.blocks().values().forEach(output::accept);
                         dev.vic17usd.spacefabric.earth.EarthMaterials.blocks().values().forEach(output::accept);
                         dev.vic17usd.spacefabric.earth.EarthMaterials.items().values().forEach(output::accept);

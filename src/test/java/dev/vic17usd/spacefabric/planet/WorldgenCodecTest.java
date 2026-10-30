@@ -3237,4 +3237,66 @@ class WorldgenCodecTest {
             assertTrue(card.outputs().getFirst().is(item));assertTrue(card.inputs().getFirst().getFirst().is(dev.vic17usd.spacefabric.mining.MiningContent.BIT));
         }
     }
+    @Test void researchCampaignPersistsOrderedPersonalStagesAndRejectsTheWrongLaboratory(){
+        var p=java.util.UUID.randomUUID();var other=java.util.UUID.randomUUID();var progress=new dev.vic17usd.spacefabric.research.ResearchProgress();
+        var refuge=new net.minecraft.core.BlockPos(10,60,20);var lab=new net.minecraft.core.BlockPos(100,80,200);var cloud=new net.minecraft.core.BlockPos(-50,301,80);
+        assertFalse(progress.advance(p,1,lab));assertEquals(0,progress.stage(p));assertTrue(progress.advance(p,0,refuge));assertFalse(progress.advance(p,0,refuge));
+        assertTrue(progress.advance(p,1,lab));assertEquals(lab,progress.laboratory(p).orElseThrow());assertTrue(progress.advance(p,2,cloud));
+        var loaded=dev.vic17usd.spacefabric.research.ResearchProgress.CODEC.parse(JsonOps.INSTANCE,dev.vic17usd.spacefabric.research.ResearchProgress.CODEC.encodeStart(JsonOps.INSTANCE,progress).getOrThrow()).getOrThrow();
+        assertEquals(3,loaded.stage(p));assertEquals(0,loaded.stage(other));assertTrue(loaded.laboratory(other).isEmpty());assertFalse(loaded.advance(p,3,refuge));
+        assertTrue(loaded.advance(p,3,lab));assertEquals(4,loaded.stage(p));assertFalse(loaded.advance(p,3,lab));assertFalse(loaded.advance(p,4,lab));
+        assertTrue(dev.vic17usd.spacefabric.research.ResearchProgress.CODEC.parse(JsonOps.INSTANCE,JsonParser.parseString("{\"players\":[{\"player\":\"p\",\"stage\":5,\"lab\":[0,0,0]}]}")).isError());
+    }
+    @Test void researchCostsRejectPartialPaymentsAndAggregateRepeatedMaterials(){
+        var inventory=new java.util.ArrayList<ItemStack>();inventory.add(new ItemStack(ColonyContent.DATA_CARD));inventory.add(new ItemStack(ColonyContent.CHARGED_POWER_CELL));
+        var costs=dev.vic17usd.spacefabric.research.ResearchCosts.forStage(3);assertFalse(dev.vic17usd.spacefabric.research.ResearchCosts.pay(inventory,costs));assertEquals(1,inventory.getFirst().getCount());assertEquals(1,inventory.get(1).getCount());
+        for(var cost:costs)if(!cost.item().equals(ColonyContent.DATA_CARD)&&!cost.item().equals(ColonyContent.CHARGED_POWER_CELL))inventory.add(new ItemStack(cost.item(),cost.count()));
+        assertTrue(dev.vic17usd.spacefabric.research.ResearchCosts.pay(inventory,costs));assertTrue(inventory.stream().allMatch(ItemStack::isEmpty));assertFalse(dev.vic17usd.spacefabric.research.ResearchCosts.pay(inventory,costs));
+        var duplicate=List.of(new dev.vic17usd.spacefabric.research.ResearchCosts.Cost(Items.IRON_INGOT,2),new dev.vic17usd.spacefabric.research.ResearchCosts.Cost(Items.IRON_INGOT,2));
+        inventory.clear();inventory.add(new ItemStack(Items.IRON_INGOT,3));assertFalse(dev.vic17usd.spacefabric.research.ResearchCosts.pay(inventory,duplicate));assertEquals(3,inventory.getFirst().getCount());
+    }
+    @Test void allResearchDeliveriesHaveExplicitFiniteCostsIncludingRepeatManufacturing(){
+        for(int stage=0;stage<=4;stage++){
+            var costs=dev.vic17usd.spacefabric.research.ResearchCosts.forStage(stage);var inventory=new java.util.ArrayList<ItemStack>();
+            costs.forEach(c->inventory.add(new ItemStack(c.item(),c.count())));assertTrue(dev.vic17usd.spacefabric.research.ResearchCosts.pay(inventory,costs));assertTrue(inventory.stream().allMatch(ItemStack::isEmpty));
+        }
+        assertThrows(IllegalArgumentException.class,()->dev.vic17usd.spacefabric.research.ResearchCosts.forStage(5));
+    }
+    @Test void deepSurveyLensPreservesOldMarkersAndSurvivesItemSerialization(){
+        var scanner=new ItemStack(dev.vic17usd.spacefabric.mining.MiningContent.SCANNER);OperationsNavigator.remember(scanner,new OperationsNavigator.Point("space_fabric:venus",new net.minecraft.core.BlockPos(2,-20,4),"Veta"));
+        assertEquals(4,dev.vic17usd.spacefabric.mining.ProspectingSystem.radius(scanner));assertEquals(64,dev.vic17usd.spacefabric.mining.ProspectingSystem.depth(scanner));
+        assertTrue(dev.vic17usd.spacefabric.research.ResearchModuleItem.installLens(scanner));assertFalse(dev.vic17usd.spacefabric.research.ResearchModuleItem.installLens(scanner));assertFalse(dev.vic17usd.spacefabric.research.ResearchModuleItem.installLens(new ItemStack(Items.COMPASS)));
+        var ops=registries.createSerializationContext(net.minecraft.nbt.NbtOps.INSTANCE);var loaded=ItemStack.CODEC.parse(ops,ItemStack.CODEC.encodeStart(ops,scanner).getOrThrow()).getOrThrow();
+        assertEquals(6,dev.vic17usd.spacefabric.mining.ProspectingSystem.radius(loaded));assertEquals(96,dev.vic17usd.spacefabric.mining.ProspectingSystem.depth(loaded));assertEquals(OperationsNavigator.points(scanner),OperationsNavigator.points(loaded));
+        assertEquals(16224,dev.vic17usd.spacefabric.mining.BoreGeometry.count(6,96));
+    }
+    @Test void upgradedRoverCannotStackOrRefillItsReservesAndPackingKeepsItsModule(){
+        var rover=new dev.vic17usd.spacefabric.rover.RoverEntity(dev.vic17usd.spacefabric.rover.RoverEntity.TYPE,null);rover.restoreSystems(new dev.vic17usd.spacefabric.rover.RoverSystems.State(1234,5678,3456,79));
+        assertTrue(rover.installEfficiency());assertFalse(rover.installEfficiency());assertTrue(rover.systems().optimized());assertEquals(1234,rover.systems().energy());assertEquals(79,rover.systems().hull());
+        var packed=dev.vic17usd.spacefabric.rover.RoverItem.packed(rover.systems());var loaded=dev.vic17usd.spacefabric.rover.RoverItem.create(null,packed);assertEquals(rover.systems(),loaded.systems());
+        var aerostat=new dev.vic17usd.spacefabric.rover.RoverEntity(dev.vic17usd.spacefabric.rover.RoverEntity.AEROSTAT_TYPE,null);assertFalse(aerostat.installEfficiency());
+        var out=net.minecraft.world.level.storage.TagValueOutput.createWithContext(net.minecraft.util.ProblemReporter.DISCARDING,registries);
+        try{var save=dev.vic17usd.spacefabric.rover.RoverEntity.class.getDeclaredMethod("addAdditionalSaveData",net.minecraft.world.level.storage.ValueOutput.class);save.setAccessible(true);save.invoke(rover,out);
+            var read=dev.vic17usd.spacefabric.rover.RoverEntity.class.getDeclaredMethod("readAdditionalSaveData",net.minecraft.world.level.storage.ValueInput.class);read.setAccessible(true);read.invoke(loaded,net.minecraft.world.level.storage.TagValueInput.create(net.minecraft.util.ProblemReporter.DISCARDING,registries,out.buildResult()));
+        }catch(ReflectiveOperationException e){throw new AssertionError(e);}assertEquals(rover.systems(),loaded.systems());
+    }
+    @Test void researchJournalRecipeUnlockAndModuleBrowserAreNativeAndModulesCannotBeCraftedEarly()throws IOException{
+        var recipe=Recipe.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("recipe/venus_research_log")).getOrThrow();
+        assertNotNull(recipe);assertNotNull(net.minecraft.advancements.Advancement.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("advancement/industry/research_log")).getOrThrow());
+        var log=new ItemStack(dev.vic17usd.spacefabric.research.ResearchContent.LOG);assertNotNull(log.get(net.minecraft.core.component.DataComponents.WRITTEN_BOOK_CONTENT));
+        for(String name:List.of("venus_rover_efficiency_module","venus_deep_survey_lens"))assertFalse(java.nio.file.Files.exists(Path.of("src/main/resources/data/space_fabric/recipe/"+name+".json")));
+        var card=viewerCatalog().find(dev.vic17usd.spacefabric.research.ResearchContent.ROVER_MODULE,false).stream().filter(c->c.id().equals("space_fabric:research/modules")).findFirst().orElseThrow();assertEquals(3,card.outputs().size());assertEquals(4,card.inputs().size());
+    }
+    @Test void researchPacketsRejectInvalidStagesAndRoundTripAllValidStages(){
+        var buffer=new net.minecraft.network.RegistryFriendlyByteBuf(io.netty.buffer.Unpooled.buffer(),(RegistryAccess)registries);
+        try{
+            for(int stage=0;stage<=4;stage++){buffer.clear();var state=new dev.vic17usd.spacefabric.research.ResearchNetwork.State(stage);dev.vic17usd.spacefabric.research.ResearchNetwork.State.CODEC.encode(buffer,state);assertEquals(state,dev.vic17usd.spacefabric.research.ResearchNetwork.State.CODEC.decode(buffer));assertEquals(0,buffer.readableBytes());}
+            for(int bad:new int[]{-1,5,255}){buffer.clear();buffer.writeVarInt(bad);assertThrows(IllegalArgumentException.class,()->dev.vic17usd.spacefabric.research.ResearchNetwork.State.CODEC.decode(buffer));}
+        }finally{buffer.release();}
+    }
+    @Test void researchMachineReadinessRejectsDegradedOrThermallyTrippedComponents(){
+        var analyzer=thermalMachine(ColonyContent.Machine.ANALYZER,0);assertTrue(dev.vic17usd.spacefabric.research.ResearchSystem.healthy(analyzer));
+        analyzer.restoreThermal(9500,true,0);assertFalse(dev.vic17usd.spacefabric.research.ResearchSystem.healthy(analyzer));
+        analyzer.restoreThermal(0,false,0);analyzer.maintenance().restore(new dev.vic17usd.spacefabric.maintenance.MachineWear.State(4000,0,0,false,0));assertFalse(dev.vic17usd.spacefabric.research.ResearchSystem.healthy(analyzer));
+    }
 }

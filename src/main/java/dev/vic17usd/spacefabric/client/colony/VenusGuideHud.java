@@ -13,7 +13,7 @@ import net.minecraft.network.chat.Component;
 /** Compact quest tracker: mission heading, fine rule and a cyan objective ring on a clear background. */
 public final class VenusGuideHud {
     private static final VenusMissionTracker STATE=new VenusMissionTracker();
-    private static int bottom;
+    private static int bottom,researchStage=-1,researchAge;
     private VenusGuideHud() { }
     private static boolean visible(){
         var c=Minecraft.getInstance();
@@ -24,10 +24,11 @@ public final class VenusGuideHud {
     public static int bottom(){return visible()?bottom:0;}
     public static void initialize(){
         ClientPlayNetworking.registerGlobalReceiver(VenusGuideNetwork.State.TYPE,(payload,context)->STATE.accept(payload.flags()));
-        ClientPlayConnectionEvents.DISCONNECT.register((handler,client)->{STATE.clear();bottom=0;});
+        ClientPlayNetworking.registerGlobalReceiver(dev.vic17usd.spacefabric.research.ResearchNetwork.State.TYPE,(payload,context)->{researchStage=payload.stage();researchAge=0;});
+        ClientPlayConnectionEvents.DISCONNECT.register((handler,client)->{STATE.clear();bottom=0;researchStage=-1;});
         ClientTickEvents.END_CLIENT_TICK.register(c->{
-            if(c.level==null||c.player==null||!c.player.isAlive()||PlanetDimensions.find(c.level).orElse(null)!=Planet.VENUS){STATE.clear();bottom=0;}
-            else if(!c.isPaused())STATE.tick();
+            if(c.level==null||c.player==null||!c.player.isAlive()||PlanetDimensions.find(c.level).orElse(null)!=Planet.VENUS){STATE.clear();bottom=0;researchStage=-1;}
+            else if(!c.isPaused()){STATE.tick();if(researchAge<=60)researchAge++;}
         });
         HudElementRegistry.addLast(SpaceFabric.id("venus_missions"),(gui,delta)->draw(gui));
     }
@@ -44,7 +45,9 @@ public final class VenusGuideHud {
         if(!visible()||c.options.hideGui||c.screen!=null)return;
         var remaining=STATE.remaining();
         boolean complete=remaining.isEmpty();
-        String step=complete?"complete":remaining.getFirst().key();
+        boolean research=complete&&researchStage>=0&&researchAge<=60;
+        String step=research?"research_"+researchStage:complete?"complete":remaining.getFirst().key();
+        if(research)complete=researchStage==4;
         int width=Math.min(214,c.getWindow().getGuiScaledWidth()-16);
         var title=Component.translatable("venus.guide.tracker_title_"+step);
         gui.text(c.font,c.font.split(title,width).getFirst(),8,8,0xFFF2F3F4);
