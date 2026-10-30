@@ -14,6 +14,23 @@ def write(path, value):
 
 
 texts = {
+    'hud_title': ('VENUS · Misiones %s/6', 'VENUS · Objectives %s/6'),
+    'hud_now': ('› Ahora: %s', '› Now: %s'),
+    'hud_next': ('Después: %s', 'Next: %s'),
+    'hud_done': ('✓ Guía completada', '✓ Guide completed'),
+    'hud_help': ('/venus guia · instrucciones completas', '/venus guia · full instructions'),
+    'hud_shelter': ('Sella una sala, carga O₂, energía y agua y entra cuando esté protegida.',
+                    'Seal a room, supply O₂, power and water, then enter once protected.'),
+    'hud_power': ('Sobre lava: batería vacía + agua. Completa un lote y acércate al generador.',
+                  'Above lava: empty cell + water. Finish a batch and approach the generator.'),
+    'hud_cooling': ('Junto al controlador, carga el intercambiador con refrigerante enfriado y batería.',
+                    'Beside the controller, charge an exchanger with chilled coolant and a cell.'),
+    'hud_automation': ('Conecta una interfaz, envases y depósitos abastecidos a una máquina próxima.',
+                       'Connect an interface, carriers and supplied tanks to a nearby machine.'),
+    'hud_food': ('En una sala protegida y con luz: semilla + batería + agua. Completa trigo.',
+                 'In a protected, lit room: seed + cell + water. Finish a wheat batch.'),
+    'hud_expedition': ('Recupera una instalación natural y reclama su misión. Consulta /expediciones.',
+                       'Recover a natural station and claim its mission. See /expediciones.'),
     'welcome': ('Llegaste a Venus. Conserva traje y reservas: la exposición sin protección es mortal. Haz clic aquí o usa /venus para iniciar la guía.',
                 'You reached Venus. Keep your suit and supplies: unprotected exposure is lethal. Click here or use /venus to start the guide.'),
     'next': ('Siguiente objetivo: %s', 'Next objective: %s'),

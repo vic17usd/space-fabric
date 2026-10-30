@@ -637,5 +637,16 @@
   "venus.guide.expedition.detail": "Repara un equipo natural al 70 %, completa un lote y entrega informe, batería y tarjeta en su consola. Shift + mano vacía reclama. /expediciones explica.",
   "venus.guide.supplies": "Reservas de soporte\n%s min · %s personas\nVolumen: %s\n\nO₂: %s bombonas\nEnergía: %s baterías\nAgua: %s bombonas\n\nIncluye arranque. No incluye trajes, industria, vehículos, calor ni fugas.",
   "balance.space_fabric.geothermal": "Circuito geotérmico: devuelve el agua; requiere lava debajo.",
-  "balance.space_fabric.composite": "Compuesto: cerámica + 2 lingotes de hierro (20 s), o hierro denso (15 s)."
+  "balance.space_fabric.composite": "Compuesto: cerámica + 2 lingotes de hierro (20 s), o hierro denso (15 s).",
+  "venus.guide.hud_title": "VENUS · Misiones %s/6",
+  "venus.guide.hud_now": "› Ahora: %s",
+  "venus.guide.hud_next": "Después: %s",
+  "venus.guide.hud_done": "✓ Guía completada",
+  "venus.guide.hud_help": "/venus guia · instrucciones completas",
+  "venus.guide.hud_shelter": "Sella una sala, carga O₂, energía y agua y entra cuando esté protegida.",
+  "venus.guide.hud_power": "Sobre lava: batería vacía + agua. Completa un lote y acércate al generador.",
+  "venus.guide.hud_cooling": "Junto al controlador, carga el intercambiador con refrigerante enfriado y batería.",
+  "venus.guide.hud_automation": "Conecta una interfaz, envases y depósitos abastecidos a una máquina próxima.",
+  "venus.guide.hud_food": "En una sala protegida y con luz: semilla + batería + agua. Completa trigo.",
+  "venus.guide.hud_expedition": "Recupera una instalación natural y reclama su misión. Consulta /expediciones."
 }

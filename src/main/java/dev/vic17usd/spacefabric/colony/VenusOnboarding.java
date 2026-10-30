@@ -77,9 +77,8 @@ public final class VenusOnboarding {
             var ledger = ExpeditionLedger.get(level);
             if (ledger.claimed(player.getUUID(), 1) || ledger.claimed(player.getUUID(), 2) || ledger.claimed(player.getUUID(), 3))
                 observations.add(VenusProgress.Step.EXPEDITION);
-            boolean changed = false;
-            for (var step : observations) changed |= progress.observe(player.getUUID(), step);
-            if (changed) player.sendSystemMessage(next(player));
+            for (var step : observations) progress.observe(player.getUUID(), step);
+            VenusGuideNetwork.send(player,progress);
             // Reconcile on reconnect/reload as well as on first observation; awarding has no item rewards.
             for (var step : VenusProgress.Step.values()) if (progress.reached(player.getUUID(), step)) {
                 var advancement = level.getServer().getAdvancements().get(SpaceFabric.id("venus_guide/" + step.key()));
@@ -89,6 +88,7 @@ public final class VenusOnboarding {
     }
 
     public static void initialize() {
+        VenusGuideNetwork.initialize();
         ServerTickEvents.END_LEVEL_TICK.register(VenusOnboarding::tick);
         CommandRegistrationCallback.EVENT.register((dispatcher, context, selection) -> dispatcher.register(
                 Commands.literal("venus").executes(c -> { show(c.getSource().getPlayerOrException()); return 1; })

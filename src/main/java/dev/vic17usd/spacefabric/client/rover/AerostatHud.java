@@ -15,9 +15,10 @@ public final class AerostatHud {
     });HudElementRegistry.addLast(SpaceFabric.id("aerostat_flight"),(gui,delta)->{
         var client=Minecraft.getInstance();if(client.options.hideGui||client.player==null||!(client.player.getVehicle() instanceof RoverEntity rover)||!rover.aerial())return;
         var state=rover.systems();int color=state.energy()<2400||state.oxygen()<1200||state.coolant()<1200||state.hull()<25?0xFFFF8070:0xFF85E5D2;
-        gui.text(client.font,Component.translatable("operations.space_fabric.flight",(int)rover.getY(),String.format(java.util.Locale.ROOT,"%.1f",vertical),rover.onGround()?"✓":"—"),8,42,color);
-        gui.text(client.font,Component.translatable("operations.space_fabric.flight_reserves",state.energy(),state.oxygen(),state.coolant()),8,54,color);
+        int top=Math.max(42,dev.vic17usd.spacefabric.client.colony.VenusGuideHud.bottom()+8);
+        gui.text(client.font,Component.translatable("operations.space_fabric.flight",(int)rover.getY(),String.format(java.util.Locale.ROOT,"%.1f",vertical),rover.onGround()?"✓":"—"),8,top,color);
+        gui.text(client.font,Component.translatable("operations.space_fabric.flight_reserves",state.energy(),state.oxygen(),state.coolant()),8,top+12,color);
         var device=client.player.getMainHandItem().is(dev.vic17usd.spacefabric.colony.ExpansionContent.NAVIGATOR)?client.player.getMainHandItem():client.player.getOffhandItem();
-        if(device.is(dev.vic17usd.spacefabric.colony.ExpansionContent.NAVIGATOR))dev.vic17usd.spacefabric.colony.OperationsNavigator.selected(device).ifPresent(p->gui.text(client.font,dev.vic17usd.spacefabric.colony.OperationsNavigator.hud(p,client.level.dimension().identifier().toString(),client.player.blockPosition()),8,66,color));
+        if(device.is(dev.vic17usd.spacefabric.colony.ExpansionContent.NAVIGATOR))dev.vic17usd.spacefabric.colony.OperationsNavigator.selected(device).ifPresent(p->gui.text(client.font,dev.vic17usd.spacefabric.colony.OperationsNavigator.hud(p,client.level.dimension().identifier().toString(),client.player.blockPosition()),8,top+24,color));
     });}
 }

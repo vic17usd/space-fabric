@@ -2968,6 +2968,31 @@ class WorldgenCodecTest {
         assertTrue(crafting.matches(input,null));assertTrue(crafting.assemble(input).is(ExpansionContent.NAVIGATOR));
         assertNotNull(net.minecraft.advancements.Advancement.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("advancement/industry/navigator")).getOrThrow());
     }
+    @Test void missionTrackerKeepsTheFirstMissingObjectiveWhenLaterStagesAreAlreadyComplete() {
+        var tracker=new VenusMissionTracker();assertFalse(tracker.ready());
+        tracker.accept(VenusProgress.Step.ARRIVAL.bit()|VenusProgress.Step.POWER.bit());
+        assertEquals(1,tracker.completed());assertEquals(VenusProgress.Step.SHELTER,tracker.remaining().getFirst());
+        assertEquals(VenusProgress.Step.COOLING,tracker.remaining().get(1));
+        tracker.accept(127);assertEquals(6,tracker.completed());assertTrue(tracker.remaining().isEmpty());
+    }
+    @Test void missionTrackerExpiresAndClearsSnapshotsBetweenSessions() {
+        var tracker=new VenusMissionTracker();tracker.accept(1);
+        for(int tick=0;tick<61;tick++)tracker.tick();
+        assertFalse(tracker.ready());assertTrue(tracker.remaining().isEmpty());
+        tracker.accept(3);assertTrue(tracker.ready());assertEquals(VenusProgress.Step.POWER,tracker.remaining().getFirst());
+        tracker.clear();assertFalse(tracker.ready());assertEquals(0,tracker.completed());
+    }
+    @Test void missionPacketsRoundTripAllBoundedProgressMasksAndRejectUnknownBits() {
+        var buffer=new net.minecraft.network.RegistryFriendlyByteBuf(io.netty.buffer.Unpooled.buffer(),(RegistryAccess)registries);
+        try {
+            for(int flags=0;flags<=127;flags++) {
+                buffer.clear();var state=new VenusGuideNetwork.State(flags);VenusGuideNetwork.State.CODEC.encode(buffer,state);
+                assertEquals(state,VenusGuideNetwork.State.CODEC.decode(buffer));assertEquals(0,buffer.readableBytes());
+            }
+            buffer.clear();buffer.writeVarInt(128);assertThrows(IllegalArgumentException.class,()->VenusGuideNetwork.State.CODEC.decode(buffer));
+            buffer.clear();buffer.writeVarInt(-1);assertThrows(IllegalArgumentException.class,()->VenusGuideNetwork.State.CODEC.decode(buffer));
+        } finally {buffer.release();}
+    }
     private net.minecraft.nbt.CompoundTag venusStation(String name) throws IOException {
         try(var in=getClass().getResourceAsStream("/data/space_fabric/structure/venus/colony/"+name+".nbt")) {
             assertNotNull(in);return net.minecraft.nbt.NbtIo.readCompressed(in,net.minecraft.nbt.NbtAccounter.unlimitedHeap());

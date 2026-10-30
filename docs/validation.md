@@ -1,8 +1,8 @@
 # Resultado de validación de esta base
 
-Última entrega: **0.41.0**, 571 pruebas JUnit aprobadas, once comprobaciones por
+Última entrega: **0.42.0**, 574 pruebas JUnit aprobadas, once comprobaciones por
 CPU y 1.205 JSON válidos. Los apartados siguientes conservan el historial de
-la base y sus ampliaciones; la validación de progresión e interiores está al final del documento.
+la base y sus ampliaciones; la validación del indicador de misiones está al final del documento.
 
 Verificado con JDK 25, Gradle 9.8.2, Loom 1.19.3, Minecraft 26.1,
 Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
@@ -601,3 +601,21 @@ Progresión e interiores de Venus, versión 0.41.0:
 
 [Balance, guía e interiores](venus-progression.md) ·
 [Comprobaciones pendientes en juego](venus-colony-playtest.md).
+
+Guía de Venus en pantalla, versión 0.42.0:
+
+- Compilación completa con `./gradlew build --console=plain`: 574 pruebas JUnit
+  y once comprobaciones por CPU. Se mantienen los 1.205 JSON válidos.
+- Tres pruebas nuevas verifican el objetivo pendiente cuando hay etapas posteriores
+  completadas, limpieza/caducidad de estados, actualización y los 128 valores
+  válidos del paquete nativo, rechazando bits desconocidos y máscaras negativas.
+- El servidor sincroniza marcas personales de la guía existente, sin canal para
+  que el cliente conceda objetivos. Se conserva el registro guardado de 0.41.
+- Indicador en la esquina superior izquierda con texto ajustado al ancho, acción
+  actual, siguiente paso y contador. El renderer no dibuja paneles de fondo.
+  No requiere llevar un objeto. El aerostato se dibuja debajo; el indicador se
+  oculta durante el vuelo del cohete, las pantallas, F1 y fuera de Venus.
+- No se ha abierto un cliente gráfico. La composición final del HUD, los idiomas,
+  escalas de interfaz y convivencia con otros mods necesitan la comprobación
+  manual 19 de `docs/venus-colony-playtest.md`. Las pruebas de paquetes y estado
+  no equivalen a una observación visual ni una sesión multijugador.

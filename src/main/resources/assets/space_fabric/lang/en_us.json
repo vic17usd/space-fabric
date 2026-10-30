@@ -637,5 +637,16 @@
   "venus.guide.expedition.detail": "Repair natural equipment to 70%, finish a batch and load a report, cell and data card into its console. Sneak-use empty-handed to claim. See /expediciones.",
   "venus.guide.supplies": "Life support supplies\n%s min · %s people\nVolume: %s\n\nO₂: %s canisters\nPower: %s cells\nWater: %s canisters\n\nIncludes startup. Excludes suits, industry, vehicles, heat and leaks.",
   "balance.space_fabric.geothermal": "Geothermal loop: returns water; requires lava below.",
-  "balance.space_fabric.composite": "Composite: ceramic + 2 iron ingots (20 s), or dense iron (15 s)."
+  "balance.space_fabric.composite": "Composite: ceramic + 2 iron ingots (20 s), or dense iron (15 s).",
+  "venus.guide.hud_title": "VENUS · Objectives %s/6",
+  "venus.guide.hud_now": "› Now: %s",
+  "venus.guide.hud_next": "Next: %s",
+  "venus.guide.hud_done": "✓ Guide completed",
+  "venus.guide.hud_help": "/venus guia · full instructions",
+  "venus.guide.hud_shelter": "Seal a room, supply O₂, power and water, then enter once protected.",
+  "venus.guide.hud_power": "Above lava: empty cell + water. Finish a batch and approach the generator.",
+  "venus.guide.hud_cooling": "Beside the controller, charge an exchanger with chilled coolant and a cell.",
+  "venus.guide.hud_automation": "Connect an interface, carriers and supplied tanks to a nearby machine.",
+  "venus.guide.hud_food": "In a protected, lit room: seed + cell + water. Finish a wheat batch.",
+  "venus.guide.hud_expedition": "Recover a natural station and claim its mission. See /expediciones."
 }

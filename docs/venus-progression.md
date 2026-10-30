@@ -85,6 +85,31 @@ cambiar de dimensión no reinicia sus marcas ni repite el aviso de bienvenida.
 Una vez completada la guía, siguen siendo necesarias las revisiones periódicas:
 las etapas son historia de aprendizaje, no un certificado permanente de seguridad.
 
+## Misiones en pantalla — 0.42.0
+
+En Venus, la guía aparece automáticamente en la **esquina superior izquierda**,
+sin panel ni textura de fondo. El texto muestra misiones completadas de seis,
+la acción actual, una instrucción breve y el siguiente objetivo. No necesitas
+tener el navegador en la mano. `/venus guia` y el diario conservan las instrucciones
+completas. Las notificaciones repetidas de progreso en el chat se sustituyen por
+este indicador; el aviso inicial de llegada se conserva.
+
+El orden es refugio → energía → refrigeración → automatización → alimentos →
+expedición. Se usa el progreso ya guardado: si observaste una etapa posterior,
+el indicador conserva la primera pendiente y salta las ya realizadas. Al terminar
+muestra «Guía completada». No se reinician los objetivos de una partida anterior.
+
+El servidor sincroniza únicamente tus marcas una vez por segundo. El indicador
+desaparece al salir de Venus, morir, entrar como espectador, abrir una pantalla
+o pulsar F1. Se oculta durante el vuelo del cohete para dejar visible la animación
+y sus indicadores. Una desconexión limpia el estado y un paquete sin actualizar caduca
+tras tres segundos de ticks activos. Los indicadores del aerostato se desplazan
+debajo de la guía para dejar libre su espacio. Cliente y servidor necesitan 0.42.0.
+
+El texto se ajusta al ancho disponible. La validación de paquetes y orden de
+objetivos es automática; su aspecto final, escalas de interfaz y convivencia con
+otros mods de HUD siguen pendientes de comprobación gráfica en Minecraft.
+
 ## Interiores de las expediciones
 
 Los nuevos diseños mantienen los identificadores y las frecuencias de aparición.
