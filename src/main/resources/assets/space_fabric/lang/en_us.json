@@ -758,5 +758,11 @@
   "venus.guide.tracker_title_research_3": "Project Aurora · Calibration",
   "venus.guide.tracker_objective_research_3": "Calibrate your bound laboratory",
   "venus.guide.tracker_title_research_4": "Project Aurora complete",
-  "venus.guide.tracker_objective_research_4": "Manufacture upgrades with the journal at your laboratory"
+  "venus.guide.tracker_objective_research_4": "Manufacture upgrades with the journal at your laboratory",
+  "death.attack.space_fabric.volcanic_gas": "%1$s was overcome by Venus volcanic gases",
+  "death.attack.space_fabric.volcanic_ejecta": "%1$s was caught in a Venus eruption",
+  "volcanism.space_fabric.gas_warning": "Fumarole: venting in %s s · %s m",
+  "volcanism.space_fabric.gas_active": "Hot gas: move away from the jet · %s s · %s m",
+  "volcanism.space_fabric.eruption_warning": "Volcanic area: eruption in %s s · %s m",
+  "volcanism.space_fabric.eruption_active": "Active eruption: take cover · %s s · %s m"
 }

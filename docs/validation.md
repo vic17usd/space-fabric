@@ -769,3 +769,26 @@ Proyecto Aurora y mejoras, versión 0.46.0:
   real por ResearchSystem.stationReady durante una sesión. Falta recorrer los
   sitios, restaurar sus componentes, validar las entregas e inspeccionar diario,
   HUD e instalación de módulos con el checklist de docs/venus-research.md.
+
+Actividad volcánica local, versión 0.47.0:
+
+- `./gradlew build --console=plain`: **649 pruebas JUnit**, cero fallos, errores
+  u omisiones; once comprobaciones de modelos y recursos anteriores por CPU.
+  **1.228 JSON** válidos; CRC, versión, clases nuevas y recursos del JAR comprobados.
+- Diecinueve casos nuevos: ciclos completos de gas/erupción, espera por límite
+  simultáneo, temporizadores y recarga sin avance offline; volumen, protecciones,
+  daño/desgaste y no acumulación; opciones estrictas; detección de respiraderos
+  apilados, cobertura, lava fuente y bordes rocosos; rechazo de consultas descargadas;
+  colisiones nativas con cascos, cristales y puertas cerradas/abiertas; intersección
+  diagonal breve, ausencia de escrituras y alcance limitado; registro compartido
+  acotado, separación de focos y máximo de cuatro avisos/episodios; retirada/recarga
+  de focos; dos codecs de daño, etiquetas de fuego y cooldowns normales.
+- Los efectos se aplican como máximo una vez por segundo y jugador, combinando
+  exposiciones por máximo. Se respetan los hábitats y cabinas existentes; los mobs
+  no son objetivos del nuevo sistema. No existen explosiones ni escrituras de terreno.
+- La detección comparte 48 columnas cada cinco ticks por dimensión. La travesía
+  nativa de rayos verifica carga antes de leer bloques; nunca fuerza chunks.
+- No se ha ejecutado cliente gráfico ni una partida multijugador. Las pruebas de
+  formas de colisión y reglas no equivalen a observar partículas, sonido, avisos,
+  daño/desgaste real ni el circuito completo de protección durante una sesión.
+  Pendiente el checklist de docs/venus-volcanism.md en partida y con Sodium.

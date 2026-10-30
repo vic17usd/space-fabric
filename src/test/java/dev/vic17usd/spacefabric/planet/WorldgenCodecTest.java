@@ -3299,4 +3299,73 @@ class WorldgenCodecTest {
         analyzer.restoreThermal(9500,true,0);assertFalse(dev.vic17usd.spacefabric.research.ResearchSystem.healthy(analyzer));
         analyzer.restoreThermal(0,false,0);analyzer.maintenance().restore(new dev.vic17usd.spacefabric.maintenance.MachineWear.State(4000,0,0,false,0));assertFalse(dev.vic17usd.spacefabric.research.ResearchSystem.healthy(analyzer));
     }
+    private dev.vic17usd.spacefabric.environment.volcanism.VolcanicTerrain.View volcanicView(VoxelWorld world,java.util.function.Predicate<net.minecraft.core.BlockPos> loaded){
+        return new dev.vic17usd.spacefabric.environment.volcanism.VolcanicTerrain.View(){
+            public boolean loaded(net.minecraft.core.BlockPos pos){return loaded.test(pos);}
+            public net.minecraft.world.level.block.state.BlockState state(net.minecraft.core.BlockPos pos){if(!loaded(pos))throw new AssertionError("Unloaded read "+pos);return world.state(pos);}
+            public net.minecraft.world.level.BlockGetter blocks(){return world.level;}
+        };
+    }
+    @Test void exposedVentStackHasOneSourceAndCoveringItCancelsDetection(){
+        var world=new VoxelWorld(0,0);var pos=new net.minecraft.core.BlockPos(8,60,8);world.blocks.put(pos,dev.vic17usd.spacefabric.venus.VenusGeology.VENT.defaultBlockState());
+        var view=volcanicView(world,p->true);assertEquals(dev.vic17usd.spacefabric.environment.volcanism.VolcanicCycle.Kind.GAS,dev.vic17usd.spacefabric.environment.volcanism.VolcanicTerrain.source(view,pos));
+        world.blocks.put(pos.above(),dev.vic17usd.spacefabric.venus.VenusGeology.VENT.defaultBlockState());assertTrue(dev.vic17usd.spacefabric.environment.volcanism.VolcanicTerrain.source(view,pos)==null);
+        assertEquals(dev.vic17usd.spacefabric.environment.volcanism.VolcanicCycle.Kind.GAS,dev.vic17usd.spacefabric.environment.volcanism.VolcanicTerrain.source(view,pos.above()));
+        world.blocks.put(pos.above(2),Blocks.GLASS.defaultBlockState());assertTrue(dev.vic17usd.spacefabric.environment.volcanism.VolcanicTerrain.source(view,pos.above())==null);
+    }
+    @Test void eruptionNeedsSourceLavaNaturalRockEdgesAndAnOpenOutlet(){
+        var world=new VoxelWorld(0,0);var pos=new net.minecraft.core.BlockPos(8,60,8);var view=volcanicView(world,p->true);
+        world.blocks.put(pos,dev.vic17usd.spacefabric.fluid.PlanetFluids.VISCOUS_LAVA_BLOCK.defaultBlockState());
+        assertTrue(dev.vic17usd.spacefabric.environment.volcanism.VolcanicTerrain.source(view,pos)==null);
+        world.blocks.put(pos.east(),dev.vic17usd.spacefabric.venus.VenusGeology.SLAG.defaultBlockState());world.blocks.put(pos.west(),dev.vic17usd.spacefabric.venus.VenusGeology.SUBSTRATE.defaultBlockState());
+        assertEquals(dev.vic17usd.spacefabric.environment.volcanism.VolcanicCycle.Kind.ERUPTION,dev.vic17usd.spacefabric.environment.volcanism.VolcanicTerrain.source(view,pos));
+        world.blocks.put(pos.above(2),ColonyContent.GEOTHERMAL_GENERATOR.defaultBlockState());assertTrue(dev.vic17usd.spacefabric.environment.volcanism.VolcanicTerrain.source(view,pos)==null);
+        world.blocks.remove(pos.above(2));world.blocks.put(pos,Blocks.LAVA.defaultBlockState().setValue(net.minecraft.world.level.block.LiquidBlock.LEVEL,3));assertTrue(dev.vic17usd.spacefabric.environment.volcanism.VolcanicTerrain.source(view,pos)==null);
+    }
+    @Test void sourceQueriesAndNativeRaysRefuseUnloadedCellsWithoutReadingThem(){
+        var world=new VoxelWorld(0,0);var pos=new net.minecraft.core.BlockPos(8,60,8);world.blocks.put(pos,dev.vic17usd.spacefabric.venus.VenusGeology.VENT.defaultBlockState());
+        var allMissing=volcanicView(world,p->false);assertTrue(dev.vic17usd.spacefabric.environment.volcanism.VolcanicTerrain.source(allMissing,pos)==null);
+        var missingAbove=volcanicView(world,p->!p.equals(pos.above()));assertTrue(dev.vic17usd.spacefabric.environment.volcanism.VolcanicTerrain.source(missingAbove,pos)==null);
+        var start=new net.minecraft.world.phys.Vec3(8.5,62,8.5);var end=new net.minecraft.world.phys.Vec3(12.5,62,8.5);
+        assertFalse(dev.vic17usd.spacefabric.environment.volcanism.VolcanicTerrain.clearRay(volcanicView(world,p->p.getX()<10),start,end));
+        assertTrue(dev.vic17usd.spacefabric.environment.volcanism.VolcanicTerrain.clearRay(volcanicView(world,p->true),start,end));
+    }
+    @Test void nativeCollisionShapesBlockJetsThroughHullsWindowsAndClosedAirlocks(){
+        var world=new VoxelWorld(0,0);var view=volcanicView(world,p->true);var blocker=new net.minecraft.core.BlockPos(10,61,8);
+        var start=new net.minecraft.world.phys.Vec3(8.5,61.5,8.5);var end=new net.minecraft.world.phys.Vec3(12.5,61.5,8.5);
+        for(var block:List.of(ColonyContent.PRESSURE_HULL,ColonyContent.PRESSURE_WINDOW,Blocks.GLASS)){
+            world.blocks.put(blocker,block.defaultBlockState());assertFalse(dev.vic17usd.spacefabric.environment.volcanism.VolcanicTerrain.clearRay(view,start,end));
+        }
+        var door=ColonyContent.AIRLOCK_DOOR.defaultBlockState().setValue(net.minecraft.world.level.block.DoorBlock.FACING,net.minecraft.core.Direction.EAST);
+        world.blocks.put(blocker,door);assertFalse(dev.vic17usd.spacefabric.environment.volcanism.VolcanicTerrain.clearRay(view,start,end));
+        world.blocks.put(blocker,door.setValue(net.minecraft.world.level.block.DoorBlock.OPEN,true));assertTrue(dev.vic17usd.spacefabric.environment.volcanism.VolcanicTerrain.clearRay(view,start,end));
+    }
+    @Test void nativeVoxelTraversalCatchesBriefDiagonalIntersectionsAndIsReadOnly(){
+        var world=new VoxelWorld(0,0);var view=volcanicView(world,p->true);var blocker=new net.minecraft.core.BlockPos(9,61,9);world.blocks.put(blocker,Blocks.STONE.defaultBlockState());var before=new java.util.HashMap<>(world.blocks);
+        var start=new net.minecraft.world.phys.Vec3(9.0,61.5,8.02);var end=new net.minecraft.world.phys.Vec3(11.0,61.5,10.02);
+        assertFalse(dev.vic17usd.spacefabric.environment.volcanism.VolcanicTerrain.clearRay(view,start,end));assertEquals(before,world.blocks);
+        assertFalse(dev.vic17usd.spacefabric.environment.volcanism.VolcanicTerrain.clearRay(view,start,start.add(17,0,0)));
+    }
+    @Test void sharedVolcanicRegistryIsSpacedBoundedAndNeverAdmitsMoreThanFourAlerts(){
+        var field=new dev.vic17usd.spacefabric.environment.volcanism.VolcanicField();var pos=new net.minecraft.core.BlockPos(0,60,0);
+        assertTrue(field.discover(pos,dev.vic17usd.spacefabric.environment.volcanism.VolcanicCycle.Kind.GAS,42));
+        assertFalse(field.discover(pos.offset(2,0,2),dev.vic17usd.spacefabric.environment.volcanism.VolcanicCycle.Kind.GAS,42));
+        for(int i=1;i<24;i++)assertTrue(field.discover(pos.offset(i*12,0,0),dev.vic17usd.spacefabric.environment.volcanism.VolcanicCycle.Kind.GAS,42));
+        assertFalse(field.discover(pos.offset(500,0,0),dev.vic17usd.spacefabric.environment.volcanism.VolcanicCycle.Kind.GAS,42));
+        for(int tick=0;tick<5000;tick++){field.tick(p->true);assertTrue(field.sources().values().stream().filter(dev.vic17usd.spacefabric.environment.volcanism.VolcanicCycle::alert).count()<=4);}
+        assertThrows(UnsupportedOperationException.class,()->field.sources().clear());field.tick(p->false);assertTrue(field.sources().isEmpty());
+    }
+    @Test void volcanicSourceRemovalAndReloadRequireANewWarningCycle(){
+        var field=new dev.vic17usd.spacefabric.environment.volcanism.VolcanicField();var pos=new net.minecraft.core.BlockPos(-20,70,-40);
+        field.discover(pos,dev.vic17usd.spacefabric.environment.volcanism.VolcanicCycle.Kind.ERUPTION,20);for(int i=0;i<460;i++)field.tick(p->true);
+        field.tick(p->false);assertTrue(field.sources().isEmpty());field.discover(pos,dev.vic17usd.spacefabric.environment.volcanism.VolcanicCycle.Kind.ERUPTION,20);
+        assertEquals(dev.vic17usd.spacefabric.environment.volcanism.VolcanicCycle.Phase.QUIET,field.sources().get(pos).phase());assertTrue(field.sources().get(pos).remaining()>=100);
+    }
+    @ParameterizedTest @ValueSource(strings={"volcanic_gas","volcanic_ejecta"})
+    void volcanicDamageTypesUseNativeCodecsAndRespectOrdinaryDamageCooldowns(String name)throws IOException{
+        assertNotNull(DamageType.DIRECT_CODEC.parse(JsonOps.INSTANCE,resource("damage_type/"+name)).getOrThrow());
+        var source=new net.minecraft.world.damagesource.DamageSource(registries.lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(net.minecraft.resources.ResourceKey.create(Registries.DAMAGE_TYPE,SpaceFabric.id(name))));
+        assertTrue(source.is(net.minecraft.tags.DamageTypeTags.BYPASSES_ARMOR));assertFalse(source.is(net.minecraft.tags.DamageTypeTags.BYPASSES_COOLDOWN));assertFalse(source.is(net.minecraft.tags.DamageTypeTags.BYPASSES_INVULNERABILITY));
+        assertEquals(name.equals("volcanic_ejecta"),source.is(net.minecraft.tags.DamageTypeTags.IS_FIRE));
+    }
 }

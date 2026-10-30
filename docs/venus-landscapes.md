@@ -121,3 +121,9 @@ biomas, colocación completa de la caldera por chunks y su guardado/carga, recha
 de pendientes sin escrituras parciales, herramientas, loot, colisiones y modelos
 cliente por CPU. La frecuencia observada, los efectos de contacto y la inspección
 visual/multijugador necesitan también comprobación en una partida real.
+
+## Actividad volcánica desde 0.47.0
+
+Los respiraderos y las fuentes de lava existentes pueden activar fumarolas y
+microerupciones locales, con aviso previo y enfriamiento. No modifican las
+estructuras ni el terreno. [Detalles y protección](venus-volcanism.md).

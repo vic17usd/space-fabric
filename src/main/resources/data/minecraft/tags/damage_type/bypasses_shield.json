@@ -4,6 +4,8 @@
     "space_fabric:decompression",
     "space_fabric:crushing_pressure",
     "space_fabric:hypoxia",
-    "space_fabric:thermal_exposure"
+    "space_fabric:thermal_exposure",
+    "space_fabric:volcanic_gas",
+    "space_fabric:volcanic_ejecta"
   ]
 }

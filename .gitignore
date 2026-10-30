@@ -12,3 +12,5 @@ __pycache__/
 /config/space-fabric-atmosphere.json
 
 /config/space-fabric-rockets.json
+
+/config/space-fabric-volcanism.json
