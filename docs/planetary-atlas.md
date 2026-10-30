@@ -1,6 +1,6 @@
-# Minimapa y atlas de los planetas — 0.44.0
+# Minimapa y atlas de los planetas — 0.44.1
 
-Instala 0.44.0 en **cliente y servidor**, sustituyendo el JAR anterior. Requiere
+Instala 0.44.1 en **cliente y servidor**, sustituyendo el JAR anterior. Requiere
 Minecraft 26.1, Java 25, Fabric y Fabric API; no añade otra dependencia de mapas.
 Funciona en partidas existentes. Cada planeta y la Luna tienen su mapa propio;
 la Tierra del mod y el Overworld también se guardan por separado.
@@ -24,11 +24,24 @@ y soporte vital adecuados al lugar donde estés.
 
 ## Minimapa
 
-Se muestra en la **esquina inferior derecha**, separado del indicador de misiones
-y del panel de hábitat. El norte permanece arriba. La marca blanca señala al
-jugador y el trazo dorado indica hacia dónde mira. Los marcadores usan el color
-elegido; el destino seleccionado lleva un borde blanco. Si queda fuera del área
-visible, su indicador aparece en el borde. Las coordenadas X/Z están abajo.
+Se muestra en la **esquina inferior derecha** como un radar circular de 104 píxeles
+de interfaz, con borde dorado, marcas de brújula y esquinas transparentes. Sigue
+el concepto de la referencia: terreno dentro del círculo, símbolos de localización
+y orientación. El norte permanece arriba; el mapa sigue al jugador sin girar.
+
+La **flecha blanca** representa al jugador y gira según su mirada. Los puntos
+normales son **rombos del color elegido**; el destino seleccionado es una
+**estrella dorada**, también en el mapa grande. Si queda fuera del minimapa,
+la estrella se proyecta al borde circular conservando la dirección. Los puntos
+no seleccionados que quedan fuera se ocultan. Un contorno oscuro mantiene los
+símbolos legibles sobre nieve o lava. El nombre del planeta aparece arriba y
+las coordenadas X/Z debajo, sin un panel rectangular de fondo.
+
+Los símbolos representan tus localizaciones guardadas o importadas del navegador.
+No se añaden misiones, enemigos ni estructuras desconocidas automáticamente.
+El mapa grande conserva su área rectangular para facilitar el zoom y el arrastre,
+con los mismos símbolos de navegación. Los datos anteriores se conservan sin
+conversión ni cambio de carpetas.
 
 Se oculta con N, F1, las pantallas abiertas, al morir y durante el vuelo del cohete.
 La preferencia de N se conserva para esa partida y jugador. Mientras el minimapa
@@ -130,5 +143,5 @@ observar este atlas. Quedan por ejecutar estas comprobaciones:
    dos mundos y un servidor cuyo mundo se haya reiniciado, usando copias de prueba.
 5. Importar un navegador y repetir: no duplica coordenadas. Con 128 puntos, la
    edición sigue disponible y se impide añadir otro hasta borrar uno.
-6. Revisar minimapa, hábitat, misiones, aerostato y vuelo del cohete con distintas
+6. Revisar el recorte circular, la estrella en el borde, la flecha al girar, minimapa, hábitat, misiones, aerostato y vuelo del cohete con distintas
    escalas de interfaz y con Sodium. Confirmar F1, N, idiomas y cierre del cliente.

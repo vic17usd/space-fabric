@@ -682,3 +682,18 @@ Atlas y minimapa planetarios, versión 0.44.0:
   haya observado en juego el muestreo o la composición de la nueva interfaz.
 
 [Controles, guardado y pruebas en partida](planetary-atlas.md).
+
+Minimapa circular, versión 0.44.1:
+
+- `./gradlew build --console=plain`: **599 pruebas JUnit**, cero fallos, errores
+  u omisiones; once comprobaciones por CPU existentes. **1.205 JSON** válidos.
+- Tres pruebas nuevas comprueban esquinas transparentes, recorte circular y marco,
+  proyección radial del destino en las ocho direcciones, símbolos acotados y
+  orientación de la flecha con el yaw de Minecraft.
+- El minimapa usa una textura dinámica de 104×104 con marco y máscara; los iconos
+  tienen contorno oscuro y se recortan dentro del círculo. El mapa grande mantiene
+  su formato rectangular y comparte los símbolos de estrella, rombo y flecha.
+- Se inspeccionó una previsualización por CPU de la geometría y los símbolos sobre
+  terreno sintético; no es una captura de Minecraft ni valida la composición GPU.
+- Se mantienen el formato de guardado y los controles. Falta revisar en cliente
+  gráfico el marco, las escalas de interfaz, los marcadores y Sodium.

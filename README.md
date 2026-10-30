@@ -1,5 +1,9 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión 0.44.1 adapta el minimapa a un **diseño circular con borde dorado**,
+flecha de orientación y estrella para el destino. Conserva las localizaciones
+y los mapas guardados. [Diseño y controles](docs/planetary-atlas.md).
+
 La versión 0.44.0 añade **minimapa y mapa grande independientes por planeta**,
 con terreno explorado, zoom, desplazamiento, marcadores personales editables e
 importación del navegador. **M** abre el atlas, **B** guarda una localización y
@@ -176,9 +180,9 @@ Consulta la [guía completa de bloques y materiales](docs/materials.md).
 Consulta la [guía de terreno y registro de biomas](docs/terrain.md).
 Consulta la [tabla de dimensiones y claves Java](docs/dimensions.md).
 
-Descarga del prototipo compilado: [space-fabric-0.44.0.jar](dist/space-fabric-0.44.0.jar)
+Descarga del prototipo compilado: [space-fabric-0.44.1.jar](dist/space-fabric-0.44.1.jar)
 (en GitHub, pulsa **Download raw file**).
-[Checksum SHA-256](dist/space-fabric-0.44.0.jar.sha256).
+[Checksum SHA-256](dist/space-fabric-0.44.1.jar.sha256).
 Fauna original: **17usdd using [CreativeMode.net](https://creativemode.net)**;
 [páginas oficiales y atribución](third_party/martian_fauna/README.md),
 [licencia de sus recursos](https://creativemode.net/mod-license).
@@ -390,7 +394,7 @@ el carácter químico del entorno. Los trajes venusiano y abisal resisten la cor
 inmunidad, prioridad de presión e hipoxia a presión normal.
 También usa Fabric Loader JUnit y los codecs reales de Minecraft para interpretar
 los nueve tipos de dimensión, sus generadores y los cuatro tipos de daño; también
-comprueba refinería, persistencia del combustible, recetas, llegadas, estructuras, comerciantes, fauna, industria, rover, redes y atlas: **596 casos**
+comprueba refinería, persistencia del combustible, recetas, llegadas, estructuras, comerciantes, fauna, industria, rover, redes y atlas: **599 casos**
 en total. `tools/validate_resources.py` comprueba además JSON y referencias internas.
 Estas pruebas no arrancan un mundo ni comprueban la sincronización del cliente.
 

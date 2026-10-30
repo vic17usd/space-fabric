@@ -21,7 +21,7 @@ import org.lwjgl.glfw.GLFW;
 public final class AtlasClient {
     private static final LinkedHashMap<String,AtlasData> MAPS=new LinkedHashMap<>(4,.75F,true);
     private static final List<int[]> OFFSETS=new ArrayList<>();
-    private static final AtlasCanvas MINI=new AtlasCanvas("atlas_mini",80);
+    private static final AtlasCanvas MINI=new AtlasCanvas("atlas_mini",104);
     private static UUID world;
     private static Path root;
     private static boolean mini=true,failed;
@@ -104,11 +104,10 @@ public final class AtlasClient {
             var c=Minecraft.getInstance();if(!mini||root==null||failed||c.level==null||c.player==null||!c.player.isAlive()||c.screen!=null||c.options.hideGui)return;
             if(c.player.getVehicle() instanceof dev.vic17usd.spacefabric.space.RocketEntity rocket&&rocket.isFlying())return;
             try {
-                int x=gui.guiWidth()-88,y=gui.guiHeight()-112;
-                MINI.draw(gui,map(dimension()),x,y,80,c.player.getX(),c.player.getZ(),2,false);
-                gui.text(c.font,c.font.split(label(dimension()),80).getFirst(),x,y-12,0xFFE5F4FA);
-                gui.fill(x,y+67,x+80,y+80,0xB0121D28);
-                gui.text(c.font,c.font.plainSubstrByWidth(c.player.getBlockX()+", "+c.player.getBlockZ(),76),x+2,y+70,0xFFE5F4FA);
+                int x=gui.guiWidth()-116,y=gui.guiHeight()-138;
+                MINI.draw(gui,map(dimension()),x,y,104,c.player.getX(),c.player.getZ(),2,false);
+                gui.text(c.font,c.font.split(label(dimension()),104).getFirst(),x,y-12,0xFFE5F4FA);
+                gui.centeredText(c.font,c.font.plainSubstrByWidth(c.player.getBlockX()+", "+c.player.getBlockZ(),104),x+52,y+111,0xFFE5F4FA);
             }catch(IOException failure){error(failure);}
         });
     }
