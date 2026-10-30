@@ -648,5 +648,19 @@
   "venus.guide.hud_cooling": "Beside the controller, charge an exchanger with chilled coolant and a cell.",
   "venus.guide.hud_automation": "Connect an interface, carriers and supplied tanks to a nearby machine.",
   "venus.guide.hud_food": "In a protected, lit room: seed + cell + water. Finish a wheat batch.",
-  "venus.guide.hud_expedition": "Recover a natural station and claim its mission. See /expediciones."
+  "venus.guide.hud_expedition": "Recover a natural station and claim its mission. See /expediciones.",
+  "venus.guide.tracker_title_shelter": "Shelter on Venus",
+  "venus.guide.tracker_title_power": "Power for the colony",
+  "venus.guide.tracker_title_cooling": "Thermal control",
+  "venus.guide.tracker_title_automation": "A connected base",
+  "venus.guide.tracker_title_food": "First harvest",
+  "venus.guide.tracker_title_expedition": "Venusian expedition",
+  "venus.guide.tracker_title_complete": "Venus colony",
+  "venus.guide.tracker_objective_shelter": "Enter a protected shelter",
+  "venus.guide.tracker_objective_power": "Generate power above lava",
+  "venus.guide.tracker_objective_cooling": "Charge the heat exchanger",
+  "venus.guide.tracker_objective_automation": "Supply a machine through pipes",
+  "venus.guide.tracker_objective_food": "Complete a wheat harvest",
+  "venus.guide.tracker_objective_expedition": "Recover an abandoned station",
+  "venus.guide.tracker_objective_complete": "Guide completed"
 }

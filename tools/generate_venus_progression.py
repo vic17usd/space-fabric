@@ -14,6 +14,20 @@ def write(path, value):
 
 
 texts = {
+    'tracker_title_shelter': ('Un refugio en Venus', 'Shelter on Venus'),
+    'tracker_title_power': ('Energía para la colonia', 'Power for the colony'),
+    'tracker_title_cooling': ('Control térmico', 'Thermal control'),
+    'tracker_title_automation': ('Una base conectada', 'A connected base'),
+    'tracker_title_food': ('Primer cultivo', 'First harvest'),
+    'tracker_title_expedition': ('Expedición venusiana', 'Venusian expedition'),
+    'tracker_title_complete': ('Colonia de Venus', 'Venus colony'),
+    'tracker_objective_shelter': ('Entra en un refugio protegido', 'Enter a protected shelter'),
+    'tracker_objective_power': ('Genera energía sobre lava', 'Generate power above lava'),
+    'tracker_objective_cooling': ('Carga el intercambiador térmico', 'Charge the heat exchanger'),
+    'tracker_objective_automation': ('Abastece una máquina por tuberías', 'Supply a machine through pipes'),
+    'tracker_objective_food': ('Completa una cosecha de trigo', 'Complete a wheat harvest'),
+    'tracker_objective_expedition': ('Recupera una instalación abandonada', 'Recover an abandoned station'),
+    'tracker_objective_complete': ('Guía completada', 'Guide completed'),
     'hud_title': ('VENUS · Misiones %s/6', 'VENUS · Objectives %s/6'),
     'hud_now': ('› Ahora: %s', '› Now: %s'),
     'hud_next': ('Después: %s', 'Next: %s'),

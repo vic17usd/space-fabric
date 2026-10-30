@@ -1,8 +1,8 @@
-# Comprobaciones de la colonia en partida — 0.42.0
+# Comprobaciones de la colonia en partida — 0.42.1
 
 Estas comprobaciones están preparadas para ejecución dentro de Minecraft; no
 se presentan como resultados observados. Usa un mundo de pruebas con cliente y
-servidor 0.42.0. El perfil planetario de exposición mantiene la escala 1:72.
+servidor 0.42.1. El perfil planetario de exposición mantiene la escala 1:72.
 
 1. Construye un hábitat válido de Venus y equipa el traje antes de entrar. Abastece
    el controlador. Comprueba el diagnóstico de presión, oxígeno y refrigeración.
@@ -69,8 +69,9 @@ servidor 0.42.0. El perfil planetario de exposición mantiene la escala 1:72.
     de lote y reconecta; no debe reiniciarse, duplicar productos ni perder batería.
 
 19. En Venus, verifica las misiones arriba a la izquierda sin un rectángulo de
-    fondo y sin llevar el navegador. Completa un objetivo y comprueba «Ahora» y
-    «Después». Prueba un jugador con etapas posteriores ya completadas, cambia
+    fondo y sin llevar el navegador. Compara con la referencia: título blanco,
+    línea fina y círculo cian hueco con un único objetivo. Completa una etapa y
+    comprueba el cambio de título y objetivo. Prueba etapas posteriores ya completadas, cambia
     de planeta, reconecta y comprueba otro UUID. Abre inventario y pulsa F1:
     debe ocultarse. Revisa escalas de interfaz, idiomas y el aerostato: sus datos
     deben aparecer debajo de la guía. Al completar las seis etapas, muestra fin.

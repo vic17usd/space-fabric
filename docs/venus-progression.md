@@ -87,6 +87,15 @@ las etapas son historia de aprendizaje, no un certificado permanente de segurida
 
 ## Misiones en pantalla — 0.42.0
 
+**Diseño actualizado en 0.42.1:** el indicador sigue la referencia aportada:
+título blanco de la misión, separador fino y círculo cian hueco con un único
+objetivo breve. La descripción usa texto algo menor y admite dos líneas si el
+ancho lo requiere. El centro del círculo y el fondo quedan transparentes.
+Se retiran del HUD el contador, «Ahora», «Después» y el recordatorio de comando.
+El siguiente objetivo sustituye al anterior automáticamente. La guía completa
+permanece disponible en el diario y `/venus guia`; el progreso no se reinicia.
+El resto de este apartado describe el comportamiento y la presentación de 0.42.0.
+
 En Venus, la guía aparece automáticamente en la **esquina superior izquierda**,
 sin panel ni textura de fondo. El texto muestra misiones completadas de seis,
 la acción actual, una instrucción breve y el siguiente objetivo. No necesitas

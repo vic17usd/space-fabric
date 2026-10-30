@@ -1,6 +1,6 @@
 # Resultado de validación de esta base
 
-Última entrega: **0.42.0**, 574 pruebas JUnit aprobadas, once comprobaciones por
+Última entrega: **0.42.1**, 574 pruebas JUnit aprobadas, once comprobaciones por
 CPU y 1.205 JSON válidos. Los apartados siguientes conservan el historial de
 la base y sus ampliaciones; la validación del indicador de misiones está al final del documento.
 
@@ -619,3 +619,14 @@ Guía de Venus en pantalla, versión 0.42.0:
   escalas de interfaz y convivencia con otros mods necesitan la comprobación
   manual 19 de `docs/venus-colony-playtest.md`. Las pruebas de paquetes y estado
   no equivalen a una observación visual ni una sesión multijugador.
+
+Ajuste visual del indicador, versión 0.42.1:
+
+- Encabezado blanco, separador fino, círculo cian hueco y un objetivo breve con
+  texto al 85 %. El fondo sigue transparente. Se mantiene el estado y protocolo
+  de progreso de 0.42; no se reinician partidas ni se alteran recompensas.
+- Compilación y comprobaciones de recursos/modelos por CPU; 574 pruebas previas
+  de reglas, registros, persistencia y red. No se añaden pruebas que reproduzcan
+  posiciones decorativas del renderer.
+- No se ha observado un cliente gráfico: la comparación visual dentro de Minecraft
+  con la referencia, las escalas GUI y el texto reducido siguen pendientes.

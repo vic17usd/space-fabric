@@ -1,5 +1,9 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión 0.42.1 adapta **el indicador de misiones a la referencia visual**:
+título blanco, línea fina y círculo cian junto a un único objetivo breve,
+con fondo transparente. Las instrucciones completas siguen en `/venus guia`.
+
 La versión 0.42.0 muestra **la guía de Venus como misiones en pantalla**, en la
 esquina superior izquierda con fondo completamente transparente. Indica qué
 hacer ahora, el paso siguiente y el progreso guardado por jugador.
@@ -162,9 +166,9 @@ Consulta la [guía completa de bloques y materiales](docs/materials.md).
 Consulta la [guía de terreno y registro de biomas](docs/terrain.md).
 Consulta la [tabla de dimensiones y claves Java](docs/dimensions.md).
 
-Descarga del prototipo compilado: [space-fabric-0.42.0.jar](dist/space-fabric-0.42.0.jar)
+Descarga del prototipo compilado: [space-fabric-0.42.1.jar](dist/space-fabric-0.42.1.jar)
 (en GitHub, pulsa **Download raw file**).
-[Checksum SHA-256](dist/space-fabric-0.42.0.jar.sha256).
+[Checksum SHA-256](dist/space-fabric-0.42.1.jar.sha256).
 Fauna original: **17usdd using [CreativeMode.net](https://creativemode.net)**;
 [páginas oficiales y atribución](third_party/martian_fauna/README.md),
 [licencia de sus recursos](https://creativemode.net/mod-license).

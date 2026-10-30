@@ -648,5 +648,19 @@
   "venus.guide.hud_cooling": "Junto al controlador, carga el intercambiador con refrigerante enfriado y batería.",
   "venus.guide.hud_automation": "Conecta una interfaz, envases y depósitos abastecidos a una máquina próxima.",
   "venus.guide.hud_food": "En una sala protegida y con luz: semilla + batería + agua. Completa trigo.",
-  "venus.guide.hud_expedition": "Recupera una instalación natural y reclama su misión. Consulta /expediciones."
+  "venus.guide.hud_expedition": "Recupera una instalación natural y reclama su misión. Consulta /expediciones.",
+  "venus.guide.tracker_title_shelter": "Un refugio en Venus",
+  "venus.guide.tracker_title_power": "Energía para la colonia",
+  "venus.guide.tracker_title_cooling": "Control térmico",
+  "venus.guide.tracker_title_automation": "Una base conectada",
+  "venus.guide.tracker_title_food": "Primer cultivo",
+  "venus.guide.tracker_title_expedition": "Expedición venusiana",
+  "venus.guide.tracker_title_complete": "Colonia de Venus",
+  "venus.guide.tracker_objective_shelter": "Entra en un refugio protegido",
+  "venus.guide.tracker_objective_power": "Genera energía sobre lava",
+  "venus.guide.tracker_objective_cooling": "Carga el intercambiador térmico",
+  "venus.guide.tracker_objective_automation": "Abastece una máquina por tuberías",
+  "venus.guide.tracker_objective_food": "Completa una cosecha de trigo",
+  "venus.guide.tracker_objective_expedition": "Recupera una instalación abandonada",
+  "venus.guide.tracker_objective_complete": "Guía completada"
 }

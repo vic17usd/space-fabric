@@ -10,7 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 
-/** Text only: no background rectangles, textures or dependency on a held navigator. */
+/** Compact quest tracker: mission heading, fine rule and a cyan objective ring on a clear background. */
 public final class VenusGuideHud {
     private static final VenusMissionTracker STATE=new VenusMissionTracker();
     private static int bottom;
@@ -31,26 +31,38 @@ public final class VenusGuideHud {
         });
         HudElementRegistry.addLast(SpaceFabric.id("venus_missions"),(gui,delta)->draw(gui));
     }
-    private static int lines(GuiGraphicsExtractor gui,Component text,int y,int width,int color,int limit){
-        var font=Minecraft.getInstance().font;
-        for(var line:font.split(text,width).stream().limit(limit).toList()){
-            gui.text(font,line,8,y,color);y+=font.lineHeight+2;
+    private static void ring(GuiGraphicsExtractor gui,int x,int y,boolean complete){
+        // A hollow, nine-pixel circle; the centre remains transparent.
+        for(int row=0;row<9;row++)for(int col=0;col<9;col++){
+            int distance=(col-4)*(col-4)+(row-4)*(row-4);
+            if(distance>=10&&distance<=20)gui.fill(x+col,y+row,x+col+1,y+row+1,complete?0xFF8DE9BE:0xFF65D9ED);
         }
-        return y;
+        if(complete)gui.fill(x+3,y+3,x+6,y+6,0xFF8DE9BE);
     }
     private static void draw(GuiGraphicsExtractor gui){
         var c=Minecraft.getInstance();bottom=0;
         if(!visible()||c.options.hideGui||c.screen!=null)return;
-        int width=Math.min(230,c.getWindow().getGuiScaledWidth()-16),y=8;
-        y=lines(gui,Component.translatable("venus.guide.hud_title",STATE.completed()),y,width,0xFFFFD477,1);
         var remaining=STATE.remaining();
-        if(remaining.isEmpty()){
-            bottom=lines(gui,Component.translatable("venus.guide.hud_done"),y+3,width,0xFF8DE9BE,2);return;
+        boolean complete=remaining.isEmpty();
+        String step=complete?"complete":remaining.getFirst().key();
+        int width=Math.min(214,c.getWindow().getGuiScaledWidth()-16);
+        var title=Component.translatable("venus.guide.tracker_title_"+step);
+        gui.text(c.font,c.font.split(title,width).getFirst(),8,8,0xFFF2F3F4);
+        gui.horizontalLine(8,8+Math.min(width,Math.max(100,c.font.width(title))),20,0x807F919B);
+        ring(gui,8,25,complete);
+        // The smaller objective text matches the reference while preserving Minecraft's GUI scaling.
+        float scale=.85F;
+        var pose=gui.pose();pose.pushMatrix();
+        try {
+            pose.translate(22,26);pose.scale(scale,scale);
+            var objective=Component.translatable("venus.guide.tracker_objective_"+step);
+            int row=0;
+            for(var line:c.font.split(objective,(int)((width-14)/scale)).stream().limit(2).toList()){
+                gui.text(c.font,line,0,row,0xFFE0E7EB);row+=c.font.lineHeight+2;
+            }
+            bottom=26+(int)Math.ceil(row*scale)+3;
+        } finally {
+            pose.popMatrix();
         }
-        var step=remaining.getFirst();
-        y=lines(gui,Component.translatable("venus.guide.hud_now",Component.translatable("venus.guide."+step.key())),y+3,width,0xFFFFFFFF,2);
-        y=lines(gui,Component.translatable("venus.guide.hud_"+step.key()),y,width,0xFFD6E5EA,3);
-        if(remaining.size()>1)y=lines(gui,Component.translatable("venus.guide.hud_next",Component.translatable("venus.guide."+remaining.get(1).key())),y+3,width,0xFF9FB3C0,2);
-        bottom=lines(gui,Component.translatable("venus.guide.hud_help"),y+3,width,0xFF9FB3C0,1);
     }
 }
