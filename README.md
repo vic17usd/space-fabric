@@ -1,5 +1,9 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión 0.45.1 reúne las ocho asignaciones del mod en **Space Fabric —
+Controles**, dentro de las opciones de teclado. Incluye los atajos de recetas
+y usos; conserva las asignaciones anteriores. [Cómo cambiarlas](docs/controls.md).
+
 La versión 0.45.0 añade **prospección y minería industrial de Venus**: escáner
 geológico con puntos importables al atlas y perforadora de sondeo que extrae
 menas reales con broca, energía y refrigerante. Se integra con redes, calor y
@@ -188,9 +192,9 @@ Consulta la [guía completa de bloques y materiales](docs/materials.md).
 Consulta la [guía de terreno y registro de biomas](docs/terrain.md).
 Consulta la [tabla de dimensiones y claves Java](docs/dimensions.md).
 
-Descarga del prototipo compilado: [space-fabric-0.45.0.jar](dist/space-fabric-0.45.0.jar)
+Descarga del prototipo compilado: [space-fabric-0.45.1.jar](dist/space-fabric-0.45.1.jar)
 (en GitHub, pulsa **Download raw file**).
-[Checksum SHA-256](dist/space-fabric-0.45.0.jar.sha256).
+[Checksum SHA-256](dist/space-fabric-0.45.1.jar.sha256).
 Fauna original: **17usdd using [CreativeMode.net](https://creativemode.net)**;
 [páginas oficiales y atribución](third_party/martian_fauna/README.md),
 [licencia de sus recursos](https://creativemode.net/mod-license).

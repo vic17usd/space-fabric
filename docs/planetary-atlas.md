@@ -18,7 +18,8 @@ la Tierra del mod y el Overworld también se guardan por separado.
 | Volver a tu posición | **Centrar** |
 | Consultar otro planeta visitado | Pulsar el botón superior con el nombre del planeta |
 
-Las tres teclas se pueden reasignar en Opciones → Controles. Las pantallas del
+Las tres teclas se pueden reasignar en Opciones → Controles → Asignación de teclas,
+en la sección **Space Fabric — Controles**. Las pantallas del
 mapa y de marcadores mantienen la supervivencia en marcha; ábrelas con el equipo
 y soporte vital adecuados al lugar donde estés.
 

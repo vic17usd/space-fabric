@@ -17,7 +17,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Util;
 import net.minecraft.world.item.ItemStack;
-import org.lwjgl.glfw.GLFW;
+import dev.vic17usd.spacefabric.client.ModKeyBindings;
 
 /** Searchable registry catalog and server-backed recipe cards. All interaction is read-only. */
 public final class RecipeViewerScreen extends Screen {
@@ -135,12 +135,13 @@ public final class RecipeViewerScreen extends Screen {
         }
     }
     @Override public boolean mouseClicked(MouseButtonEvent event,boolean doubleClick) {
+        if(!hovered.isEmpty()&&(ModKeyBindings.ITEM_RECIPES.matchesMouse(event)||ModKeyBindings.ITEM_USES.matchesMouse(event))){clearFocus();search.setFocused(false);select(hovered,ModKeyBindings.ITEM_USES.matchesMouse(event));return true;}
         if(!hovered.isEmpty()&&(event.button()==0||event.button()==1)){clearFocus();search.setFocused(false);select(hovered,event.button()==1);return true;}
         return super.mouseClicked(event,doubleClick);
     }
     @Override public boolean keyPressed(KeyEvent event) {
-        if(!search.isFocused()&&!hovered.isEmpty()&&(event.key()==GLFW.GLFW_KEY_R||event.key()==GLFW.GLFW_KEY_U)) {
-            select(hovered,event.key()==GLFW.GLFW_KEY_U);return true;
+        if(!search.isFocused()&&!hovered.isEmpty()&&(ModKeyBindings.ITEM_RECIPES.matches(event)||ModKeyBindings.ITEM_USES.matches(event))) {
+            select(hovered,ModKeyBindings.ITEM_USES.matches(event));return true;
         }
         return super.keyPressed(event);
     }

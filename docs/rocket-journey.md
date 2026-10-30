@@ -1,7 +1,7 @@
 # Viaje visible y aterrizaje en el terreno — 0.27.0 / Fabric 26.1
 
 El vuelo incluye despegue, travesía espacial y aterrizaje. Elige destino en el
-mapa del cohete, carga el combustible indicado, sube y pulsa **Despegar** o Espacio.
+mapa del cohete, carga el combustible indicado, sube y pulsa **Despegar** o la tecla asignada a Saltar (Espacio por defecto).
 No requiere activar una opción ni fabricar una pieza adicional.
 
 ![Referencia animada de la travesía por la escotilla](assets/rocket-journey-preview.gif)

@@ -7,7 +7,6 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.*;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.minecraft.client.*;
@@ -16,7 +15,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.chunk.status.ChunkStatus;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.storage.LevelResource;
-import org.lwjgl.glfw.GLFW;
 
 public final class AtlasClient {
     private static final LinkedHashMap<String,AtlasData> MAPS=new LinkedHashMap<>(4,.75F,true);
@@ -84,9 +82,9 @@ public final class AtlasClient {
         }
     }
     public static void initialize(){
-        openKey=KeyMappingHelper.registerKeyMapping(new KeyMapping("key.space_fabric.atlas",GLFW.GLFW_KEY_M,KeyMapping.Category.INVENTORY));
-        var mark=KeyMappingHelper.registerKeyMapping(new KeyMapping("key.space_fabric.map_marker",GLFW.GLFW_KEY_B,KeyMapping.Category.INVENTORY));
-        var toggle=KeyMappingHelper.registerKeyMapping(new KeyMapping("key.space_fabric.minimap",GLFW.GLFW_KEY_N,KeyMapping.Category.INVENTORY));
+        openKey=dev.vic17usd.spacefabric.client.ModKeyBindings.ATLAS;
+        var mark=dev.vic17usd.spacefabric.client.ModKeyBindings.MARKER;
+        var toggle=dev.vic17usd.spacefabric.client.ModKeyBindings.MINIMAP;
         ClientPlayNetworking.registerGlobalReceiver(AtlasNetwork.Identity.TYPE,(p,context)->world=p.world());
         ClientPlayConnectionEvents.DISCONNECT.register((handler,c)->close());
         net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents.CLIENT_STOPPING.register(c->close());

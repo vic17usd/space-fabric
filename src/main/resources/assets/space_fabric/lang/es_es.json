@@ -204,7 +204,7 @@
   "gui.space_fabric.viewer.loading": "Cargando recetas…",
   "gui.space_fabric.viewer.unavailable": "Sin respuesta del servidor. Actualiza el mod y pulsa Recargar.",
   "gui.space_fabric.viewer.empty": "No hay recetas en esta consulta. Prueba Recetas o Usos.",
-  "gui.space_fabric.viewer.click_help": "Clic/R: recetas · Derecho/U: usos",
+  "gui.space_fabric.viewer.click_help": "Clic: recetas · Clic derecho: usos · Atajos configurables en Controles → Space Fabric",
   "gui.space_fabric.viewer.kind.crafting": "Fabricación",
   "gui.space_fabric.viewer.kind.smelting": "Horno",
   "gui.space_fabric.viewer.kind.blasting": "Alto horno",
@@ -717,5 +717,8 @@
   "colony.space_fabric.drill_protected": "Extracción bloqueada por protección",
   "colony.space_fabric.drill_changed": "El bloque cambió · reintentando",
   "colony.space_fabric.drill_owner": "Propietario desconectado o fuera de Venus",
-  "colony.space_fabric.drill_redstone": "Pausa por señal de redstone"
+  "colony.space_fabric.drill_redstone": "Pausa por señal de redstone",
+  "key.category.space_fabric.controls": "Space Fabric — Controles",
+  "key.space_fabric.item_recipes": "Ver recetas del objeto (visor)",
+  "key.space_fabric.item_uses": "Ver usos del objeto (visor)"
 }

@@ -3,18 +3,15 @@ package dev.vic17usd.spacefabric.client.equipment;
 import dev.vic17usd.spacefabric.equipment.SuitEquipment;
 import dev.vic17usd.spacefabric.menu.ModMenus;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.Screens;
-import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 public final class SuitEquipmentClient {
     private SuitEquipmentClient() { }
@@ -26,7 +23,7 @@ public final class SuitEquipmentClient {
     }
     public static void initialize() {
         MenuScreens.register(ModMenus.SUIT,dev.vic17usd.spacefabric.client.menu.SuitScreen::new);
-        var key=KeyMappingHelper.registerKeyMapping(new KeyMapping("key.space_fabric.suit_inventory",GLFW.GLFW_KEY_J,KeyMapping.Category.INVENTORY));
+        var key=dev.vic17usd.spacefabric.client.ModKeyBindings.SUIT;
         ClientTickEvents.END_CLIENT_TICK.register(client->{while(key.consumeClick())if(client.screen==null)open(client);});
         ScreenEvents.AFTER_INIT.register((client,screen,width,height)->{
             if(screen instanceof CreativeModeInventoryScreen)

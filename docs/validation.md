@@ -732,3 +732,15 @@ Prospección y minería industrial, versión 0.45.0:
 - No se ha ejecutado cliente gráfico ni partida multijugador. Sondeo interactivo,
   importación visual al atlas, control por redstone, conexión física completa y
   permisos con otros mods quedan pendientes del checklist de docs/venus-mining.md.
+
+Sección de controles, versión 0.45.1:
+
+- `./gradlew build --console=plain`: 617 pruebas JUnit sin fallos, errores
+  ni omisiones; once comprobaciones por CPU. 1.217 JSON válidos.
+- Categoría nativa registrada una vez: `space_fabric:controls`, con ocho
+  asignaciones. Se conservan los seis identificadores anteriores de options.txt.
+- Los atajos contextuales del visor R/U usan KeyMapping.matches y matchesMouse;
+  no disparan acciones de teclado mientras se escribe en la búsqueda.
+- El atajo de despegue en el panel del cohete usa la tecla de salto configurada.
+- Compilación y empaquetado verificados; no se ha abierto un cliente gráfico para
+  observar la lista, reasignación, conflictos o persistencia de las preferencias.

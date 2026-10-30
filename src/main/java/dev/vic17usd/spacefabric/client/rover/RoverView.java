@@ -3,9 +3,7 @@ package dev.vic17usd.spacefabric.client.rover;
 import dev.vic17usd.spacefabric.rover.*;
 import java.util.*;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.client.KeyMapping;
 
 public final class RoverView {
     private record Motion(double x,double z,float previousRoll,float roll) { }
@@ -19,7 +17,7 @@ public final class RoverView {
         return motion.previousRoll+(motion.roll-motion.previousRoll)*delta;
     }
     public static void initialize() {
-        var key=KeyMappingHelper.registerKeyMapping(new KeyMapping("key.space_fabric.rover_inventory",org.lwjgl.glfw.GLFW.GLFW_KEY_V,KeyMapping.Category.INVENTORY));
+        var key=dev.vic17usd.spacefabric.client.ModKeyBindings.ROVER;
         ClientTickEvents.END_CLIENT_TICK.register(client->{
             if(client.level==null){MOTION.clear();previous=null;return;}
             for(var entity:client.level.entitiesForRendering())if(entity instanceof RoverEntity rover) {

@@ -13,7 +13,6 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-import org.lwjgl.glfw.GLFW;
 
 public final class RocketScreen extends SpaceContainerScreen<RocketMenu> {
     private final List<Button> destinations = new ArrayList<>();
@@ -63,7 +62,7 @@ public final class RocketScreen extends SpaceContainerScreen<RocketMenu> {
     }
     @Override protected void containerTick() { super.containerTick(); updateButtons(); }
     @Override public boolean keyPressed(KeyEvent event) {
-        if (event.key() == GLFW.GLFW_KEY_SPACE) { if (launch.active) send(RocketMenu.LAUNCH); return true; }
+        if (minecraft.options.keyJump.matches(event)) { if (launch.active) send(RocketMenu.LAUNCH); return true; }
         return super.keyPressed(event);
     }
     @Override public void extractBackground(GuiGraphicsExtractor gui, int mouseX, int mouseY, float delta) {
