@@ -1,8 +1,8 @@
 # Resultado de validación de esta base
 
-Última entrega: **0.43.0**, 582 pruebas JUnit aprobadas, once comprobaciones por
+Última entrega: **0.44.0**, 596 pruebas JUnit aprobadas, once comprobaciones por
 CPU y 1.205 JSON válidos. Los apartados siguientes conservan el historial de
-la base y sus ampliaciones; la validación del indicador de misiones está al final del documento.
+la base y sus ampliaciones; la validación del atlas planetario está al final del documento.
 
 Verificado con JDK 25, Gradle 9.8.2, Loom 1.19.3, Minecraft 26.1,
 Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
@@ -655,3 +655,30 @@ Apoyo de estructuras superficiales de Marte, versión 0.43.0:
   de juego completo. La inspección visual en chunks nuevos continúa pendiente.
 
 [Configuración y comandos de comprobación](martian-surface-plots.md).
+
+Atlas y minimapa planetarios, versión 0.44.0:
+
+- `./gradlew build --console=plain`: **596 pruebas JUnit**, cero fallos, errores
+  u omisiones; once comprobaciones por CPU de recursos, modelos y vistas existentes.
+  `python3 tools/validate_resources.py`: **1.205 JSON** válidos.
+- Doce pruebas nuevas de archivos y modelo: separación entre planetas, mundos y
+  jugadores; nueve cuerpos y Overworld; coordenadas negativas y límites de región;
+  terreno desconocido; edición, ocultación, selección y borrado; límite de puntos;
+  claves privadas de almacenamiento; metadatos/regiones dañados preservados;
+  posición anterior, guardado y lectura con presupuestos; validación de coordenadas.
+- Dos pruebas nativas verifican el codec de SavedData del UUID del mundo y su
+  paquete de 16 bytes. La conexión del cliente y el envío en JOIN requieren todavía
+  comprobación en partida: no se presenta una conexión real como resultado de JUnit.
+- El cliente muestrea solo chunks ya cargados, usando getChunk con carga desactivada.
+  Las lecturas de altura y color se limitan a dos chunks por tick. La superficie se
+  conserva en celdas de cuatro bloques y regiones comprimidas con caché limitada.
+  El guardado usa archivos temporales y sustitución atómica cuando está disponible.
+- Compilan las pantallas nativas, teclas reasignables y texturas dinámicas de 26.1.
+  Se verificó la API nativa para ARGB y el escalado de la textura. Las pruebas de
+  modelos por CPU anteriores no ejecutan el renderer GPU del nuevo atlas.
+- No se ha ejecutado cliente gráfico ni multijugador. Minimapa, zoom, arrastre,
+  marcadores, selector, importación del navegador, colores, teclas y reconexión
+  deben verificarse con la lista en docs/planetary-atlas.md. No se afirma que se
+  haya observado en juego el muestreo o la composición de la nueva interfaz.
+
+[Controles, guardado y pruebas en partida](planetary-atlas.md).

@@ -3026,6 +3026,19 @@ class WorldgenCodecTest {
             buffer.clear();buffer.writeVarInt(-1);assertThrows(IllegalArgumentException.class,()->VenusGuideNetwork.State.CODEC.decode(buffer));
         } finally {buffer.release();}
     }
+    @Test void atlasWorldIdentityPersistsThroughItsNativeSavedDataCodec() {
+        var id=java.util.UUID.randomUUID();var state=new dev.vic17usd.spacefabric.map.AtlasNetwork.WorldIdentity(id);
+        var codec=dev.vic17usd.spacefabric.map.AtlasNetwork.WorldIdentity.CODEC;
+        assertEquals(id,codec.parse(JsonOps.INSTANCE,codec.encodeStart(JsonOps.INSTANCE,state).getOrThrow()).getOrThrow().id());
+    }
+    @Test void atlasIdentityPacketContainsOnlyItsWorldUuidAndRoundTripsNatively() {
+        var buffer=new net.minecraft.network.RegistryFriendlyByteBuf(io.netty.buffer.Unpooled.buffer(),(RegistryAccess)registries);
+        try {
+            var packet=new dev.vic17usd.spacefabric.map.AtlasNetwork.Identity(java.util.UUID.randomUUID());
+            dev.vic17usd.spacefabric.map.AtlasNetwork.Identity.CODEC.encode(buffer,packet);assertEquals(16,buffer.readableBytes());
+            assertEquals(packet,dev.vic17usd.spacefabric.map.AtlasNetwork.Identity.CODEC.decode(buffer));assertEquals(0,buffer.readableBytes());
+        }finally{buffer.release();}
+    }
     private net.minecraft.nbt.CompoundTag venusStation(String name) throws IOException {
         try(var in=getClass().getResourceAsStream("/data/space_fabric/structure/venus/colony/"+name+".nbt")) {
             assertNotNull(in);return net.minecraft.nbt.NbtIo.readCompressed(in,net.minecraft.nbt.NbtAccounter.unlimitedHeap());
