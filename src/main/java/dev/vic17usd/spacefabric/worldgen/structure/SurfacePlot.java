@@ -31,6 +31,9 @@ public final class SurfacePlot {
     public static void prepareVenus(WorldGenLevel level,BoundingBox plot,int originY,BoundingBox clip) {
         prepareVenus(level,plot,originY,clip,0);
     }
+    public static void prepareMars(WorldGenLevel level,BoundingBox plot,int originY,BoundingBox clip,int blend) {
+        prepare(level,plot,originY,clip,ModBlocks.IRON_OXIDE_REGOLITH.defaultBlockState(),ModBlocks.MARTIAN_STONE.defaultBlockState(),blend);
+    }
     public static void prepareVenus(WorldGenLevel level,BoundingBox plot,int originY,BoundingBox clip,int blend) {
         prepare(level,plot,originY,clip,ModBlocks.VULCANIZED_BASALT.defaultBlockState(),Blocks.BASALT.defaultBlockState(),blend);
     }

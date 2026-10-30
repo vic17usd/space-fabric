@@ -1,5 +1,10 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión 0.43.0 integra **las estructuras superficiales de Marte en el terreno**:
+evita elevar toda la parcela hasta un pico, descarta pendientes fuertes y suaviza
+los bordes con suelo marciano. Conserva el santuario subterráneo. Se aplica a
+generaciones nuevas. [Detalles](docs/martian-surface-plots.md).
+
 La versión 0.42.1 adapta **el indicador de misiones a la referencia visual**:
 título blanco, línea fina y círculo cian junto a un único objetivo breve,
 con fondo transparente. Las instrucciones completas siguen en `/venus guia`.
@@ -166,9 +171,9 @@ Consulta la [guía completa de bloques y materiales](docs/materials.md).
 Consulta la [guía de terreno y registro de biomas](docs/terrain.md).
 Consulta la [tabla de dimensiones y claves Java](docs/dimensions.md).
 
-Descarga del prototipo compilado: [space-fabric-0.42.1.jar](dist/space-fabric-0.42.1.jar)
+Descarga del prototipo compilado: [space-fabric-0.43.0.jar](dist/space-fabric-0.43.0.jar)
 (en GitHub, pulsa **Download raw file**).
-[Checksum SHA-256](dist/space-fabric-0.42.1.jar.sha256).
+[Checksum SHA-256](dist/space-fabric-0.43.0.jar.sha256).
 Fauna original: **17usdd using [CreativeMode.net](https://creativemode.net)**;
 [páginas oficiales y atribución](third_party/martian_fauna/README.md),
 [licencia de sus recursos](https://creativemode.net/mod-license).
@@ -380,7 +385,7 @@ el carácter químico del entorno. Los trajes venusiano y abisal resisten la cor
 inmunidad, prioridad de presión e hipoxia a presión normal.
 También usa Fabric Loader JUnit y los codecs reales de Minecraft para interpretar
 los nueve tipos de dimensión, sus generadores y los cuatro tipos de daño; también
-comprueba refinería, persistencia del combustible, recetas, llegadas, estructuras, comerciantes, fauna, industria, rover y redes: **574 casos**
+comprueba refinería, persistencia del combustible, recetas, llegadas, estructuras, comerciantes, fauna, industria, rover y redes: **582 casos**
 en total. `tools/validate_resources.py` comprueba además JSON y referencias internas.
 Estas pruebas no arrancan un mundo ni comprueban la sincronización del cliente.
 

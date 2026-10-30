@@ -1,6 +1,6 @@
 # Resultado de validación de esta base
 
-Última entrega: **0.42.1**, 574 pruebas JUnit aprobadas, once comprobaciones por
+Última entrega: **0.43.0**, 582 pruebas JUnit aprobadas, once comprobaciones por
 CPU y 1.205 JSON válidos. Los apartados siguientes conservan el historial de
 la base y sus ampliaciones; la validación del indicador de misiones está al final del documento.
 
@@ -630,3 +630,28 @@ Ajuste visual del indicador, versión 0.42.1:
   posiciones decorativas del renderer.
 - No se ha observado un cliente gráfico: la comparación visual dentro de Minecraft
   con la referencia, las escalas GUI y el texto reducido siguen pendientes.
+
+Apoyo de estructuras superficiales de Marte, versión 0.43.0:
+
+- `./gradlew build --console=plain`: **582 pruebas JUnit** sin fallos, errores ni
+  omisiones, y once comprobaciones por CPU. Se mantienen **1.205 JSON** válidos.
+- La Base de Marte y el Pueblo de Marte usan una cota del terreno predominante:
+  el intervalo de alturas más compacto que reúne al menos el 75 % de muestras.
+  Se rechazan pendientes extensas y se evita que un pico aislado eleve la parcela
+  o que una grieta aislada hunda el edificio. La tolerancia distribuida es 16.
+- Ocho casos nuevos: seis pruebas de alturas (pico 50 bloques más alto, fisuras
+  profundas, bordes de fisura, pendientes, cota limitada y presupuesto de consultas)
+  y dos pruebas de preparación real de márgenes sobre terreno alto/bajo. Se verifica
+  continuidad, apoyo de columnas y ausencia de escrituras fuera del chunk.
+- Las pruebas nativas existentes se actualizan para comprobar el nuevo criterio:
+  ambas estructuras encuentran emplazamientos válidos en semillas 0, 42 y 8675309,
+  con búsqueda acotada. Las plantillas reales se colocan después de limpiar sus
+  interiores y mantienen su suelo y arquitectura.
+- Origen, rotación, plano y transición persisten en NBT. Los guardados anteriores
+  sin TerrainBlend conservan su comportamiento. No se desplazan edificios ya
+  colocados. El santuario subterráneo y sus pruebas siguen sin cambios.
+- La generación se ha verificado mediante APIs nativas y volúmenes de prueba;
+  no se ha observado un cliente gráfico ni cronometrado /locate en un servidor
+  de juego completo. La inspección visual en chunks nuevos continúa pendiente.
+
+[Configuración y comandos de comprobación](martian-surface-plots.md).

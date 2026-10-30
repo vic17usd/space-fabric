@@ -22,13 +22,19 @@ public final class MarsSurfacePiece extends StructurePiece {
     private final Rotation templateRotation;
     private final int padding;
     private final boolean floorAligned;
+    private final int terrainBlend;
 
     public MarsSurfacePiece(Identifier id, StructureTemplate template, BlockPos origin, Rotation rotation,
             int padding, int minY, int maxY) {
+        this(id,template,origin,rotation,padding,minY,maxY,0);
+    }
+    public MarsSurfacePiece(Identifier id,StructureTemplate template,BlockPos origin,Rotation rotation,
+            int padding,int minY,int maxY,int terrainBlend) {
         super(MarsSurfaceStructures.PIECE, 0, plotBounds(template, origin, rotation, padding, minY, maxY));
         this.templateId = id; this.template = template; this.origin = origin;
         this.templateRotation = rotation; this.padding = padding;
         this.floorAligned = true;
+        this.terrainBlend=Math.clamp(terrainBlend,0,padding);
     }
     public MarsSurfacePiece(StructurePieceSerializationContext context, CompoundTag tag) {
         super(MarsSurfaceStructures.PIECE, tag);
@@ -38,6 +44,7 @@ public final class MarsSurfacePiece extends StructurePiece {
         templateRotation = Rotation.valueOf(tag.getStringOr("TemplateRotation", Rotation.NONE.name()));
         padding = Math.clamp(tag.getIntOr("Padding", 8), 0, 16);
         floorAligned = tag.getBooleanOr("FloorAligned", false);
+        terrainBlend=Math.clamp(tag.getIntOr("TerrainBlend",0),0,padding);
     }
     private static BoundingBox plotBounds(StructureTemplate template, BlockPos origin, Rotation rotation, int padding, int minY, int maxY) {
         var box = template.getBoundingBox(new StructurePlaceSettings().setRotation(rotation), origin);
@@ -46,6 +53,7 @@ public final class MarsSurfacePiece extends StructurePiece {
     public BoundingBox templateBounds() { return template.getBoundingBox(new StructurePlaceSettings().setRotation(templateRotation), origin); }
     public BlockPos templateOrigin() { return origin; }
     public int surfaceY() { return origin.getY() - (floorAligned ? 0 : 1); }
+    public int terrainBlend(){return terrainBlend;}
     @Override public Rotation getRotation() { return templateRotation; }
     @Override public void move(int x, int y, int z) {
         super.move(x, y, z); origin = origin.offset(x, y, z);
@@ -58,10 +66,11 @@ public final class MarsSurfacePiece extends StructurePiece {
         tag.putInt("OriginX", origin.getX()); tag.putInt("OriginY", origin.getY()); tag.putInt("OriginZ", origin.getZ());
         tag.putInt("Padding", padding);
         tag.putBoolean("FloorAligned", floorAligned);
+        tag.putInt("TerrainBlend",terrainBlend);
     }
     @Override public void postProcess(WorldGenLevel level, StructureManager structures, ChunkGenerator generator,
             RandomSource random, BoundingBox clip, ChunkPos chunk, BlockPos pivot) {
-        SurfacePlot.prepare(level, boundingBox, surfaceY() + 1, clip);
+        SurfacePlot.prepareMars(level,boundingBox,surfaceY()+1,clip,terrainBlend);
         // La preparación se completa antes de colocar bloques y habitantes en este chunk.
         var settings = new StructurePlaceSettings().setRotation(templateRotation).setBoundingBox(clip)
                 .setIgnoreEntities(false).setFinalizeEntities(true).setKnownShape(true);

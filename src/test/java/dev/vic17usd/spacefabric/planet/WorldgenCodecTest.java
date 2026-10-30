@@ -733,9 +733,14 @@ class WorldgenCodecTest {
             java.util.function.Predicate<net.minecraft.core.Holder<net.minecraft.world.level.biome.Biome>> martianBiome =
                     biome -> biome.is(dev.vic17usd.spacefabric.worldgen.PlanetBiomes.key(Planet.MARS));
             // Ejecuta Structure.generate y JigsawPlacement; aceptar el codec no basta.
-            var valid = holder.value().generate(holder, PlanetDimensions.key(Planet.MARS), access, generator,
-                    generator.getBiomeSource(), randomState, templates, seed, chunk, 0, height, martianBiome);
-            assertTrue(valid.isValid(), "La estructura debe ser localizable con semilla " + seed);
+            net.minecraft.world.level.levelgen.structure.StructureStart valid=null;
+            // Steep sites are deliberately rejected instead of building a plateau at their highest point.
+            for(int attempt=0;attempt<128&&(valid==null||!valid.isValid());attempt++) {
+                chunk=new net.minecraft.world.level.ChunkPos(2+attempt*16,-3+attempt*8);
+                valid=holder.value().generate(holder,PlanetDimensions.key(Planet.MARS),access,generator,
+                        generator.getBiomeSource(),randomState,templates,seed,chunk,0,height,martianBiome);
+            }
+            assertNotNull(valid);assertTrue(valid.isValid(), "No suitable gentle Martian site for seed " + seed);
             assertEquals(1, valid.getPieces().size(), "Sin conectores solo debe generarse el edificio inicial");
             var piece = assertInstanceOf(dev.vic17usd.spacefabric.worldgen.structure.MarsSurfacePiece.class, valid.getPieces().getFirst());
             var box = piece.templateBounds();
@@ -749,9 +754,15 @@ class WorldgenCodecTest {
                 assertTrue(box.getXSpan() == 124 || box.getXSpan() == 125);
                 assertEquals(81, box.getYSpan()); assertEquals(249, box.getXSpan() + box.getZSpan());
             }
-            int sampledHeight = dev.vic17usd.spacefabric.worldgen.structure.SurfacePlot.sampleHighest(piece.getBoundingBox(),
-                    (x, z) -> generator.getFirstFreeHeight(x, z, net.minecraft.world.level.levelgen.Heightmap.Types.WORLD_SURFACE_WG, height, randomState));
-            assertEquals(sampledHeight - 1, piece.templateOrigin().getY());
+            var surveyed=new java.util.ArrayList<Integer>();
+            int floor=dev.vic17usd.spacefabric.worldgen.structure.MarsTerrain.ground(piece.getBoundingBox(),16,(x,z)->{
+                int free=generator.getFirstFreeHeight(x,z,net.minecraft.world.level.levelgen.Heightmap.Types.WORLD_SURFACE_WG,height,randomState);
+                surveyed.add(free-1);return free;
+            }).orElseThrow();
+            assertEquals(floor,piece.templateOrigin().getY());
+            assertTrue(surveyed.stream().filter(y->y>=floor-4&&y<=floor+16).count()*4>=surveyed.size()*3,
+                    "The building must stay close to the dominant surface, not a remote high point");
+            assertEquals(8,piece.terrainBlend());
             assertEquals(piece.templateOrigin().getY(), piece.surfaceY());
             var pieceContext = new net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext(resources, access, templates);
             var saved = piece.createTag(pieceContext);
@@ -761,7 +772,13 @@ class WorldgenCodecTest {
             assertEquals(piece.templateOrigin(), restored.templateOrigin());
             assertEquals(piece.templateBounds(), restored.templateBounds());
             assertEquals(piece.getBoundingBox(), restored.getBoundingBox());
+            assertEquals(piece.terrainBlend(),restored.terrainBlend());
+            var previousPlot=saved.copy();previousPlot.remove("TerrainBlend");
+            var unblended=(dev.vic17usd.spacefabric.worldgen.structure.MarsSurfacePiece)
+                    dev.vic17usd.spacefabric.worldgen.structure.MarsSurfaceStructures.PIECE.load(pieceContext,previousPlot);
+            assertEquals(0,unblended.terrainBlend());assertEquals(piece.surfaceY(),unblended.surfaceY());
             var legacyTag = saved.copy(); legacyTag.remove("FloorAligned");
+            legacyTag.remove("TerrainBlend");
             legacyTag.putString("Template", "space_fabric:" + structureName);
             var legacy = (dev.vic17usd.spacefabric.worldgen.structure.MarsSurfacePiece)
                     dev.vic17usd.spacefabric.worldgen.structure.MarsSurfaceStructures.PIECE.load(pieceContext, legacyTag);
@@ -930,6 +947,22 @@ class WorldgenCodecTest {
         assertTrue(world.blocks.keySet().stream().allMatch(clip::isInside));
     }
 
+    @ParameterizedTest @ValueSource(ints={25,33})
+    void martianPlotsBlendIntoTheOriginalGroundWithoutACliffAtTheirBorder(int natural) {
+        var world=new VoxelWorld(0,0,natural);
+        var plot=new net.minecraft.world.level.levelgen.structure.BoundingBox(0,-60,0,15,447,15);
+        dev.vic17usd.spacefabric.worldgen.structure.SurfacePlot.prepareMars(world.level,plot,30,plot,4);
+        assertEquals(natural,world.level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.WORLD_SURFACE_WG,0,8)-1);
+        assertEquals(29,world.level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.WORLD_SURFACE_WG,4,8)-1);
+        assertTrue(world.state(new net.minecraft.core.BlockPos(4,29,8)).is(ModBlocks.IRON_OXIDE_REGOLITH));
+        int previous=natural;
+        for(int x=1;x<=4;x++) {
+            int top=world.level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.WORLD_SURFACE_WG,x,8)-1;
+            assertTrue(Math.abs(top-previous)<=1);previous=top;
+            assertFalse(world.state(new net.minecraft.core.BlockPos(x,top-1,8)).isAir());
+        }
+        assertTrue(world.blocks.keySet().stream().allMatch(plot::isInside));
+    }
     @Test void surfaceHeightSamplingIsBoundedAndIncludesAllEdges() {
         var calls = new java.util.concurrent.atomic.AtomicInteger();
         var box = new net.minecraft.world.level.levelgen.structure.BoundingBox(-70, -64, -70, 70, 319, 70);
@@ -949,7 +982,7 @@ class WorldgenCodecTest {
         template.load(registries.lookupOrThrow(Registries.BLOCK), nbt);
         var world = new VoxelWorld(0, 0, 40);
         var piece = new dev.vic17usd.spacefabric.worldgen.structure.MarsSurfacePiece(SpaceFabric.id(name + "_surface"),
-                template, new net.minecraft.core.BlockPos(-40, 30, -40), net.minecraft.world.level.block.Rotation.NONE, 8, -60, 447);
+                template, new net.minecraft.core.BlockPos(-40, 30, -40), net.minecraft.world.level.block.Rotation.NONE, 8, -60, 447,8);
         piece.postProcess(world.level, null, null, net.minecraft.util.RandomSource.create(42),
                 new net.minecraft.world.level.levelgen.structure.BoundingBox(0, -64, 0, 15, 447, 15),
                 new net.minecraft.world.level.ChunkPos(0, 0), net.minecraft.core.BlockPos.ZERO);

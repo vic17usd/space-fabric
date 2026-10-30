@@ -5,5 +5,6 @@
   "spawn_overrides": {},
   "terrain_adaptation": "none",
   "template": "space_fabric:martian_haven_settlement_surface",
-  "padding": 8
+  "padding": 8,
+  "max_terrain_relief": 16
 }
