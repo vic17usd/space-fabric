@@ -116,6 +116,7 @@ class WorldgenCodecTest {
         DimensionType type = decodeType(planet);
         assertEquals(planet.height(), type.height());
         assertEquals(planet.minY(), type.minY());
+        if(planet==Planet.EARTH)return; // Vanilla Overworld supplies Earth.
         JsonElement data = resource("dimension_type/" + planet.path());
         var attributes = data.getAsJsonObject().getAsJsonObject("attributes");
         assertEquals(planet.skyColor(), attributes.get("minecraft:visual/sky_color").getAsString());
@@ -183,13 +184,12 @@ class WorldgenCodecTest {
     @ParameterizedTest
     @EnumSource(Planet.class)
     void dimensionAndGeneratorResolveAgainstRealRegistries(Planet planet) throws IOException {
-        LevelStem stem = LevelStem.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),
-                resource("dimension/" + planet.path())).getOrThrow();
+        LevelStem stem = planet==Planet.EARTH?registries.lookupOrThrow(Registries.LEVEL_STEM).getOrThrow(LevelStem.OVERWORLD).value():LevelStem.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("dimension/"+planet.path())).getOrThrow();
         assertNotNull(stem.generator());
         assertTrue(stem.generator().getMinY() >= planet.minY());
         assertTrue(stem.generator().getMinY() + stem.generator().getGenDepth()
                 <= planet.minY() + planet.height());
-        assertEquals("space_fabric:" + planet.path(), stem.type().unwrapKey().orElseThrow().identifier().toString());
+        assertEquals(planet==Planet.EARTH?"minecraft:overworld":"space_fabric:" + planet.path(), stem.type().unwrapKey().orElseThrow().identifier().toString());
     }
 
     @ParameterizedTest
@@ -201,6 +201,7 @@ class WorldgenCodecTest {
     }
 
     private static DimensionType decodeType(Planet planet) throws IOException {
+        if(planet==Planet.EARTH)return registries.lookupOrThrow(Registries.DIMENSION_TYPE).getOrThrow(PlanetDimensions.typeKey(planet)).value();
         return DimensionType.DIRECT_CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),
                 resource("dimension_type/" + planet.path())).getOrThrow();
     }
@@ -302,6 +303,7 @@ class WorldgenCodecTest {
     @ParameterizedTest
     @EnumSource(Planet.class)
     void independentClockAndTimelineDriveActualEnvironmentAttributes(Planet planet) throws IOException {
+        if(planet==Planet.EARTH)return; // Overworld uses its unmodified vanilla timelines.
         var type = decodeType(planet);
         var key = dev.vic17usd.spacefabric.environment.PlanetRotation.key(planet);
         assertEquals(key, type.defaultClock().orElseThrow().unwrapKey().orElseThrow());
@@ -632,7 +634,7 @@ class WorldgenCodecTest {
         var restored = new dev.vic17usd.spacefabric.space.RocketEntity(dev.vic17usd.spacefabric.space.ModSpaceEntities.ROCKET, null);
         restored.inventory().setItem(10, new ItemStack(Items.DIAMOND));
         read.invoke(restored, net.minecraft.world.level.storage.TagValueInput.create(net.minecraft.util.ProblemReporter.DISCARDING, registries, output.buildResult()));
-        assertEquals(751, restored.fuel()); assertEquals(5, restored.destinationIndex());
+        assertEquals(751, restored.fuel()); assertEquals(4, restored.destinationIndex());
         assertEquals(7, restored.inventory().getItem(2).getCount()); assertTrue(restored.inventory().getItem(2).is(ModItems.ARES_CRYSTAL));
         assertTrue(restored.inventory().getItem(10).isEmpty()); assertEquals(0, restored.flightState());
         assertTrue(restored.isNoGravity()); assertTrue(restored.getControllingPassenger() == null);
@@ -1382,11 +1384,16 @@ class WorldgenCodecTest {
         assertEquals(variant.fuelCapacity(),replica.state().capacity());assertEquals(63,replica.state().hull());
         replica.setData(5,0); // A loaded Overworld, distinct from the planet/variant IDs.
         replica.setData(3,dev.vic17usd.spacefabric.space.RocketRules.cost(dev.vic17usd.spacefabric.space.TravelDestination.at(0),dev.vic17usd.spacefabric.space.TravelDestination.at(mission)));
+        if(variant.mission==Planet.EARTH){
+            assertEquals(dev.vic17usd.spacefabric.space.RocketNavigation.Reason.CURRENT_WORLD,replica.state().destination(mission));
+            assertEquals(dev.vic17usd.spacefabric.space.RocketNavigation.Reason.CURRENT_WORLD,replica.state().launch());
+        }else{
         assertEquals(dev.vic17usd.spacefabric.space.RocketNavigation.Reason.READY,replica.state().destination(mission));
         assertEquals(dev.vic17usd.spacefabric.space.RocketNavigation.Reason.BOARD_FIRST,replica.state().launch());
         replica.setData(4,1);replica.setData(10,1);
         var launch=replica.state().launch();
         assertEquals(replica.state().fuel()>=replica.state().cost()?dev.vic17usd.spacefabric.space.RocketNavigation.Reason.READY:dev.vic17usd.spacefabric.space.RocketNavigation.Reason.LOW_FUEL,launch);
+        }
 
         assertEquals(63,item.get(net.minecraft.core.component.DataComponents.CUSTOM_DATA).copyTag().getIntOr("RocketHull",-1));
         restored.restoreHull(-1);assertEquals(0,restored.hull());restored.restoreHull(101);assertEquals(100,restored.hull());
@@ -3650,6 +3657,63 @@ class WorldgenCodecTest {
         }
         for(var key:List.of(OreGen.ARES_CRYSTAL,OreGen.PHOBOSITE,OreGen.IRON_OXIDE,OreGen.MARTIAN_OLIVINE,OreGen.MARTIAN_SULFATE))assertTrue(polar.value().getGenerationSettings().features().stream().flatMap(net.minecraft.core.HolderSet::stream).anyMatch(f->f.is(key)));
         for(var category:net.minecraft.world.entity.MobCategory.values())assertTrue(polar.value().getMobSettings().getMobs(category).isEmpty());
+    }
+
+    private static net.minecraft.nbt.ListTag earthVector(double x,double y,double z){
+        var values=new net.minecraft.nbt.ListTag();for(double v:new double[]{x,y,z})values.add(net.minecraft.nbt.DoubleTag.valueOf(v));return values;
+    }
+    @Test void earthIsOnlyTheVanillaOverworldAndTheRetiredWorldIsAbsent(){
+        assertEquals(net.minecraft.world.level.Level.OVERWORLD,PlanetDimensions.key(Planet.EARTH));
+        assertEquals(LevelStem.OVERWORLD,PlanetDimensions.stemKey(Planet.EARTH));
+        var access=(RegistryAccess)registries;
+        assertTrue(access.lookupOrThrow(Registries.LEVEL_STEM).getOptional(dev.vic17usd.spacefabric.compat.EarthRetirement.LEGACY_STEM).isEmpty());
+        assertFalse(java.nio.file.Files.exists(Path.of("src/main/resources/data/space_fabric/dimension/earth.json")));
+        assertEquals(9,dev.vic17usd.spacefabric.space.TravelDestination.ALL.size());
+        assertEquals(1,dev.vic17usd.spacefabric.space.TravelDestination.ALL.stream().filter(d->d.planet()==Planet.EARTH).count());
+    }
+    @Test void oldSavedDimensionMapsDecodeAndBakeWithoutRecreatingEarth(){
+        var access=(RegistryAccess)registries;
+        var vanilla=access.lookupOrThrow(Registries.WORLD_PRESET).getOrThrow(net.minecraft.world.level.levelgen.presets.WorldPresets.NORMAL).value().createWorldDimensions();
+        var saved=new java.util.LinkedHashMap<>(vanilla.dimensions());
+        var oldType=access.lookupOrThrow(Registries.DIMENSION_TYPE).getOrThrow(net.minecraft.resources.ResourceKey.create(Registries.DIMENSION_TYPE,SpaceFabric.id("earth")));
+        saved.put(dev.vic17usd.spacefabric.compat.EarthRetirement.LEGACY_STEM,new LevelStem(oldType,vanilla.overworld()));
+        var ops=registries.createSerializationContext(JsonOps.INSTANCE);
+        var codec=net.minecraft.world.level.levelgen.WorldDimensions.CODEC.codec();
+        var decoded=codec.parse(ops,codec.encodeStart(ops,new net.minecraft.world.level.levelgen.WorldDimensions(saved)).getOrThrow()).getOrThrow();
+        assertTrue(decoded.dimensions().containsKey(dev.vic17usd.spacefabric.compat.EarthRetirement.LEGACY_STEM));
+        var baked=decoded.bake(access.lookupOrThrow(Registries.LEVEL_STEM)).dimensionsRegistryAccess();
+        assertTrue(baked.lookupOrThrow(Registries.LEVEL_STEM).getOptional(dev.vic17usd.spacefabric.compat.EarthRetirement.LEGACY_STEM).isEmpty());
+        assertNotNull(baked.lookupOrThrow(Registries.LEVEL_STEM).getOrThrow(LevelStem.OVERWORLD));
+        assertTrue(saved.containsKey(dev.vic17usd.spacefabric.compat.EarthRetirement.LEGACY_STEM));
+    }
+    @Test void legacyEarthPlayersKeepInventoryAndTheirVehicleWhenReturningToTheSpawn(){
+        var saved=new net.minecraft.nbt.CompoundTag();saved.putString("Dimension","space_fabric:earth");saved.put("Pos",earthVector(-40,92,60));
+        saved.putInt("XpLevel",27);var inventory=new net.minecraft.nbt.ListTag();var item=new net.minecraft.nbt.CompoundTag();item.putString("id","minecraft:diamond");item.putInt("count",42);inventory.add(item);saved.put("Inventory",inventory);
+        var root=new net.minecraft.nbt.CompoundTag();var entity=new net.minecraft.nbt.CompoundTag();entity.putString("id","space_fabric:rocket");entity.put("Pos",earthVector(-40,90,60));
+        entity.putInt("Fuel",751);var passengers=new net.minecraft.nbt.ListTag();var rider=new net.minecraft.nbt.CompoundTag();rider.put("Pos",earthVector(-39,92,61));passengers.add(rider);entity.put("Passengers",passengers);root.put("Entity",entity);saved.put("RootVehicle",root);
+        var original=saved.copy();var moved=dev.vic17usd.spacefabric.compat.EarthRetirement.player(saved,new net.minecraft.core.BlockPos(10,65,20));
+        assertEquals(original,saved);assertEquals("minecraft:overworld",moved.getStringOr("Dimension",""));
+        assertEquals(saved.getListOrEmpty("Inventory"),moved.getListOrEmpty("Inventory"));assertEquals(27,moved.getIntOr("XpLevel",0));
+        assertEquals(66,moved.getListOrEmpty("Pos").getDoubleOr(1,0));
+        var vehicle=moved.getCompoundOrEmpty("RootVehicle").getCompoundOrEmpty("Entity");assertEquals(751,vehicle.getIntOr("Fuel",0));assertTrue(vehicle.getBooleanOr("RetiredEarthReturn",false));
+        assertEquals(10.5,vehicle.getListOrEmpty("Pos").getDoubleOr(0,0));
+        assertEquals(68,vehicle.getListOrEmpty("Passengers").getCompoundOrEmpty(0).getListOrEmpty("Pos").getDoubleOr(1,0));
+        assertEquals(moved,dev.vic17usd.spacefabric.compat.EarthRetirement.player(moved,net.minecraft.core.BlockPos.ZERO));
+    }
+    @Test void retirementDoesNotMovePlayersInOtherWorldsOrTouchTheirData(){
+        for(String name:List.of("minecraft:overworld","space_fabric:mars","minecraft:the_nether")){
+            var tag=new net.minecraft.nbt.CompoundTag();tag.putString("Dimension",name);tag.put("Pos",earthVector(1,70,3));
+            assertTrue(tag==dev.vic17usd.spacefabric.compat.EarthRetirement.player(tag,net.minecraft.core.BlockPos.ZERO));
+        }
+    }
+    @Test void migratedRocketsDescendSafelyAndRememberTheirOriginalPlanet() throws Exception {
+        var rocket=new dev.vic17usd.spacefabric.space.RocketEntity(dev.vic17usd.spacefabric.space.ModSpaceEntities.ROCKET,null);rocket.setPos(10.5,66,20.5);
+        var tag=new net.minecraft.nbt.CompoundTag();tag.putInt("Fuel",751);tag.putInt("Destination",9);tag.putBoolean("RetiredEarthReturn",true);
+        var read=rocket.getClass().getDeclaredMethod("readAdditionalSaveData",net.minecraft.world.level.storage.ValueInput.class);read.setAccessible(true);
+        read.invoke(rocket,net.minecraft.world.level.storage.TagValueInput.create(net.minecraft.util.ProblemReporter.DISCARDING,registries,tag));
+        assertEquals(751,rocket.fuel());assertEquals(dev.vic17usd.spacefabric.space.RocketJourney.DESCENDING,rocket.flightState());
+        assertEquals(Planet.NEPTUNE,dev.vic17usd.spacefabric.space.TravelDestination.at(rocket.destinationIndex()).planet());
+        assertClientTarget("net/minecraft/server/players/PlayerList","loadPlayerData","(Lnet/minecraft/server/players/NameAndId;)Ljava/util/Optional;");
     }
 
 }

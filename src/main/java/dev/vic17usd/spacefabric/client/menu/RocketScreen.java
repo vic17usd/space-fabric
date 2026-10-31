@@ -17,7 +17,7 @@ import net.minecraft.world.entity.player.Inventory;
 public final class RocketScreen extends SpaceContainerScreen<RocketMenu> {
     private final List<Button> destinations = new ArrayList<>();
     private Button launch, board;
-    private static final int[] COLORS = {0xFF69C8A8, 0xFFB6ADA2, 0xFFECC56F, 0xFF448EE0, 0xFFD6DBE1,
+    private static final int[] COLORS = {0xFF69C8A8, 0xFFB6ADA2, 0xFFECC56F, 0xFFD6DBE1,
             0xFFE66B3C, 0xFFE1AC79, 0xFFEACD91, 0xFF7FE1DF, 0xFF507FE8};
     public RocketScreen(RocketMenu menu, Inventory inventory, Component title) { super(menu, inventory, title, 320, 244); }
     @Override protected void init() {
@@ -67,14 +67,14 @@ public final class RocketScreen extends SpaceContainerScreen<RocketMenu> {
     }
     @Override public void extractBackground(GuiGraphicsExtractor gui, int mouseX, int mouseY, float delta) {
         super.extractBackground(gui, mouseX, mouseY, delta);
-        // Esquema orbital, no efemérides. La Luna y el regreso al Overworld tienen marcadores propios.
+        // Un marcador por destino, incluido el regreso al Overworld.
         int cx = leftPos + 238, cy = topPos + 48;
         for (int i = 0; i < 45; i++) {
             int x = leftPos + 164 + (i * 37 % 146), y = topPos + 18 + (i * 23 % 54);
             gui.fill(x, y, x + 1, y + 1, 0xFF6B8396);
         }
         gui.fill(cx - 3, cy - 3, cx + 4, cy + 4, 0xFFFFCC55);
-        for (int i = 1; i < 10; i++) {
+        for (int i = 1; i < TravelDestination.ALL.size(); i++) {
             double radius = 9 + i * 6;
             for (int angle = 0; angle < 360; angle += 8) {
                 double radians = Math.toRadians(angle);
@@ -82,7 +82,7 @@ public final class RocketScreen extends SpaceContainerScreen<RocketMenu> {
                 gui.fill(x, y, x + 1, y + 1, 0xFF284355);
             }
         }
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < TravelDestination.ALL.size(); i++) {
             double angle = i * 2.3, radius = 9 + i * 6;
             int x = cx + (int)(Math.cos(angle) * radius), y = cy + (int)(Math.sin(angle) * radius * 0.36);
             if (i == menu.value(1)) gui.fill(x - 4, y - 4, x + 5, y + 5, 0xFFFFFFFF);

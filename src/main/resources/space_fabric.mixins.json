@@ -7,7 +7,9 @@
     "InventorySuitMixin",
     "ServerLevelWeatherMixin",
     "PlanetSleepClockMixin",
-    "SpawnPlacementsAccessor"
+    "SpawnPlacementsAccessor",
+    "RetiredEarthDimensionsMixin",
+    "RetiredEarthPlayerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

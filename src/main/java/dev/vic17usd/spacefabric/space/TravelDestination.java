@@ -14,7 +14,7 @@ public record TravelDestination(String id, ResourceKey<Level> world, Planet plan
     static {
         var destinations = new ArrayList<TravelDestination>();
         destinations.add(new TravelDestination("overworld", Level.OVERWORLD, Planet.EARTH));
-        for (Planet planet : Planet.values()) destinations.add(new TravelDestination(planet.path(), PlanetDimensions.key(planet), planet));
+        for (Planet planet : Planet.values()) if(planet!=Planet.EARTH) destinations.add(new TravelDestination(planet.path(), PlanetDimensions.key(planet), planet));
         ALL = List.copyOf(destinations);
     }
 
@@ -28,5 +28,16 @@ public record TravelDestination(String id, ResourceKey<Level> world, Planet plan
         return -1;
     }
 
+    /** Stable IDs supersede the old ten-entry numeric list. Earth aliases the Overworld. */
+    public static int savedIndex(String id,int index,int version) {
+        if(!id.isEmpty()) {
+            if(id.equals("earth"))return 0;
+            for(int i=0;i<ALL.size();i++)if(ALL.get(i).id.equals(id))return i;
+            return 0;
+        }
+        if(version>=2)return Math.clamp(index,0,ALL.size()-1);
+        if(index<0||index>9)return 0;
+        return index==3?0:index>3?index-1:index;
+    }
     public Component label() { return Component.translatable("destination.space_fabric." + id); }
 }

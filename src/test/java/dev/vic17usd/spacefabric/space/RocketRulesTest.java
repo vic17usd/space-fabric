@@ -8,12 +8,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class RocketRulesTest {
     @Test void closedDestinationListIncludesHomeAndEveryCelestialBody() {
-        assertEquals(10, TravelDestination.ALL.size());
-        assertEquals(10, TravelDestination.ALL.stream().map(TravelDestination::world).distinct().count());
+        assertEquals(9, TravelDestination.ALL.size());
+        assertEquals(9, TravelDestination.ALL.stream().map(TravelDestination::world).distinct().count());
         assertEquals(0, TravelDestination.indexOf(Level.OVERWORLD));
         assertEquals(-1, TravelDestination.indexOf(Level.NETHER));
         assertThrows(IllegalArgumentException.class, () -> TravelDestination.at(-1));
-        assertThrows(IllegalArgumentException.class, () -> TravelDestination.at(10));
+        assertThrows(IllegalArgumentException.class, () -> TravelDestination.at(9));
     }
     @Test void roundTripsFitTheirMissionTankAndBudgetRespectsOriginGravity() {
         for (var origin : TravelDestination.ALL) for (var destination : TravelDestination.ALL) {
@@ -63,4 +63,16 @@ class RocketRulesTest {
         assertEquals(1.2, RocketRules.ascentSpeed(10000), 0.0001);
         assertTrue(RocketRules.ascentSpeed(-1) > 0);
     }
+    @Test void savedDestinationsKeepTheirPlanetAcrossTheRemovalAndUseStableIds(){
+        String[] old={"overworld","mercury","venus","overworld","moon","mars","jupiter","saturn","uranus","neptune"};
+        for(int i=0;i<old.length;i++)assertEquals(old[i],TravelDestination.at(TravelDestination.savedIndex("",i,0)).id());
+        assertEquals(0,TravelDestination.savedIndex("earth",3,2));
+        for(var destination:TravelDestination.ALL){
+            int index=TravelDestination.indexOf(destination.world());
+            assertEquals(index,TravelDestination.savedIndex(destination.id(),0,2));
+            assertEquals(index,TravelDestination.savedIndex("",index,2));
+        }
+        assertEquals(0,TravelDestination.savedIndex("invalid_world",8,2));
+    }
+
 }

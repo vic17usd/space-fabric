@@ -47,7 +47,7 @@ public final class AtlasClient {
         }
         return data;
     }
-    public static List<String> visited() throws IOException {return root==null?List.of():AtlasData.visited(root);}
+    public static List<String> visited() throws IOException {return root==null?List.of():AtlasData.visited(root).stream().filter(d->!d.equals("space_fabric:earth")).toList();}
     public static void error(Exception failure){SpaceFabric.LOGGER.warn("Planet atlas operation failed",failure);var c=Minecraft.getInstance();if(c.player!=null)c.player.sendSystemMessage(text("error"));}
     public static void report(AtlasData data){if(data.error()!=null&&WARNED.add(data.dimension()))error(data.error());}
     private static void close(){

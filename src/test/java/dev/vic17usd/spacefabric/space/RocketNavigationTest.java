@@ -13,9 +13,13 @@ class RocketNavigationTest {
         return new RocketNavigation.State(variant,source,selected,flight,fuel,cost,variant.fuelCapacity(),hull,pilot,occupied,false,ready);
     }
     @ParameterizedTest @EnumSource(RocketVariant.class)
-    void everyRocketCanSelectItsOwnMissionBeforeBoardingAndLaunchAfterBoarding(RocketVariant variant) {
+    void missionSelectionReflectsTheSingleHomeWorldAndBoarding(RocketVariant variant) {
         int target=destination(variant.mission);int cost=RocketRules.cost(TravelDestination.at(0),TravelDestination.at(target));
         var parked=state(variant,0,target,RocketRules.IDLE,variant.fuelCapacity(),cost,100,false,false,true);
+        if(variant.mission==Planet.EARTH){
+            assertEquals(RocketNavigation.Reason.CURRENT_WORLD,parked.destination(target));
+            assertEquals(RocketNavigation.Reason.CURRENT_WORLD,parked.launch());return;
+        }
         assertEquals(RocketNavigation.Reason.READY,parked.destination(target),variant.path);
         assertEquals(RocketNavigation.Reason.READY,parked.board());assertEquals(RocketNavigation.Reason.BOARD_FIRST,parked.launch());
         assertEquals(RocketNavigation.Reason.READY,state(variant,0,target,RocketRules.IDLE,variant.fuelCapacity(),cost,100,true,true,true).launch(),variant.path);

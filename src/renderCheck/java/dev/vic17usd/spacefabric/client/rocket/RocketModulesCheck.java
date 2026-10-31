@@ -75,7 +75,7 @@ public final class RocketModulesCheck {
         System.out.println("OK: eight unmodified hulls for ten variants, "+total+" vertices; no exterior additions, and native item/entity rotations, UVs and collision bounds agree.");
         var report=new StringBuilder("| Cohete | Nivel | Modelo | Depósito | Tierra → destino | Destino → Tierra |\n|---|---:|---|---:|---:|---:|\n");
         Arrays.stream(RocketVariant.values()).sorted(Comparator.comparingInt(RocketVariant::rank)).forEach(variant->{
-            var target=TravelDestination.ALL.stream().filter(d->d.planet()==variant.mission&& !d.id().equals("overworld")).findFirst().orElseThrow();
+            var target=TravelDestination.ALL.stream().filter(d->d.planet()==variant.mission).findFirst().orElseThrow();
             report.append("| ").append(variant.path).append(" | ").append(variant.rank()).append(" | ")
                 .append(manifest.getAsJsonObject(variant.path).get("source").getAsString()).append(" | ").append(variant.fuelCapacity()).append(" | ")
                 .append(RocketRules.cost(TravelDestination.at(0),target)).append(" | ").append(RocketRules.cost(target,TravelDestination.at(0))).append(" |\n");

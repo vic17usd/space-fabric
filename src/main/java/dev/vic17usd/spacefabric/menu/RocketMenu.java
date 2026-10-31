@@ -27,7 +27,7 @@ public final class RocketMenu extends AbstractContainerMenu {
                 case 5 -> rocket.level()==null?-1:TravelDestination.indexOf(rocket.level().dimension());
                 case 6 -> rocket.variant().ordinal(); case 7 -> rocket.hull();
                 case 8 -> dev.vic17usd.spacefabric.space.RocketFlightConfig.exclusive()?1:0;
-                case 9 -> rocket.fuelCapacity(); case 10 -> rocket.isVehicle()?1:0; case 11 -> 1; default -> 0;
+                case 9 -> rocket.fuelCapacity(); case 10 -> rocket.isVehicle()?1:0; case 11 -> 2; default -> 0;
             }; }
             @Override public void set(int index, int value) { }
             @Override public int getCount() { return DATA_COUNT; }
@@ -43,7 +43,7 @@ public final class RocketMenu extends AbstractContainerMenu {
     public int value(int index) { return data.get(index); }
     public dev.vic17usd.spacefabric.space.RocketNavigation.State state() {
         return new dev.vic17usd.spacefabric.space.RocketNavigation.State(dev.vic17usd.spacefabric.space.RocketVariant.byId(value(6)),
-            value(5),value(1),value(2),value(0),value(3),value(9),value(7),value(4)==1,value(10)==1,value(8)==1,value(11)==1);
+            value(5),value(1),value(2),value(0),value(3),value(9),value(7),value(4)==1,value(10)==1,value(8)==1,value(11)==2);
     }
     @Override public boolean stillValid(Player player) {
         return rocket == null || (player.isAlive()&&!player.isSpectator()&&!rocket.isRemoved() && player.level() == rocket.level() && player.distanceToSqr(rocket) <= 64);

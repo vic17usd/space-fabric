@@ -1,5 +1,9 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión 0.52.0 retira la dimensión Earth adicional: **el Overworld es la única
+Tierra**. Actualiza destinos, atlas y guardados antiguos de cohetes y jugadores.
+[Compatibilidad y actualización](docs/overworld-only.md).
+
 La versión 0.51.0 añade **casquetes polares a Marte**, con hielo glaciar, CO₂
 congelado, cámaras heladas, cristales y mena subglacial. Los recursos aportados
 se adaptan a su generación y permiten obtener agua y gas en recipientes sellados.
@@ -149,7 +153,7 @@ Se aplica a construcciones nuevas; las ya guardadas conservan su generación ant
 [Detalles, límites y comprobación](docs/venus-expansion.md#integración-con-el-suelo--0280).
 
 La versión 0.27.0 hace que el cohete **aterrice directamente en el terreno** del
-Overworld, Tierra, Mercurio, Venus, Luna y Marte. Busca suelo seco y plano durante
+Overworld, Mercurio, Venus, Luna y Marte. Busca suelo seco y plano durante
 el crucero y desciende hasta apoyar el modelo, sin crear plataformas flotantes.
 Los gigantes conservan su llegada orbital porque no tienen superficie rocosa.
 [Aterrizaje, búsqueda de terreno y límites](docs/rocket-journey.md#aterrizaje-sobre-el-terreno).
@@ -247,8 +251,8 @@ Requiere Minecraft **26.1**, Java **25**, Fabric Loader y Fabric API **0.145.1+2
 Coloca el JAR y Fabric API en la carpeta `mods/`. Es el prototipo descrito abajo;
 todavía falta su validación dentro del juego.
 
-Base modular en Java 25 para nueve dimensiones independientes: Mercurio, Venus,
-Tierra, Luna, Marte, Júpiter, Saturno, Urano y Neptuno. Usa los nombres oficiales de
+Base modular en Java 25 para ocho dimensiones adicionales: Mercurio, Venus,
+Luna, Marte, Júpiter, Saturno, Urano y Neptuno. La Tierra es el Overworld. Usa los nombres oficiales de
 Minecraft 26.1, sin Yarn ni remapeo de versiones anteriores.
 
 Implementa dimensiones por datos, gravedad para entidades vivas y daño atmosférico
@@ -367,13 +371,13 @@ ServerLevel marsLevel = server.getLevel(mars);
 
 Crear el `ResourceKey` **no registra ni crea un mundo**. Estos registros son
 dinámicos: Minecraft carga sus JSON al abrir el mundo. No uses `Registry.register`
-para añadir dimensiones en el inicializador. El servidor comprueba que las nueve
+para añadir dimensiones en el inicializador. El servidor comprueba que las ocho dimensiones adicionales
 existan al arrancar y falla con un mensaje concreto si falta alguna.
 
 Tras cambiar worldgen, cierra y vuelve a abrir el mundo; `/reload` no garantiza
 crear dimensiones nuevas ni regenera chunks existentes. Usa un mundo nuevo para
-pruebas de generación. Tierra es `space_fabric:earth`, con almacenamiento propio;
-no reemplaza `minecraft:overworld`.
+pruebas de generación. Tierra corresponde a `minecraft:overworld`. La dimensión
+adicional `space_fabric:earth` se retiró en 0.52.0; sus archivos se conservan como archivo.
 
 Son terrenos abiertos que se generan al explorar dentro de los límites normales
 de Minecraft. No son esferas ni réplicas geográficas. Comparten semilla y algunos
@@ -391,7 +395,7 @@ entre 512 y 768 bloques del origen.
 | --- | ---: | --- |
 | Mercurio | 0.38 | Vacío, no respirable |
 | Venus | 0.90 | Presión extrema, no respirable |
-| Tierra | 1.00 | Normal, respirable |
+| Tierra (Overworld) | 1.00 | Normal, respirable |
 | Luna | 0.165 | Vacío, no respirable |
 | Marte | 0.38 | Tenue, no respirable |
 | Júpiter | 2.53 | H₂/He, presión variable, no respirable |
@@ -448,14 +452,14 @@ el carácter químico del entorno. Los trajes venusiano y abisal resisten la cor
 `./gradlew test` prueba Tierra segura, planetas hostiles, protección del traje,
 inmunidad, prioridad de presión e hipoxia a presión normal.
 También usa Fabric Loader JUnit y los codecs reales de Minecraft para interpretar
-los nueve tipos de dimensión, sus generadores y los cuatro tipos de daño; también
-comprueba refinería, persistencia del combustible, recetas, llegadas, estructuras, comerciantes, fauna, industria, rover, redes y atlas: **692 casos**
+las ocho dimensiones planetarias, el Overworld y los cuatro tipos de daño; también
+comprueba refinería, persistencia del combustible, recetas, llegadas, estructuras, comerciantes, fauna, industria, rover, redes y atlas: **698 casos**
 en total. `tools/validate_resources.py` comprueba además JSON y referencias internas.
 Estas pruebas no arrancan un mundo ni comprueban la sincronización del cliente.
 
 En un mundo nuevo con comandos habilitados:
 
-1. Arranca el cliente y confirma en el log que se cargaron las nueve dimensiones.
+1. Arranca el cliente y confirma en el log que se cargaron las ocho dimensiones adicionales.
 2. Usa `/gamemode spectator` y
    `/execute in space_fabric:mars run tp @s 0 180 0`. Inspecciona el terreno antes
    de salir de espectador. `/planetinfo` muestra el perfil y el atributo de gravedad.
@@ -467,7 +471,7 @@ En un mundo nuevo con comandos habilitados:
    cambios de dimensión, muerte/respawn y reconexión.
 6. Compara saltos en Marte y Tierra. Al regresar a `minecraft:overworld`, verifica
    con `/planetinfo` que se retiró nuestro modificador.
-7. Visita las nueve dimensiones en espectador. En los gigantes construye una plataforma
+7. Visita los nueve destinos, incluido el Overworld, en espectador. En los gigantes construye una plataforma
    a Y=240 antes de dejar el vuelo y lleva el traje completo adecuado para la profundidad.
 
 Los comandos vanilla de viaje requieren permisos de operador. `/planetinfo` es

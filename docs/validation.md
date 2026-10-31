@@ -1,8 +1,8 @@
 # Resultado de validación de esta base
 
-Última entrega: **0.51.0**, 692 pruebas JUnit aprobadas, doce comprobaciones por
-CPU y 1.338 JSON válidos. Los apartados siguientes conservan el historial de
-la base y sus ampliaciones; la validación de los casquetes marcianos está al final del documento.
+Última entrega: **0.52.0**, 698 pruebas JUnit aprobadas, doce comprobaciones por
+CPU y 1.337 JSON válidos. Los apartados siguientes conservan el historial de
+la base y sus ampliaciones; la validación de la retirada de Earth está al final del documento.
 
 Verificado con JDK 25, Gradle 9.8.2, Loom 1.19.3, Minecraft 26.1,
 Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
@@ -894,3 +894,21 @@ Casquetes polares de Marte, versión 0.51.0:
 - Pendiente cliente gráfico y multijugador: superficie en chunks completos,
   transición con terreno antiguo, frecuencia real de cámaras y vetas,
   navegación, aspecto y aterrizajes polares. Véase docs/mars-polar.md.
+
+Overworld como Tierra única, versión 0.52.0:
+
+- `./gradlew build --console=plain`: **698 pruebas JUnit**, cero fallos, errores
+  u omisiones; doce comprobaciones por CPU y **1.337 JSON** válidos.
+- Seis casos nuevos: traducción de los diez índices antiguos y claves estables;
+  Tierra como Overworld y ausencia del stem retirado; codec de un mapa antiguo
+  y bake real con el Mixin; NBT de jugador con inventario, experiencia, vehículo
+  y pasajeros; conservación de jugadores en otras dimensiones; descenso de un
+  cohete trasladado conservando combustible y destino.
+- Las pruebas anteriores de navegación reconocen que Overworld y Tierra son
+  el mismo destino. Los guardados de cohetes conservan Marte, Neptuno y demás
+  cuerpos; el menú requiere la revisión 2 del protocolo de destinos.
+- El atlas omite el mapa retirado y conserva sus archivos. Se mantiene el tipo
+  legado y sus relojes para decodificar partidas antiguas, sin generar ese mundo.
+- La carga de registros, genérico de viajes, modelos y todos los controles de
+  minerales y atmósfera pasan. Pendiente actualización de una partida real en
+  cliente/multijugador, ida y vuelta y reconexión con vehículo.

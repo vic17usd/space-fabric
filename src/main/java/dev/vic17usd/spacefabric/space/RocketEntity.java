@@ -294,7 +294,7 @@ public final class RocketEntity extends Entity implements ExtendedMenuProvider<I
         }
         entityData.set(VARIANT,restored.ordinal()); restoreHull(input.getIntOr("Hull",100));
         entityData.set(FUEL, Math.clamp(input.getIntOr("Fuel", 0), 0, fuelCapacity()));
-        entityData.set(DESTINATION, Math.clamp(input.getIntOr("Destination", 0), 0, TravelDestination.ALL.size() - 1));
+        entityData.set(DESTINATION, TravelDestination.savedIndex(input.getStringOr("DestinationId",""),input.getIntOr("Destination",0),input.getIntOr("DestinationVersion",0)));
         inventory.clearContent();
         ContainerHelper.loadAllItems(input, inventory.getItems());
         abort(); // Legacy saves never start an unrequested flight.
@@ -304,15 +304,18 @@ public final class RocketEntity extends Entity implements ExtendedMenuProvider<I
                 setFlightPhase(phase==RocketRules.TRANSFERRING?RocketJourney.CRUISING:phase);
                 entityData.set(JOURNEY_TICKS,Math.clamp(input.getIntOr("JourneyTicks",0),0,RocketJourney.MAX_CRUISE));
                 entityData.set(JOURNEY_DURATION,RocketJourney.safeDuration(input.getIntOr("JourneyDuration",RocketJourney.MIN_CRUISE)));
-                entityData.set(ORIGIN,Math.clamp(input.getIntOr("JourneyOrigin",0),0,TravelDestination.ALL.size()-1));
+                entityData.set(ORIGIN,TravelDestination.savedIndex(input.getStringOr("JourneyOriginId",""),input.getIntOr("JourneyOrigin",0),input.getIntOr("DestinationVersion",0)));
                 double touchdown=input.getDoubleOr("JourneyTouchdownY",getY());
                 touchdownY=Double.isFinite(touchdown)?Math.min(touchdown,getY()):getY();
             }
         }
+        if(input.getBooleanOr("RetiredEarthReturn",false))beginDescent(getY()-1);
     }
     @Override protected void addAdditionalSaveData(ValueOutput output) {
         output.putString("RocketVariant",variant().path);output.putInt("Hull",hull());
         output.putInt("Fuel", fuel()); output.putInt("Destination", destinationIndex());
+        output.putInt("DestinationVersion",2);output.putString("DestinationId",TravelDestination.at(destinationIndex()).id());
+        output.putString("JourneyOriginId",TravelDestination.at(Math.clamp(originIndex(),0,TravelDestination.ALL.size()-1)).id());
         output.putInt("JourneyVersion",1);output.putInt("JourneyPhase",flightState());output.putInt("JourneyTicks",journeyTicks());
         output.putInt("JourneyDuration",journeyDuration());output.putInt("JourneyOrigin",originIndex());
         output.putDouble("JourneyTouchdownY",touchdownY);

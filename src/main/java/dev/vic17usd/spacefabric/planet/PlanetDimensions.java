@@ -13,7 +13,7 @@ import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.dimension.LevelStem;
 
 public final class PlanetDimensions {
-    private static final Map<ResourceKey<Level>, Planet> PLANETS = Arrays.stream(Planet.values())
+    private static final Map<ResourceKey<Level>, Planet> PLANETS = Arrays.stream(Planet.values()).filter(planet -> planet != Planet.EARTH)
             .collect(Collectors.toUnmodifiableMap(PlanetDimensions::key, planet -> planet));
 
     private PlanetDimensions() {
@@ -21,14 +21,17 @@ public final class PlanetDimensions {
 
     /** Es una referencia. El JSON del datapack crea la dimensión durante el arranque del mundo. */
     public static ResourceKey<Level> key(Planet planet) {
+        if(planet==Planet.EARTH)return Level.OVERWORLD;
         return ResourceKey.create(Registries.DIMENSION, SpaceFabric.id(planet.path()));
     }
 
     public static ResourceKey<DimensionType> typeKey(Planet planet) {
+        if(planet==Planet.EARTH)return ResourceKey.create(Registries.DIMENSION_TYPE, net.minecraft.resources.Identifier.withDefaultNamespace("overworld"));
         return ResourceKey.create(Registries.DIMENSION_TYPE, SpaceFabric.id(planet.path()));
     }
 
     public static ResourceKey<LevelStem> stemKey(Planet planet) {
+        if(planet==Planet.EARTH)return LevelStem.OVERWORLD;
         return ResourceKey.create(Registries.LEVEL_STEM, SpaceFabric.id(planet.path()));
     }
 
@@ -39,12 +42,13 @@ public final class PlanetDimensions {
     public static void initialize() {
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             for (Planet planet : Planet.values()) {
+                if(planet==Planet.EARTH)continue;
                 if (server.getLevel(key(planet)) == null) {
                     throw new IllegalStateException("Falta la dimensión " + SpaceFabric.id(planet.path())
                             + "; revisa los JSON de worldgen y reinicia el servidor.");
                 }
             }
-            SpaceFabric.LOGGER.info("Los {} destinos del sistema solar están cargados", Planet.values().length);
+            SpaceFabric.LOGGER.info("Los {} destinos del sistema solar están cargados", Planet.values().length-1);
         });
     }
 }
