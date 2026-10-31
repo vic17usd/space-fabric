@@ -28,3 +28,10 @@ references. Both existing suit and rocket resource generators invoke it, retaini
 this artwork when assets are regenerated. Building the checked-in project does
 not require ImageMagick; reimporting artwork does. The optional preview script
 requires Pillow and creates a front UV projection, not an in-game screenshot.
+
+## Wearable redesigns — 0.50.1
+
+The supplied wearable layers in `../suit_redesigns/` now override the eight worn
+textures. `import_equipment_textures.py` keeps this original art as the inner lining
+and reapplies those unchanged 128x64 overlays at the end. Inventory sprites retain
+the original artwork described above. See `docs/suit-redesigns.md`.

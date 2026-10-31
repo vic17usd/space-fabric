@@ -1,5 +1,9 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión 0.50.1 aplica los **cuatro rediseños de trajes aportados**: venusiano,
+de vacío, abisal y criogénico. Conserva las capas originales de los ZIP y añade
+un forro interior donde hay transparencia. [Asignación y comprobaciones](docs/suit-redesigns.md).
+
 La versión 0.50.0 añade **La señal del Coloso**: una expedición con archivos en
 la Fundición Abandonada y el Puesto de Ceniza, examen del Nido de Azufre y
 coordenadas verificadas del búnker. Usa el diario y la guía transparente existentes,

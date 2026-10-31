@@ -1,6 +1,6 @@
 # Resultado de validación de esta base
 
-Última entrega: **0.50.0**, 681 pruebas JUnit aprobadas, doce comprobaciones por
+Última entrega: **0.50.1**, 681 pruebas JUnit aprobadas, doce comprobaciones por
 CPU y 1.297 JSON válidos. Los apartados siguientes conservan el historial de
 la base y sus ampliaciones; la validación de su expedición está al final del documento.
 
@@ -859,3 +859,18 @@ Expedición La señal del Coloso, versión 0.50.0:
 - Pendiente partida manual: pistas con el diario, permisos, reanudación al
   reconectar, generación asíncrona en mundos antiguos, HUD, baja y cooperación.
   No se ha ejecutado un cliente gráfico ni una sesión multijugador.
+
+Rediseños de trajes aportados, versión 0.50.1:
+
+- `./gradlew build --console=plain`: 681 pruebas JUnit, doce comprobaciones
+  por CPU y 1.297 JSON válidos.
+- `verifyEquipmentTextures` lee cuatro definiciones con el codec nativo, verifica
+  sus capas interior/exterior, ocho PNG originales idénticos a sus fuentes,
+  transparencia de los márgenes y cobertura combinada de todas las piezas.
+- Se conservan los ocho dibujos RGBA de 128×64. Ocho forros de 256×128 cubren
+  sus transparencias; los iconos, recetas, física y protección permanecen iguales.
+- Venus reforzado utiliza la misma apariencia equipada; las ranuras dedicadas
+  mantienen su renderizador nativo bajo la armadura. Regenerar recursos reaplica
+  el rediseño desde los PNG conservados, sin procesar ni alterar esas imágenes.
+- Pendiente revisión visual en Minecraft y con Sodium; no se ejecutó cliente
+  gráfico ni multijugador. Véase docs/suit-redesigns.md.

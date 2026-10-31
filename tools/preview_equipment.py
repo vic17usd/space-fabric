@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Review sheet and front UV projection, not an in-game screenshot (Pillow optional)."""
 from pathlib import Path
+import json
 from PIL import Image,ImageDraw
 BASE=Path(__file__).resolve().parents[1]
 TEX=BASE/'src/main/resources/assets/space_fabric/textures'
@@ -12,13 +13,17 @@ for index,(tier,name) in enumerate(zip(TIERS,NAMES)):
     for n,part in enumerate(['helmet','chestplate','leggings','boots']):
         icon=Image.open(TEX/f'item/{tier}_suit_{part}.png').convert('RGBA').resize((48,48),Image.Resampling.NEAREST)
         canvas.paste(icon,(x+n*50,61),icon)
-    upper=Image.open(TEX/f'entity/equipment/humanoid/{tier}_suit.png').convert('RGBA')
-    lower=Image.open(TEX/f'entity/equipment/humanoid_leggings/{tier}_suit.png').convert('RGBA')
+    equipment=json.loads((TEX.parent/f'equipment/{tier}_suit.json').read_text())['layers']
+    def layers(kind):
+        return [Image.open(TEX/f'entity/equipment/{kind}/{layer["texture"].split(":",1)[1]}.png').convert('RGBA') for layer in equipment[kind]]
+    upper=layers('humanoid');lower=layers('humanoid_leggings')
     figure=Image.new('RGBA',(64,128))
-    def face(source,rect,pos,flip=False):
-        part=source.crop(tuple(v*4 for v in rect))
-        if flip:part=part.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
-        figure.alpha_composite(part,(pos[0]*4,pos[1]*4))
+    def face(sources,rect,pos,flip=False):
+        for source in sources:
+            factor=source.width//64
+            part=source.crop(tuple(v*factor for v in rect)).resize(((rect[2]-rect[0])*4,(rect[3]-rect[1])*4),Image.Resampling.NEAREST)
+            if flip:part=part.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
+            figure.alpha_composite(part,(pos[0]*4,pos[1]*4))
     face(upper,(8,8,16,16),(4,0));face(upper,(20,20,28,32),(4,8))
     face(upper,(44,20,48,32),(0,8));face(upper,(44,20,48,32),(12,8),True)
     face(lower,(4,20,8,32),(4,20));face(lower,(4,20,8,32),(8,20),True)

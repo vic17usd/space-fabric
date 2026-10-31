@@ -90,6 +90,9 @@ def import_art():
         write(ASSETS/f'equipment/{tier}_suit.json',{'layers':{
             'humanoid':[{'texture':'space_fabric:'+tier+'_suit'}],
             'humanoid_leggings':[{'texture':'space_fabric:'+tier+'_suit'}]}})
+    # Reapply the supplied wearable redesigns after regenerating the original lining.
+    from import_suit_redesigns import apply_redesign
+    apply_redesign(refresh_lining=True)
     print('Equipment: 25 item sprites, eight wearable UV layers and four equipment assets imported.')
 
 if __name__=='__main__':import_art()
