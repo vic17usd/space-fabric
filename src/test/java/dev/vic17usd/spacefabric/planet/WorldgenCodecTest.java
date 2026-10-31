@@ -3731,4 +3731,33 @@ class WorldgenCodecTest {
         }
     }
 
+    @Test void creativeCategoriesBuildRealTabsAndCoverEveryModItemExactlyOnce(){
+        var seen=new java.util.HashSet<net.minecraft.world.item.Item>();
+        var parameters=new net.minecraft.world.item.CreativeModeTab.ItemDisplayParameters(net.minecraft.world.flag.FeatureFlags.DEFAULT_FLAGS,true,registries);
+        for(var category:dev.vic17usd.spacefabric.item.ModCreativeTabs.Category.values()){
+            var tab=dev.vic17usd.spacefabric.item.ModCreativeTabs.tab(category);tab.buildContents(parameters);
+            assertFalse(tab.getIconItem().isEmpty());assertFalse(tab.getDisplayItems().isEmpty(),category.name());
+            for(var stack:tab.getDisplayItems()){
+                assertEquals("space_fabric",BuiltInRegistries.ITEM.getKey(stack.getItem()).getNamespace());
+                assertTrue(seen.add(stack.getItem()),"Duplicate creative item: "+stack);
+                assertEquals(category,dev.vic17usd.spacefabric.item.ModCreativeTabs.category(stack.getItem()));
+            }
+        }
+        var expected=BuiltInRegistries.ITEM.stream().filter(item->BuiltInRegistries.ITEM.getKey(item).getNamespace().equals("space_fabric")).collect(java.util.stream.Collectors.toSet());
+        assertEquals(expected,seen);
+    }
+    @Test void creativeCategoriesFollowThePrimaryUseOfExistingContent(){
+        var grouped=new java.util.EnumMap<dev.vic17usd.spacefabric.item.ModCreativeTabs.Category,java.util.List<net.minecraft.world.item.Item>>(dev.vic17usd.spacefabric.item.ModCreativeTabs.Category.class);
+        grouped.put(dev.vic17usd.spacefabric.item.ModCreativeTabs.Category.BLOCKS,List.of(ModBlocks.MARTIAN_STONE.asItem(),dev.vic17usd.spacefabric.mars.MarsPolarContent.ICE.asItem()));
+        grouped.put(dev.vic17usd.spacefabric.item.ModCreativeTabs.Category.MATERIALS,List.of(ModItems.SULFATE_DUST,dev.vic17usd.spacefabric.entity.colossus.ColossusContent.COLOSSUS_CORE));
+        grouped.put(dev.vic17usd.spacefabric.item.ModCreativeTabs.Category.TOOLS,List.of(dev.vic17usd.spacefabric.mining.MiningContent.SCANNER,dev.vic17usd.spacefabric.mining.MiningContent.BIT,dev.vic17usd.spacefabric.research.ResearchContent.LOG));
+        grouped.put(dev.vic17usd.spacefabric.item.ModCreativeTabs.Category.SUITS,List.of(ModItems.VENUS_SUIT_HELMET,ModItems.THERMAL_BOOTS));
+        grouped.put(dev.vic17usd.spacefabric.item.ModCreativeTabs.Category.VEHICLES,List.of(ModItems.MARS_ROCKET,ModItems.MARS_ROCKET_KIT,dev.vic17usd.spacefabric.recovery.RecoveryContent.ROVER,dev.vic17usd.spacefabric.colony.ExpansionContent.AEROSTAT,ModBlocks.LANDING_PAD.asItem()));
+        grouped.put(dev.vic17usd.spacefabric.item.ModCreativeTabs.Category.MACHINES,List.of(ModBlocks.FUEL_REFINERY.asItem(),ColonyContent.block(ColonyContent.Machine.HABITAT).asItem()));
+        grouped.put(dev.vic17usd.spacefabric.item.ModCreativeTabs.Category.SUPPLIES,List.of(ColonyContent.WATER_CANISTER,ModItems.ROCKET_FUEL_CELL,dev.vic17usd.spacefabric.maintenance.MaintenanceContent.REPAIR_KIT));
+        grouped.put(dev.vic17usd.spacefabric.item.ModCreativeTabs.Category.CREATURES,List.of(dev.vic17usd.spacefabric.entity.colossus.ColossusContent.SPAWN_EGG,ModItems.CRYSTAL_HUM_CRAWLER_SPAWN_EGG));
+        grouped.forEach((category,items)->items.forEach(item->assertEquals(category,dev.vic17usd.spacefabric.item.ModCreativeTabs.category(item),BuiltInRegistries.ITEM.getKey(item).toString())));
+        dev.vic17usd.spacefabric.transport.TransportContent.blocks().values().forEach(block->assertEquals(dev.vic17usd.spacefabric.item.ModCreativeTabs.Category.MACHINES,dev.vic17usd.spacefabric.item.ModCreativeTabs.category(block.asItem())));
+    }
+
 }

@@ -1,8 +1,8 @@
 # Resultado de validación de esta base
 
-Última entrega: **0.52.1**, 698 pruebas JUnit aprobadas, doce comprobaciones por
+Última entrega: **0.53.0**, 701 pruebas JUnit aprobadas, doce comprobaciones por
 CPU y 1.337 JSON válidos. Los apartados siguientes conservan el historial de
-la base y sus ampliaciones; la validación de los iconos de traje está al final del documento.
+la base y sus ampliaciones; la validación de las categorías creativas está al final del documento.
 
 Verificado con JDK 25, Gradle 9.8.2, Loom 1.19.3, Minecraft 26.1,
 Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
@@ -938,3 +938,16 @@ Diagnóstico de iconos anteriores tras 0.52.1:
 - Paquete opcional para el cliente: formato 84.0, metadatos en raíz y sesenta
   archivos de recursos, idénticos a los del mod. No hay cambios de código de
   producción ni se reemplaza el JAR 0.52.1 ya publicado.
+
+Categorías creativas, versión 0.53.0:
+
+- `./gradlew build --console=plain`: **701 pruebas**, cero fallos, errores u
+  omisiones, doce comprobaciones por CPU y 1.337 JSON válidos.
+- Dos casos nuevos construyen las ocho pestañas con parámetros nativos, comprueban
+  iconos y contenido, y comparan su unión con todos los ítems del mod sin duplicados.
+  Se verifican casos de uso y la clasificación de todas las piezas de transporte.
+- Registro dinámico de contenido por utilidad, con orden estable y categorías
+  traducidas; se conserva la clave antigua de materiales. No cambian identificadores
+  de objetos, recetas, física o datos de las partidas.
+- Incluye los iconos nuevos de los trajes de 0.52.1. Pendiente comprobación visual
+  en cliente de títulos, paginación, orden y búsqueda del inventario creativo.

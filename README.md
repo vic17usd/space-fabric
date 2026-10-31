@@ -1,5 +1,10 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión 0.53.0 organiza el **inventario creativo en ocho categorías por utilidad**:
+bloques, materiales, herramientas y armas, trajes, vehículos, máquinas, suministros
+y criaturas. Conserva todos los objetos y los iconos nuevos de los trajes.
+[Categorías y actualización del cliente](docs/creative-categories.md).
+
 La versión 0.52.1 actualiza los **veinte iconos de inventario de los trajes**
 para corresponder a los diseños equipados nuevos, incluyendo Venus reforzado.
 [Arte, piezas y comprobaciones](docs/suit-inventory-icons.md).
@@ -457,7 +462,7 @@ el carácter químico del entorno. Los trajes venusiano y abisal resisten la cor
 inmunidad, prioridad de presión e hipoxia a presión normal.
 También usa Fabric Loader JUnit y los codecs reales de Minecraft para interpretar
 las ocho dimensiones planetarias, el Overworld y los cuatro tipos de daño; también
-comprueba refinería, persistencia del combustible, recetas, llegadas, estructuras, comerciantes, fauna, industria, rover, redes y atlas: **698 casos**
+comprueba refinería, persistencia del combustible, recetas, llegadas, estructuras, comerciantes, fauna, industria, rover, redes y atlas: **701 casos**
 en total. `tools/validate_resources.py` comprueba además JSON y referencias internas.
 Estas pruebas no arrancan un mundo ni comprueban la sincronización del cliente.
 

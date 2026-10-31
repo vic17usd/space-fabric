@@ -17,7 +17,7 @@
   "item.space_fabric.ares_crystal": "Ares Crystal",
   "item.space_fabric.raw_phobosite": "Raw Phobosite",
   "item.space_fabric.thermal_boots": "Thermal Boots",
-  "itemGroup.space_fabric.materials": "Solar System Materials",
+  "itemGroup.space_fabric.materials": "Materials & Components",
   "block.space_fabric.mercury_silicate": "Mercurian Silicates",
   "block.space_fabric.dense_iron_ore": "Dense Iron Ore",
   "block.space_fabric.crater_ice": "Eternal Crater Ice",
@@ -820,5 +820,12 @@
   "block.space_fabric.martian_frost_crystal_node": "Martian Frost Crystal Node",
   "item.space_fabric.martian_frost_crystal": "Martian Frost Crystal",
   "item.space_fabric.martian_heatstone": "Martian Heatstone",
-  "biome.space_fabric.mars_polar_ice_cap": "Martian Polar Ice Cap"
+  "biome.space_fabric.mars_polar_ice_cap": "Martian Polar Ice Cap",
+  "itemGroup.space_fabric.blocks": "Blocks & Ores",
+  "itemGroup.space_fabric.tools": "Tools & Weapons",
+  "itemGroup.space_fabric.suits": "Suits & Protection",
+  "itemGroup.space_fabric.vehicles": "Rockets & Vehicles",
+  "itemGroup.space_fabric.machines": "Machines & Networks",
+  "itemGroup.space_fabric.supplies": "Supplies & Maintenance",
+  "itemGroup.space_fabric.creatures": "Creatures & Bosses"
 }

@@ -17,7 +17,7 @@
   "item.space_fabric.ares_crystal": "Cristal de Ares",
   "item.space_fabric.raw_phobosite": "Fobosita en bruto",
   "item.space_fabric.thermal_boots": "Botas térmicas",
-  "itemGroup.space_fabric.materials": "Materiales del sistema solar",
+  "itemGroup.space_fabric.materials": "Materiales y componentes",
   "block.space_fabric.mercury_silicate": "Silicatos de Mercurio",
   "block.space_fabric.dense_iron_ore": "Mena de hierro denso",
   "block.space_fabric.crater_ice": "Hielo eterno de cráter",
@@ -820,5 +820,12 @@
   "block.space_fabric.martian_frost_crystal_node": "Nódulo de cristal de escarcha",
   "item.space_fabric.martian_frost_crystal": "Cristal de escarcha marciano",
   "item.space_fabric.martian_heatstone": "Piedra térmica marciana",
-  "biome.space_fabric.mars_polar_ice_cap": "Casquete polar marciano"
+  "biome.space_fabric.mars_polar_ice_cap": "Casquete polar marciano",
+  "itemGroup.space_fabric.blocks": "Bloques y menas",
+  "itemGroup.space_fabric.tools": "Herramientas y armas",
+  "itemGroup.space_fabric.suits": "Trajes y protección",
+  "itemGroup.space_fabric.vehicles": "Cohetes y vehículos",
+  "itemGroup.space_fabric.machines": "Máquinas y redes",
+  "itemGroup.space_fabric.supplies": "Suministros y mantenimiento",
+  "itemGroup.space_fabric.creatures": "Criaturas y bosses"
 }
