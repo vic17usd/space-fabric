@@ -42,3 +42,20 @@ la igualdad de sus ocho capas originales con los PNG aportados.
 Pendiente inspección visual dentro de Minecraft con las veinte piezas y en el
 visor de recetas. La hoja artística y las comprobaciones por CPU no son una
 captura de una partida.
+
+## Si continúan apareciendo los iconos anteriores
+
+Comprueba la versión **del cliente** en el menú de mods. El cambio se incorporó
+en **0.52.1**; la captura diagnosticada correspondía a **0.52.0**. Cierra Minecraft,
+sustituye el JAR anterior en la carpeta `mods` del perfil que estás usando y vuelve
+a abrir el juego con 0.52.1. Actualizar solo el servidor mantiene los gráficos del
+cliente antiguo.
+
+Como alternativa para aplicar únicamente los iconos, se incluye el paquete
+`dist/space-fabric-trajes-iconos-nuevos-26.1.zip`. Ponlo sin descomprimir en la carpeta
+`resourcepacks` y actívalo con prioridad superior. El paquete tiene formato nativo
+84.0 para 26.1 y contiene veinte definiciones, veinte modelos y veinte PNG.
+
+El control nativo adicional recorre el componente `ITEM_MODEL` real de cada una
+de las veinte piezas hasta su modelo e imagen, y valida el formato del paquete.
+La apariencia del cliente del usuario sigue pendiente de confirmar tras actualizar.

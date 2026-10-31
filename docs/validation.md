@@ -925,3 +925,16 @@ Iconos de los trajes rediseñados, versión 0.52.1:
   importadores y el generador industrial conservan el diseño al regenerar recursos.
 - Las capas equipadas aportadas conservan sus bytes; recetas y jugabilidad intactas.
   Pendiente inspección visual de inventario y visor de recetas en Minecraft.
+
+Diagnóstico de iconos anteriores tras 0.52.1:
+
+- El usuario confirmó usar 0.52.0; esa versión precede al cambio de iconos.
+- Se verificó el JAR 0.52.1 almacenado en el commit publicado: sus cuatro cascos
+  coinciden con los PNG nuevos del repositorio.
+- `./gradlew build suitIconsPack --console=plain`: **699 pruebas**, cero fallos,
+  errores u omisiones, y doce comprobaciones por CPU. El nuevo caso valida el
+  componente `ITEM_MODEL` de las veinte piezas, su cadena modelo-textura y el
+  codec nativo del paquete de recursos.
+- Paquete opcional para el cliente: formato 84.0, metadatos en raíz y sesenta
+  archivos de recursos, idénticos a los del mod. No hay cambios de código de
+  producción ni se reemplaza el JAR 0.52.1 ya publicado.

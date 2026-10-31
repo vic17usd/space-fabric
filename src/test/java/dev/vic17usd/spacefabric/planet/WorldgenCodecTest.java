@@ -3716,4 +3716,19 @@ class WorldgenCodecTest {
         assertClientTarget("net/minecraft/server/players/PlayerList","loadPlayerData","(Lnet/minecraft/server/players/NameAndId;)Ljava/util/Optional;");
     }
 
+    @Test void actualSuitStacksResolveToTheRedesignedInventoryTexturesAndPackIsCompatible() throws IOException {
+        var metadata=JsonParser.parseString(java.nio.file.Files.readString(Path.of("resourcepacks/suit-icons/pack.mcmeta"))).getAsJsonObject().get("pack");
+        assertNotNull(net.minecraft.server.packs.metadata.pack.PackMetadataSection.CLIENT_TYPE.codec().parse(JsonOps.INSTANCE,metadata).getOrThrow());
+        for(String tier:List.of("vacuum","venus","cryo","abyssal","reinforced_venus"))for(String part:List.of("helmet","chestplate","leggings","boots")){
+            var id=SpaceFabric.id(tier+"_suit_"+part);var stack=new ItemStack(BuiltInRegistries.ITEM.getValue(id));assertFalse(stack.isEmpty());
+            var model=stack.get(net.minecraft.core.component.DataComponents.ITEM_MODEL);assertEquals(id,model);
+            var base=Path.of("src/main/resources/assets",model.getNamespace());
+            var definition=JsonParser.parseString(java.nio.file.Files.readString(base.resolve("items/"+model.getPath()+".json"))).getAsJsonObject();
+            var mesh=net.minecraft.resources.Identifier.parse(definition.getAsJsonObject("model").get("model").getAsString());
+            var meshJson=JsonParser.parseString(java.nio.file.Files.readString(base.resolve("models/"+mesh.getPath()+".json"))).getAsJsonObject();
+            var sprite=net.minecraft.resources.Identifier.parse(meshJson.getAsJsonObject("textures").get("layer0").getAsString());
+            assertEquals(SpaceFabric.id("item/"+id.getPath()),sprite);assertTrue(java.nio.file.Files.exists(base.resolve("textures/"+sprite.getPath()+".png")));
+        }
+    }
+
 }

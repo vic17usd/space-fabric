@@ -146,3 +146,17 @@ tasks.register('verifyColossusModel', JavaExec) {
     mainClass = 'dev.vic17usd.spacefabric.client.colossus.ColossusModelCheck'
 }
 tasks.named('check') { dependsOn tasks.named('verifyColossusModel') }
+
+// Client-only override: twenty item definitions, models and redesigned inventory sprites.
+tasks.register('suitIconsPack', Zip) {
+    archiveFileName = 'space-fabric-trajes-iconos-nuevos-26.1.zip'
+    destinationDirectory = layout.buildDirectory.dir('resourcepacks')
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+    from('resourcepacks/suit-icons') { include 'pack.mcmeta' }
+    from('src/main/resources') {
+        include 'assets/space_fabric/items/*_suit_*.json'
+        include 'assets/space_fabric/models/item/*_suit_*.json'
+        include 'assets/space_fabric/textures/item/*_suit_*.png'
+    }
+}
