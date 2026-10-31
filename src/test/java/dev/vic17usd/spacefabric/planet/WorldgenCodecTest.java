@@ -3558,4 +3558,24 @@ class WorldgenCodecTest {
         assertTrue(world.blocks.keySet().stream().allMatch(p->p.getX()>=0&&p.getX()<16&&p.getZ()>=0&&p.getZ()<16&&p.getY()<=6));
     }
 
+    @Test void colossusSurveyFindsValidNativeCandidatesWithoutTemplatesOrLoadedChunks() throws IOException {
+        var access=(RegistryAccess)registries;
+        var stem=LevelStem.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("dimension/venus")).getOrThrow();
+        var generator=(net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator)stem.generator();
+        var structure=access.lookupOrThrow(Registries.STRUCTURE).getValue(SpaceFabric.id("venus_colossus_bunker"));
+        var set=access.lookupOrThrow(Registries.STRUCTURE_SET).getValue(SpaceFabric.id("venus_colossus_bunker"));
+        var placement=assertInstanceOf(net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement.class,set.placement());
+        for(long seed:new long[]{42,1729,8128}){
+            var random=net.minecraft.world.level.levelgen.RandomState.create(generator.generatorSettings().value(),access.lookupOrThrow(Registries.NOISE),seed);
+            boolean found=false;
+            for(var offset:dev.vic17usd.spacefabric.expedition.ColossusExpedition.offsets()){
+                var candidate=placement.getPotentialStructureChunk(seed,offset.x()*placement.spacing(),offset.z()*placement.spacing());
+                var point=structure.findValidGenerationPoint(new net.minecraft.world.level.levelgen.structure.Structure.GenerationContext(access,generator,generator.getBiomeSource(),random,null,seed,candidate,
+                    net.minecraft.world.level.LevelHeightAccessor.create(Planet.VENUS.minY(),Planet.VENUS.height()),structure.biomes()::contains));
+                if(point.isPresent()){assertEquals(-51,point.get().position().getY());found=true;break;}
+            }
+            assertTrue(found,"No valid bunker candidate for "+seed);
+        }
+    }
+
 }

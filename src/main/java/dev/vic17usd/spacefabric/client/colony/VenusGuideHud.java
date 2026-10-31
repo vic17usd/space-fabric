@@ -13,7 +13,7 @@ import net.minecraft.network.chat.Component;
 /** Compact quest tracker: mission heading, fine rule and a cyan objective ring on a clear background. */
 public final class VenusGuideHud {
     private static final VenusMissionTracker STATE=new VenusMissionTracker();
-    private static int bottom,researchStage=-1,researchAge;
+    private static int bottom,researchStage=-1,researchAge,questStage=-1,questAge;
     private VenusGuideHud() { }
     private static boolean visible(){
         var c=Minecraft.getInstance();
@@ -25,10 +25,11 @@ public final class VenusGuideHud {
     public static void initialize(){
         ClientPlayNetworking.registerGlobalReceiver(VenusGuideNetwork.State.TYPE,(payload,context)->STATE.accept(payload.flags()));
         ClientPlayNetworking.registerGlobalReceiver(dev.vic17usd.spacefabric.research.ResearchNetwork.State.TYPE,(payload,context)->{researchStage=payload.stage();researchAge=0;});
-        ClientPlayConnectionEvents.DISCONNECT.register((handler,client)->{STATE.clear();bottom=0;researchStage=-1;});
+        ClientPlayNetworking.registerGlobalReceiver(dev.vic17usd.spacefabric.expedition.QuestNetwork.State.TYPE,(payload,context)->{questStage=payload.stage();questAge=0;});
+        ClientPlayConnectionEvents.DISCONNECT.register((handler,client)->{STATE.clear();bottom=0;researchStage=-1;questStage=-1;});
         ClientTickEvents.END_CLIENT_TICK.register(c->{
-            if(c.level==null||c.player==null||!c.player.isAlive()||PlanetDimensions.find(c.level).orElse(null)!=Planet.VENUS){STATE.clear();bottom=0;researchStage=-1;}
-            else if(!c.isPaused()){STATE.tick();if(researchAge<=60)researchAge++;}
+            if(c.level==null||c.player==null||!c.player.isAlive()||PlanetDimensions.find(c.level).orElse(null)!=Planet.VENUS){STATE.clear();bottom=0;researchStage=-1;questStage=-1;}
+            else if(!c.isPaused()){STATE.tick();if(researchAge<=60)researchAge++;if(questAge<=60)questAge++;}
         });
         HudElementRegistry.addLast(SpaceFabric.id("venus_missions"),(gui,delta)->draw(gui));
     }
@@ -48,6 +49,7 @@ public final class VenusGuideHud {
         boolean research=complete&&researchStage>=0&&researchAge<=60;
         String step=research?"research_"+researchStage:complete?"complete":remaining.getFirst().key();
         if(research)complete=researchStage==4;
+        if(remaining.isEmpty()&&questStage>=0&&questStage<5&&(questStage>0||researchStage==4)&&questAge<=60){step="colossus_"+questStage;complete=questStage==5;}
         int width=Math.min(214,c.getWindow().getGuiScaledWidth()-16);
         var title=Component.translatable("venus.guide.tracker_title_"+step);
         gui.text(c.font,c.font.split(title,width).getFirst(),8,8,0xFFF2F3F4);

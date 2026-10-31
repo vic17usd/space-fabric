@@ -20,7 +20,7 @@ public final class ResearchLogItem extends WrittenBookItem {
     }
     @Override public InteractionResult useOn(UseOnContext context){
         if(!(context.getPlayer() instanceof ServerPlayer player))return InteractionResult.SUCCESS;
-        if(player.isSecondaryUseActive()){ResearchSystem.interact(player,context.getClickedPos());return InteractionResult.SUCCESS_SERVER;}
+        if(player.isSecondaryUseActive()){if(!dev.vic17usd.spacefabric.expedition.ColossusExpedition.interact(player,context.getClickedPos()))ResearchSystem.interact(player,context.getClickedPos());return InteractionResult.SUCCESS_SERVER;}
         return use(context.getLevel(),player,context.getHand());
     }
 }

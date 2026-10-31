@@ -412,6 +412,7 @@ public final class SulfurColossusEntity extends SulfurColossusRigEntity {
    protected void dropCustomDeathLoot(ServerLevel level, DamageSource source, boolean killedByPlayer) {
       super.dropCustomDeathLoot(level, source, killedByPlayer);
       if(!killedByPlayer||lootGranted)return;lootGranted=true;
+      if(source.getEntity() instanceof ServerPlayer player)dev.vic17usd.spacefabric.expedition.ColossusExpedition.defeated(player,blockPosition());
       this.spawnAtLocation(level, new ItemStack(dev.vic17usd.spacefabric.item.ModItems.SULFUR_CRYSTAL, 5 + this.getRandom().nextInt(4)));
       this.spawnAtLocation(level, new ItemStack(ColossusContent.COLOSSUS_CORE));
    }

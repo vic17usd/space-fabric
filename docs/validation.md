@@ -1,8 +1,8 @@
 # Resultado de validación de esta base
 
-Última entrega: **0.49.0**, 676 pruebas JUnit aprobadas, doce comprobaciones por
+Última entrega: **0.50.0**, 681 pruebas JUnit aprobadas, doce comprobaciones por
 CPU y 1.297 JSON válidos. Los apartados siguientes conservan el historial de
-la base y sus ampliaciones; la validación del Coloso de Azufre está al final del documento.
+la base y sus ampliaciones; la validación de su expedición está al final del documento.
 
 Verificado con JDK 25, Gradle 9.8.2, Loom 1.19.3, Minecraft 26.1,
 Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
@@ -841,3 +841,21 @@ Coloso de Azufre y lugares de Venus, versión 0.49.0:
   generación y malla no equivalen a observar el combate, las apariciones de
   entidades, el sonido y la sincronización durante una partida. Pendiente la
   comprobación manual de docs/venus-colossus.md.
+
+Expedición La señal del Coloso, versión 0.50.0:
+
+- `./gradlew build --console=plain`: **681 pruebas JUnit**, cero fallos, errores
+  u omisiones; doce comprobaciones por CPU. **1.297 JSON** válidos.
+- Cinco casos nuevos verifican orden y rechazo de repeticiones/saltos, destino
+  requerido, persistencia personal y coordenadas tras recargar, etapas inválidas
+  y presupuesto de 81 regiones sin repeticiones. El caso nativo encuentra
+  candidatos del búnker con semillas 42, 1729 y 8128 sin cargar plantillas.
+- Diario de Aurora ampliado; comando de lectura `/venus coloso`, guía transparente
+  y paquete S2C de etapa, sin mensajes del cliente para acreditar objetivos.
+- Evidencia en piezas naturales cargadas, excluyendo parcelas; cámara y boss
+  vinculados al destino asignado. La prospección usa un candidato por segundo
+  global y una comprobación asíncrona de inicio de estructura pendiente; rechaza
+  chunks ya completos para seleccionar un búnker nuevo.
+- Pendiente partida manual: pistas con el diario, permisos, reanudación al
+  reconectar, generación asíncrona en mundos antiguos, HUD, baja y cooperación.
+  No se ha ejecutado un cliente gráfico ni una sesión multijugador.

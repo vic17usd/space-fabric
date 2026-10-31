@@ -42,7 +42,7 @@ public final class ResearchSystem {
         var pages=new ArrayList<Component>();pages.add(text("intro"));pages.add(text("current",stage,4,text("objective_"+stage)));
         progress.laboratory(player.getUUID()).ifPresent(pos->pages.add(text("bound",pos.toShortString())));
         for(int i=0;i<4;i++)pages.add(text("page",i<stage?"✓":"○",text("objective_"+i),text("detail_"+i)));
-        pages.add(text("manufacture"));return List.copyOf(pages);
+        pages.add(text("manufacture"));pages.addAll(dev.vic17usd.spacefabric.expedition.ColossusExpedition.pages(player));return List.copyOf(pages);
     }
     public static void interact(ServerPlayer player,BlockPos pos){
         var level=player.level();
