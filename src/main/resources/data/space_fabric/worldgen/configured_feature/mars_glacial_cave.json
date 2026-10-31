@@ -1,0 +1,8 @@
+{
+  "type": "space_fabric:mars_glacial_cave",
+  "config": {
+    "state": {
+      "Name": "space_fabric:martian_glacier_ice"
+    }
+  }
+}

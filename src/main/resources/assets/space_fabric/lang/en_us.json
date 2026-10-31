@@ -813,5 +813,12 @@
   "venus.guide.tracker_title_colossus_5": "Signal of the Colossus",
   "venus.guide.tracker_objective_colossus_5": "Expedition complete: the Colossus signal has fallen silent.",
   "venus.guide.tracker_title_colossus_0": "Signal of the Colossus",
-  "venus.guide.tracker_objective_colossus_0": "Recover the emergency log at the Abandoned Venus Foundry."
+  "venus.guide.tracker_objective_colossus_0": "Recover the emergency log at the Abandoned Venus Foundry.",
+  "block.space_fabric.martian_glacier_ice": "Martian Glacier Ice",
+  "block.space_fabric.martian_frozen_co2": "Martian Frozen CO₂",
+  "block.space_fabric.martian_subglacial_ore": "Martian Subglacial Ore",
+  "block.space_fabric.martian_frost_crystal_node": "Martian Frost Crystal Node",
+  "item.space_fabric.martian_frost_crystal": "Martian Frost Crystal",
+  "item.space_fabric.martian_heatstone": "Martian Heatstone",
+  "biome.space_fabric.mars_polar_ice_cap": "Martian Polar Ice Cap"
 }

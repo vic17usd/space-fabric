@@ -3578,4 +3578,78 @@ class WorldgenCodecTest {
         }
     }
 
+    @ParameterizedTest @ValueSource(longs={42,971,-200})
+    void martianPolarSourceKeepsTheEquatorAndPlacesBothCapsAtEveryDepth(long seed) throws IOException {
+        var stem=LevelStem.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("dimension/mars")).getOrThrow();
+        var generator=(net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator)stem.generator();
+        var source=assertInstanceOf(dev.vic17usd.spacefabric.mars.MarsPolarBiomeSource.class,generator.getBiomeSource());
+        var random=net.minecraft.world.level.levelgen.RandomState.create(generator.generatorSettings().value(),registries.lookupOrThrow(Registries.NOISE),seed);
+        assertEquals(2,source.possibleBiomes().size());
+        for(int x:new int[]{-30000,-1000,0,1000,30000})for(int y:new int[]{-12,20,60}){
+            assertTrue(source.getNoiseBiome(x>>2,y,0,random.sampler()).is(dev.vic17usd.spacefabric.worldgen.PlanetBiomes.key(Planet.MARS)));
+            for(int z:new int[]{-12000,12000})assertTrue(source.getNoiseBiome(x>>2,y,z>>2,random.sampler()).is(dev.vic17usd.spacefabric.worldgen.PlanetBiomes.MARS_POLAR));
+        }
+        var ops=registries.createSerializationContext(JsonOps.INSTANCE);
+        assertInstanceOf(dev.vic17usd.spacefabric.mars.MarsPolarBiomeSource.class,net.minecraft.world.level.biome.BiomeSource.CODEC.parse(ops,net.minecraft.world.level.biome.BiomeSource.CODEC.encodeStart(ops,source).getOrThrow()).getOrThrow());
+    }
+    @ParameterizedTest @ValueSource(strings={"martian_glacier_ice","martian_frozen_co2","martian_subglacial_ore","martian_frost_crystal_node"})
+    void polarMaterialsHaveNativeLootToolsAndOriginalArt(String name) throws IOException {
+        var block=BuiltInRegistries.BLOCK.getValue(SpaceFabric.id(name));assertFalse(block==Blocks.AIR);assertEquals(block.asItem(),BuiltInRegistries.ITEM.getValue(SpaceFabric.id(name)));
+        assertNotNull(LootTable.DIRECT_CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("loot_table/blocks/"+name)).getOrThrow());
+        assertTrue(block.defaultBlockState().is(net.minecraft.tags.BlockTags.MINEABLE_WITH_PICKAXE));
+        if(name.equals("martian_subglacial_ore"))assertTrue(block.defaultBlockState().is(net.minecraft.tags.BlockTags.INCORRECT_FOR_WOODEN_TOOL));
+        else if(name.equals("martian_glacier_ice")||name.equals("martian_frozen_co2")){
+            assertFalse(block instanceof net.minecraft.world.level.block.IceBlock);assertFalse(block.defaultBlockState().isRandomlyTicking());
+            assertTrue(dev.vic17usd.spacefabric.space.SpaceTravel.naturalGround(block.defaultBlockState(),net.minecraft.world.level.EmptyBlockGetter.INSTANCE,net.minecraft.core.BlockPos.ZERO));
+        }
+        String original=switch(name){case "martian_glacier_ice"->"packed_glacier_ice";case "martian_frozen_co2"->"frozen_co2";case "martian_subglacial_ore"->"subglacial_ore";default->"frost_crystal";};
+        String target=name.equals("martian_frost_crystal_node")?"martian_frost_crystal":name;
+        assertEquals(-1,java.nio.file.Files.mismatch(Path.of("tools/import_sources/mars_glacial/assets/glacial-frontier-kzj32637/textures/block/"+original+".png"),Path.of("src/main/resources/assets/space_fabric/textures/block/"+target+".png")));
+    }
+    private static VoxelWorld glacialVolume(){
+        var world=new VoxelWorld(0,0);
+        for(int x=0;x<16;x++)for(int z=0;z<16;z++)for(int y=-38;y<=-22;y++)world.blocks.put(new net.minecraft.core.BlockPos(x,y,z),ModBlocks.MARTIAN_STONE.defaultBlockState());
+        return world;
+    }
+    @Test void realPolarCaveCarvesAnIceShellAndNeverWritesAcrossChunkEdges(){
+        var world=glacialVolume();var center=new net.minecraft.core.BlockPos(8,-30,8);
+        assertTrue(dev.vic17usd.spacefabric.mars.MarsGlacialCaveFeature.carve(world.level,center));
+        assertTrue(world.state(center).isAir());assertTrue(world.state(center.below(4)).is(dev.vic17usd.spacefabric.mars.MarsPolarContent.ICE));
+        assertTrue(world.state(center.below(2)).is(dev.vic17usd.spacefabric.mars.MarsPolarContent.NODE));
+        assertTrue(world.blocks.values().stream().allMatch(s->s.getFluidState().isEmpty()));
+        assertTrue(world.blocks.keySet().stream().allMatch(p->p.getX()>=0&&p.getX()<16&&p.getZ()>=0&&p.getZ()<16));
+    }
+    @Test void polarCavesRejectWaterProtectedBlocksAndInvalidCentersBeforeAnyWrite(){
+        var center=new net.minecraft.core.BlockPos(8,-30,8);
+        for(var obstacle:List.of(Blocks.WATER,Blocks.CHEST,Blocks.BEDROCK)){
+            var world=glacialVolume();world.blocks.put(center,obstacle.defaultBlockState());var before=new java.util.HashMap<>(world.blocks);
+            assertFalse(dev.vic17usd.spacefabric.mars.MarsGlacialCaveFeature.carve(world.level,center));assertEquals(before,world.blocks);
+        }
+        var world=glacialVolume();assertFalse(dev.vic17usd.spacefabric.mars.MarsGlacialCaveFeature.carve(world.level,center.offset(-3,0,0)));
+    }
+    @Test void polarResourcesProduceSealedWaterAndGasWithoutCreatingEmptyContainers() throws IOException {
+        for(boolean water:new boolean[]{true,false}){
+            var recipe=assertInstanceOf(net.minecraft.world.item.crafting.ShapelessRecipe.class,Recipe.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("recipe/"+(water?"martian_glacier_water":"martian_co2_capture"))).getOrThrow());
+            var items=new java.util.ArrayList<ItemStack>();items.add(new ItemStack(water?dev.vic17usd.spacefabric.mars.MarsPolarContent.ICE:dev.vic17usd.spacefabric.mars.MarsPolarContent.CO2));
+            items.add(new ItemStack(ColonyContent.EMPTY_CANISTER));if(water)items.add(new ItemStack(dev.vic17usd.spacefabric.mars.MarsPolarContent.HEATSTONE));
+            var input=net.minecraft.world.item.crafting.CraftingInput.of(items.size(),1,items);assertTrue(recipe.matches(input,null));
+            assertTrue(recipe.assemble(input).is(water?ColonyContent.WATER_CANISTER:dev.vic17usd.spacefabric.industry.IndustryContent.CARBON_DIOXIDE));
+            items.set(1,ItemStack.EMPTY);assertFalse(recipe.matches(net.minecraft.world.item.crafting.CraftingInput.of(items.size(),1,items),null));
+        }
+        assertNotNull(Recipe.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("recipe/martian_heatstone")).getOrThrow());
+        var viewer=viewerCatalog();assertTrue(viewer.find(dev.vic17usd.spacefabric.mars.MarsPolarContent.HEATSTONE,false).stream().anyMatch(c->c.kind().equals("crafting")));
+    }
+    @Test void glacialFeaturesOnlyOccurInThePolarBiomeAndSharedMarsOresRemainAvailable(){
+        var polar=registries.lookupOrThrow(Registries.BIOME).getOrThrow(dev.vic17usd.spacefabric.worldgen.PlanetBiomes.MARS_POLAR);
+        for(String name:List.of("subglacial_vein","frost_crystal_veins","ice_cave_seams","frozen_co2_strata","glacial_cave")){
+            var key=net.minecraft.resources.ResourceKey.create(Registries.PLACED_FEATURE,SpaceFabric.id("mars_"+name));
+            for(var biome:registries.lookupOrThrow(Registries.BIOME).listElements().toList()){
+                boolean found=biome.value().getGenerationSettings().features().stream().flatMap(net.minecraft.core.HolderSet::stream).anyMatch(f->f.is(key));
+                assertEquals(biome.is(polar.key()),found,"Glacial feature in wrong biome: "+biome.key());
+            }
+        }
+        for(var key:List.of(OreGen.ARES_CRYSTAL,OreGen.PHOBOSITE,OreGen.IRON_OXIDE,OreGen.MARTIAN_OLIVINE,OreGen.MARTIAN_SULFATE))assertTrue(polar.value().getGenerationSettings().features().stream().flatMap(net.minecraft.core.HolderSet::stream).anyMatch(f->f.is(key)));
+        for(var category:net.minecraft.world.entity.MobCategory.values())assertTrue(polar.value().getMobSettings().getMobs(category).isEmpty());
+    }
+
 }

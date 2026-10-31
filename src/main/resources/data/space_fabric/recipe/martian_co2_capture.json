@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "space_fabric:martian_frozen_co2",
+    "space_fabric:empty_canister"
+  ],
+  "result": {
+    "id": "space_fabric:carbon_dioxide_canister",
+    "count": 1
+  }
+}

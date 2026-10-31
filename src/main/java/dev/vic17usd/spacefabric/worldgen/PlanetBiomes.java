@@ -16,6 +16,8 @@ public final class PlanetBiomes {
     public static final java.util.List<ResourceKey<Biome>> VENUS_KEYS=java.util.List.of(key(Planet.VENUS),VENUS_FUMAROLES,VENUS_BASINS,VENUS_RIFTLANDS,VENUS_TESSERA,VENUS_ASHLANDS);
     public static final net.minecraft.tags.TagKey<Biome> VENUS_TAG=net.minecraft.tags.TagKey.create(Registries.BIOME,SpaceFabric.id("venus_biomes"));
     public static boolean isVenus(ResourceKey<Biome> key){return VENUS_KEYS.contains(key);}
+    public static final ResourceKey<Biome> MARS_POLAR=ResourceKey.create(Registries.BIOME,SpaceFabric.id("mars_polar_ice_cap"));
+    public static boolean isMars(ResourceKey<Biome> key){return key.equals(key(Planet.MARS))||key.equals(MARS_POLAR);}
     private PlanetBiomes() { }
 
     public static ResourceKey<Biome> key(Planet planet) {

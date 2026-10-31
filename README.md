@@ -1,5 +1,11 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión 0.51.0 añade **casquetes polares a Marte**, con hielo glaciar, CO₂
+congelado, cámaras heladas, cristales y mena subglacial. Los recursos aportados
+se adaptan a su generación y permiten obtener agua y gas en recipientes sellados.
+[Geografía, recursos y visita](docs/mars-polar.md). Diseño original:
+[Glacial Frontier — CreativeMode.net](https://creativemode.net/mod/glacial-frontier-kzj32637).
+
 La versión 0.50.1 aplica los **cuatro rediseños de trajes aportados**: venusiano,
 de vacío, abisal y criogénico. Conserva las capas originales de los ZIP y añade
 un forro interior donde hay transparencia. [Asignación y comprobaciones](docs/suit-redesigns.md).
@@ -443,7 +449,7 @@ el carácter químico del entorno. Los trajes venusiano y abisal resisten la cor
 inmunidad, prioridad de presión e hipoxia a presión normal.
 También usa Fabric Loader JUnit y los codecs reales de Minecraft para interpretar
 los nueve tipos de dimensión, sus generadores y los cuatro tipos de daño; también
-comprueba refinería, persistencia del combustible, recetas, llegadas, estructuras, comerciantes, fauna, industria, rover, redes y atlas: **681 casos**
+comprueba refinería, persistencia del combustible, recetas, llegadas, estructuras, comerciantes, fauna, industria, rover, redes y atlas: **692 casos**
 en total. `tools/validate_resources.py` comprueba además JSON y referencias internas.
 Estas pruebas no arrancan un mundo ni comprueban la sincronización del cliente.
 

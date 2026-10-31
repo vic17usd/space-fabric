@@ -813,5 +813,12 @@
   "venus.guide.tracker_title_colossus_5": "La señal del Coloso",
   "venus.guide.tracker_objective_colossus_5": "Expedición completada: has silenciado la señal del Coloso.",
   "venus.guide.tracker_title_colossus_0": "La señal del Coloso",
-  "venus.guide.tracker_objective_colossus_0": "Recupera el Registro de emergencia en la Fundición Abandonada de Venus."
+  "venus.guide.tracker_objective_colossus_0": "Recupera el Registro de emergencia en la Fundición Abandonada de Venus.",
+  "block.space_fabric.martian_glacier_ice": "Hielo glaciar marciano",
+  "block.space_fabric.martian_frozen_co2": "CO₂ congelado marciano",
+  "block.space_fabric.martian_subglacial_ore": "Mena subglacial marciana",
+  "block.space_fabric.martian_frost_crystal_node": "Nódulo de cristal de escarcha",
+  "item.space_fabric.martian_frost_crystal": "Cristal de escarcha marciano",
+  "item.space_fabric.martian_heatstone": "Piedra térmica marciana",
+  "biome.space_fabric.mars_polar_ice_cap": "Casquete polar marciano"
 }

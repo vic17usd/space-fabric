@@ -46,6 +46,8 @@
     "space_fabric:venus_tessera_rock",
     "space_fabric:venus_ember_fissure",
     "space_fabric:venus_basalt_sheet",
-    "space_fabric:venus_charred_rock"
+    "space_fabric:venus_charred_rock",
+    "space_fabric:martian_glacier_ice",
+    "space_fabric:martian_frozen_co2"
   ]
 }

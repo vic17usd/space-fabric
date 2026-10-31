@@ -1,8 +1,8 @@
 # Resultado de validación de esta base
 
-Última entrega: **0.50.1**, 681 pruebas JUnit aprobadas, doce comprobaciones por
-CPU y 1.297 JSON válidos. Los apartados siguientes conservan el historial de
-la base y sus ampliaciones; la validación de su expedición está al final del documento.
+Última entrega: **0.51.0**, 692 pruebas JUnit aprobadas, doce comprobaciones por
+CPU y 1.338 JSON válidos. Los apartados siguientes conservan el historial de
+la base y sus ampliaciones; la validación de los casquetes marcianos está al final del documento.
 
 Verificado con JDK 25, Gradle 9.8.2, Loom 1.19.3, Minecraft 26.1,
 Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
@@ -874,3 +874,23 @@ Rediseños de trajes aportados, versión 0.50.1:
   el rediseño desde los PNG conservados, sin procesar ni alterar esas imágenes.
 - Pendiente revisión visual en Minecraft y con Sodium; no se ejecutó cliente
   gráfico ni multijugador. Véase docs/suit-redesigns.md.
+
+Casquetes polares de Marte, versión 0.51.0:
+
+- `./gradlew build --console=plain`: **692 pruebas JUnit**, cero fallos, errores
+  u omisiones; doce comprobaciones por CPU y **1.338 JSON** válidos.
+- Once casos nuevos: tres semillas en ecuador y ambos polos, conservación
+  del bioma en profundidad y serialización del codec; cuatro materiales con
+  ítems, loot, herramientas, hielo estable, aterrizaje y arte original;
+  excavación nativa acotada y rechazo atómico de agua/cofres/bedrock;
+  recetas selladas que exigen recipientes; exclusividad de las cinco features
+  y conservación de los cinco minerales habituales bajo los casquetes.
+- Cámaras antes de las vetas y con prevalidación; superficie de CO₂ y hielo
+  seleccionada por bioma. Fuente geográfica configurable, por defecto ±8.192
+  bloques con borde irregular, sin introducir el bioma en el Overworld.
+- Seis texturas originales, bloques, materiales, modelos y receta de piedra
+  térmica; recipientes industriales existentes para agua y CO₂. Licencia y
+  procedencia conservadas. No se importa código ni TerraBlender del JAR fuente.
+- Pendiente cliente gráfico y multijugador: superficie en chunks completos,
+  transición con terreno antiguo, frecuencia real de cámaras y vetas,
+  navegación, aspecto y aterrizajes polares. Véase docs/mars-polar.md.

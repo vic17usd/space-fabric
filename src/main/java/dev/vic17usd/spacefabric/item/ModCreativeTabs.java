@@ -17,6 +17,9 @@ public final class ModCreativeTabs {
                     .icon(() -> new ItemStack(ModBlocks.MARTIAN_STONE))
                     .displayItems((parameters, output) -> {
                         ModBlocks.all().values().forEach(output::accept);
+                        dev.vic17usd.spacefabric.mars.MarsPolarContent.blocks().forEach(output::accept);
+                        output.accept(dev.vic17usd.spacefabric.mars.MarsPolarContent.CRYSTAL);
+                        output.accept(dev.vic17usd.spacefabric.mars.MarsPolarContent.HEATSTONE);
                         ModItems.all().values().forEach(output::accept);
                         dev.vic17usd.spacefabric.maintenance.MaintenanceContent.items().values().forEach(output::accept);
                         dev.vic17usd.spacefabric.venus.VenusGeology.blocks().values().forEach(output::accept);
