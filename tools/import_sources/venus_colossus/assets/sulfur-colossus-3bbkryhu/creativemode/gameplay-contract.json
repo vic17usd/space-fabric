@@ -1,0 +1,59 @@
+{
+  "medium": "grounded",
+  "actions": [
+    {
+      "key": "primary_attack",
+      "description": "Claw sweep: lift one front claw during a clear planted wind-up, strike at the impact cue, then recover with the chest core exposed briefly.",
+      "length": 2.4,
+      "loop": "once",
+      "effect": {
+        "start": 1.0,
+        "end": 1.0
+      }
+    },
+    {
+      "key": "ground_slam",
+      "description": "Raise the front body for a readable two-second telegraph, slam the ground at the cue, then recover with the chest armor open.",
+      "length": 4.0,
+      "loop": "once",
+      "effect": {
+        "start": 2.0,
+        "end": 2.0
+      }
+    },
+    {
+      "key": "venting",
+      "description": "Back vents and sulfur crystals charge for three seconds, then release a short-range sulfur cloud; recover with chest core briefly exposed.",
+      "length": 5.0,
+      "loop": "once",
+      "effect": {
+        "start": 3.0,
+        "end": 3.0
+      }
+    },
+    {
+      "key": "volcanic_burst",
+      "description": "Orange cracks brighten and marked ground positions warn for three seconds before contained, non-block-damaging bursts; recover with the chest core exposed.",
+      "length": 5.0,
+      "loop": "once",
+      "effect": {
+        "start": 3.0,
+        "end": 3.0
+      }
+    },
+    {
+      "key": "stagger",
+      "description": "Brief recoil and flinch from a heavy hit, then return to combat.",
+      "length": 1.2,
+      "loop": "once",
+      "effect": null
+    },
+    {
+      "key": "death",
+      "description": "Cooling collapse as the Colossus dies; hold the final collapsed pose.",
+      "length": 4.0,
+      "loop": "hold",
+      "effect": null
+    }
+  ]
+}

@@ -778,5 +778,10 @@
   "block.space_fabric.venus_charred_rock": "Roca carbonizada",
   "block.space_fabric.venus_sulfur_ash": "Ceniza de azufre",
   "item.space_fabric.venus_rift_shard": "Fragmento de hierro de grieta",
-  "item.space_fabric.venus_sulfur_dust": "Polvo de azufre venusiano"
+  "item.space_fabric.venus_sulfur_dust": "Polvo de azufre venusiano",
+  "entity.space_fabric.sulfur_colossus": "Coloso de Azufre",
+  "item.space_fabric.colossus_core": "Núcleo del Coloso",
+  "item.space_fabric.sulfur_colossus_spawn_egg": "Generador de Coloso de Azufre",
+  "structure.space_fabric.venus_colossus_bunker": "Búnker del Coloso",
+  "structure.space_fabric.venus_sulfurfire_nest": "Nido de Azufre"
 }

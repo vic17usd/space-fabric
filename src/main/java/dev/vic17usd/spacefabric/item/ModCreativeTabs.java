@@ -39,6 +39,8 @@ public final class ModCreativeTabs {
                         dev.vic17usd.spacefabric.transport.TransportContent.blocks().values().forEach(output::accept);
                         dev.vic17usd.spacefabric.earth.EarthMaterials.blocks().values().forEach(output::accept);
                         dev.vic17usd.spacefabric.earth.EarthMaterials.items().values().forEach(output::accept);
+                        output.accept(dev.vic17usd.spacefabric.entity.colossus.ColossusContent.COLOSSUS_CORE);
+                        output.accept(dev.vic17usd.spacefabric.entity.colossus.ColossusContent.SPAWN_EGG);
                         output.accept(PlanetFluids.VISCOUS_LAVA_BUCKET);
                     }).build());
 

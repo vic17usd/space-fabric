@@ -9,6 +9,8 @@ import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
 public final class VenusSurfaceStructures {
     public static final StructureType<VenusSurfaceStructure> TYPE=Registry.register(BuiltInRegistries.STRUCTURE_TYPE,SpaceFabric.id("venus_surface"),()->VenusSurfaceStructure.CODEC);
     public static final StructurePieceType PIECE=Registry.register(BuiltInRegistries.STRUCTURE_PIECE,SpaceFabric.id("venus_surface_piece"),VenusSurfacePiece::new);
+    public static final StructureType<VenusBunkerStructure> BUNKER=Registry.register(BuiltInRegistries.STRUCTURE_TYPE,SpaceFabric.id("venus_bunker"),()->VenusBunkerStructure.CODEC);
+    public static final StructurePieceType BUNKER_PIECE=Registry.register(BuiltInRegistries.STRUCTURE_PIECE,SpaceFabric.id("venus_bunker_piece"),VenusBunkerPiece::new);
     private VenusSurfaceStructures() { }
     public static void initialize() { }
 }

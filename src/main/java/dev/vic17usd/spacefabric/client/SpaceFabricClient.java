@@ -15,6 +15,7 @@ public final class SpaceFabricClient implements ClientModInitializer {
         dev.vic17usd.spacefabric.client.colony.VenusGuideHud.initialize();
         dev.vic17usd.spacefabric.client.map.AtlasClient.initialize();
         dev.vic17usd.spacefabric.client.rover.RoverView.initialize();dev.vic17usd.spacefabric.client.rover.AerostatHud.initialize();
+        net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry.register(dev.vic17usd.spacefabric.entity.colossus.ColossusContent.TYPE,dev.vic17usd.spacefabric.client.colossus.SulfurColossusEntityRenderer::new);
         net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry.register(dev.vic17usd.spacefabric.rover.RoverEntity.TYPE,dev.vic17usd.spacefabric.client.rover.RoverRenderer::new);
         net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry.register(dev.vic17usd.spacefabric.rover.RoverEntity.AEROSTAT_TYPE,dev.vic17usd.spacefabric.client.rover.RoverRenderer::new);
         net.minecraft.client.gui.screens.MenuScreens.register(dev.vic17usd.spacefabric.menu.ModMenus.FOUNDRY,dev.vic17usd.spacefabric.client.menu.FoundryScreen::new);

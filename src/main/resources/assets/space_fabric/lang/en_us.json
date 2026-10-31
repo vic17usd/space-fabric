@@ -778,5 +778,10 @@
   "block.space_fabric.venus_charred_rock": "Charred Rock",
   "block.space_fabric.venus_sulfur_ash": "Sulfur Ash",
   "item.space_fabric.venus_rift_shard": "Rift Iron Shard",
-  "item.space_fabric.venus_sulfur_dust": "Venus Sulfur Dust"
+  "item.space_fabric.venus_sulfur_dust": "Venus Sulfur Dust",
+  "entity.space_fabric.sulfur_colossus": "Sulfur Colossus",
+  "item.space_fabric.colossus_core": "Colossus Core",
+  "item.space_fabric.sulfur_colossus_spawn_egg": "Sulfur Colossus Spawn Egg",
+  "structure.space_fabric.venus_colossus_bunker": "Colossus Bunker",
+  "structure.space_fabric.venus_sulfurfire_nest": "Sulfurfire Nest"
 }

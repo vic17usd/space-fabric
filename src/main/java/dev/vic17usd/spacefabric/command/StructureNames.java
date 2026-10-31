@@ -29,7 +29,9 @@ public final class StructureNames {
             new Entry("rustfall_foundry","fundicion_venusiana",Planet.VENUS),
             new Entry("venus_research_station","laboratorio_venusiano",Planet.VENUS),
             new Entry("venus_recovery_shelter","recuperacion_venusiana",Planet.VENUS),
-            new Entry("venus_cloud_station","estacion_atmosferica",Planet.VENUS));
+            new Entry("venus_cloud_station","estacion_atmosferica",Planet.VENUS),
+            new Entry("venus_colossus_bunker","bunker_del_coloso",Planet.VENUS),
+            new Entry("venus_sulfurfire_nest","nido_de_azufre",Planet.VENUS));
     private StructureNames() { }
     public static void initialize() {
         CommandRegistrationCallback.EVENT.register((dispatcher,context,selection)->dispatcher.register(

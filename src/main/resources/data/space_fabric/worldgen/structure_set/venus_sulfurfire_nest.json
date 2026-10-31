@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "space_fabric:venus_sulfurfire_nest",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 120,
+    "separation": 64,
+    "salt": 93114658
+  }
+}

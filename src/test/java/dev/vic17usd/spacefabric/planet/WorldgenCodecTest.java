@@ -3445,4 +3445,117 @@ class WorldgenCodecTest {
         }
         assertTrue(pockets>0);
     }
+    @Test void colossusIsRegisteredWithItsOriginalDimensionsAndOnlySpawnsAsAStructureResident() throws IOException {
+        assertNotNull(LootTable.DIRECT_CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("loot_table/entities/sulfur_colossus")).getOrThrow());
+        var type=dev.vic17usd.spacefabric.entity.colossus.ColossusContent.TYPE;
+        var attributes=dev.vic17usd.spacefabric.entity.colossus.SulfurColossusEntity.createAttributes().build();
+        assertEquals(400,attributes.getBaseValue(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH));
+        assertEquals(5,type.getHeight()*attributes.getBaseValue(net.minecraft.world.entity.ai.attributes.Attributes.SCALE),.0001);
+        assertTrue(type.fireImmune());
+        assertTrue(dev.vic17usd.spacefabric.entity.venus.VenusMob.class.isAssignableFrom(dev.vic17usd.spacefabric.entity.colossus.SulfurColossusEntity.class));
+        assertTrue(net.minecraft.world.item.SpawnEggItem.spawnsEntity(new ItemStack(dev.vic17usd.spacefabric.entity.colossus.ColossusContent.SPAWN_EGG),type));
+        for(var biome:registries.lookupOrThrow(Registries.BIOME).listElements().toList())for(var category:net.minecraft.world.entity.MobCategory.values())
+            assertTrue(biome.value().getMobSettings().getMobs(category).unwrap().stream().noneMatch(entry->entry.value().type()==type));
+    }
+    private static net.minecraft.nbt.CompoundTag bossSiteTile(String name) throws IOException {
+        try(var input=WorldgenCodecTest.class.getResourceAsStream("/data/space_fabric/structure/"+name+".nbt")){
+            assertNotNull(input);return net.minecraft.nbt.NbtIo.readCompressed(input,net.minecraft.nbt.NbtAccounter.unlimitedHeap());
+        }
+    }
+    @Test void bunkerHasExactlyOnePersistentBossAndAnExcavatedRoomThatFitsItsWholeBody() throws IOException {
+        var config=resource("worldgen/structure/venus_colossus_bunker").getAsJsonObject();int residents=0,air=0,blocks=0;
+        var room=new java.util.HashMap<net.minecraft.core.BlockPos,String>();
+        for(var element:config.getAsJsonArray("tiles")){
+            var tile=element.getAsJsonObject();int tx=tile.get("x").getAsInt(),tz=tile.get("z").getAsInt();
+            var nbt=bossSiteTile(tile.get("template").getAsString().substring("space_fabric:".length()));var palette=nbt.getListOrEmpty("palette");
+            for(var entry:nbt.getListOrEmpty("entities")){
+                residents++;var entity=((net.minecraft.nbt.CompoundTag)entry).getCompoundOrEmpty("nbt");
+                assertEquals("space_fabric:sulfur_colossus",entity.getStringOr("id",""));
+                assertTrue(entity.getBooleanOr("PersistenceRequired",false));assertFalse(entity.contains("UUID"));
+                var pos=((net.minecraft.nbt.CompoundTag)entry).getListOrEmpty("blockPos");
+                assertEquals(new net.minecraft.core.BlockPos(58,5,59),new net.minecraft.core.BlockPos(tx+pos.getIntOr(0,-1),pos.getIntOr(1,-1),tz+pos.getIntOr(2,-1)));
+            }
+            for(var entry:nbt.getListOrEmpty("blocks")){
+                blocks++;var block=(net.minecraft.nbt.CompoundTag)entry;var pos=block.getListOrEmpty("pos");
+                var name=palette.getCompoundOrEmpty(block.getIntOr("state",-1)).getStringOr("Name","");
+                assertTrue(BuiltInRegistries.BLOCK.containsKey(net.minecraft.resources.Identifier.parse(name)),name);
+                if(name.equals("minecraft:air"))air++;
+                int x=tx+pos.getIntOr(0,-1),y=pos.getIntOr(1,-1),z=tz+pos.getIntOr(2,-1);
+                if(x>=54&&x<=62&&z>=55&&z<=63&&y>=4&&y<=14)room.put(new net.minecraft.core.BlockPos(x,y,z),name);
+            }
+        }
+        assertEquals(1,residents);assertEquals(116*47*119,blocks);assertTrue(air>100000);
+        for(int x=54;x<=62;x++)for(int z=55;z<=63;z++){
+            assertEquals("minecraft:smooth_stone",room.get(new net.minecraft.core.BlockPos(x,4,z)));
+            for(int y=5;y<=14;y++)assertEquals("minecraft:air",room.get(new net.minecraft.core.BlockPos(x,y,z)));
+        }
+        assertNotNull(LootTable.DIRECT_CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("loot_table/chests/venus_colossus_bunker")).getOrThrow());
+    }
+    @Test void nestHasNoBossAndEveryRetainedPartHasAConnectionToTheNaturalFloor() throws IOException {
+        var config=resource("worldgen/structure/venus_sulfurfire_nest").getAsJsonObject();var blocks=new java.util.HashSet<net.minecraft.core.BlockPos>();
+        for(var element:config.getAsJsonArray("tiles")){
+            var tile=element.getAsJsonObject();var nbt=bossSiteTile(tile.get("template").getAsString().substring("space_fabric:".length()));
+            assertTrue(nbt.getListOrEmpty("entities").isEmpty());var palette=nbt.getListOrEmpty("palette");
+            for(var entry:nbt.getListOrEmpty("blocks")){
+                var b=(net.minecraft.nbt.CompoundTag)entry;var p=b.getListOrEmpty("pos");
+                var name=palette.getCompoundOrEmpty(b.getIntOr("state",-1)).getStringOr("Name","");assertFalse(name.endsWith("_wool"));assertFalse(name.equals("minecraft:water"));
+                blocks.add(new net.minecraft.core.BlockPos(tile.get("x").getAsInt()+p.getIntOr(0,-1),p.getIntOr(1,-1),tile.get("z").getAsInt()+p.getIntOr(2,-1)));
+            }
+        }
+        var pending=new java.util.HashSet<>(blocks);var queue=new java.util.ArrayDeque<net.minecraft.core.BlockPos>();
+        for(var p:blocks)if(p.getY()==0){queue.add(p);pending.remove(p);}
+        while(!queue.isEmpty()){
+            var p=queue.removeFirst();for(var direction:net.minecraft.core.Direction.values())if(pending.remove(p.relative(direction)))queue.add(p.relative(direction));
+        }
+        assertTrue(blocks.size()>100000);assertTrue(pending.isEmpty(),"Detached nest geometry: "+pending.size());
+    }
+    @ParameterizedTest @ValueSource(longs={42,1729,8128})
+    void bossSitesGenerateAcrossSeedsAndBunkerTilesSurviveSerialization(long seed,@org.junit.jupiter.api.io.TempDir Path temporary) throws IOException {
+        var access=(RegistryAccess)registries;
+        var stem=LevelStem.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("dimension/venus")).getOrThrow();
+        var generator=(net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator)stem.generator();
+        var random=net.minecraft.world.level.levelgen.RandomState.create(generator.generatorSettings().value(),access.lookupOrThrow(Registries.NOISE),seed);
+        var pack=new PathPackResources(new PackLocationInfo("boss_sites_test",Component.literal("Boss sites"),PackSource.DEFAULT,Optional.empty()),Path.of("src/main/resources"));
+        try(var world=net.minecraft.world.level.storage.LevelStorageSource.createDefault(temporary).createAccess("boss-test");var resources=new MultiPackResourceManager(PackType.SERVER_DATA,List.of(ServerPacksSource.createVanillaPackSource(),pack))){
+            var templates=new net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager(resources,world,net.minecraft.util.datafix.DataFixers.getDataFixer(),access.lookupOrThrow(Registries.BLOCK));
+            var context=new net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext(resources,access,templates);
+            var height=net.minecraft.world.level.LevelHeightAccessor.create(Planet.VENUS.minY(),Planet.VENUS.height());
+            for(var name:List.of("venus_colossus_bunker","venus_sulfurfire_nest")){
+                var holder=access.lookupOrThrow(Registries.STRUCTURE).getOrThrow(net.minecraft.resources.ResourceKey.create(Registries.STRUCTURE,SpaceFabric.id(name)));
+                assertEquals(6,holder.value().biomes().size());net.minecraft.world.level.levelgen.structure.StructureStart start=null;
+                for(int attempt=0;attempt<64&&(start==null||!start.isValid());attempt++)
+                    start=holder.value().generate(holder,PlanetDimensions.key(Planet.VENUS),access,generator,generator.getBiomeSource(),random,templates,seed,new net.minecraft.world.level.ChunkPos(attempt*16,attempt*8),0,height,holder.value().biomes()::contains);
+                assertNotNull(start);assertTrue(start.isValid(),name+" seed "+seed);
+                if(name.equals("venus_colossus_bunker")){
+                    var structure=assertInstanceOf(dev.vic17usd.spacefabric.worldgen.structure.VenusBunkerStructure.class,holder.value());assertEquals(structure.tiles().size(),start.getPieces().size());
+                    assertEquals(-56,start.getBoundingBox().minY());assertEquals(6,start.getBoundingBox().maxY());
+                    for(var original:start.getPieces()){
+                        var piece=assertInstanceOf(dev.vic17usd.spacefabric.worldgen.structure.VenusBunkerPiece.class,original);
+                        var restored=new dev.vic17usd.spacefabric.worldgen.structure.VenusBunkerPiece(context,piece.createTag(context));
+                        assertEquals(piece.getBoundingBox(),restored.getBoundingBox());assertEquals(piece.templateOrigin(),restored.templateOrigin());assertEquals(piece.getRotation(),restored.getRotation());
+                    }
+                }else{
+                    var structure=assertInstanceOf(dev.vic17usd.spacefabric.worldgen.structure.VenusSurfaceStructure.class,holder.value());assertEquals(structure.tiles().size()+1,start.getPieces().size());
+                    var plot=assertInstanceOf(dev.vic17usd.spacefabric.worldgen.structure.VenusSurfacePiece.class,start.getPieces().getFirst());assertTrue(plot.isPlot());
+                    assertTrue(start.getPieces().stream().skip(1).allMatch(p->p.getBoundingBox().minY()==plot.origin().getY()));
+                    assertVenusPlacedAcrossChunks(start,context,generator,plot.origin().getY());
+                }
+            }
+        }
+    }
+    @ParameterizedTest @ValueSource(ints={-64,100})
+    void bunkerNativePlacementExcavatesOnlyItsOwnChunkAndSealsTheRoof(int ground) throws IOException {
+        var nbt=bossSiteTile("venus_colossus_bunker/tile_48_48");nbt.remove("entities");
+        var template=new net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate();template.load(registries.lookupOrThrow(Registries.BLOCK),nbt);
+        var world=new VoxelWorld(0,0,ground);var origin=new net.minecraft.core.BlockPos(0,-56,0);
+        var piece=new dev.vic17usd.spacefabric.worldgen.structure.VenusBunkerPiece(SpaceFabric.id("venus_colossus_bunker/tile_48_48"),template,origin,net.minecraft.world.level.block.Rotation.NONE);
+        piece.postProcess(world.level,null,null,net.minecraft.util.RandomSource.create(42),new net.minecraft.world.level.levelgen.structure.BoundingBox(0,-64,0,15,319,15),new net.minecraft.world.level.ChunkPos(0,0),net.minecraft.core.BlockPos.ZERO);
+        for(int x=7;x<=13;x++)for(int z=8;z<=14;z++){
+            assertTrue(world.state(new net.minecraft.core.BlockPos(x,-52,z)).is(Blocks.SMOOTH_STONE));
+            for(int y=-51;y<=-42;y++)assertTrue(world.state(new net.minecraft.core.BlockPos(x,y,z)).isAir());
+            for(int y=-9;y<=6;y++)assertFalse(world.state(new net.minecraft.core.BlockPos(x,y,z)).isAir());
+        }
+        assertTrue(world.blocks.keySet().stream().allMatch(p->p.getX()>=0&&p.getX()<16&&p.getZ()>=0&&p.getZ()<16&&p.getY()<=6));
+    }
+
 }

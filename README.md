@@ -1,5 +1,14 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión 0.49.0 integra el **Coloso de Azufre** en un nuevo **Búnker del Coloso**
+subterráneo de Venus y añade el **Nido de Azufre** sobre el terreno. Conserva los
+modelos originales, adapta materiales, inmunidades y ataques, y permite localizar
+ambos sitios con nombres en español. [Guía y comprobaciones](docs/venus-colossus.md).
+
+Diseños originales: CreativeMode.net — [Basalt Lifebunker](https://creativemode.net/mod/basalt-lifebunker-f2yaojrq),
+[Sulfurfire Broodlands](https://creativemode.net/mod/sulfurfire-broodlands-wrlm5742) y
+[Sulfur Colossus](https://creativemode.net/mod/sulfur-colossus-3bbkryhu).
+
 La versión 0.48.0 añade **tres biomas nuevos de Venus** adaptados de los diseños
 aportados para 1.21.5: Grietas de obsidiana, Mesetas de azufre y Yermos de ceniza
 basáltica, con nueve bloques y dos materiales. Venus cuenta ahora con seis biomas.
@@ -425,7 +434,7 @@ el carácter químico del entorno. Los trajes venusiano y abisal resisten la cor
 inmunidad, prioridad de presión e hipoxia a presión normal.
 También usa Fabric Loader JUnit y los codecs reales de Minecraft para interpretar
 los nueve tipos de dimensión, sus generadores y los cuatro tipos de daño; también
-comprueba refinería, persistencia del combustible, recetas, llegadas, estructuras, comerciantes, fauna, industria, rover, redes y atlas: **668 casos**
+comprueba refinería, persistencia del combustible, recetas, llegadas, estructuras, comerciantes, fauna, industria, rover, redes y atlas: **676 casos**
 en total. `tools/validate_resources.py` comprueba además JSON y referencias internas.
 Estas pruebas no arrancan un mundo ni comprueban la sincronización del cliente.
 

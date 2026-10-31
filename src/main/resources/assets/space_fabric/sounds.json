@@ -8,5 +8,10 @@
     "sounds": [
       "space_fabric:crystal_crawler_hum"
     ]
+  },
+  "sulfur_vent_hiss": {
+    "sounds": [
+      "space_fabric:sulfur_vent_hiss"
+    ]
   }
 }

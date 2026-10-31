@@ -1,8 +1,8 @@
 # Resultado de validación de esta base
 
-Última entrega: **0.44.0**, 596 pruebas JUnit aprobadas, once comprobaciones por
-CPU y 1.205 JSON válidos. Los apartados siguientes conservan el historial de
-la base y sus ampliaciones; la validación del atlas planetario está al final del documento.
+Última entrega: **0.49.0**, 676 pruebas JUnit aprobadas, doce comprobaciones por
+CPU y 1.297 JSON válidos. Los apartados siguientes conservan el historial de
+la base y sus ampliaciones; la validación del Coloso de Azufre está al final del documento.
 
 Verificado con JDK 25, Gradle 9.8.2, Loom 1.19.3, Minecraft 26.1,
 Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
@@ -815,3 +815,29 @@ Biomas de Venus aportados para 1.21.5, versión 0.48.0:
   volúmenes de feature y ProtoChunk no equivalen a inspeccionar regiones completas,
   apoyo de estructuras, spawns, sonido, niebla o cambios de versión en una partida.
   Pendiente el checklist de docs/venus-imported-regions.md.
+
+Coloso de Azufre y lugares de Venus, versión 0.49.0:
+
+- `./gradlew build --console=plain`: **676 pruebas JUnit**, cero fallos, errores
+  u omisiones; doce comprobaciones por CPU y **1.297 JSON** válidos.
+- Ocho casos nuevos: registro y atributos del boss; ausencia de spawn adicional
+  en biomas; exactamente un residente persistente en el NBT; excavación explícita
+  y suelo para toda su caja; conexión del nido al piso; generación de ambos sitios
+  con semillas 42, 1729 y 8128; persistencia de piezas rotadas; colocación nativa
+  de una cámara entre roca y sobre vacío, cubierta y escrituras acotadas al chunk.
+- El nido se coloca por completo a través de los límites de chunks en las tres
+  semillas, preservando cada bloque y el apoyo en el suelo. Ambas estructuras
+  admiten los seis biomas venusianos y tienen alias de localización en español.
+- La comprobación `verifyColossusModel` ejecuta los 124 cubos, UV originales,
+  reposo, caminar, seis acciones y apertura/cierre del pecho sin acumular rotaciones.
+- El combate hereda inmunidad y gravedad de Venus; usa objetivos de servidor,
+  recuperación entre ataques, suelo local para las marcas, filtros de traje y
+  protección de cabina/hábitat. La recompensa se concede por muerte atribuida
+  a un jugador; su guardia de guardado impide repetir la entrega.
+- Se incluyen textura, sonido, huevo y licencias; no se cargan inicializadores
+  ni dependencias de los tres JAR originales. Se conservan fuentes de diseños
+  y conversores reproducibles.
+- No se abrió un cliente gráfico ni una partida multijugador. Las pruebas de
+  generación y malla no equivalen a observar el combate, las apariciones de
+  entidades, el sonido y la sincronización durante una partida. Pendiente la
+  comprobación manual de docs/venus-colossus.md.

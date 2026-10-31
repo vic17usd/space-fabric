@@ -139,3 +139,10 @@ tasks.register('verifyRoverAssets', JavaExec) {
     mainClass = 'dev.vic17usd.spacefabric.client.rocket.RoverAssetsCheck'
 }
 tasks.named('check') { dependsOn tasks.named('verifyRoverAssets') }
+
+tasks.register('verifyColossusModel', JavaExec) {
+    dependsOn tasks.named('renderCheckClasses')
+    classpath = sourceSets.renderCheck.runtimeClasspath
+    mainClass = 'dev.vic17usd.spacefabric.client.colossus.ColossusModelCheck'
+}
+tasks.named('check') { dependsOn tasks.named('verifyColossusModel') }
