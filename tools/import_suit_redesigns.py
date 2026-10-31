@@ -20,6 +20,9 @@ def apply_redesign(refresh_lining=False):
    shutil.copyfile(SOURCE/tier/(layer+'.png'),target)
    equipment[layer]=[{'texture':'space_fabric:'+tier+'_suit_lining'},{'texture':'space_fabric:'+tier+'_suit'}]
   (ASSETS/f'equipment/{tier}_suit.json').write_text(json.dumps({'layers':equipment},indent=2)+'\n')
+ # The inventory sheet follows the wearable redesign when present.
+ from import_suit_inventory_icons import apply_inventory
+ apply_inventory()
 def main():
  parser=argparse.ArgumentParser(description=__doc__)
  for tier in TIERS:parser.add_argument('--'+tier,type=Path)

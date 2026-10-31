@@ -1,8 +1,8 @@
 # Resultado de validación de esta base
 
-Última entrega: **0.52.0**, 698 pruebas JUnit aprobadas, doce comprobaciones por
+Última entrega: **0.52.1**, 698 pruebas JUnit aprobadas, doce comprobaciones por
 CPU y 1.337 JSON válidos. Los apartados siguientes conservan el historial de
-la base y sus ampliaciones; la validación de la retirada de Earth está al final del documento.
+la base y sus ampliaciones; la validación de los iconos de traje está al final del documento.
 
 Verificado con JDK 25, Gradle 9.8.2, Loom 1.19.3, Minecraft 26.1,
 Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
@@ -912,3 +912,16 @@ Overworld como Tierra única, versión 0.52.0:
 - La carga de registros, genérico de viajes, modelos y todos los controles de
   minerales y atmósfera pasan. Pendiente actualización de una partida real en
   cliente/multijugador, ida y vuelta y reconexión con vehículo.
+
+Iconos de los trajes rediseñados, versión 0.52.1:
+
+- `./gradlew build --console=plain`: 698 pruebas JUnit, doce comprobaciones
+  por CPU y 1.337 JSON válidos.
+- `verifyEquipmentTextures` comprueba 29 iconos, incluidos los cuatro de Venus
+  reforzado, con sus modelos, rutas, dimensiones y transparencia. Se mantienen
+  las comprobaciones de ocho capas equipadas originales y sus forros.
+- Veinte PNG de inventario sustituidos a partir de la hoja nueva, con extracción
+  técnica por regiones, escalado de píxeles y margen transparente uniforme. Los
+  importadores y el generador industrial conservan el diseño al regenerar recursos.
+- Las capas equipadas aportadas conservan sus bytes; recetas y jugabilidad intactas.
+  Pendiente inspección visual de inventario y visor de recetas en Minecraft.

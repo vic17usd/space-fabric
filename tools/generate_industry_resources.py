@@ -212,3 +212,7 @@ for locale,index in [('es_es',0),('en_us',1)]:
     lang.update({'item.space_fabric.'+n+'.hint':v[index] for n,v in HINTS.items()})
     lang.update({k:v[index] for k,v in MESSAGES.items()});write(path,lang)
 print('Generated Venus industry: four machines, hull, twelve items, twelve recipes, four advancements and tags.')
+
+# Keep reinforced Venus inventory pieces aligned with the supplied wearable design.
+from import_suit_inventory_icons import apply_inventory
+apply_inventory()

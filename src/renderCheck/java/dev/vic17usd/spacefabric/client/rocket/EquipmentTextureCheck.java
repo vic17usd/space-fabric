@@ -51,6 +51,7 @@ public final class EquipmentTextureCheck {
 
             }
         }
+        for(var part:new String[]{"helmet","chestplate","leggings","boots"})icons.add("reinforced_venus_suit_"+part);
         for(var planet:new String[]{"mercury","venus","earth","moon","mars","jupiter","saturn","uranus","neptune"})icons.add(planet+"_rocket_kit");
         for(var id:icons) {
             var definition=JsonParser.parseString(Files.readString(ROOT.resolve("items/"+id+".json"))).getAsJsonObject();
@@ -61,6 +62,6 @@ public final class EquipmentTextureCheck {
             if(image.getWidth()!=128||image.getHeight()!=128||(image.getRGB(0,0)>>>24)!=0)throw new AssertionError("Invalid icon dimensions/alpha");
         }
         if(hashes.size()!=16)throw new AssertionError("Duplicate suit designs or linings");
-        System.out.println("OK: 25 custom icons, four native equipment definitions, eight unchanged supplied overlays, eight linings; sealed helmet, torso, arm, leg and boot coverage checked.");
+        System.out.println("OK: 29 custom icons, four native equipment definitions, eight unchanged supplied overlays, eight linings; sealed helmet, torso, arm, leg and boot coverage checked.");
     }
 }

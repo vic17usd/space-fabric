@@ -1,5 +1,9 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión 0.52.1 actualiza los **veinte iconos de inventario de los trajes**
+para corresponder a los diseños equipados nuevos, incluyendo Venus reforzado.
+[Arte, piezas y comprobaciones](docs/suit-inventory-icons.md).
+
 La versión 0.52.0 retira la dimensión Earth adicional: **el Overworld es la única
 Tierra**. Actualiza destinos, atlas y guardados antiguos de cohetes y jugadores.
 [Compatibilidad y actualización](docs/overworld-only.md).

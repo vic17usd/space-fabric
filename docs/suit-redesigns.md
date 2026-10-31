@@ -21,11 +21,13 @@ nuevo encima, usando el sistema nativo de capas de equipo. Así se ven los detal
 aportados y las zonas de material transparente tienen un forro visible. La misma
 cobertura funciona al llevar el traje debajo de la armadura normal.
 
-Esta entrega cambia las texturas equipadas. Los iconos de inventario conservan su
-arte anterior; los ZIP aportan exclusivamente las dos capas para el personaje.
+La versión 0.50.1 cambió las texturas equipadas. Desde 0.52.1, los iconos de
+inventario también usan ilustraciones basadas en esos diseños; véase
+[suit-inventory-icons.md](suit-inventory-icons.md). Los ZIP aportaron las capas
+equipadas y la hoja nueva de iconos se conserva como fuente adicional.
 Recetas, propiedades, resistencia ambiental, corrosión y durabilidad mantienen sus
 valores. Venus reforzado comparte la apariencia equipada venusiana y conserva sus
-iconos de inventario diferenciados.
+nombres de inventario diferenciados.
 
 ## Fuentes y regeneración
 

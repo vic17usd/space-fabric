@@ -1,0 +1,18 @@
+{
+  "source": "suit_inventory_redesign.png",
+  "sha256": "9bcc7b7218743d5a3f83ca122e6cd315248bc2a748ddb605ffa5ddaf821eb307",
+  "rows": [
+    "vacuum",
+    "venus",
+    "cryo",
+    "abyssal"
+  ],
+  "columns": [
+    "helmet",
+    "chestplate",
+    "leggings",
+    "boots"
+  ],
+  "reinforced_venus": "Same artwork as Venus, matching its shared wearable design",
+  "icon_size": 128
+}
