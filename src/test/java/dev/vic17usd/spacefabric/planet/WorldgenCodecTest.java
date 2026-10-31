@@ -1758,7 +1758,7 @@ class WorldgenCodecTest {
         var holder=registries.lookupOrThrow(Registries.STRUCTURE).getOrThrow(net.minecraft.resources.ResourceKey.create(Registries.STRUCTURE,SpaceFabric.id(name)));
         var structure=assertInstanceOf(dev.vic17usd.spacefabric.worldgen.structure.VenusSurfaceStructure.class,holder.value());
         assertTrue(structure.biomes().contains(registries.lookupOrThrow(Registries.BIOME).getOrThrow(dev.vic17usd.spacefabric.worldgen.PlanetBiomes.key(Planet.VENUS))));
-        assertEquals(3,structure.biomes().size());
+        assertEquals(6,structure.biomes().size());
         assertTrue(structure.biomes().stream().allMatch(b->b.is(dev.vic17usd.spacefabric.worldgen.PlanetBiomes.VENUS_TAG)));
         int total=0;var positions=new java.util.HashSet<net.minecraft.core.BlockPos>();
         for(var tile:structure.tiles()) {
@@ -2110,11 +2110,11 @@ class WorldgenCodecTest {
         assertEquals(2,inventory.getNonEquipmentItems().stream().filter(stack->stack.is(dev.vic17usd.spacefabric.colony.ColonyContent.EMPTY_CANISTER)).mapToInt(ItemStack::getCount).sum());
     }
 
-    @Test void venusClimateActuallySelectsAllThreeBiomesAndPreservesOresAndFauna() throws IOException {
+    @Test void venusClimateActuallySelectsAllSixBiomesAndPreservesOresAndFauna() throws IOException {
         var access=(RegistryAccess)registries;
         var stem=LevelStem.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("dimension/venus")).getOrThrow();
         var generator=(net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator)stem.generator();
-        assertEquals(3,generator.getBiomeSource().possibleBiomes().size());
+        assertEquals(6,generator.getBiomeSource().possibleBiomes().size());
         var found=new java.util.HashSet<net.minecraft.resources.ResourceKey<net.minecraft.world.level.biome.Biome>>();
         for(long seed:new long[]{42,971,-200}) {
             var random=net.minecraft.world.level.levelgen.RandomState.create(generator.generatorSettings().value(),access.lookupOrThrow(Registries.NOISE),seed);
@@ -2123,7 +2123,7 @@ class WorldgenCodecTest {
                 assertTrue(biome.is(dev.vic17usd.spacefabric.worldgen.PlanetBiomes.VENUS_TAG));found.add(biome.unwrapKey().orElseThrow());
             }
         }
-        assertEquals(3,found.size());
+        assertEquals(6,found.size());
         for(var key:found) {
             var biome=access.lookupOrThrow(Registries.BIOME).getOrThrow(key).value();
             assertTrue(biome.getGenerationSettings().features().stream().flatMap(net.minecraft.core.HolderSet::stream).anyMatch(f->f.is(OreGen.SULFUR)));
@@ -3367,5 +3367,82 @@ class WorldgenCodecTest {
         var source=new net.minecraft.world.damagesource.DamageSource(registries.lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(net.minecraft.resources.ResourceKey.create(Registries.DAMAGE_TYPE,SpaceFabric.id(name))));
         assertTrue(source.is(net.minecraft.tags.DamageTypeTags.BYPASSES_ARMOR));assertFalse(source.is(net.minecraft.tags.DamageTypeTags.BYPASSES_COOLDOWN));assertFalse(source.is(net.minecraft.tags.DamageTypeTags.BYPASSES_INVULNERABILITY));
         assertEquals(name.equals("volcanic_ejecta"),source.is(net.minecraft.tags.DamageTypeTags.IS_FIRE));
+    }
+    @ParameterizedTest @ValueSource(strings={"venus_obsidian_riftlands","venus_sulfur_shardlands","venus_basalt_ashlands"})
+    void importedVenusBiomesDecodeWithOriginalColorsAndExistingNativeFauna(String name)throws IOException{
+        var biome=net.minecraft.world.level.biome.Biome.DIRECT_CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("worldgen/biome/"+name)).getOrThrow();assertFalse(biome.hasPrecipitation());
+        assertEquals(2,biome.getMobSettings().getMobs(net.minecraft.world.entity.MobCategory.CREATURE).unwrap().size());assertEquals(4,biome.getMobSettings().getMobs(net.minecraft.world.entity.MobCategory.MONSTER).unwrap().size());
+        var key=net.minecraft.resources.ResourceKey.create(Registries.BIOME,SpaceFabric.id(name));assertTrue(dev.vic17usd.spacefabric.worldgen.PlanetBiomes.isVenus(key));assertTrue(registries.lookupOrThrow(Registries.BIOME).getOrThrow(key).is(dev.vic17usd.spacefabric.worldgen.PlanetBiomes.VENUS_TAG));
+        var json=resource("worldgen/biome/"+name).getAsJsonObject();assertTrue(json.getAsJsonObject("attributes").has("minecraft:audio/ambient_sounds"));
+        assertNotNull(net.minecraft.world.level.levelgen.feature.ConfiguredFeature.DIRECT_CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("worldgen/configured_feature/"+name+"_terrain")).getOrThrow());
+        assertNotNull(net.minecraft.world.level.levelgen.placement.PlacedFeature.DIRECT_CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("worldgen/placed_feature/"+name+"_terrain")).getOrThrow());
+    }
+    @ParameterizedTest @ValueSource(strings={"RIFTS","TESSERA","ASHLANDS"})
+    void importedRegionalTerrainWritesOnlyItsChunkAndBiomeBeforeStructures(String value){
+        var kind=dev.vic17usd.spacefabric.venus.regions.VenusRegionFeature.Kind.valueOf(value);
+        var world=new VoxelWorld(-3,4,64);for(int x=-48;x<-32;x++)for(int z=64;z<80;z++)for(int y=46;y<=64;y++)world.blocks.put(new net.minecraft.core.BlockPos(x,y,z),ModBlocks.VULCANIZED_BASALT.defaultBlockState());
+        var origin=new net.minecraft.core.BlockPos(-48,0,64);
+        assertTrue(dev.vic17usd.spacefabric.venus.regions.VenusRegionFeature.placePatch(world.level,origin,net.minecraft.util.RandomSource.create(42),kind,42,p->p.getX()<-40));
+        for(var e:world.blocks.entrySet())if(e.getKey().getX()>=-40)assertTrue(e.getValue().is(ModBlocks.VULCANIZED_BASALT));
+        assertTrue(world.blocks.size()<9000);for(var p:world.blocks.keySet())assertTrue(p.getY()>=46&&p.getY()<=75);
+        var empty=new VoxelWorld(0,0,64);var before=new java.util.HashMap<>(empty.blocks);
+        assertFalse(dev.vic17usd.spacefabric.venus.regions.VenusRegionFeature.placePatch(empty.level,net.minecraft.core.BlockPos.ZERO,net.minecraft.util.RandomSource.create(42),kind,42,p->false));assertEquals(before,empty.blocks);
+    }
+    @Test void regionDecorationReservesStructureReferencesAndStartsInNativeChunks(){
+        var chunk=new net.minecraft.world.level.chunk.ProtoChunk(new net.minecraft.world.level.ChunkPos(0,0),net.minecraft.world.level.chunk.UpgradeData.EMPTY,net.minecraft.world.level.LevelHeightAccessor.create(-64,384),net.minecraft.world.level.chunk.PalettedContainerFactory.create((RegistryAccess)registries),null);
+        assertTrue(dev.vic17usd.spacefabric.venus.regions.VenusRegionFeature.canDecorate(chunk));
+        var structure=registries.lookupOrThrow(Registries.STRUCTURE).getOrThrow(net.minecraft.resources.ResourceKey.create(Registries.STRUCTURE,SpaceFabric.id("venus_research_station"))).value();
+        chunk.addReferenceForStructure(structure,net.minecraft.world.level.ChunkPos.pack(1,0));assertFalse(dev.vic17usd.spacefabric.venus.regions.VenusRegionFeature.canDecorate(chunk));
+        chunk.setAllReferences(java.util.Map.of());assertTrue(dev.vic17usd.spacefabric.venus.regions.VenusRegionFeature.canDecorate(chunk));
+        chunk.setAllStarts(java.util.Map.of(structure,net.minecraft.world.level.levelgen.structure.StructureStart.INVALID_START));assertFalse(dev.vic17usd.spacefabric.venus.regions.VenusRegionFeature.canDecorate(chunk));
+    }
+    @Test void allVenusResearchSitesAcceptSixBiomesWithoutChangingTheirDimensions()throws IOException{
+        for(String name:List.of("venus_research_station","venus_recovery_shelter","venus_cloud_station")){
+            var json=resource("tags/worldgen/biome/has_structure/"+name).getAsJsonObject();assertEquals(6,json.getAsJsonArray("values").size());
+            var structure=registries.lookupOrThrow(Registries.STRUCTURE).getOrThrow(net.minecraft.resources.ResourceKey.create(Registries.STRUCTURE,SpaceFabric.id(name))).value();
+            for(var key:dev.vic17usd.spacefabric.worldgen.PlanetBiomes.VENUS_KEYS)assertTrue(structure.biomes().contains(registries.lookupOrThrow(Registries.BIOME).getOrThrow(key)));
+        }
+    }
+    @Test void sixVenusRegionsRetainOresAndHaveAcyclicNativeFeatureOrdering()throws IOException{
+        var stem=LevelStem.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("dimension/venus")).getOrThrow();var source=stem.generator().getBiomeSource();
+        var sorted=net.minecraft.world.level.biome.FeatureSorter.buildFeaturesPerStep(List.copyOf(source.possibleBiomes()),holder->holder.value().getGenerationSettings().features(),true);assertFalse(sorted.isEmpty());
+        for(var key:dev.vic17usd.spacefabric.worldgen.PlanetBiomes.VENUS_KEYS){
+            var biome=registries.lookupOrThrow(Registries.BIOME).getOrThrow(key).value();
+            var features=biome.getGenerationSettings().features().stream().flatMap(net.minecraft.core.HolderSet::stream).toList();
+            for(var ore:List.of(OreGen.VENUSIAN_OLIVINE,OreGen.PYROXENE,OreGen.SULFUR,OreGen.CONDENSED_ACID))assertTrue(features.stream().anyMatch(f->f.is(ore)));
+        }
+    }
+    @ParameterizedTest @ValueSource(strings={"venus_sulfur_lantern","venus_sulfur_dust_crystal","venus_rift_iron_smelting","venus_rift_iron_blasting"})
+    void newRegionalMaterialsHaveNativeRecipesAndLoot(String name)throws IOException{
+        assertNotNull(Recipe.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("recipe/"+name)).getOrThrow());
+    }
+    @Test void nineImportedBlocksHaveNativeLootToolAndLandingTagsAndAshShape()throws IOException{
+        for(var block:dev.vic17usd.spacefabric.venus.regions.VenusRegionBlocks.blocks()){
+            var name=BuiltInRegistries.BLOCK.getKey(block).getPath();assertNotNull(LootTable.DIRECT_CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("loot_table/blocks/"+name)).getOrThrow());
+            assertEquals(block.asItem(),BuiltInRegistries.ITEM.getValue(BuiltInRegistries.BLOCK.getKey(block)));
+        }
+        var ash=dev.vic17usd.spacefabric.venus.regions.VenusRegionBlocks.ASH.defaultBlockState();assertTrue(ash.getCollisionShape(net.minecraft.world.level.EmptyBlockGetter.INSTANCE,net.minecraft.core.BlockPos.ZERO).isEmpty());
+        assertEquals(1/16.,ash.getShape(net.minecraft.world.level.EmptyBlockGetter.INSTANCE,net.minecraft.core.BlockPos.ZERO).max(net.minecraft.core.Direction.Axis.Y));
+        assertTrue(dev.vic17usd.spacefabric.venus.regions.VenusRegionBlocks.RIFT_OBSIDIAN.defaultBlockState().is(net.minecraft.tags.BlockTags.NEEDS_DIAMOND_TOOL));
+        assertTrue(dev.vic17usd.spacefabric.venus.regions.VenusRegionBlocks.RIFT_IRON.defaultBlockState().is(net.minecraft.tags.BlockTags.NEEDS_IRON_TOOL));
+    }
+    @Test void regionalIronOreWorksWithScannerAndFiniteDrillAndDoesNotChangeTheOldMinerals(){
+        assertEquals(dev.vic17usd.spacefabric.venus.regions.VenusRegionBlocks.RIFT_SHARD,dev.vic17usd.spacefabric.mining.MiningDrill.product(dev.vic17usd.spacefabric.venus.regions.VenusRegionBlocks.RIFT_IRON));
+        var m=coreDrill();var w=boreWorld();w.cells.put(boreTarget(),dev.vic17usd.spacefabric.venus.regions.VenusRegionBlocks.RIFT_IRON.defaultBlockState());
+        for(int i=0;i<200;i++)m.drill().step(m,w,true);assertEquals(1,w.writes);assertTrue(m.getItem(3).is(dev.vic17usd.spacefabric.venus.regions.VenusRegionBlocks.RIFT_SHARD));assertEquals(1,m.getItem(3).getCount());
+        assertTrue(dev.vic17usd.spacefabric.mining.MiningDrill.mineral(ModBlocks.PYROXENE_ORE));
+    }
+    @Test void ashlandLavaPocketsHaveSolidRimsAndRespectBiomeEdges(){
+        int pockets=0;
+        for(int seed=0;seed<24;seed++){
+            var world=new VoxelWorld(0,0,64);
+            for(int x=0;x<16;x++)for(int z=0;z<16;z++)for(int y=62;y<=64;y++)world.blocks.put(new net.minecraft.core.BlockPos(x,y,z),ModBlocks.VULCANIZED_BASALT.defaultBlockState());
+            dev.vic17usd.spacefabric.venus.regions.VenusRegionFeature.placePatch(world.level,net.minecraft.core.BlockPos.ZERO,net.minecraft.util.RandomSource.create(seed),dev.vic17usd.spacefabric.venus.regions.VenusRegionFeature.Kind.ASHLANDS,seed,p->true);
+            var lava=world.blocks.entrySet().stream().filter(e->!e.getValue().getFluidState().isEmpty()).toList();assertTrue(lava.size()<=1);
+            for(var entry:lava){pockets++;assertTrue(world.state(entry.getKey().below()).canOcclude());
+                for(var direction:net.minecraft.core.Direction.Plane.HORIZONTAL)assertTrue(world.state(entry.getKey().relative(direction)).canOcclude());
+            }
+        }
+        assertTrue(pockets>0);
     }
 }

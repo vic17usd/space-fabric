@@ -22,6 +22,11 @@ public final class ColonyAssetsCheck {
             var texture=new TextureSlots.Resolver().addLast(industry.textureSlots()).resolve(()->name).getMaterial("#all");
             if(texture==null||ImageIO.read(root.resolve("textures/block/"+name+".png").toFile())==null)throw new AssertionError("Missing industry texture: "+name);
         }
+        for(String name:new String[]{"venus_rift_obsidian","venus_rift_iron","venus_rift_ember_crust","venus_tessera_rock","venus_ember_fissure","venus_sulfur_lantern","venus_basalt_sheet","venus_charred_rock","venus_sulfur_ash"}){
+            var imported=CuboidModel.fromStream(new StringReader(Files.readString(root.resolve("models/block/"+name+".json"))));
+            var slots=new TextureSlots.Resolver().addLast(imported.textureSlots()).resolve(()->name);
+            if(slots.getMaterial(name.equals("venus_sulfur_ash")?"#ash":"#all")==null||ImageIO.read(root.resolve("textures/block/"+name+".png").toFile())==null)throw new AssertionError("Invalid imported Venus block: "+name);
+        }
         for(String half:new String[]{"bottom","top"})for(String side:new String[]{"left","right"})for(String suffix:new String[]{"","_open"})
             CuboidModel.fromStream(new StringReader(Files.readString(root.resolve("models/block/airlock_door_"+half+"_"+side+suffix+".json"))));
         for(var path:Files.list(root.resolve("models/block")).filter(p->{String n=p.getFileName().toString();return n.startsWith("liquid_")||n.startsWith("gas_")||n.startsWith("energy_")||n.equals("machine_interface.json");}).toList())

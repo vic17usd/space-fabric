@@ -3,6 +3,7 @@
   "values": [
     "space_fabric:mercury_regolith",
     "space_fabric:lunar_regolith",
-    "space_fabric:iron_oxide_regolith"
+    "space_fabric:iron_oxide_regolith",
+    "space_fabric:venus_sulfur_ash"
   ]
 }

@@ -1,0 +1,26 @@
+{
+  "has_precipitation": false,
+  "temperature": 1.8,
+  "downfall": 0.0,
+  "effects": {
+    "fog_color": 12517384,
+    "water_color": 4868682,
+    "water_fog_color": 3421236,
+    "sky_color": 15748143,
+    "ambient_light": 0.22,
+    "mood_sound": {
+      "sound": "minecraft:ambient.basalt_deltas.mood",
+      "tick_delay": 6000,
+      "block_search_extent": 8,
+      "offset": 2.0
+    },
+    "music": [{"data":{"sound":"minecraft:music.nether.basalt_deltas","min_delay":12000,"max_delay":24000,"replace_current_music":false},"weight":1}]
+  },
+  "carvers": ["minecraft:cave", "minecraft:cave_extra_underground", "minecraft:canyon"],
+  "features": [[], [], [], [], [], [], ["obsidian-riftlands-fu2ghb3x:riftlands_terrain"], [], [], [], []],
+  "spawners": {
+    "creature": [{"type":"obsidian-riftlands-fu2ghb3x:cinderminer","weight":70,"minCount":1,"maxCount":3}],
+    "monster": [], "ambient": [], "axolotls": [], "underground_water_creature": [], "water_creature": [], "water_ambient": [], "misc": []
+  },
+  "spawn_costs": {}
+}

@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "space_fabric:venus_fumaroles"
+    "space_fabric:venus_fumaroles",
+    "space_fabric:venus_basalt_ashlands"
   ]
 }

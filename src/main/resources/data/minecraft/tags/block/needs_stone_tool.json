@@ -40,6 +40,12 @@
     "space_fabric:venus_basalt_substrate",
     "space_fabric:venus_cracked_stone",
     "space_fabric:venus_sulfur_crystal_block",
-    "space_fabric:venus_acid_pool"
+    "space_fabric:venus_acid_pool",
+    "space_fabric:venus_rift_ember_crust",
+    "space_fabric:venus_tessera_rock",
+    "space_fabric:venus_ember_fissure",
+    "space_fabric:venus_sulfur_lantern",
+    "space_fabric:venus_basalt_sheet",
+    "space_fabric:venus_charred_rock"
   ]
 }

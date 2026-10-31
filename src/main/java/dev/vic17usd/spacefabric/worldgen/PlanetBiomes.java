@@ -10,8 +10,12 @@ import net.minecraft.world.level.biome.Biome;
 public final class PlanetBiomes {
     public static final ResourceKey<Biome> VENUS_FUMAROLES=ResourceKey.create(Registries.BIOME,SpaceFabric.id("venus_fumaroles"));
     public static final ResourceKey<Biome> VENUS_BASINS=ResourceKey.create(Registries.BIOME,SpaceFabric.id("venus_obsidian_basins"));
+    public static final ResourceKey<Biome> VENUS_RIFTLANDS=ResourceKey.create(Registries.BIOME,SpaceFabric.id("venus_obsidian_riftlands"));
+    public static final ResourceKey<Biome> VENUS_TESSERA=ResourceKey.create(Registries.BIOME,SpaceFabric.id("venus_sulfur_shardlands"));
+    public static final ResourceKey<Biome> VENUS_ASHLANDS=ResourceKey.create(Registries.BIOME,SpaceFabric.id("venus_basalt_ashlands"));
+    public static final java.util.List<ResourceKey<Biome>> VENUS_KEYS=java.util.List.of(key(Planet.VENUS),VENUS_FUMAROLES,VENUS_BASINS,VENUS_RIFTLANDS,VENUS_TESSERA,VENUS_ASHLANDS);
     public static final net.minecraft.tags.TagKey<Biome> VENUS_TAG=net.minecraft.tags.TagKey.create(Registries.BIOME,SpaceFabric.id("venus_biomes"));
-    public static boolean isVenus(ResourceKey<Biome> key){return key.equals(key(Planet.VENUS))||key.equals(VENUS_FUMAROLES)||key.equals(VENUS_BASINS);}
+    public static boolean isVenus(ResourceKey<Biome> key){return VENUS_KEYS.contains(key);}
     private PlanetBiomes() { }
 
     public static ResourceKey<Biome> key(Planet planet) {

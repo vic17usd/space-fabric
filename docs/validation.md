@@ -792,3 +792,26 @@ Actividad volcánica local, versión 0.47.0:
   formas de colisión y reglas no equivalen a observar partículas, sonido, avisos,
   daño/desgaste real ni el circuito completo de protección durante una sesión.
   Pendiente el checklist de docs/venus-volcanism.md en partida y con Sodium.
+
+Biomas de Venus aportados para 1.21.5, versión 0.48.0:
+
+- `./gradlew build --console=plain`: **668 pruebas JUnit**, cero fallos, errores
+  u omisiones; once comprobaciones por CPU, con los nueve modelos importados en
+  la de colonia. **1.283 JSON** válidos. JAR, versión, CRC y recursos verificados.
+- Diecinueve casos nuevos: relieve acotado y continuo, semilla determinista; tres
+  biomas y features con codecs nativos; tres terrenos limitados a su chunk/bioma;
+  reservas de inicios/referencias de estructuras en ProtoChunk; estaciones que
+  admiten seis biomas; orden acíclico de features y minerales compartidos; cuatro
+  recetas nativas; nueve loot tables, niveles de herramienta y capa de ceniza;
+  extracción finita del hierro nuevo; pozos de lava con paredes y fondo sólidos.
+- La prueba de clima existente encuentra ahora los seis biomas en la cuadrícula
+  de las semillas 42, 971 y −200 y conserva los seis tipos de fauna. Los controles
+  de asentamientos se actualizan de tres a seis biomas; no se alteran sus plantillas.
+- Texturas PNG de los nueve bloques idénticas a sus fuentes. Los modelos solo
+  cambian referencias y, para ceniza, heredan las transformaciones GUI de un bloque.
+  Créditos y licencias incluidos. No se añaden clases, entrypoints, TerraBlender
+  ni telemetría de los JAR antiguos al mod construido.
+- No se ha ejecutado cliente gráfico ni multijugador. El muestreo de biomas, los
+  volúmenes de feature y ProtoChunk no equivalen a inspeccionar regiones completas,
+  apoyo de estructuras, spawns, sonido, niebla o cambios de versión en una partida.
+  Pendiente el checklist de docs/venus-imported-regions.md.

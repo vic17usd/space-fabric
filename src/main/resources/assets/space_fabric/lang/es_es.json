@@ -764,5 +764,19 @@
   "volcanism.space_fabric.gas_warning": "Fumarola: expulsión en %s s · %s m",
   "volcanism.space_fabric.gas_active": "Gas caliente: aléjate del chorro · %s s · %s m",
   "volcanism.space_fabric.eruption_warning": "Zona volcánica: erupción en %s s · %s m",
-  "volcanism.space_fabric.eruption_active": "Erupción activa: busca cobertura · %s s · %s m"
+  "volcanism.space_fabric.eruption_active": "Erupción activa: busca cobertura · %s s · %s m",
+  "biome.space_fabric.venus_obsidian_riftlands": "Grietas de obsidiana",
+  "biome.space_fabric.venus_sulfur_shardlands": "Mesetas de azufre",
+  "biome.space_fabric.venus_basalt_ashlands": "Yermos de ceniza basáltica",
+  "block.space_fabric.venus_rift_obsidian": "Obsidiana de grieta",
+  "block.space_fabric.venus_rift_iron": "Mena de hierro de grieta",
+  "block.space_fabric.venus_rift_ember_crust": "Costra de grieta incandescente",
+  "block.space_fabric.venus_tessera_rock": "Roca de tesela venusiana",
+  "block.space_fabric.venus_ember_fissure": "Roca de fisura incandescente",
+  "block.space_fabric.venus_sulfur_lantern": "Lámpara de azufre",
+  "block.space_fabric.venus_basalt_sheet": "Laja de basalto",
+  "block.space_fabric.venus_charred_rock": "Roca carbonizada",
+  "block.space_fabric.venus_sulfur_ash": "Ceniza de azufre",
+  "item.space_fabric.venus_rift_shard": "Fragmento de hierro de grieta",
+  "item.space_fabric.venus_sulfur_dust": "Polvo de azufre venusiano"
 }

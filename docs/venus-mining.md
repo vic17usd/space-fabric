@@ -132,3 +132,7 @@ de Minecraft. Revisar en copias de una partida:
 Proyecto Aurora, desde 0.46.0, permite instalar una lente que amplía el escáner
 a 13×13 y 96 capas. Mantiene los presupuestos de trabajo, guardado y carga local.
 [Cadena de investigación e instalación](venus-research.md).
+
+Desde 0.48.0, la mena de hierro de grieta también se detecta y admite extracción
+finita. Sus fragmentos se refinan en horno o alto horno.
+[Nuevas regiones y materiales](venus-imported-regions.md).

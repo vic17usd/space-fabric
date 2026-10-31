@@ -35,6 +35,7 @@ public final class MiningDrill {
     public int cursor(){return cursor;}
     public int progress(){return progress;}
     public static Item product(Block block){
+        if(block==dev.vic17usd.spacefabric.venus.regions.VenusRegionBlocks.RIFT_IRON)return dev.vic17usd.spacefabric.venus.regions.VenusRegionBlocks.RIFT_SHARD;
         if(block==ModBlocks.VENUSIAN_OLIVINE_ORE)return ModItems.VENUSIAN_OLIVINE;
         if(block==ModBlocks.PYROXENE_ORE)return ModItems.PYROXENE;
         if(block==ModBlocks.SULFUR_DEPOSIT)return ModItems.SULFUR_CRYSTAL;

@@ -1,0 +1,35 @@
+[
+  {
+    "source": "obsidian-riftlands-fu2ghb3x.jar",
+    "sha256": "2dfedd4f4e65a8d98d0db3ffe2a4a0feb0611bd1ae8ce4084c5e3ba0766be720",
+    "authors": [
+      "holasoynuevo using CreativeMode.net"
+    ],
+    "url": "https://creativemode.net/mod/obsidian-riftlands-fu2ghb3x",
+    "license": "ARR - CreativeMode.net/mod-license",
+    "target_biome": "space_fabric:venus_obsidian_riftlands",
+    "scope": "Original biome art and geology; rewritten native terrain; existing Venus fauna, no source entrypoints or bundled telemetry."
+  },
+  {
+    "source": "sulfur-shardlands-36x5fjm7.jar",
+    "sha256": "9109ee3ff11c657c70cc2eff815b22348f5c09afd7736d59f08b02e6d0d02e97",
+    "authors": [
+      "holasoynuevo using CreativeMode.net"
+    ],
+    "url": "https://creativemode.net/mod/sulfur-shardlands-36x5fjm7",
+    "license": "ARR - CreativeMode.net/mod-license",
+    "target_biome": "space_fabric:venus_sulfur_shardlands",
+    "scope": "Original biome art and geology; rewritten native terrain; existing Venus fauna, no source entrypoints or bundled telemetry."
+  },
+  {
+    "source": "basalt-ashlands-iktgmxrq.jar",
+    "sha256": "69b5663e519e1586a42097c1fe408f51e9e6fbac0070f2d39f1cb4c154068ef8",
+    "authors": [
+      "holasoynuevo using CreativeMode.net"
+    ],
+    "url": "https://creativemode.net/mod/basalt-ashlands-iktgmxrq",
+    "license": "ARR - CreativeMode.net/mod-license",
+    "target_biome": "space_fabric:venus_basalt_ashlands",
+    "scope": "Original biome art and geology; rewritten native terrain; existing Venus fauna, no source entrypoints or bundled telemetry."
+  }
+]

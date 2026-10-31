@@ -1,0 +1,29 @@
+{
+  "has_precipitation": false,
+  "temperature": 1.6,
+  "downfall": 0.0,
+  "effects": {
+    "fog_color": 5131854,
+    "sky_color": 6842472,
+    "water_color": 6579300,
+    "water_fog_color": 3355443,
+    "ambient_particle": {
+      "options": {"type": "minecraft:ash"},
+      "probability": 0.025
+    },
+    "mood_sound": {
+      "sound": "minecraft:ambient.cave",
+      "tick_delay": 6000,
+      "block_search_extent": 8,
+      "offset": 2.0
+    }
+  },
+  "carvers": [],
+  "features": [[], [], [], [], [], [], [], [], [], ["basalt-ashlands-iktgmxrq:ashland_surface"], []],
+  "spawners": {
+    "monster": [
+      {"type": "basalt-ashlands-iktgmxrq:cinder_crawler", "weight": 70, "minCount": 2, "maxCount": 4}
+    ]
+  },
+  "spawn_costs": {}
+}

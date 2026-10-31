@@ -1,0 +1,8 @@
+{
+  "feature": "space_fabric:venus_basalt_ashlands_terrain",
+  "placement": [
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

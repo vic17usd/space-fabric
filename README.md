@@ -1,5 +1,14 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión 0.48.0 añade **tres biomas nuevos de Venus** adaptados de los diseños
+aportados para 1.21.5: Grietas de obsidiana, Mesetas de azufre y Yermos de ceniza
+basáltica, con nueve bloques y dos materiales. Venus cuenta ahora con seis biomas.
+[Adaptación, recursos y generación](docs/venus-imported-regions.md).
+
+Diseños originales: CreativeMode.net — [Obsidian Riftlands](https://creativemode.net/mod/obsidian-riftlands-fu2ghb3x),
+[Sulfur Shardlands](https://creativemode.net/mod/sulfur-shardlands-36x5fjm7) y
+[Basalt Ashlands](https://creativemode.net/mod/basalt-ashlands-iktgmxrq).
+
 La versión 0.47.0 activa **fumarolas y microerupciones en Venus**, con avisos,
 humo, ceniza, calor local y ciclos de enfriamiento. Respeta paredes, cabinas y
 hábitats; no destruye construcciones ni extiende lava.
@@ -202,9 +211,9 @@ Consulta la [guía completa de bloques y materiales](docs/materials.md).
 Consulta la [guía de terreno y registro de biomas](docs/terrain.md).
 Consulta la [tabla de dimensiones y claves Java](docs/dimensions.md).
 
-Descarga del prototipo compilado: [space-fabric-0.47.0.jar](dist/space-fabric-0.47.0.jar)
+Descarga del prototipo compilado: [space-fabric-0.48.0.jar](dist/space-fabric-0.48.0.jar)
 (en GitHub, pulsa **Download raw file**).
-[Checksum SHA-256](dist/space-fabric-0.47.0.jar.sha256).
+[Checksum SHA-256](dist/space-fabric-0.48.0.jar.sha256).
 Fauna original: **17usdd using [CreativeMode.net](https://creativemode.net)**;
 [páginas oficiales y atribución](third_party/martian_fauna/README.md),
 [licencia de sus recursos](https://creativemode.net/mod-license).
@@ -416,7 +425,7 @@ el carácter químico del entorno. Los trajes venusiano y abisal resisten la cor
 inmunidad, prioridad de presión e hipoxia a presión normal.
 También usa Fabric Loader JUnit y los codecs reales de Minecraft para interpretar
 los nueve tipos de dimensión, sus generadores y los cuatro tipos de daño; también
-comprueba refinería, persistencia del combustible, recetas, llegadas, estructuras, comerciantes, fauna, industria, rover, redes y atlas: **649 casos**
+comprueba refinería, persistencia del combustible, recetas, llegadas, estructuras, comerciantes, fauna, industria, rover, redes y atlas: **668 casos**
 en total. `tools/validate_resources.py` comprueba además JSON y referencias internas.
 Estas pruebas no arrancan un mundo ni comprueban la sincronización del cliente.
 

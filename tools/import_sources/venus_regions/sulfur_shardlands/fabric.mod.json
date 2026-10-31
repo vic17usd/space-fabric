@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "id": "sulfur-shardlands-36x5fjm7",
+  "version": "1.0.0",
+  "name": "Sulfur Shardlands",
+  "description": "Explore barren sulfur plateaus, battle sulfur automata, and turn their cores into glowing lanterns.",
+  "authors": [
+    "holasoynuevo using CreativeMode.net"
+  ],
+  "contact": {
+    "homepage": "https://creativemode.net",
+    "sources": "https://creativemode.net/mod/sulfur-shardlands-36x5fjm7"
+  },
+  "license": "ARR - CreativeMode.net/mod-license",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "sulfur_shardlands_36x5fjm7.SulfurShardlands"
+    ],
+    "terrablender": [
+      "sulfur_shardlands_36x5fjm7.worldgen.SulfurShardlandsTerraBlenderApi"
+    ],
+    "client": [
+      "sulfur_shardlands_36x5fjm7.SulfurShardlandsClient"
+    ]
+  },
+  "mixins": [
+    "sulfur_shardlands_36x5fjm7.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.16.14",
+    "minecraft": "~1.21.5",
+    "java": ">=21",
+    "fabric-api": "*",
+    "terrablender": ">=5.0.0.1"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/creativemode"
+      }
+    },
+    "creativemode:mod": {
+      "schemaVersion": 1,
+      "modId": "39112a25-df31-402a-9038-fe206800f358",
+      "modSlug": "sulfur-shardlands-36x5fjm7",
+      "modVersion": 1
+    }
+  },
+  "jars": [
+    {
+      "file": "META-INF/jars/creativemode-telemetry.jar"
+    }
+  ]
+}

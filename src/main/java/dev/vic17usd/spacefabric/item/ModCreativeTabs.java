@@ -20,6 +20,9 @@ public final class ModCreativeTabs {
                         ModItems.all().values().forEach(output::accept);
                         dev.vic17usd.spacefabric.maintenance.MaintenanceContent.items().values().forEach(output::accept);
                         dev.vic17usd.spacefabric.venus.VenusGeology.blocks().values().forEach(output::accept);
+                        dev.vic17usd.spacefabric.venus.regions.VenusRegionBlocks.blocks().forEach(output::accept);
+                        output.accept(dev.vic17usd.spacefabric.venus.regions.VenusRegionBlocks.RIFT_SHARD);
+                        output.accept(dev.vic17usd.spacefabric.venus.regions.VenusRegionBlocks.SULFUR_DUST);
                         dev.vic17usd.spacefabric.colony.ColonyContent.blocks().values().forEach(output::accept);
                         dev.vic17usd.spacefabric.colony.ColonyContent.items().values().forEach(output::accept);
                         dev.vic17usd.spacefabric.industry.IndustryContent.items().values().forEach(output::accept);

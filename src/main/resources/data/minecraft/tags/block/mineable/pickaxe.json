@@ -88,6 +88,14 @@
     "space_fabric:venus_service_dock",
     "space_fabric:venus_expedition_console",
     "space_fabric:venus_grow_lamp",
-    "space_fabric:venus_core_drill"
+    "space_fabric:venus_core_drill",
+    "space_fabric:venus_rift_obsidian",
+    "space_fabric:venus_rift_iron",
+    "space_fabric:venus_rift_ember_crust",
+    "space_fabric:venus_tessera_rock",
+    "space_fabric:venus_ember_fissure",
+    "space_fabric:venus_sulfur_lantern",
+    "space_fabric:venus_basalt_sheet",
+    "space_fabric:venus_charred_rock"
   ]
 }

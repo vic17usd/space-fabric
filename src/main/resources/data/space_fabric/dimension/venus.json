@@ -8,10 +8,6 @@
         {
           "biome": "space_fabric:venus",
           "parameters": {
-            "temperature": [
-              -2,
-              2
-            ],
             "continentalness": [
               -2,
               2
@@ -26,6 +22,40 @@
             ],
             "weirdness": [
               -2,
+              2
+            ],
+            "temperature": [
+              -2,
+              0
+            ],
+            "humidity": [
+              -0.25,
+              0.25
+            ],
+            "offset": 0
+          }
+        },
+        {
+          "biome": "space_fabric:venus_sulfur_shardlands",
+          "parameters": {
+            "continentalness": [
+              -2,
+              2
+            ],
+            "erosion": [
+              -2,
+              2
+            ],
+            "depth": [
+              -2,
+              2
+            ],
+            "weirdness": [
+              -2,
+              2
+            ],
+            "temperature": [
+              0,
               2
             ],
             "humidity": [
@@ -38,10 +68,6 @@
         {
           "biome": "space_fabric:venus_fumaroles",
           "parameters": {
-            "temperature": [
-              -2,
-              2
-            ],
             "continentalness": [
               -2,
               2
@@ -56,6 +82,40 @@
             ],
             "weirdness": [
               -2,
+              2
+            ],
+            "temperature": [
+              -2,
+              0
+            ],
+            "humidity": [
+              -1,
+              -0.25
+            ],
+            "offset": 0
+          }
+        },
+        {
+          "biome": "space_fabric:venus_basalt_ashlands",
+          "parameters": {
+            "continentalness": [
+              -2,
+              2
+            ],
+            "erosion": [
+              -2,
+              2
+            ],
+            "depth": [
+              -2,
+              2
+            ],
+            "weirdness": [
+              -2,
+              2
+            ],
+            "temperature": [
+              0,
               2
             ],
             "humidity": [
@@ -68,10 +128,6 @@
         {
           "biome": "space_fabric:venus_obsidian_basins",
           "parameters": {
-            "temperature": [
-              -2,
-              2
-            ],
             "continentalness": [
               -2,
               2
@@ -86,6 +142,40 @@
             ],
             "weirdness": [
               -2,
+              2
+            ],
+            "temperature": [
+              -2,
+              0
+            ],
+            "humidity": [
+              0.25,
+              1
+            ],
+            "offset": 0
+          }
+        },
+        {
+          "biome": "space_fabric:venus_obsidian_riftlands",
+          "parameters": {
+            "continentalness": [
+              -2,
+              2
+            ],
+            "erosion": [
+              -2,
+              2
+            ],
+            "depth": [
+              -2,
+              2
+            ],
+            "weirdness": [
+              -2,
+              2
+            ],
+            "temperature": [
+              0,
               2
             ],
             "humidity": [
