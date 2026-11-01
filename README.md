@@ -1,5 +1,9 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión 0.56.0 recubre físicamente el hielo glaciar expuesto de Marte
+con CO₂ blanco, también en paredes y techos. Se aplica una vez por zona
+al cargarla y conserva las excavaciones posteriores.
+
 La versión 0.55.4 usa hielo azul limpio en todas las caras del hielo glaciar
 marciano, conservando sus posiciones y la cubierta blanca de CO₂.
 

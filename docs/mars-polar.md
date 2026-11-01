@@ -126,3 +126,16 @@ El hielo glaciar azul usa la textura limpia en todas sus caras, sin franja
 de tierra. La cubierta blanca de CO₂ y las posiciones de los bloques se
 conservan. El cambio visual se aplica también a terreno existente al actualizar
 el JAR y reiniciar Minecraft; no requiere generar chunks nuevos.
+
+## Cubierta física completa desde 0.56.0
+
+El hielo azul expuesto se sustituye por bloques blancos de CO₂ en todas sus
+caras accesibles: techo, suelo y paredes. El azul queda dentro del depósito;
+para llegar a él desde una superficie natural hay que romper la cubierta.
+No se mueve el terreno ni se agregan bloques por fuera del relieve original.
+
+El acabado se aplica gradualmente al cargar cada zona, tanto nueva como ya
+explorada. Se registra una sola vez por interior y borde de chunk. Los bordes
+se completan cuando carga el vecino, sin cargar chunks adicionales. Después
+puedes excavar y dejar azul visible: no se vuelve a tapar al regresar ni al
+reiniciar. Mantén la misma versión en cliente y servidor.

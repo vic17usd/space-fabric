@@ -1,6 +1,6 @@
 # Resultado de validación de esta base
 
-Última entrega: **0.55.4**, 723 pruebas JUnit aprobadas, trece comprobaciones por
+Última entrega: **0.56.0**, 728 pruebas JUnit aprobadas, trece comprobaciones por
 CPU y 1.337 JSON válidos. Los recursos nuevos se comprueban mediante
 `verifyModBatchAssets`; queda pendiente su inspección visual en un cliente. Los apartados siguientes conservan el historial de
 la base y sus ampliaciones; la validación de las categorías creativas está al final del documento.
@@ -1105,3 +1105,26 @@ El importador conserva esta asignación en posteriores regeneraciones.
 Se ejecutan las comprobaciones existentes de referencias, texturas y modelos,
 además de la compilación completa. La inspección visual dentro del cliente
 sigue pendiente.
+
+## Cubierta física del casquete marciano (0.56.0)
+
+`MarsIceCover` sustituye únicamente hielo glaciar azul expuesto por CO₂ blanco
+en biomas polares de Marte. Se consideran las seis direcciones y vecinos con
+colisión parcial o vacíos; el interior azul y otros materiales se conservan.
+No se añade volumen ni se desplaza el relieve.
+
+El acabado se ejecuta después de la generación, al cargar chunks de servidor,
+y también actualiza terreno ya explorado. Procesa como máximo dos entradas de
+cola por tick del nivel y omite secciones sin hielo. Solo se consultan vecinos
+que ya están cargados. Una attachment persistente por chunk registra el interior
+y cada borde atendido; los bordes pendientes se revisan al cargarse el vecino.
+Esto evita recubrir nuevamente un frente excavado tras completar su acabado.
+El recubrimiento no es una actualización continua ni una capa regenerable.
+
+Cinco pruebas adicionales ejecutan el algoritmo real en un volumen de bloques:
+la piel completa de un cubo tiene 1.352 bloques blancos y conserva el interior
+azul y todas las posiciones; romper un bloque blanco da acceso al azul. También
+se prueban hielo ya cubierto, vecinos de chunk pendientes, ausencia de regeneración
+y exclusión de materiales ajenos y posiciones fuera del bioma permitido.
+La persistencia de attachments usa la API de Fabric; el recorrido visual por
+un mundo guardado y el comportamiento multijugador siguen pendientes.

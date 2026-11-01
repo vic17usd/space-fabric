@@ -3641,6 +3641,49 @@ class WorldgenCodecTest {
         }
         var world=glacialVolume();assertFalse(dev.vic17usd.spacefabric.mars.MarsGlacialCaveFeature.carve(world.level,center.offset(-3,0,0)));
     }
+    private static int coverIce(VoxelWorld world,int mask,java.util.function.Predicate<net.minecraft.core.BlockPos> eligible){
+        return dev.vic17usd.spacefabric.mars.MarsIceCover.coat(world.level,new net.minecraft.world.level.ChunkPos(0,0),0,16,mask,eligible,p->world.level.setBlock(p,dev.vic17usd.spacefabric.mars.MarsPolarContent.CO2.defaultBlockState(),2));
+    }
+    @Test void polarIceGetsAPhysicalWhiteShellOnEveryExposedFaceWithoutMovingTerrain(){
+        var world=new VoxelWorld(0,0);var ice=dev.vic17usd.spacefabric.mars.MarsPolarContent.ICE;var white=dev.vic17usd.spacefabric.mars.MarsPolarContent.CO2;
+        for(int x=0;x<16;x++)for(int y=0;y<16;y++)for(int z=0;z<16;z++)world.blocks.put(new net.minecraft.core.BlockPos(x,y,z),ice.defaultBlockState());
+        var positions=java.util.Set.copyOf(world.blocks.keySet());
+        assertEquals(1352,coverIce(world,31,p->true));assertEquals(positions,world.blocks.keySet());
+        for(var entry:world.blocks.entrySet()){
+            var p=entry.getKey();boolean outside=p.getX()==0||p.getX()==15||p.getY()==0||p.getY()==15||p.getZ()==0||p.getZ()==15;
+            assertTrue(entry.getValue().is(outside?white:ice));
+            if(entry.getValue().is(ice))for(var d:net.minecraft.core.Direction.values())assertFalse(world.state(p.relative(d)).isAir());
+        }
+        var door=new net.minecraft.core.BlockPos(0,8,8);assertTrue(world.state(door).is(white));
+        world.blocks.remove(door);assertTrue(world.state(door.east()).is(ice));
+    }
+    @Test void coveredIceAndExistingWhiteBlocksAreNotChanged(){
+        var world=new VoxelWorld(0,0);var p=new net.minecraft.core.BlockPos(8,8,8);
+        world.blocks.put(p,dev.vic17usd.spacefabric.mars.MarsPolarContent.ICE.defaultBlockState());
+        for(var d:net.minecraft.core.Direction.values())world.blocks.put(p.relative(d),Blocks.STONE.defaultBlockState());
+        world.blocks.put(p.above(),dev.vic17usd.spacefabric.mars.MarsPolarContent.CO2.defaultBlockState());
+        var before=new java.util.HashMap<>(world.blocks);assertEquals(0,coverIce(world,31,q->true));assertEquals(before,world.blocks);
+    }
+    @Test void iceChunkBoundariesAreOnlyInspectedWhenThatNeighbourIsAvailable(){
+        var world=new VoxelWorld(0,0);var p=new net.minecraft.core.BlockPos(0,8,8);
+        world.blocks.put(p,dev.vic17usd.spacefabric.mars.MarsPolarContent.ICE.defaultBlockState());
+        for(var d:net.minecraft.core.Direction.values())if(d!=net.minecraft.core.Direction.WEST)world.blocks.put(p.relative(d),Blocks.STONE.defaultBlockState());
+        assertEquals(0,coverIce(world,1,q->true));assertEquals(1,coverIce(world,2,q->true));
+        assertTrue(world.state(p).is(dev.vic17usd.spacefabric.mars.MarsPolarContent.CO2));
+    }
+    @Test void completedIceCoatingDoesNotRegrowAfterMiningOrReload(){
+        var world=new VoxelWorld(0,0);var p=new net.minecraft.core.BlockPos(8,8,8);
+        world.blocks.put(p,dev.vic17usd.spacefabric.mars.MarsPolarContent.ICE.defaultBlockState());
+        assertEquals(0,coverIce(world,dev.vic17usd.spacefabric.mars.MarsIceCover.pending(31,31),q->true));
+        assertTrue(world.state(p).is(dev.vic17usd.spacefabric.mars.MarsPolarContent.ICE));
+        assertEquals(2,dev.vic17usd.spacefabric.mars.MarsIceCover.pending(1,3));
+    }
+    @Test void iceCoatingDoesNotModifyNonPolarAreasOrOtherMaterials(){
+        var world=new VoxelWorld(0,0);var p=new net.minecraft.core.BlockPos(8,8,8);
+        world.blocks.put(p,dev.vic17usd.spacefabric.mars.MarsPolarContent.ICE.defaultBlockState());world.blocks.put(p.above(),Blocks.CHEST.defaultBlockState());
+        var before=new java.util.HashMap<>(world.blocks);assertEquals(0,coverIce(world,31,q->false));assertEquals(before,world.blocks);
+        assertEquals(1,coverIce(world,31,q->true));assertTrue(world.state(p.above()).is(Blocks.CHEST));
+    }
     @Test void polarResourcesProduceSealedWaterAndGasWithoutCreatingEmptyContainers() throws IOException {
         for(boolean water:new boolean[]{true,false}){
             var recipe=assertInstanceOf(net.minecraft.world.item.crafting.ShapelessRecipe.class,Recipe.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("recipe/"+(water?"martian_glacier_water":"martian_co2_capture"))).getOrThrow());

@@ -28,6 +28,7 @@ public final class MarsPolarContent {
     }
     public static List<Block> blocks(){return List.copyOf(BLOCKS);}
     public static void initialize(){
+        MarsIceCover.initialize();
         Registry.register(BuiltInRegistries.BIOME_SOURCE,SpaceFabric.id("mars_polar"),MarsPolarBiomeSource.CODEC);
         Registry.register(BuiltInRegistries.FEATURE,SpaceFabric.id("mars_glacial_cave"),new MarsGlacialCaveFeature());
     }
