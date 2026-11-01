@@ -834,7 +834,7 @@
   "chat_tools.space_fabric.back": "Back to chat",
   "chat_tools.space_fabric.copied": "Message copied to clipboard",
   "chat_tools.space_fabric.capture": "Capture",
-  "chat_tools.space_fabric.copy_hint": "Choose a message or copy the entire chat",
+  "chat_tools.space_fabric.copy_hint": "Click to copy this entire message",
   "chat_tools.space_fabric.capture_hint": "Capture screen, save PNG and copy image",
   "chat_tools.space_fabric.busy": "A screenshot is in progress",
   "chat_tools.space_fabric.capture_copied": "Screenshot copied to clipboard and saved in screenshots",

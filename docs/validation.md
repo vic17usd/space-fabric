@@ -1,6 +1,6 @@
 # Resultado de validación de esta base
 
-Última entrega: **0.55.0**, 708 pruebas JUnit aprobadas, trece comprobaciones por
+Última entrega: **0.55.1**, 714 pruebas JUnit aprobadas, trece comprobaciones por
 CPU y 1.337 JSON válidos. Los recursos nuevos se comprueban mediante
 `verifyModBatchAssets`; queda pendiente su inspección visual en un cliente. Los apartados siguientes conservan el historial de
 la base y sus ampliaciones; la validación de las categorías creativas está al final del documento.
@@ -1033,3 +1033,23 @@ y contorno/relleno. Las capas de cueva se almacenan aparte y se muestrean solo
 en chunks cliente existentes, con dos chunks por tick y búsqueda vertical acotada.
 El aspecto final y la interacción con otros mods de renderizado quedan pendientes
 de inspección dentro de Minecraft.
+
+## Copia directa y silueta estable (0.55.1)
+
+Se elimina `ChatCopyScreen`. Al pasar el mouse sobre una línea nativa del chat,
+un icono de dos hojas permite copiar su mensaje padre completo con un clic.
+Se usan `trimmedMessages`, el desplazamiento y la altura de línea reales; el
+cálculo reproduce la línea base escalada de Minecraft 26.1. No se cambia de
+pantalla ni se altera el borrador. El botón de captura ocupa el extremo del
+campo de entrada, cuyo ancho se ajusta para evitar solapamientos.
+
+La flecha ya no se reconstruye redondeando coordenadas en cada ángulo. Una
+silueta fija de franjas y contorno se transforma como una pieza completa con
+una matriz uniforme. Las pruebas recorren todos los grados entre -720 y 720,
+comprobando longitudes y perpendicularidad de los polígonos reales dibujados;
+la cobertura de la silueta y su contorno se comprueban píxel a píxel.
+
+Seis pruebas adicionales cubren esa geometría y la selección del mensaje por
+coordenadas con escalas, espaciados, desplazamiento, historial vacío, límites
+y líneas partidas. El renderizado final y la interacción con el portapapeles
+del sistema siguen pendientes de inspección dentro del juego.

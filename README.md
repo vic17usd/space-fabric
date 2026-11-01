@@ -1,5 +1,8 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión 0.55.1 sustituye la selección de mensajes por copia con un clic junto
+a cada línea del chat y gira la flecha del mapa sin deformar su silueta.
+
 La versión 0.55.0 añade botones de copia de mensajes y capturas al chat, y
 capas subterráneas automáticas al atlas. El indicador del jugador se dibuja
 sobre el terreno y los marcadores. [Uso y comprobaciones](docs/chat-and-cave-map.md).

@@ -54,7 +54,7 @@ final class AtlasCanvas {
         gui.nextStratum(); // The player stays above terrain, markers and their labels.
         if(c.player!=null&&data.dimension().equals(AtlasClient.dimension())) {
             int px=left+size/2+(int)Math.round((c.player.getX()-x)/scale),py=top+size/2+(int)Math.round((c.player.getZ()-z)/scale);
-            symbol(gui,px,py,0xFFEAF7FF,false,true,Math.toRadians(c.player.getYRot()),left,top,size,!labels);
+            drawPlayer(gui,px,py,Math.toRadians(c.player.getYRot()));
         }
         gui.disableScissor();
         if(labels)gui.text(c.font,"N",left+size/2-3,top+2,0xFFFFDF8C);
@@ -67,8 +67,19 @@ final class AtlasCanvas {
             gui.text(c.font,"N",left+size/2-3,top+7,0xFFFFE3A0);
         }
     }
+    private static void drawPlayer(GuiGraphicsExtractor gui,int x,int y,double yaw){
+        // Rotate the complete fixed silhouette. Resampling each pixel at every yaw distorted it.
+        gui.pose().pushMatrix();
+        gui.pose().mul(PlayerMarkerGeometry.pose(x,y,yaw));
+        for(int pass=0;pass<2;pass++){
+            gui.nextStratum();
+            for(var span:PlayerMarkerGeometry.SPANS)if(span.pass()==pass)
+                gui.fill(span.x0(),span.y(),span.x1(),span.y()+1,pass==0?0xFF172026:0xFFEAF7FF);
+        }
+        gui.pose().popMatrix();
+    }
     private static boolean shape(int x,int y,boolean selected,boolean player,double yaw){
-        return player?AtlasStyle.player((int)Math.round(x*1.6),(int)Math.round(y*1.6),yaw):AtlasStyle.marker(x,y,selected);
+        return player?AtlasStyle.player(x,y,yaw):AtlasStyle.marker(x,y,selected);
     }
     private static void symbol(GuiGraphicsExtractor gui,int px,int py,int color,boolean selected,boolean player,double yaw,int left,int top,int size,boolean round){
         // Scanlines keep draw calls bounded. A dark halo separates symbols from pale ice or lava.

@@ -1,6 +1,14 @@
-# Copia del chat y mapa de cuevas — 0.55.0
+# Copia del chat y mapa de cuevas — 0.55.1
 
-Abre el chat: aparecen «Copiar» y «Captura» junto a su zona inferior. «Copiar»
+Abre el chat y pasa el mouse sobre un mensaje. Aparece un icono pequeño de
+dos hojas al final de esa línea del chat: un clic izquierdo copia el mensaje
+completo, aunque ocupe varias líneas. Funciona también al desplazar el historial
+y cambiar la escala o el espaciado. No se abre otra pantalla ni se modifica
+el texto que estabas escribiendo. La pantalla de selección de 0.55.0 se eliminó.
+
+El botón «Captura» está al final del campo de entrada, con espacio propio.
+
+«Captura» junto a su zona inferior. «Copiar»
 abre una lista de mensajes completos. Puedes copiar uno o usar «Copiar todo»
 para obtener el historial en orden cronológico; no envía mensajes al servidor.
 «Volver al chat» recupera la pantalla que estabas usando.
@@ -11,8 +19,9 @@ una captura simultánea. Si el sistema no admite copiar imágenes, se guarda el
 PNG y se copia su ruta, con un aviso que distingue ambos resultados. No se
 suben archivos automáticamente.
 
-La flecha del jugador usa estratos separados del terreno, los marcadores y su
-propio contorno. El minimapa conserva tamaño y posición arriba a la derecha.
+La flecha del jugador usa una silueta fija que gira de forma uniforme, sin
+recalcular sus píxeles por ángulo. Sus estratos están separados del terreno,
+los marcadores y su propio contorno. El minimapa conserva tamaño y posición arriba a la derecha.
 
 Al estar bajo una cubierta superior a tres bloques y sin vista al cielo, el
 minimapa y el mapa grande del planeta actual muestran el subsuelo cercano a

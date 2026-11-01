@@ -7,7 +7,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ClipboardImageTest {
     @Test void chatAccessorsMatchTheActual261Fields() throws Exception {
-        assertEquals(java.util.List.class,net.minecraft.client.gui.components.ChatComponent.class.getDeclaredField("allMessages").getType());
+        assertEquals(java.util.List.class,net.minecraft.client.gui.components.ChatComponent.class.getDeclaredField("trimmedMessages").getType());
+        assertEquals(int.class,net.minecraft.client.gui.components.ChatComponent.class.getDeclaredField("chatScrollbarPos").getType());
+        assertEquals(int.class,net.minecraft.client.gui.components.ChatComponent.class.getDeclaredMethod("getLineHeight").getReturnType());
         assertEquals(java.util.function.Predicate.class,net.minecraft.client.gui.components.ChatComponent.class.getDeclaredField("visibleMessageFilter").getType());
         assertEquals(net.minecraft.client.gui.components.EditBox.class,net.minecraft.client.gui.screens.ChatScreen.class.getDeclaredField("input").getType());
         assertEquals(String.class,net.minecraft.client.gui.screens.ChatScreen.class.getDeclaredField("initial").getType());

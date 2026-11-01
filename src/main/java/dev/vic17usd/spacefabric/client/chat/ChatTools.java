@@ -25,22 +25,39 @@ public final class ChatTools {
     public static void initialize(){
         ScreenEvents.AFTER_INIT.register((c,screen,width,height)->{
             if(!(screen instanceof ChatScreen))return;
-            int x=Math.max(4,Math.min(width-148,(int)(net.minecraft.client.gui.components.ChatComponent.getWidth(c.options.chatWidth().get())*c.options.chatScale().get())-140));
-            var copy=Button.builder(text("copy"),b->{
-                var access=(ChatMessagesAccessor)c.gui.getChat();
-                var messages=access.spaceFabric$messages().stream().filter(access.spaceFabric$visibleFilter()).map(m->m.content().getString()).toList();
-                var draft=(ChatDraftAccessor)c.screen;draft.spaceFabric$initial(draft.spaceFabric$input().getValue());
-                c.gui.getChat().preserveCurrentChatScreen();c.setScreen(new ChatCopyScreen(messages));
-            }).bounds(x,height-42,66,18).tooltip(Tooltip.create(text("copy_hint"))).build();
-            var capture=Button.builder(text("capture"),b->capture()).bounds(x+70,height-42,72,18).tooltip(Tooltip.create(text("capture_hint"))).build();
-            Screens.getWidgets(screen).add(copy);Screens.getWidgets(screen).add(capture);
-            // ChatScreen checks links before regular widgets; consume tool clicks first.
-            boolean first=!TOOLS.containsKey(screen);TOOLS.put(screen,java.util.List.of(copy,capture));
-            if(first)ScreenMouseEvents.allowMouseClick(screen).register((s,event)->{
-                for(var button:TOOLS.getOrDefault(s,java.util.List.of()))if(button.isMouseOver(event.x(),event.y())&&event.button()==0){button.mouseClicked(event,false);return false;}
-                return true;
-            });
+            // Leave room at the end of the input for the independent capture button.
+            ((ChatDraftAccessor)screen).spaceFabric$input().setWidth(Math.max(20,width-82));
+            var capture=Button.builder(text("capture"),b->capture()).bounds(width-76,height-22,72,18).tooltip(Tooltip.create(text("capture_hint"))).build();
+            Screens.getWidgets(screen).add(capture);
+            boolean first=!TOOLS.containsKey(screen);TOOLS.put(screen,java.util.List.of(capture));
+            if(first){
+                ScreenEvents.afterExtract(screen).register((s,gui,mx,my,delta)->{
+                    var hit=hit(c,s,mx,my);if(hit==null)return;
+                    boolean hover=hit.contains(mx,my);gui.nextStratum();
+                    gui.fill(hit.x()-1,hit.y()-1,hit.x()+hit.size()+1,hit.y()+hit.size()+1,hover?0xEE536A7B:0xC022303C);
+                    gui.pose().pushMatrix();gui.pose().translate(hit.x(),hit.y()).scale(hit.size()/8F);
+                    gui.outline(0,0,6,6,0xFF8EA5B6);gui.outline(2,2,6,6,0xFFFFFFFF);gui.pose().popMatrix();
+                    if(hover)gui.setTooltipForNextFrame(c.font,text("copy_hint"),mx,my);
+                });
+                // Consume icon clicks before vanilla handles message links or suggestions.
+                ScreenMouseEvents.allowMouseClick(screen).register((s,event)->{
+                    var hit=hit(c,s,event.x(),event.y());
+                    if(event.button()==0&&hit!=null&&hit.contains(event.x(),event.y())){
+                        var access=(ChatMessagesAccessor)c.gui.getChat();
+                        c.keyboardHandler.setClipboard(access.spaceFabric$lines().get(hit.lineIndex()).parent().content().getString());
+                        notify("copied");return false;
+                    }
+                    for(var button:TOOLS.getOrDefault(s,java.util.List.of()))if(button.isMouseOver(event.x(),event.y())&&event.button()==0){button.mouseClicked(event,false);return false;}
+                    return true;
+                });
+            }
         });
+    }
+    private static ChatCopyHit hit(Minecraft c,net.minecraft.client.gui.screens.Screen screen,double mx,double my){
+        var chat=c.gui.getChat();var access=(ChatMessagesAccessor)chat;
+        var hit=ChatCopyHit.at(screen.width,screen.height,net.minecraft.client.gui.components.ChatComponent.getWidth(c.options.chatWidth().get()),c.options.chatScale().get(),access.spaceFabric$lineHeight(),access.spaceFabric$scroll(),access.spaceFabric$lines().size(),chat.getLinesPerPage(),mx,my);
+        if(hit!=null&&!access.spaceFabric$visibleFilter().test(access.spaceFabric$lines().get(hit.lineIndex()).parent()))return null;
+        return hit;
     }
     private static void capture(){
         if(!BUSY.compareAndSet(false,true)){notify("busy");return;}
