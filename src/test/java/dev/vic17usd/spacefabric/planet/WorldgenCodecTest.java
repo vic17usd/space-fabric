@@ -1938,6 +1938,13 @@ class WorldgenCodecTest {
     void colonyAdvancementsHaveNativeInventoryTriggers(String name) throws IOException {
         assertNotNull(net.minecraft.advancements.Advancement.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE),resource("advancement/colony/"+name)).getOrThrow());
     }
+    @Test void detailedVenusMachinesKeepNeighboursVisibleAndRemainSolid() {
+        for(var block:List.of(ColonyContent.CERAMIC_KILN,ColonyContent.COOLING_UNIT)) {
+            var state=block.defaultBlockState();
+            assertFalse(state.canOcclude(),"Detailed machine must not hide neighbouring faces");
+            assertTrue(state.isCollisionShapeFullBlock(net.minecraft.world.level.EmptyBlockGetter.INSTANCE,net.minecraft.core.BlockPos.ZERO));
+        }
+    }
     @Test void pressureShellAndDoorClassificationUsesActualTagsAndOpenState() {
         var c=dev.vic17usd.spacefabric.colony.ColonyContent.class;
         var level=net.minecraft.world.level.EmptyBlockGetter.INSTANCE;var pos=net.minecraft.core.BlockPos.ZERO;

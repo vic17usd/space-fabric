@@ -28,6 +28,37 @@ public final class ModBatchCheck {
                 throw new AssertionError("Missing or invalid texture PNG: " + target + " -> " + texture);
         }
     }
+    private static double coordinate(JsonObject e,String end,int axis) {
+        return e.getAsJsonArray(end).get(axis).getAsDouble();
+    }
+    private static void checkMachineGeometry(JsonObject model,String target) {
+        var es=model.getAsJsonArray("elements");
+        String[] directions={"west","east","down","up","north","south"};
+        for(int i=0;i<es.size();i++) {
+            var a=es.get(i).getAsJsonObject();
+            for(int axis=0;axis<3;axis++) {
+                if(coordinate(a,"from",axis)<0 || coordinate(a,"to",axis)>16)
+                    throw new AssertionError("Machine protrudes into neighbour: "+target);
+            }
+            for(int j=0;j<i;j++) {
+                var b=es.get(j).getAsJsonObject();
+                for(int side=0;side<6;side++) {
+                    String direction=directions[side];int axis=side/2;
+                    if(!a.getAsJsonObject("faces").has(direction)||!b.getAsJsonObject("faces").has(direction))continue;
+                    String end=side%2==0?"from":"to";
+                    if(Math.abs(coordinate(a,end,axis)-coordinate(b,end,axis))>1e-6)continue;
+                    boolean overlap=true;
+                    for(int q=0;q<3;q++)if(q!=axis)
+                        overlap &= Math.min(coordinate(a,"to",q),coordinate(b,"to",q))-Math.max(coordinate(a,"from",q),coordinate(b,"from",q))>1e-6;
+                    if(overlap)throw new AssertionError("Overlapping coplanar faces: "+target+" "+i+"/"+j+" "+direction);
+                }
+            }
+        }
+        if(es.get(0).getAsJsonObject().getAsJsonObject("faces").size()!=6)
+            throw new AssertionError("Open machine body: "+target);
+        String screen=model.getAsJsonObject("textures").get("screen").getAsString();
+        if(!screen.endsWith("_concrete"))throw new AssertionError("Machine screen must have an opaque backing: "+target);
+    }
     public static void main(String[] args) throws Exception {
         var root=Path.of("src/main/resources/assets/space_fabric");var cache=Path.of("tools/import_sources/mod_batch");
         var manifest=JsonParser.parseString(Files.readString(Path.of("third_party/mod_batch/manifest.json"))).getAsJsonObject();
@@ -39,6 +70,7 @@ public final class ModBatchCheck {
                 blocks++;var path=root.resolve("models/block/"+target+".json");var json=JsonParser.parseString(Files.readString(path)).getAsJsonObject();
                 var model=CuboidModel.fromStream(new StringReader(Files.readString(path)));
                 checkTextureFiles(root,json,target);
+                if(target.equals("venus_ceramic_kiln")||target.equals("venus_cooling_unit"))checkMachineGeometry(json,target);
                 var textures=json.getAsJsonObject("textures");var slots=new TextureSlots.Resolver().addLast(model.textureSlots()).resolve(()->target);
                 for(String key:textures.keySet())if(slots.getMaterial("#"+key)==null)throw new AssertionError("Unresolved texture: "+target+" #"+key);
                 try(var paths=Files.walk(cache.resolve("blocks").resolve(target).resolve("textures"))){

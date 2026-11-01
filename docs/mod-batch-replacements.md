@@ -35,3 +35,9 @@ La revisión 0.54.1 corrige diez modelos cuyas texturas originales estaban en
 `textures/gui/`. Ahora se importan y se registran dentro del atlas de bloques
 del propio mod, de modo que tampoco requieren instalar los JAR de origen.
 Para actualizar, sustituye el JAR 0.54.0 por el 0.54.1 y reinicia Minecraft.
+
+La revisión 0.54.3 adapta la geometría defectuosa de las dos máquinas: separa
+caras coplanares, encaja sus detalles dentro del bloque y usa indicadores
+opacos. También evita que los huecos del modelo oculten las caras de bloques
+vecinos. Las copias de origen permanecen intactas; la corrección se aplica en
+`repair_machine_geometry` al regenerar el lote.

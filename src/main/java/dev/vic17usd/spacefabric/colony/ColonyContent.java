@@ -55,7 +55,12 @@ public final class ColonyContent {
                     HABITAT_CONTROLLER,ELECTROLYZER,SOLAR_CHARGER,GEOTHERMAL_GENERATOR,SAMPLE_ANALYZER,
                     ATMOSPHERIC_COLLECTOR,GAS_SEPARATOR,SULFUR_PROCESSOR,CERAMIC_KILN,COOLING_UNIT,HEAT_EXCHANGER,GREENHOUSE,RECLAIMER,DOCK,SURVEY,DRILL).build());
     private ColonyContent() { }
-    private static Block machine(String name){return block(name,ColonyMachineBlock::new,BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(5,25));}
+    private static Block machine(String name){
+        var properties=BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(5,25);
+        // Their detailed models do not fill every face: preserve neighbours behind the gaps.
+        if(name.equals("venus_ceramic_kiln")||name.equals("venus_cooling_unit"))properties.noOcclusion();
+        return block(name,ColonyMachineBlock::new,properties);
+    }
     private static Block block(String name,Function<BlockBehaviour.Properties,Block> factory,BlockBehaviour.Properties properties) {
         var id=SpaceFabric.id(name);var block=Registry.register(BuiltInRegistries.BLOCK,id,factory.apply(properties.setId(ResourceKey.create(Registries.BLOCK,id))));
         Item item=name.equals("airlock_door")?new DoubleHighBlockItem(block,new Item.Properties().setId(ResourceKey.create(Registries.ITEM,id)).useBlockDescriptionPrefix()):

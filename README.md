@@ -1,5 +1,8 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión 0.54.3 corrige las caras superpuestas y la ocultación de bloques
+vecinos en el horno y la unidad de refrigeración venusianos.
+
 La versión 0.54.2 corrige las referencias de cuarzo y basalto de la unidad de
 refrigeración y el horno cerámico venusianos, también presentes en sus ítems.
 

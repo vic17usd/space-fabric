@@ -29,6 +29,33 @@ for planet,filename in [('jupiter','Kit del cohete de jupiter.png'),('moon','kit
 MODELS={'Perforadora de sondeo venus.bbmodel':'venus_core_drill','Separador de gases industrial.bbmodel':'venus_gas_separator'}
 def write(p,o):p.parent.mkdir(parents=True,exist_ok=True);p.write_text(json.dumps(o,ensure_ascii=False,indent=2)+'\n')
 def store(path,data):p=S/path;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(data)
+def repair_machine_geometry(doc,target):
+ # Fix defects in the supplied models while keeping their original design.
+ if target not in ('venus_ceramic_kiln','venus_cooling_unit'):return
+ es=doc['elements']
+ if target=='venus_ceramic_kiln':
+  assert len(es)==14,'Recheck kiln geometry after updating its source'
+  # Door frame, recess, indicator and screen need distinct depth layers.
+  for i in range(2,6):es[i]['from'][2]=-.06
+  for i,z in [(6,-.12),(7,-.18),(8,-.24)]:es[i]['from'][2]=z
+  # Separate the top housing from the body, its rails and side display.
+  es[9]['from'][0]=-.06;es[9]['to'][0]=15.06
+  for i in (10,11):es[i]['to'][1]=16.06
+  es[13]['to'][0]=16.06
+  doc['textures']['screen']='minecraft:block/purple_concrete'
+ else:
+  assert len(es)==22,'Recheck cooler geometry after updating its source'
+  es[21]['from'][1]=16;es[21]['to'][1]=16.12
+  # Keep horizontal grille bars visibly in front of the vertical bars.
+  for i in (14,15,16):es[i]['from'][2]=-.66
+  doc['textures']['screen']='minecraft:block/light_blue_concrete'
+ # Keep protruding details inside the block so neighbours cannot intersect them.
+ low=[min(e['from'][i] for e in es) for i in range(3)]
+ high=[max(e['to'][i] for e in es) for i in range(3)]
+ for e in es:
+  for end in ('from','to'):
+   e[end]=[round((e[end][i]-low[i])*16/(high[i]-low[i]),6) for i in range(3)]
+
 def block_model(name,target):
  doc=json.loads((S/'blocks'/target/'model.json').read_text());source=json.loads((S/'blocks'/target/'source.json').read_text());prefix=source['id']+':'
  textures=list((S/'blocks'/target/'textures').glob('*.png'))
@@ -58,6 +85,7 @@ def block_model(name,target):
    doc['textures'][k]='space_fabric:block/replacements/'+target+'/'+relative
  for p in (S/'blocks'/target/'textures').rglob('*.png'):
   out=A/'textures/block/replacements'/target/p.relative_to(S/'blocks'/target/'textures');out.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(p,out)
+ repair_machine_geometry(doc,target)
  write(A/'models/block'/f'{target}.json',doc)
 def geometry(source,target):
  d=json.loads((S/'models'/source).read_text());elements=d['elements'];lo=[min(e['from'][i] for e in elements) for i in range(3)];hi=[max(e['to'][i] for e in elements) for i in range(3)]

@@ -1,6 +1,6 @@
 # Resultado de validación de esta base
 
-Última entrega: **0.54.2**, 701 pruebas JUnit aprobadas, trece comprobaciones por
+Última entrega: **0.54.3**, 702 pruebas JUnit aprobadas, trece comprobaciones por
 CPU y 1.337 JSON válidos. Los recursos nuevos se comprueban mediante
 `verifyModBatchAssets`; queda pendiente su inspección visual en un cliente. Los apartados siguientes conservan el historial de
 la base y sus ampliaciones; la validación de las categorías creativas está al final del documento.
@@ -977,3 +977,20 @@ La comprobación ampliada reproduce el fallo anterior del horno con
 classpath real de Minecraft, incluyendo su decodificación. La inspección de todos
 los modelos del mod contra el JAR cliente no encontró otras referencias vanilla
 ausentes. La validación visual en una partida sigue pendiente.
+
+## Geometría y ocultación de las máquinas (0.54.3)
+
+La captura posterior a 0.54.2 mostró un problema distinto al de referencias
+ausentes: una pareja de caras coincidentes en la refrigeración y quince en el
+horno, además de detalles fuera del bloque y una ocultación de vecinos propia
+de un cubo completo. Los relieves de puerta, rejilla, tapa y pantalla ahora
+tienen profundidad diferenciada y se ajustan al volumen del bloque. Los paneles
+usan material opaco, manteniendo sus colores.
+
+Ambas máquinas desactivan la ocultación de vecinos (`noOcclusion`), conservando
+colisión sólida, clasificación de sellado, inventarios y procesos industriales.
+La prueba de recursos compara todas las caras con la misma orientación y plano
+y rechaza áreas superpuestas; también verifica límites del modelo y un cuerpo
+con seis caras. Una prueba con estados reales verifica que las máquinas no
+oculten a sus vecinas y mantengan la colisión completa. Estas comprobaciones
+no sustituyen una inspección visual en Minecraft, que sigue pendiente.
