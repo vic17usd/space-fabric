@@ -11,7 +11,9 @@
     "PlanetSkyMixin",
     "RocketPilotStateMixin",
     "RocketPilotRendererMixin",
-    "SuitRendererMixin"
+    "SuitRendererMixin",
+    "ChatMessagesAccessor",
+    "ChatDraftAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

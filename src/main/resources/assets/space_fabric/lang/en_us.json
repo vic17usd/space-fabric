@@ -827,5 +827,18 @@
   "itemGroup.space_fabric.vehicles": "Rockets & Vehicles",
   "itemGroup.space_fabric.machines": "Machines & Networks",
   "itemGroup.space_fabric.supplies": "Supplies & Maintenance",
-  "itemGroup.space_fabric.creatures": "Creatures & Bosses"
+  "itemGroup.space_fabric.creatures": "Creatures & Bosses",
+  "chat_tools.space_fabric.title": "Copy chat messages",
+  "chat_tools.space_fabric.all": "Copy all",
+  "chat_tools.space_fabric.copy": "Copy",
+  "chat_tools.space_fabric.back": "Back to chat",
+  "chat_tools.space_fabric.copied": "Message copied to clipboard",
+  "chat_tools.space_fabric.capture": "Capture",
+  "chat_tools.space_fabric.copy_hint": "Choose a message or copy the entire chat",
+  "chat_tools.space_fabric.capture_hint": "Capture screen, save PNG and copy image",
+  "chat_tools.space_fabric.busy": "A screenshot is in progress",
+  "chat_tools.space_fabric.capture_copied": "Screenshot copied to clipboard and saved in screenshots",
+  "chat_tools.space_fabric.capture_saved": "Image saved; its path was copied: %s",
+  "chat_tools.space_fabric.capture_failed": "Could not capture the screen",
+  "atlas.space_fabric.cave": "Underground · Y %s"
 }

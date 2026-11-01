@@ -1,6 +1,6 @@
 # Resultado de validación de esta base
 
-Última entrega: **0.54.4**, 702 pruebas JUnit aprobadas, trece comprobaciones por
+Última entrega: **0.55.0**, 708 pruebas JUnit aprobadas, trece comprobaciones por
 CPU y 1.337 JSON válidos. Los recursos nuevos se comprueban mediante
 `verifyModBatchAssets`; queda pendiente su inspección visual en un cliente. Los apartados siguientes conservan el historial de
 la base y sus ampliaciones; la validación de las categorías creativas está al final del documento.
@@ -1012,3 +1012,24 @@ resuelven durante la importación, sin conservar rutas `../` en los recursos fin
 Las comprobaciones verifican los bytes frente a los recursos fuente, referencias
 PNG, codecs de equipamiento y cobertura de casco, torso y extremidades. Sigue
 pendiente la inspección visual dentro de una partida.
+
+## Chat y atlas subterráneo (0.55.0)
+
+Se compilan las APIs nativas de captura de pantalla, la transferencia de imágenes
+al portapapeles y los eventos de pantalla de Fabric. Los botones interceptan sus
+propios clics para evitar activar enlaces del chat que queden detrás. La lista
+de copia respeta el filtro de mensajes visible y permite copiar mensajes enteros
+o el historial en orden cronológico.
+
+Seis pruebas nuevas comprueban búsqueda acotada de suelos de cueva con dos
+bloques de espacio, paredes, cavidades de un bloque, límites de altura, bandas
+negativas, separación persistente de superficie/altura/dimensión y transferencia
+del PNG como imagen sin depender de un escritorio y las firmas de los campos
+vanilla usados por los accessors del chat. La captura real y el acceso
+al portapapeles del sistema requieren comprobación en el cliente del usuario.
+
+El atlas usa estratos de renderizado explícitos: terreno, marcadores, jugador
+y contorno/relleno. Las capas de cueva se almacenan aparte y se muestrean solo
+en chunks cliente existentes, con dos chunks por tick y búsqueda vertical acotada.
+El aspecto final y la interacción con otros mods de renderizado quedan pendientes
+de inspección dentro de Minecraft.

@@ -18,6 +18,10 @@ import net.minecraft.world.level.storage.LevelResource;
 
 public final class AtlasClient {
     private static final LinkedHashMap<String,AtlasData> MAPS=new LinkedHashMap<>(4,.75F,true);
+    private static final LinkedHashMap<String,AtlasData> CAVES=new LinkedHashMap<>(4,.75F,true);
+    private static boolean underground;
+    private static int caveBand;
+    private static String layerDimension="";
     private static final List<int[]> OFFSETS=new ArrayList<>();
     private static final AtlasCanvas MINI=new AtlasCanvas("atlas_mini",76);
     private static UUID world;
@@ -47,12 +51,24 @@ public final class AtlasClient {
         }
         return data;
     }
+    public static boolean underground(){return underground;}
+    public static AtlasData terrain(AtlasData surface) throws IOException {
+        if(!underground||!surface.dimension().equals(dimension()))return surface;
+        String key=surface.dimension()+"|"+caveBand;
+        var data=CAVES.get(key);
+        if(data==null) {
+            if(CAVES.size()>=4){var oldest=CAVES.entrySet().iterator().next();oldest.getValue().flush(Integer.MAX_VALUE);CAVES.remove(oldest.getKey());}
+            data=new AtlasData(root.resolve("caves").resolve(Integer.toString(caveBand)),surface.dimension());CAVES.put(key,data);
+        }
+        return data;
+    }
     public static List<String> visited() throws IOException {return root==null?List.of():AtlasData.visited(root).stream().filter(d->!d.equals("space_fabric:earth")).toList();}
     public static void error(Exception failure){SpaceFabric.LOGGER.warn("Planet atlas operation failed",failure);var c=Minecraft.getInstance();if(c.player!=null)c.player.sendSystemMessage(text("error"));}
     public static void report(AtlasData data){if(data.error()!=null&&WARNED.add(data.dimension()))error(data.error());}
     private static void close(){
         for(var data:MAPS.values())try{data.flush(Integer.MAX_VALUE);}catch(IOException failure){error(failure);}
-        MAPS.clear();WARNED.clear();root=null;world=null;failed=false;cursor=0;MINI.close();
+        for(var data:CAVES.values())try{data.flush(Integer.MAX_VALUE);}catch(IOException failure){error(failure);}
+        CAVES.clear();underground=false;layerDimension="";MAPS.clear();WARNED.clear();root=null;world=null;failed=false;cursor=0;MINI.close();
     }
     private static void start(Minecraft c) throws IOException {
         String scope=c.getSingleplayerServer()!=null?"local:"+c.getSingleplayerServer().getWorldPath(LevelResource.ROOT).toAbsolutePath().normalize():
@@ -63,6 +79,14 @@ public final class AtlasClient {
     }
     private static void sample(Minecraft c,AtlasData data) throws IOException {
         data.position(c.player.getBlockX(),c.player.getBlockY(),c.player.getBlockZ());
+        var feet=c.player.blockPosition();
+        int roof=c.level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,feet.getX(),feet.getZ());
+        boolean cave=roof>feet.getY()+3&&!c.level.canSeeSky(feet);
+        int band=CaveSlice.band(feet.getY());
+        if(cave!=underground||(cave&&band!=caveBand)||!layerDimension.equals(dimension()))cursor=0;
+        underground=cave;caveBand=band;layerDimension=dimension();
+        var caveData=cave?terrain(data):null;
+        if(caveData!=null)caveData.position(feet.getX(),feet.getY(),feet.getZ());
         for(int work=0;work<2;work++) {
             var offset=OFFSETS.get(cursor);cursor=(cursor+1)%OFFSETS.size();int cx=(c.player.getBlockX()>>4)+offset[0],cz=(c.player.getBlockZ()>>4)+offset[1];
             var chunk=c.level.getChunkSource().getChunk(cx,cz,ChunkStatus.FULL,false);if(chunk==null)continue;
@@ -78,6 +102,22 @@ public final class AtlasClient {
                     color=0xFF000000|((int)(((rgb>>16)&255)*shade)<<16)|((int)(((rgb>>8)&255)*shade)<<8)|(int)((rgb&255)*shade);
                 }
                 data.record(wx,wz,Math.clamp(top+1,-2048,2047),color);
+                if(caveData!=null) {
+                    var p=new BlockPos.MutableBlockPos(wx,caveBand,wz);
+                    int floor=CaveSlice.floor(feet.getY(),c.level.getMinY(),c.level.getMaxY()-1,y->{
+                        p.setY(y);var block=chunk.getBlockState(p);
+                        return !block.isAir()&&!block.getCollisionShape(c.level,p).isEmpty();
+                    });
+                    int caveColor=0xFF252936;
+                    if(floor!=Integer.MIN_VALUE) {
+                        p.setY(floor);int rgb=chunk.getBlockState(p).getMapColor(c.level,p).col;
+                        if(rgb==0)rgb=0x75818A;
+                        caveColor=0xFF000000|rgb;
+                        p.setY(floor+1);
+                        if(!chunk.getBlockState(p).getFluidState().isEmpty()){int fluid=chunk.getBlockState(p).getMapColor(c.level,p).col;caveColor=0xFF000000|(fluid==0?0x346DA6:fluid);}
+                    }
+                    caveData.record(wx,wz,floor==Integer.MIN_VALUE?caveBand:floor+1,caveColor);
+                }
             }
         }
     }
@@ -92,7 +132,7 @@ public final class AtlasClient {
             if(c.level==null||c.player==null)return;
             tick++;
             try {
-                if(world!=null&&!failed){if(root==null)start(c);for(var data:MAPS.values())data.beginTick();var data=map(dimension());if(!c.isPaused())sample(c,data);report(data);if(tick%20==0)for(var cached:MAPS.values())cached.flush(2);}
+                if(world!=null&&!failed){if(root==null)start(c);for(var data:MAPS.values())data.beginTick();for(var data:CAVES.values())data.beginTick();var data=map(dimension());if(!c.isPaused())sample(c,data);report(data);if(tick%20==0){for(var cached:MAPS.values())cached.flush(2);for(var cached:CAVES.values())cached.flush(2);}}
             }catch(IOException failure){failed=true;error(failure);}
             while(openKey.consumeClick())if(c.screen==null){if(root!=null&&!failed)c.setScreen(new AtlasScreen());else c.player.sendSystemMessage(text("waiting"));}
             while(mark.consumeClick())if(c.screen==null&&root!=null&&!failed)try{c.setScreen(new WaypointScreen(null,map(dimension()),null,c.player.getBlockX(),c.player.getBlockY(),c.player.getBlockZ()));}catch(IOException failure){error(failure);}
@@ -104,7 +144,7 @@ public final class AtlasClient {
             try {
                 int x=gui.guiWidth()-84,y=24;
                 MINI.draw(gui,map(dimension()),x,y,76,c.player.getX(),c.player.getZ(),2,false);
-                gui.text(c.font,c.font.split(label(dimension()),76).getFirst(),x,y-12,0xFFE5F4FA);
+                gui.text(c.font,c.font.split(underground?text("cave",c.player.getBlockY()):label(dimension()),76).getFirst(),x,y-12,0xFFE5F4FA);
                 gui.centeredText(c.font,c.font.plainSubstrByWidth(c.player.getBlockX()+", "+c.player.getBlockZ(),76),x+38,y+83,0xFFE5F4FA);
             }catch(IOException failure){error(failure);}
         });

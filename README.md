@@ -1,5 +1,9 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión 0.55.0 añade botones de copia de mensajes y capturas al chat, y
+capas subterráneas automáticas al atlas. El indicador del jugador se dibuja
+sobre el terreno y los marcadores. [Uso y comprobaciones](docs/chat-and-cave-map.md).
+
 La versión 0.54.4 restaura el regolito de óxido de hierro y sitúa el minimapa
 arriba a la derecha. Actualiza bauxita, Ares y los trajes de vacío y Venus con
 los diseños aportados, incluyendo iconos de inventario y capas equipadas.

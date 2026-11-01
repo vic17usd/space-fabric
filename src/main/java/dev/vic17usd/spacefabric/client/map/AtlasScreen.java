@@ -91,7 +91,7 @@ public final class AtlasScreen extends Screen {
     @Override public void extractRenderState(GuiGraphicsExtractor gui,int mouseX,int mouseY,float delta){
         gui.fill(0,0,width,height,0xE6121D29);gui.text(font,title,8,8,0xFFE6F5FA);
         if(data==null)return;
-        canvas.draw(gui,data,left,top,side,centerX,centerZ,ZOOM[zoom],true);
+        try{canvas.draw(gui,data,left,top,side,centerX,centerZ,ZOOM[zoom],true);}catch(IOException failure){AtlasClient.error(failure);}
         AtlasClient.report(data);
         gui.text(font,AtlasClient.text("markers",data.waypoints().size()),panel,12,0xFFB9D5DF);
         gui.centeredText(font,(page+1)+" / "+Math.max(1,(data.waypoints().size()+rows-1)/rows),panel+76,height-86,0xFFAAC3D0);
