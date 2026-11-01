@@ -1,5 +1,8 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión 0.55.4 usa hielo azul limpio en todas las caras del hielo glaciar
+marciano, conservando sus posiciones y la cubierta blanca de CO₂.
+
 La versión 0.55.3 corrige la copia de capturas en Windows usando su
 portapapeles nativo, compatible con el modo Java sin escritorio de Minecraft.
 

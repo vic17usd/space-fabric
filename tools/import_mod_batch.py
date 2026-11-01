@@ -88,6 +88,9 @@ def block_model(name,target):
    doc['textures'][k]='space_fabric:block/replacements/'+target+'/'+relative
  for p in (S/'blocks'/target/'textures').rglob('*.png'):
   out=A/'textures/block/replacements'/target/p.relative_to(S/'blocks'/target/'textures');out.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(p,out)
+ if target=='martian_glacier_ice':
+  # The source side/top include red soil. Its bottom is the same blue ice without soil.
+  doc={'parent':'minecraft:block/cube_all','textures':{'all':doc['textures']['down']}}
  repair_machine_geometry(doc,target)
  write(A/'models/block'/f'{target}.json',doc)
 def geometry(source,target):

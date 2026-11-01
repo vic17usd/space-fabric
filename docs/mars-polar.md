@@ -119,3 +119,10 @@ Diseño original: **holasoynuevo / CreativeMode.net**,
 Las licencias se incluyen en el JAR. Se importan los recursos como datos; las clases,
 TerraBlender, los inicializadores y la telemetría del archivo original quedan fuera
 del mod integrado.
+
+## Apariencia del hielo desde 0.55.4
+
+El hielo glaciar azul usa la textura limpia en todas sus caras, sin franja
+de tierra. La cubierta blanca de CO₂ y las posiciones de los bloques se
+conservan. El cambio visual se aplica también a terreno existente al actualizar
+el JAR y reiniciar Minecraft; no requiere generar chunks nuevos.

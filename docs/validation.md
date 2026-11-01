@@ -1,6 +1,6 @@
 # Resultado de validación de esta base
 
-Última entrega: **0.55.3**, 723 pruebas JUnit aprobadas, trece comprobaciones por
+Última entrega: **0.55.4**, 723 pruebas JUnit aprobadas, trece comprobaciones por
 CPU y 1.337 JSON válidos. Los recursos nuevos se comprueban mediante
 `verifyModBatchAssets`; queda pendiente su inspección visual en un cliente. Los apartados siguientes conservan el historial de
 la base y sus ampliaciones; la validación de las categorías creativas está al final del documento.
@@ -1092,3 +1092,16 @@ propiedad y limpieza usando una API Win32 simulada con memoria nativa de JNA.
 No se ha ejecutado esta llamada al portapapeles real de Windows en este entorno
 Linux. macOS usa osascript; Linux puede usar wl-copy o xclip si están disponibles;
 esas rutas también requieren comprobación en su escritorio correspondiente.
+
+## Hielo glaciar sin tierra (0.55.4)
+
+El modelo de `martian_glacier_ice` usa en sus seis caras el PNG inferior
+original de Frostglass, que muestra hielo azul sin la franja marrón ni la
+cubierta de tierra del modelo fuente. No se repintan imágenes ni se cambian
+bloques, posiciones, cubiertas blancas de CO₂, alturas o generación. El cambio
+se aplica también a los bloques ya colocados al cargar los recursos nuevos.
+El importador conserva esta asignación en posteriores regeneraciones.
+
+Se ejecutan las comprobaciones existentes de referencias, texturas y modelos,
+además de la compilación completa. La inspección visual dentro del cliente
+sigue pendiente.
