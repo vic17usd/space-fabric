@@ -9,7 +9,7 @@ final class PlayerMarkerGeometry {
     record Span(int pass,int x0,int x1,int y) { }
     static final List<Span> SPANS=build();
     private PlayerMarkerGeometry() { }
-    static Matrix3x2f pose(int x,int y,double yaw){return new Matrix3x2f().translate(x,y).rotate((float)yaw).scale(.8F);}
+    static Matrix3x2f pose(int x,int y,double yaw){return new Matrix3x2f().translate(x,y).rotate((float)yaw).scale(.65F);}
     private static boolean arrow(int x,int y){return AtlasStyle.player(x,y,0);}
     private static List<Span> build(){
         var result=new ArrayList<Span>();

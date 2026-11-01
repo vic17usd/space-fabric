@@ -1,6 +1,6 @@
 # Resultado de validación de esta base
 
-Última entrega: **0.55.1**, 714 pruebas JUnit aprobadas, trece comprobaciones por
+Última entrega: **0.55.2**, 718 pruebas JUnit aprobadas, trece comprobaciones por
 CPU y 1.337 JSON válidos. Los recursos nuevos se comprueban mediante
 `verifyModBatchAssets`; queda pendiente su inspección visual en un cliente. Los apartados siguientes conservan el historial de
 la base y sus ampliaciones; la validación de las categorías creativas está al final del documento.
@@ -1053,3 +1053,21 @@ Seis pruebas adicionales cubren esa geometría y la selección del mensaje por
 coordenadas con escalas, espaciados, desplazamiento, historial vacío, límites
 y líneas partidas. El renderizado final y la interacción con el portapapeles
 del sistema siguen pendientes de inspección dentro del juego.
+
+## Copia de PNG desde el aviso de F2 (0.55.2)
+
+El icono del jugador pasa de escala uniforme 0,80 a 0,65, manteniendo su
+rotación rígida, silueta y contorno. Se conservan las pruebas geométricas.
+
+La acción de copia reconoce el componente nativo `screenshot.success`, localiza
+el enlace `ClickEvent.OpenFile` de su argumento y carga ese PNG como imagen.
+No depende del texto traducido ni del idioma. Los mensajes normales conservan
+la copia de texto; una captura ausente o un error del portapapeles no se
+convierten en texto ni ruta copiada. El botón de captura usa el mismo lector
+y tampoco sustituye una imagen fallida por una cadena de texto.
+
+Cuatro pruebas nuevas construyen el aviso nativo de F2 con un PNG temporal
+y comprueban sus píxeles y tipo de transferencia, componentes con prefijos,
+selección de archivos dentro de screenshots y fallos de imágenes ausentes o
+inválidas. El renderizado y el portapapeles nativo del escritorio aún requieren
+comprobación dentro del cliente del usuario.

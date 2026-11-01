@@ -6,7 +6,6 @@ import dev.vic17usd.spacefabric.mixin.client.ChatDraftAccessor;
 import java.nio.file.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-import javax.imageio.ImageIO;
 import net.fabricmc.fabric.api.client.screen.v1.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Screenshot;
@@ -37,15 +36,19 @@ public final class ChatTools {
                     gui.fill(hit.x()-1,hit.y()-1,hit.x()+hit.size()+1,hit.y()+hit.size()+1,hover?0xEE536A7B:0xC022303C);
                     gui.pose().pushMatrix();gui.pose().translate(hit.x(),hit.y()).scale(hit.size()/8F);
                     gui.outline(0,0,6,6,0xFF8EA5B6);gui.outline(2,2,6,6,0xFFFFFFFF);gui.pose().popMatrix();
-                    if(hover)gui.setTooltipForNextFrame(c.font,text("copy_hint"),mx,my);
+                    if(hover){var message=((ChatMessagesAccessor)c.gui.getChat()).spaceFabric$lines().get(hit.lineIndex()).parent().content();gui.setTooltipForNextFrame(c.font,text(ScreenshotChatMessage.matches(message)?"copy_image_hint":"copy_hint"),mx,my);}
                 });
                 // Consume icon clicks before vanilla handles message links or suggestions.
                 ScreenMouseEvents.allowMouseClick(screen).register((s,event)->{
                     var hit=hit(c,s,event.x(),event.y());
                     if(event.button()==0&&hit!=null&&hit.contains(event.x(),event.y())){
                         var access=(ChatMessagesAccessor)c.gui.getChat();
-                        c.keyboardHandler.setClipboard(access.spaceFabric$lines().get(hit.lineIndex()).parent().content().getString());
-                        notify("copied");return false;
+                        var message=access.spaceFabric$lines().get(hit.lineIndex()).parent().content();
+                        if(ScreenshotChatMessage.matches(message)){
+                            var file=ScreenshotChatMessage.file(message,c.gameDirectory.toPath());
+                            if(file.isPresent())copyScreenshot(file.get());else notify("capture_missing");
+                        }else{c.keyboardHandler.setClipboard(message.getString());notify("copied");}
+                        return false;
                     }
                     for(var button:TOOLS.getOrDefault(s,java.util.List.of()))if(button.isMouseOver(event.x(),event.y())&&event.button()==0){button.mouseClicked(event,false);return false;}
                     return true;
@@ -59,6 +62,21 @@ public final class ChatTools {
         if(hit!=null&&!access.spaceFabric$visibleFilter().test(access.spaceFabric$lines().get(hit.lineIndex()).parent()))return null;
         return hit;
     }
+    private static void putImage(Path file) throws java.io.IOException {
+        java.awt.Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ClipboardImage.fromPng(file),null);
+    }
+    private static void copyScreenshot(Path file){
+        if(!BUSY.compareAndSet(false,true)){notify("busy");return;}
+        COPIER.execute(()->{
+            try{
+                var folder=Minecraft.getInstance().gameDirectory.toPath().resolve("screenshots").toRealPath();
+                var real=file.toRealPath();
+                if(!real.startsWith(folder))throw new java.io.IOException("Screenshot outside screenshot directory");
+                putImage(real);notify("capture_copied");
+            }catch(Exception|LinkageError failure){SpaceFabric.LOGGER.warn("Screenshot image copy failed",failure);notify("capture_copy_failed");}
+            finally{BUSY.set(false);}
+        });
+    }
     private static void capture(){
         if(!BUSY.compareAndSet(false,true)){notify("busy");return;}
         var c=Minecraft.getInstance();
@@ -68,16 +86,11 @@ public final class ChatTools {
                 try(image){
                     var directory=c.gameDirectory.toPath().resolve("screenshots");Files.createDirectories(directory);
                     file=Files.createTempFile(directory,"space-fabric-",".png");image.writeToFile(file);
-                    var png=ImageIO.read(file.toFile());
-                    if(png==null)throw new java.io.IOException("Invalid screenshot PNG");
-                    java.awt.Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new ClipboardImage(png),null);
+                    putImage(file);
                     notify("capture_copied");
                 }catch(Exception|LinkageError failure){
                     SpaceFabric.LOGGER.warn("Screenshot clipboard failed",failure);
-                    if(file!=null&&Files.isRegularFile(file)){
-                        String saved=file.toAbsolutePath().toString();
-                        c.execute(()->{c.keyboardHandler.setClipboard(saved);notify("capture_saved",saved);});
-                    }else notify("capture_failed");
+                    if(file!=null&&Files.isRegularFile(file))notify("capture_copy_failed");else notify("capture_failed");
                 }finally{BUSY.set(false);}
             }));
         }catch(RuntimeException failure){BUSY.set(false);SpaceFabric.LOGGER.warn("Screenshot capture failed",failure);notify("capture_failed");}

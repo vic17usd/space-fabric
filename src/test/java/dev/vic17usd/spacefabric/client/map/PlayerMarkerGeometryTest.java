@@ -21,8 +21,8 @@ class PlayerMarkerGeometryTest {
                 var a=pose.transformPosition(span.x0(),span.y(),new Vector2f());
                 var b=pose.transformPosition(span.x1(),span.y(),new Vector2f());
                 var c=pose.transformPosition(span.x0(),span.y()+1,new Vector2f());
-                assertEquals((span.x1()-span.x0())*.8,a.distance(b),.00002);
-                assertEquals(.8,a.distance(c),.00002);
+                assertEquals((span.x1()-span.x0())*.65,a.distance(b),.00002);
+                assertEquals(.65,a.distance(c),.00002);
                 assertEquals(0,new Vector2f(b).sub(a).dot(new Vector2f(c).sub(a)),.0001);
             }
         }

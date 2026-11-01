@@ -840,5 +840,8 @@
   "chat_tools.space_fabric.capture_copied": "Screenshot copied to clipboard and saved in screenshots",
   "chat_tools.space_fabric.capture_saved": "Image saved; its path was copied: %s",
   "chat_tools.space_fabric.capture_failed": "Could not capture the screen",
-  "atlas.space_fabric.cave": "Underground · Y %s"
+  "atlas.space_fabric.cave": "Underground · Y %s",
+  "chat_tools.space_fabric.copy_image_hint": "Click to copy this screenshot as an image",
+  "chat_tools.space_fabric.capture_missing": "Could not find the file for this screenshot",
+  "chat_tools.space_fabric.capture_copy_failed": "Could not copy the image. The PNG remains in screenshots."
 }

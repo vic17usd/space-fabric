@@ -1,4 +1,4 @@
-# Copia del chat y mapa de cuevas — 0.55.1
+# Copia del chat y mapa de cuevas — 0.55.2
 
 Abre el chat y pasa el mouse sobre un mensaje. Aparece un icono pequeño de
 dos hojas al final de esa línea del chat: un clic izquierdo copia el mensaje
@@ -15,11 +15,15 @@ para obtener el historial en orden cronológico; no envía mensajes al servidor.
 
 «Captura» toma la pantalla actual, guarda el PNG en `screenshots` y copia la
 imagen al portapapeles del sistema para pegarla fuera del juego. Solo se permite
-una captura simultánea. Si el sistema no admite copiar imágenes, se guarda el
-PNG y se copia su ruta, con un aviso que distingue ambos resultados. No se
-suben archivos automáticamente.
+una operación de imagen simultánea. Si falla el portapapeles, se informa del
+problema y se conserva el PNG, sin copiar texto o rutas como sustituto.
 
-La flecha del jugador usa una silueta fija que gira de forma uniforme, sin
+Desde 0.55.2, el mismo icono de copiar que aparece junto al aviso de una captura
+hecha con F2 copia su imagen original. Reconoce el aviso de Minecraft en cualquier
+idioma y usa el archivo enlazado; no hace una captura nueva ni copia la frase
+«Captura de pantalla guardada…». Si ese archivo fue borrado, muestra un aviso.
+
+La flecha del jugador, reducida aproximadamente un 19 % en 0.55.2, usa una silueta fija que gira de forma uniforme, sin
 recalcular sus píxeles por ángulo. Sus estratos están separados del terreno,
 los marcadores y su propio contorno. El minimapa conserva tamaño y posición arriba a la derecha.
 

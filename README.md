@@ -1,5 +1,8 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión 0.55.2 reduce el indicador del jugador y permite copiar la imagen
+desde el aviso de captura de F2 usando el mismo icono del chat.
+
 La versión 0.55.1 sustituye la selección de mensajes por copia con un clic junto
 a cada línea del chat y gira la flecha del mapa sin deformar su silueta.
 
