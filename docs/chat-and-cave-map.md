@@ -1,4 +1,4 @@
-# Copia del chat y mapa de cuevas — 0.55.2
+# Copia del chat y mapa de cuevas — 0.55.3
 
 Abre el chat y pasa el mouse sobre un mensaje. Aparece un icono pequeño de
 dos hojas al final de esa línea del chat: un clic izquierdo copia el mensaje
@@ -43,3 +43,9 @@ leen chunks cargados en el cliente; no se solicitan chunks remotos adicionales.
 Los datos de cuevas se guardan en `config/space-fabric/maps/<sesión>/caves/`.
 Se mantienen hasta cuatro capas abiertas y se guardan al salir de la partida.
 La apariencia y el portapapeles deben comprobarse también dentro del juego.
+
+Desde 0.55.3 la copia de imágenes en Windows usa directamente el portapapeles
+del sistema; no depende de AWT, que Minecraft desactiva al iniciar. Publica el
+PNG y un mapa de bits estándar para facilitar pegar en distintas aplicaciones.
+La misma ruta sirve para el botón «Captura» y los avisos de capturas hechas con F2.
+Los PNG guardados permanecen en `screenshots`.

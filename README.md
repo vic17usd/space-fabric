@@ -1,5 +1,8 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión 0.55.3 corrige la copia de capturas en Windows usando su
+portapapeles nativo, compatible con el modo Java sin escritorio de Minecraft.
+
 La versión 0.55.2 reduce el indicador del jugador y permite copiar la imagen
 desde el aviso de captura de F2 usando el mismo icono del chat.
 

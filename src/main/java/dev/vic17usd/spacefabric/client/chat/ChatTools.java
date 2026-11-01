@@ -63,7 +63,7 @@ public final class ChatTools {
         return hit;
     }
     private static void putImage(Path file) throws java.io.IOException {
-        java.awt.Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ClipboardImage.fromPng(file),null);
+        SystemImageClipboard.copy(file);
     }
     private static void copyScreenshot(Path file){
         if(!BUSY.compareAndSet(false,true)){notify("busy");return;}

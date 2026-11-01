@@ -1,6 +1,6 @@
 # Resultado de validación de esta base
 
-Última entrega: **0.55.2**, 718 pruebas JUnit aprobadas, trece comprobaciones por
+Última entrega: **0.55.3**, 723 pruebas JUnit aprobadas, trece comprobaciones por
 CPU y 1.337 JSON válidos. Los recursos nuevos se comprueban mediante
 `verifyModBatchAssets`; queda pendiente su inspección visual en un cliente. Los apartados siguientes conservan el historial de
 la base y sus ampliaciones; la validación de las categorías creativas está al final del documento.
@@ -1071,3 +1071,24 @@ y comprueban sus píxeles y tipo de transferencia, componentes con prefijos,
 selección de archivos dentro de screenshots y fallos de imágenes ausentes o
 inválidas. El renderizado y el portapapeles nativo del escritorio aún requieren
 comprobación dentro del cliente del usuario.
+
+## Portapapeles nativo de imágenes (0.55.3)
+
+El bytecode real de `net.minecraft.client.main.Main` de 26.1 configura
+`java.awt.headless=true`. Por ello el Toolkit de AWT usado anteriormente
+no puede abrir el portapapeles, aunque `BufferedImage` e ImageIO sí funcionen.
+En Windows se usa JNA, ya incluido con Minecraft, para abrir el portapapeles
+con el HWND de GLFW del juego y publicar CF_DIB y el PNG original. El DIB usa
+BITMAPINFOHEADER, píxeles BGRA y filas de abajo arriba.
+
+Las asignaciones se desbloquean antes de publicarlas; solo Windows libera la
+memoria aceptada por SetClipboardData. Las asignaciones rechazadas se recuperan
+y el portapapeles se cierra también tras un fallo. Se reintenta brevemente una
+apertura ocupada. Una publicación válida de CF_DIB se conserva aunque falle
+el formato PNG adicional. Nunca se copia texto como sustituto de una imagen.
+
+Cinco pruebas nuevas verifican bytes del formato, reintentos, transferencia de
+propiedad y limpieza usando una API Win32 simulada con memoria nativa de JNA.
+No se ha ejecutado esta llamada al portapapeles real de Windows en este entorno
+Linux. macOS usa osascript; Linux puede usar wl-copy o xclip si están disponibles;
+esas rutas también requieren comprobación en su escritorio correspondiente.
