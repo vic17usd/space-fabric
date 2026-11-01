@@ -1,6 +1,6 @@
 {
   "textures": {
-    "basalt": "minecraft:block/polished_basalt",
+    "basalt": "minecraft:block/polished_basalt_side",
     "dark": "minecraft:block/deepslate_tiles",
     "metal": "minecraft:block/iron_block",
     "trim": "minecraft:block/cut_copper",
@@ -8,7 +8,8 @@
     "violet": "minecraft:block/amethyst_block",
     "screen": "minecraft:block/purple_stained_glass",
     "hot": "minecraft:block/magma",
-    "particle": "#basalt"
+    "particle": "#basalt",
+    "basalt_end": "minecraft:block/polished_basalt_top"
   },
   "elements": [
     {

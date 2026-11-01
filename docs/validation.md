@@ -1,6 +1,6 @@
 # Resultado de validación de esta base
 
-Última entrega: **0.54.1**, 701 pruebas JUnit aprobadas, trece comprobaciones por
+Última entrega: **0.54.2**, 701 pruebas JUnit aprobadas, trece comprobaciones por
 CPU y 1.337 JSON válidos. Los recursos nuevos se comprueban mediante
 `verifyModBatchAssets`; queda pendiente su inspección visual en un cliente. Los apartados siguientes conservan el historial de
 la base y sus ampliaciones; la validación de las categorías creativas está al final del documento.
@@ -963,3 +963,17 @@ las imágenes de interfaz de los JAR aportados y las copia bajo
 al atlas del mod y que su PNG exista y pueda decodificarse. Resolver un nombre
 de textura en el modelo no era suficiente para detectar un archivo ausente.
 La verificación del renderizado dentro de una partida sigue pendiente.
+
+## Referencias vanilla de las máquinas (0.54.2)
+
+La comprobación anterior omitía los archivos de textura de Minecraft. En el JAR
+real de 26.1, `block/smooth_quartz.png` y `block/polished_basalt.png` no existen.
+Se usan `quartz_block_bottom` y `polished_basalt_side`/`polished_basalt_top`,
+respectivamente, siguiendo los modelos vanilla. Se mantienen geometría, UV y
+funcionamiento. El importador aplica estas correcciones al regenerar recursos.
+
+La comprobación ampliada reproduce el fallo anterior del horno con
+`Missing vanilla texture PNG` y ahora verifica también los PNG vanilla desde el
+classpath real de Minecraft, incluyendo su decodificación. La inspección de todos
+los modelos del mod contra el JAR cliente no encontró otras referencias vanilla
+ausentes. La validación visual en una partida sigue pendiente.

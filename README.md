@@ -1,5 +1,8 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión 0.54.2 corrige las referencias de cuarzo y basalto de la unidad de
+refrigeración y el horno cerámico venusianos, también presentes en sus ítems.
+
 La versión 0.54.1 corrige las texturas rosa y negro de diez bloques importados.
 Incluye sus imágenes de origen y corrige las referencias al atlas de bloques.
 

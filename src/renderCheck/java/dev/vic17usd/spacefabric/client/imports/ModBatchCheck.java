@@ -12,7 +12,15 @@ public final class ModBatchCheck {
     private static void checkTextureFiles(Path root, JsonObject model, String target) throws Exception {
         for (var entry : model.getAsJsonObject("textures").entrySet()) {
             String texture = entry.getValue().getAsString();
-            if (texture.startsWith("#") || texture.startsWith("minecraft:")) continue;
+            if (texture.startsWith("#")) continue;
+            if (texture.startsWith("minecraft:")) {
+                String resource = "/assets/minecraft/textures/" + texture.split(":", 2)[1] + ".png";
+                try (var stream = ModBatchCheck.class.getResourceAsStream(resource)) {
+                    if (stream == null || javax.imageio.ImageIO.read(stream) == null)
+                        throw new AssertionError("Missing vanilla texture PNG: " + target + " -> " + texture);
+                }
+                continue;
+            }
             if (!texture.startsWith("space_fabric:block/") && !texture.startsWith("space_fabric:item/"))
                 throw new AssertionError("Texture outside the supplied block atlas: " + target + " -> " + texture);
             var png = root.resolve("textures/" + texture.split(":", 2)[1] + ".png");

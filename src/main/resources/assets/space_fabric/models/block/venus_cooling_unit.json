@@ -1,6 +1,6 @@
 {
   "textures": {
-    "ceramic": "minecraft:block/smooth_quartz",
+    "ceramic": "minecraft:block/quartz_block_bottom",
     "copper": "minecraft:block/cut_copper",
     "dark": "minecraft:block/deepslate_tiles",
     "grille": "minecraft:block/iron_block",

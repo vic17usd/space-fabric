@@ -38,6 +38,16 @@ def block_model(name,target):
  if doc.get('elements') and not doc.get('parent'):doc['parent']='minecraft:block/block'
  if doc.get('elements') and 'particle' not in doc.get('textures',{}):
   doc['textures']['particle']='#'+next(iter(doc['textures']))
+ # Vanilla block IDs are not necessarily texture IDs. Match the real 26.1 models.
+ for key,value in list(doc['textures'].items()):
+  if value=='minecraft:block/smooth_quartz':
+   doc['textures'][key]='minecraft:block/quartz_block_bottom'
+  elif value=='minecraft:block/polished_basalt':
+   doc['textures'][key]='minecraft:block/polished_basalt_side'
+   end_key=key+'_end';doc['textures'][end_key]='minecraft:block/polished_basalt_top'
+   for element in doc.get('elements',[]):
+    for direction,face in element.get('faces',{}).items():
+     if direction in ('up','down') and face.get('texture')=='#'+key:face['texture']='#'+end_key
  for k,v in doc['textures'].items():
   if isinstance(v,str) and v.startswith(prefix):
    relative=v[len(prefix):]
