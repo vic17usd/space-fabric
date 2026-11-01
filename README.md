@@ -1,5 +1,9 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión 0.54.0 incorpora los diseños aportados para 30 bloques, 21 objetos
+y dos máquinas venusianas. Conserva sus funciones y recetas existentes.
+[Asignación y validación de los recursos](docs/mod-batch-replacements.md).
+
 La versión 0.53.0 organiza el **inventario creativo en ocho categorías por utilidad**:
 bloques, materiales, herramientas y armas, trajes, vehículos, máquinas, suministros
 y criaturas. Conserva todos los objetos y los iconos nuevos de los trajes.

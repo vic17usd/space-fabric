@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "space_fabric:block/ares_crystal_ore"
+    "all": "ares-ember-ore-letdlqhf:gui/ares_ember_ore_letdlqhf"
   }
 }

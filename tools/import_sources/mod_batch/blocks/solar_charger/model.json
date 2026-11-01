@@ -1,0 +1,61 @@
+{
+  "textures": {
+    "panel": "sunforge-solar-charger-pvvgvihw:block/sunforge_solar_charger_pvvgvihw",
+    "alloy": "minecraft:block/gray_concrete",
+    "metal": "minecraft:block/iron_block",
+    "conduit": "minecraft:block/light_blue_stained_glass"
+  },
+  "elements": [
+    {
+      "from": [0, 0, 0],
+      "to": [16, 6, 16],
+      "faces": {
+        "down": {"texture": "#alloy"},
+        "up": {"texture": "#alloy"},
+        "north": {"texture": "#alloy"},
+        "south": {"texture": "#alloy"},
+        "west": {"texture": "#alloy"},
+        "east": {"texture": "#alloy"}
+      }
+    },
+    {
+      "from": [0, 0, 0],
+      "to": [2, 8, 2],
+      "faces": {"north": {"texture": "#metal"}, "south": {"texture": "#metal"}, "west": {"texture": "#metal"}, "east": {"texture": "#metal"}, "up": {"texture": "#metal"}, "down": {"texture": "#metal"}}
+    },
+    {
+      "from": [14, 0, 0],
+      "to": [16, 8, 2],
+      "faces": {"north": {"texture": "#metal"}, "south": {"texture": "#metal"}, "west": {"texture": "#metal"}, "east": {"texture": "#metal"}, "up": {"texture": "#metal"}, "down": {"texture": "#metal"}}
+    },
+    {
+      "from": [0, 0, 14],
+      "to": [2, 8, 16],
+      "faces": {"north": {"texture": "#metal"}, "south": {"texture": "#metal"}, "west": {"texture": "#metal"}, "east": {"texture": "#metal"}, "up": {"texture": "#metal"}, "down": {"texture": "#metal"}}
+    },
+    {
+      "from": [14, 0, 14],
+      "to": [16, 8, 16],
+      "faces": {"north": {"texture": "#metal"}, "south": {"texture": "#metal"}, "west": {"texture": "#metal"}, "east": {"texture": "#metal"}, "up": {"texture": "#metal"}, "down": {"texture": "#metal"}}
+    },
+    {
+      "from": [1, 7, 1],
+      "to": [15, 8, 15],
+      "faces": {
+        "up": {"uv": [0, 0, 16, 12], "texture": "#panel"},
+        "down": {"texture": "#alloy"},
+        "north": {"texture": "#conduit"},
+        "south": {"texture": "#conduit"},
+        "west": {"texture": "#conduit"},
+        "east": {"texture": "#conduit"}
+      }
+    },
+    {
+      "from": [5, 1, -0.01],
+      "to": [11, 4, 0.01],
+      "faces": {
+        "north": {"uv": [4, 12, 12, 16], "texture": "#panel", "tintindex": 0}
+      }
+    }
+  ]
+}

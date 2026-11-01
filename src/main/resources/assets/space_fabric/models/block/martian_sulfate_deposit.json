@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "space_fabric:block/martian_sulfate_deposit"
+    "all": "space_fabric:block/replacements/martian_sulfate_deposit/martian_sulfide_vein_ap4pip5e"
   }
 }

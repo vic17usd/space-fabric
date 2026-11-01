@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "habitat-lifeline-6t2bhcdt:block/habitat_lifeline_6t2bhcdt_north",
+    "up": "habitat-lifeline-6t2bhcdt:block/habitat_lifeline_6t2bhcdt_top_bottom_south",
+    "down": "habitat-lifeline-6t2bhcdt:block/habitat_lifeline_6t2bhcdt_top_bottom_south",
+    "north": "habitat-lifeline-6t2bhcdt:block/habitat_lifeline_6t2bhcdt_north",
+    "south": "habitat-lifeline-6t2bhcdt:block/habitat_lifeline_6t2bhcdt_top_bottom_south",
+    "east": "habitat-lifeline-6t2bhcdt:block/habitat_lifeline_6t2bhcdt_east_west",
+    "west": "habitat-lifeline-6t2bhcdt:block/habitat_lifeline_6t2bhcdt_east_west"
+  }
+}

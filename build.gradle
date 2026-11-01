@@ -160,3 +160,10 @@ tasks.register('suitIconsPack', Zip) {
         include 'assets/space_fabric/textures/item/*_suit_*.png'
     }
 }
+
+tasks.register('verifyModBatchAssets', JavaExec) {
+    dependsOn tasks.named('renderCheckClasses')
+    classpath = sourceSets.renderCheck.runtimeClasspath
+    mainClass = 'dev.vic17usd.spacefabric.client.imports.ModBatchCheck'
+}
+tasks.named('check') { dependsOn tasks.named('verifyModBatchAssets') }

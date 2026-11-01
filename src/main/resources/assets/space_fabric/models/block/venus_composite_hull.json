@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "space_fabric:block/venus_composite_hull"
+    "all": "space_fabric:block/replacements/venus_composite_hull/venusian_aegis_wall_7kwv4i32"
   }
 }

@@ -1,6 +1,12 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "minecraft:block/cube",
   "textures": {
-    "all": "space_fabric:block/habitat_controller"
+    "particle": "space_fabric:block/replacements/habitat_controller/habitat_lifeline_6t2bhcdt_north",
+    "up": "space_fabric:block/replacements/habitat_controller/habitat_lifeline_6t2bhcdt_top_bottom_south",
+    "down": "space_fabric:block/replacements/habitat_controller/habitat_lifeline_6t2bhcdt_top_bottom_south",
+    "north": "space_fabric:block/replacements/habitat_controller/habitat_lifeline_6t2bhcdt_north",
+    "south": "space_fabric:block/replacements/habitat_controller/habitat_lifeline_6t2bhcdt_top_bottom_south",
+    "east": "space_fabric:block/replacements/habitat_controller/habitat_lifeline_6t2bhcdt_east_west",
+    "west": "space_fabric:block/replacements/habitat_controller/habitat_lifeline_6t2bhcdt_east_west"
   }
 }

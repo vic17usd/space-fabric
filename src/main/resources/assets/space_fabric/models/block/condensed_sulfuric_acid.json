@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "space_fabric:block/condensed_sulfuric_acid"
+    "all": "venusian-greenfire-ore-yker4d33:gui/venusian_greenfire_ore_yker4d33"
   }
 }

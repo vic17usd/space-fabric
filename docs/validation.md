@@ -1,7 +1,8 @@
 # Resultado de validación de esta base
 
-Última entrega: **0.53.0**, 701 pruebas JUnit aprobadas, doce comprobaciones por
-CPU y 1.337 JSON válidos. Los apartados siguientes conservan el historial de
+Última entrega: **0.54.0**, 701 pruebas JUnit aprobadas, trece comprobaciones por
+CPU y 1.337 JSON válidos. Los recursos nuevos se comprueban mediante
+`verifyModBatchAssets`; queda pendiente su inspección visual en un cliente. Los apartados siguientes conservan el historial de
 la base y sus ampliaciones; la validación de las categorías creativas está al final del documento.
 
 Verificado con JDK 25, Gradle 9.8.2, Loom 1.19.3, Minecraft 26.1,

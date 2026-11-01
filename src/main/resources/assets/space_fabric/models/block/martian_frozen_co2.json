@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "space_fabric:block/martian_frozen_co2"
+    "all": "space_fabric:block/replacements/martian_frozen_co2/martian_frostveil_qitsylls"
   }
 }

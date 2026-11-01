@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "planetary-sample-analyzer-gg3e2hkl:block/planetary_sample_analyzer_gg3e2hkl_north",
+    "up": "planetary-sample-analyzer-gg3e2hkl:block/planetary_sample_analyzer_gg3e2hkl_end",
+    "down": "planetary-sample-analyzer-gg3e2hkl:block/planetary_sample_analyzer_gg3e2hkl_end",
+    "north": "planetary-sample-analyzer-gg3e2hkl:block/planetary_sample_analyzer_gg3e2hkl_north",
+    "south": "planetary-sample-analyzer-gg3e2hkl:block/planetary_sample_analyzer_gg3e2hkl_south_east_west",
+    "east": "planetary-sample-analyzer-gg3e2hkl:block/planetary_sample_analyzer_gg3e2hkl_south_east_west",
+    "west": "planetary-sample-analyzer-gg3e2hkl:block/planetary_sample_analyzer_gg3e2hkl_south_east_west"
+  }
+}

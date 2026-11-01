@@ -1,6 +1,77 @@
 {
-  "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "space_fabric:block/water_electrolyzer"
-  }
+    "machine": "oxygen-forge-6mt7ympf:gui/oxygen_forge_6mt7ympf",
+    "particle": "#machine"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            4,
+            16
+          ],
+          "texture": "#machine"
+        },
+        "east": {
+          "uv": [
+            4,
+            0,
+            8,
+            16
+          ],
+          "texture": "#machine"
+        },
+        "south": {
+          "uv": [
+            12,
+            0,
+            16,
+            16
+          ],
+          "texture": "#machine"
+        },
+        "west": {
+          "uv": [
+            4,
+            0,
+            8,
+            16
+          ],
+          "texture": "#machine"
+        },
+        "up": {
+          "uv": [
+            8,
+            0,
+            12,
+            16
+          ],
+          "texture": "#machine"
+        },
+        "down": {
+          "uv": [
+            12,
+            0,
+            16,
+            16
+          ],
+          "texture": "#machine"
+        }
+      }
+    }
+  ],
+  "parent": "minecraft:block/block"
 }

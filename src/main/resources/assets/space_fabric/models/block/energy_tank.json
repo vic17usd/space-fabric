@@ -1,76 +1,12 @@
 {
+  "parent": "minecraft:block/cube",
   "textures": {
-    "all": "space_fabric:block/energy_tank",
-    "particle": "#all"
-  },
-  "elements": [
-    {
-      "from": [
-        0,
-        0,
-        0
-      ],
-      "to": [
-        16,
-        16,
-        16
-      ],
-      "faces": {
-        "down": {
-          "texture": "#all",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ]
-        },
-        "up": {
-          "texture": "#all",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ]
-        },
-        "north": {
-          "texture": "#all",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ]
-        },
-        "south": {
-          "texture": "#all",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ]
-        },
-        "east": {
-          "texture": "#all",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ]
-        },
-        "west": {
-          "texture": "#all",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ]
-        }
-      }
-    }
-  ]
+    "particle": "space_fabric:block/replacements/energy_tank/planetary_sample_analyzer_gg3e2hkl_north",
+    "up": "space_fabric:block/replacements/energy_tank/planetary_sample_analyzer_gg3e2hkl_end",
+    "down": "space_fabric:block/replacements/energy_tank/planetary_sample_analyzer_gg3e2hkl_end",
+    "north": "space_fabric:block/replacements/energy_tank/planetary_sample_analyzer_gg3e2hkl_north",
+    "south": "space_fabric:block/replacements/energy_tank/planetary_sample_analyzer_gg3e2hkl_south_east_west",
+    "east": "space_fabric:block/replacements/energy_tank/planetary_sample_analyzer_gg3e2hkl_south_east_west",
+    "west": "space_fabric:block/replacements/energy_tank/planetary_sample_analyzer_gg3e2hkl_south_east_west"
+  }
 }

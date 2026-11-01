@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "martian-frostglass-block-mhquwlry:block/martian_frostglass_block_mhquwlry_side",
+    "up": "martian-frostglass-block-mhquwlry:block/martian_frostglass_block_mhquwlry_top",
+    "down": "martian-frostglass-block-mhquwlry:block/martian_frostglass_block_mhquwlry_bottom",
+    "north": "martian-frostglass-block-mhquwlry:block/martian_frostglass_block_mhquwlry_side",
+    "south": "martian-frostglass-block-mhquwlry:block/martian_frostglass_block_mhquwlry_side",
+    "east": "martian-frostglass-block-mhquwlry:block/martian_frostglass_block_mhquwlry_side",
+    "west": "martian-frostglass-block-mhquwlry:block/martian_frostglass_block_mhquwlry_side"
+  }
+}

@@ -19,8 +19,10 @@ public final class ColonyAssetsCheck {
             CuboidModel.fromStream(new StringReader(Files.readString(root.resolve("models/block/"+name+".json"))));
         for(String name:new String[]{"venus_core_drill","venus_atmospheric_collector","venus_gas_separator","venus_sulfur_processor","venus_ceramic_kiln","venus_composite_hull","venus_heat_exchanger","venus_greenhouse","venus_life_reclaimer","venus_service_dock","venus_expedition_console","venus_grow_lamp"}) {
             var industry=CuboidModel.fromStream(new StringReader(Files.readString(root.resolve("models/block/"+name+".json"))));
-            var texture=new TextureSlots.Resolver().addLast(industry.textureSlots()).resolve(()->name).getMaterial("#all");
-            if(texture==null||ImageIO.read(root.resolve("textures/block/"+name+".png").toFile())==null)throw new AssertionError("Missing industry texture: "+name);
+            var json=com.google.gson.JsonParser.parseString(Files.readString(root.resolve("models/block/"+name+".json"))).getAsJsonObject();
+            var textureNames=json.getAsJsonObject("textures");String first=textureNames.keySet().iterator().next();
+            var texture=new TextureSlots.Resolver().addLast(industry.textureSlots()).resolve(()->name).getMaterial("#"+first);
+            if(texture==null)throw new AssertionError("Missing industry texture: "+name);
         }
         for(String name:new String[]{"venus_rift_obsidian","venus_rift_iron","venus_rift_ember_crust","venus_tessera_rock","venus_ember_fissure","venus_sulfur_lantern","venus_basalt_sheet","venus_charred_rock","venus_sulfur_ash"}){
             var imported=CuboidModel.fromStream(new StringReader(Files.readString(root.resolve("models/block/"+name+".json"))));

@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "space_fabric:block/neptunian_methane_ice"
+    "all": "space_fabric:block/replacements/neptunian_methane_ice/neptune_frostcore_5rygjm2a"
   }
 }

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "jovian-emberstone-32evpnw5:block/jovian_emberstone_32evpnw5"
+  }
+}

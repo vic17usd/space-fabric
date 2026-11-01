@@ -1,6 +1,12 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "minecraft:block/cube",
   "textures": {
-    "all": "space_fabric:block/pressure_hull"
+    "particle": "space_fabric:block/replacements/pressure_hull/pressurelock_bulkhead_3d5jpfmy_north",
+    "up": "space_fabric:block/replacements/pressure_hull/pressurelock_bulkhead_3d5jpfmy_end",
+    "down": "space_fabric:block/replacements/pressure_hull/pressurelock_bulkhead_3d5jpfmy_end",
+    "north": "space_fabric:block/replacements/pressure_hull/pressurelock_bulkhead_3d5jpfmy_north",
+    "south": "space_fabric:block/replacements/pressure_hull/pressurelock_bulkhead_3d5jpfmy_south_east_west",
+    "east": "space_fabric:block/replacements/pressure_hull/pressurelock_bulkhead_3d5jpfmy_south_east_west",
+    "west": "space_fabric:block/replacements/pressure_hull/pressurelock_bulkhead_3d5jpfmy_south_east_west"
   }
 }
