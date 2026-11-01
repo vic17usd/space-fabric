@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "saturn-ring-ice-oprsg5b2:gui/saturn_ring_ice_texture"
+    "all": "space_fabric:block/replacements/saturn_ring_ice/gui/saturn_ring_ice_texture"
   }
 }

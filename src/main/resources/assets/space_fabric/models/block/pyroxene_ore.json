@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "asteroid-pyroxene-ore-ddun2mk3:gui/asteroid_pyroxene_ore"
+    "all": "space_fabric:block/replacements/pyroxene_ore/gui/asteroid_pyroxene_ore"
   }
 }

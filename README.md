@@ -1,5 +1,8 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión 0.54.1 corrige las texturas rosa y negro de diez bloques importados.
+Incluye sus imágenes de origen y corrige las referencias al atlas de bloques.
+
 La versión 0.54.0 incorpora los diseños aportados para 30 bloques, 21 objetos
 y dos máquinas venusianas. Conserva sus funciones y recetas existentes.
 [Asignación y validación de los recursos](docs/mod-batch-replacements.md).

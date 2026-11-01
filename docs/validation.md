@@ -1,6 +1,6 @@
 # Resultado de validación de esta base
 
-Última entrega: **0.54.0**, 701 pruebas JUnit aprobadas, trece comprobaciones por
+Última entrega: **0.54.1**, 701 pruebas JUnit aprobadas, trece comprobaciones por
 CPU y 1.337 JSON válidos. Los recursos nuevos se comprueban mediante
 `verifyModBatchAssets`; queda pendiente su inspección visual en un cliente. Los apartados siguientes conservan el historial de
 la base y sus ampliaciones; la validación de las categorías creativas está al final del documento.
@@ -952,3 +952,14 @@ Categorías creativas, versión 0.53.0:
   de objetos, recetas, física o datos de las partidas.
 - Incluye los iconos nuevos de los trajes de 0.52.1. Pendiente comprobación visual
   en cliente de títulos, paginación, orden y búsqueda del inventario creativo.
+
+## Corrección de texturas importadas (0.54.1)
+
+Diez modelos conservaban referencias `namespace_original:gui/...` que no existían
+en Space Fabric ni en su atlas de bloques. El importador ahora extrae también
+las imágenes de interfaz de los JAR aportados y las copia bajo
+`space_fabric:block/replacements/...`, conservando bytes y UV originales.
+`verifyModBatchAssets` comprueba además que cada textura no vanilla pertenezca
+al atlas del mod y que su PNG exista y pueda decodificarse. Resolver un nombre
+de textura en el modelo no era suficiente para detectar un archivo ausente.
+La verificación del renderizado dentro de una partida sigue pendiente.

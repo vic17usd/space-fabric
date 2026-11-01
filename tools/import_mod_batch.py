@@ -30,7 +30,7 @@ MODELS={'Perforadora de sondeo venus.bbmodel':'venus_core_drill','Separador de g
 def write(p,o):p.parent.mkdir(parents=True,exist_ok=True);p.write_text(json.dumps(o,ensure_ascii=False,indent=2)+'\n')
 def store(path,data):p=S/path;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(data)
 def block_model(name,target):
- doc=json.loads((S/'blocks'/target/'model.json').read_text());source=json.loads((S/'blocks'/target/'source.json').read_text());prefix=source['id']+':block/'
+ doc=json.loads((S/'blocks'/target/'model.json').read_text());source=json.loads((S/'blocks'/target/'source.json').read_text());prefix=source['id']+':'
  textures=list((S/'blocks'/target/'textures').glob('*.png'))
  if not doc.get('elements') and not any(source['id']+':' in str(v) for v in doc.get('textures',{}).values()):
   if len(textures)!=1:raise ValueError('Cannot infer the texture for '+target)
@@ -39,9 +39,15 @@ def block_model(name,target):
  if doc.get('elements') and 'particle' not in doc.get('textures',{}):
   doc['textures']['particle']='#'+next(iter(doc['textures']))
  for k,v in doc['textures'].items():
-  if isinstance(v,str) and v.startswith(prefix):doc['textures'][k]='space_fabric:block/replacements/'+target+'/'+v[len(prefix):]
- for p in (S/'blocks'/target/'textures').glob('*.png'):
-  out=A/'textures/block/replacements'/target/p.name;out.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(p,out)
+  if isinstance(v,str) and v.startswith(prefix):
+   relative=v[len(prefix):]
+   # GUI sprites in source JARs must also be copied into the block atlas.
+   relative=relative.removeprefix('block/')
+   texture_path=S/'blocks'/target/'textures'/(relative+'.png')
+   if not texture_path.is_file():raise ValueError('Missing source texture: '+v)
+   doc['textures'][k]='space_fabric:block/replacements/'+target+'/'+relative
+ for p in (S/'blocks'/target/'textures').rglob('*.png'):
+  out=A/'textures/block/replacements'/target/p.relative_to(S/'blocks'/target/'textures');out.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(p,out)
  write(A/'models/block'/f'{target}.json',doc)
 def geometry(source,target):
  d=json.loads((S/'models'/source).read_text());elements=d['elements'];lo=[min(e['from'][i] for e in elements) for i in range(3)];hi=[max(e['to'][i] for e in elements) for i in range(3)]
@@ -77,7 +83,10 @@ def main():
      if len(models)!=1:raise ValueError(filename+' needs one model')
      store(Path('blocks')/target/'model.json',z.read(models[0]));store(Path('blocks')/target/'source.json',json.dumps({'id':ns,'authors':metadata['authors'],'license':metadata['license'],'url':metadata.get('contact',{}).get('sources')}).encode())
      for n in z.namelist():
-      if n.startswith('assets/'+ns+'/textures/block/') and n.endswith('.png'):store(Path('blocks')/target/'textures'/Path(n).name,z.read(n))
+      texture_prefix='assets/'+ns+'/textures/'
+      if n.startswith(texture_prefix) and n.endswith('.png'):
+       relative=n[len(texture_prefix):].removeprefix('block/')
+       store(Path('blocks')/target/'textures'/relative,z.read(n))
       if n.startswith('LICENSE'):store(Path('blocks')/target/'LICENSE.txt',z.read(n))
      manifest[filename]={'target':target,'source_id':ns,'sha256':hashlib.sha256(data).hexdigest(),'url':metadata.get('contact',{}).get('sources'),'license':metadata.get('license')}
    for filename,target in ITEMS.items():

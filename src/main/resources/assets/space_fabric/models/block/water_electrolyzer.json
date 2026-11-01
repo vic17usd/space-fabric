@@ -1,6 +1,6 @@
 {
   "textures": {
-    "machine": "oxygen-forge-6mt7ympf:gui/oxygen_forge_6mt7ympf",
+    "machine": "space_fabric:block/replacements/water_electrolyzer/gui/oxygen_forge_6mt7ympf",
     "particle": "#machine"
   },
   "elements": [

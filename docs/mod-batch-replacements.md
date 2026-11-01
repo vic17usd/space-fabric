@@ -30,3 +30,8 @@ Para actualizar desde 0.52.0, sustituye el JAR anterior en la carpeta `mods` y
 reinicia el juego. En multijugador usa la misma versión en cliente y servidor. La
 compilación comprueba los modelos y texturas sin GPU; la apariencia y orientación
 deben revisarse también dentro de Minecraft.
+
+La revisión 0.54.1 corrige diez modelos cuyas texturas originales estaban en
+`textures/gui/`. Ahora se importan y se registran dentro del atlas de bloques
+del propio mod, de modo que tampoco requieren instalar los JAR de origen.
+Para actualizar, sustituye el JAR 0.54.0 por el 0.54.1 y reinicia Minecraft.
