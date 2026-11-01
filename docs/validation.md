@@ -1,6 +1,6 @@
 # Resultado de validación de esta base
 
-Última entrega: **0.54.3**, 702 pruebas JUnit aprobadas, trece comprobaciones por
+Última entrega: **0.54.4**, 702 pruebas JUnit aprobadas, trece comprobaciones por
 CPU y 1.337 JSON válidos. Los recursos nuevos se comprueban mediante
 `verifyModBatchAssets`; queda pendiente su inspección visual en un cliente. Los apartados siguientes conservan el historial de
 la base y sus ampliaciones; la validación de las categorías creativas está al final del documento.
@@ -994,3 +994,21 @@ y rechaza áreas superpuestas; también verifica límites del modelo y un cuerpo
 con seis caras. Una prueba con estados reales verifica que las máquinas no
 oculten a sus vecinas y mantengan la colisión completa. Estas comprobaciones
 no sustituyen una inspección visual en Minecraft, que sigue pendiente.
+
+## Regolito, minimapa y nuevos diseños (0.54.4)
+
+Se restaura la referencia original de `iron_oxide_regolith`, presente antes del
+lote 0.54.0. El minimapa conserva 76 unidades de tamaño y queda anclado arriba
+a la derecha, con título por encima y coordenadas por debajo.
+
+Los cuatro JAR aportados se tratan como archivos de recursos. Bauxita y Ares
+usan exactamente las imágenes referenciadas por sus modelos fuente, reubicadas
+en el atlas de bloques propio. El traje nivel 1 sustituye al traje de vacío;
+el traje venusiano sustituye a Venus y a sus iconos reforzados, que ya compartían
+apariencia. Se copian sin cambios las capas e iconos referenciados y se mantiene
+el forro sellado. Las referencias relativas del equipamiento venusiano se
+resuelven durante la importación, sin conservar rutas `../` en los recursos finales.
+
+Las comprobaciones verifican los bytes frente a los recursos fuente, referencias
+PNG, codecs de equipamiento y cobertura de casco, torso y extremidades. Sigue
+pendiente la inspección visual dentro de una partida.

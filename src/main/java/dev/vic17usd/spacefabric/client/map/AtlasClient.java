@@ -102,7 +102,7 @@ public final class AtlasClient {
             var c=Minecraft.getInstance();if(!mini||root==null||failed||c.level==null||c.player==null||!c.player.isAlive()||c.screen!=null||c.options.hideGui)return;
             if(c.player.getVehicle() instanceof dev.vic17usd.spacefabric.space.RocketEntity rocket&&rocket.isFlying())return;
             try {
-                int x=gui.guiWidth()-84,y=gui.guiHeight()-100;
+                int x=gui.guiWidth()-84,y=24;
                 MINI.draw(gui,map(dimension()),x,y,76,c.player.getX(),c.player.getZ(),2,false);
                 gui.text(c.font,c.font.split(label(dimension()),76).getFirst(),x,y-12,0xFFE5F4FA);
                 gui.centeredText(c.font,c.font.plainSubstrByWidth(c.player.getBlockX()+", "+c.player.getBlockZ(),76),x+38,y+83,0xFFE5F4FA);

@@ -28,6 +28,8 @@ def apply_inventory():
   write(A/f'models/item/{name}.json',{'parent':'minecraft:item/generated','textures':{'layer0':'space_fabric:item/'+name}})
   write(A/f'items/{name}.json',{'model':{'type':'minecraft:model','model':'space_fabric:item/'+name}})
  write(ROOT/'tools/texture_sources/suit_inventory_redesign.json',{'source':SOURCE.name,'sha256':hashlib.sha256(SOURCE.read_bytes()).hexdigest(),'rows':TIERS,'columns':PARTS,'reinforced_venus':'Same artwork as Venus, matching its shared wearable design','icon_size':128})
+ from import_asset_refresh import apply_suits
+ apply_suits()
  print('Updated 20 suit inventory sprites from the new designs.')
 def main():
  parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--sheet',type=Path);args=parser.parse_args()

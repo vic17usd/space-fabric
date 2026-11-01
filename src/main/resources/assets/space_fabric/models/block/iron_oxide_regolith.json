@@ -1,12 +1,6 @@
 {
-  "parent": "minecraft:block/cube",
+  "parent": "minecraft:block/cube_all",
   "textures": {
-    "particle": "space_fabric:block/replacements/iron_oxide_regolith/martian_ironsoil_ogekorvb_side",
-    "up": "space_fabric:block/replacements/iron_oxide_regolith/martian_ironsoil_ogekorvb_top",
-    "down": "space_fabric:block/replacements/iron_oxide_regolith/martian_ironsoil_ogekorvb_bottom",
-    "north": "space_fabric:block/replacements/iron_oxide_regolith/martian_ironsoil_ogekorvb_side",
-    "south": "space_fabric:block/replacements/iron_oxide_regolith/martian_ironsoil_ogekorvb_side",
-    "east": "space_fabric:block/replacements/iron_oxide_regolith/martian_ironsoil_ogekorvb_side",
-    "west": "space_fabric:block/replacements/iron_oxide_regolith/martian_ironsoil_ogekorvb_side"
+    "all": "space_fabric:block/iron_oxide_regolith"
   }
 }

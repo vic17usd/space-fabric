@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "id": "venusian-bauxite-ore-lw544ngr",
+  "version": "1",
+  "name": "Venusian Bauxite Ore",
+  "description": "Mine Venusian Bauxite Ore, a striking red-streaked mineral set in dark volcanic stone.",
+  "authors": [
+    "holasoynuevo using CreativeMode.net"
+  ],
+  "contact": {
+    "homepage": "https://creativemode.net",
+    "sources": "https://creativemode.net/mod/venusian-bauxite-ore-lw544ngr"
+  },
+  "license": "ARR - CreativeMode.net/mod-license",
+  "icon": "assets/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "venusian_bauxite_ore_lw544ngr.VenusianBauxiteOre"
+    ],
+    "client": [
+      "venusian_bauxite_ore_lw544ngr.VenusianBauxiteOreClient"
+    ],
+    "fabric-datagen": [
+      "venusian_bauxite_ore_lw544ngr.VenusianBauxiteOreDataGenerator"
+    ]
+  },
+  "mixins": [
+    "venusian_bauxite_ore_lw544ngr.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.18.4",
+    "minecraft": "~26.1",
+    "java": ">=25",
+    "fabric-api": "*"
+  },
+  "suggests": {
+    "another-mod": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/creativemode"
+      }
+    },
+    "creativemode:mod": {
+      "schemaVersion": 1,
+      "modId": "5cf0fa72-d4ca-48fe-adfa-18dc9289866c",
+      "modSlug": "venusian-bauxite-ore-lw544ngr",
+      "modVersion": 1
+    }
+  },
+  "jars": [
+    {
+      "file": "META-INF/jars/creativemode-telemetry.jar"
+    }
+  ]
+}

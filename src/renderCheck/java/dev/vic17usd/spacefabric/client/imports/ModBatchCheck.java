@@ -59,9 +59,47 @@ public final class ModBatchCheck {
         String screen=model.getAsJsonObject("textures").get("screen").getAsString();
         if(!screen.endsWith("_concrete"))throw new AssertionError("Machine screen must have an opaque backing: "+target);
     }
+    private static void checkRefreshAssets(Path root) throws Exception {
+        var cache=Path.of("tools/import_sources/asset_refresh");
+        for(String target:new String[]{"bauxite_ore","ares_crystal_ore"}) {
+            var dir=cache.resolve(target);
+            String ns=JsonParser.parseString(Files.readString(dir.resolve("fabric.mod.json"))).getAsJsonObject().get("id").getAsString();
+            var base=dir.resolve("assets/"+ns);
+            Path sourceModel;
+            try(var paths=Files.list(base.resolve("models/block"))){sourceModel=paths.findFirst().orElseThrow();}
+            var original=JsonParser.parseString(Files.readString(sourceModel)).getAsJsonObject();
+            var model=JsonParser.parseString(Files.readString(root.resolve("models/block/"+target+".json"))).getAsJsonObject();
+            checkTextureFiles(root,model,target);
+            String oldRef=original.getAsJsonObject("textures").get("all").getAsString().split(":",2)[1];
+            String ref=model.getAsJsonObject("textures").get("all").getAsString().split(":",2)[1];
+            if(Files.mismatch(base.resolve("textures/"+oldRef+".png"),root.resolve("textures/"+ref+".png"))!=-1)
+                throw new AssertionError("Wrong new ore design: "+target);
+        }
+        for(String tier:new String[]{"venus","vacuum"}) {
+            var dir=cache.resolve(tier);
+            String ns=JsonParser.parseString(Files.readString(dir.resolve("fabric.mod.json"))).getAsJsonObject().get("id").getAsString();
+            var base=dir.resolve("assets/"+ns);
+            var source=JsonParser.parseString(Files.readString(Files.list(base.resolve("equipment")).findFirst().orElseThrow())).getAsJsonObject();
+            for(String layer:new String[]{"humanoid","humanoid_leggings"}) {
+                String ref=source.getAsJsonObject("layers").getAsJsonArray(layer).get(0).getAsJsonObject().get("texture").getAsString().split(":",2)[1];
+                if(Files.mismatch(base.resolve("textures/entity/equipment/"+layer+"/"+ref+".png").normalize(),root.resolve("textures/entity/equipment/"+layer+"/"+tier+"_suit.png"))!=-1)
+                    throw new AssertionError("Wrong new wearable design: "+tier);
+            }
+            for(String part:new String[]{"helmet","chestplate","leggings","boots"}) {
+                Path png;
+                try(var paths=Files.list(base.resolve("textures/item"))){png=paths.filter(p->p.toString().endsWith("_"+part+".png")).findFirst().orElseThrow();}
+                if(Files.mismatch(png,root.resolve("textures/item/"+tier+"_suit_"+part+".png"))!=-1)
+                    throw new AssertionError("Wrong new inventory design: "+tier+" "+part);
+            }
+        }
+        var regolith=JsonParser.parseString(Files.readString(root.resolve("models/block/iron_oxide_regolith.json"))).getAsJsonObject();
+        if(!regolith.getAsJsonObject("textures").get("all").getAsString().equals("space_fabric:block/iron_oxide_regolith"))
+            throw new AssertionError("Original regolith design was not restored");
+    }
     public static void main(String[] args) throws Exception {
         var root=Path.of("src/main/resources/assets/space_fabric");var cache=Path.of("tools/import_sources/mod_batch");
         var manifest=JsonParser.parseString(Files.readString(Path.of("third_party/mod_batch/manifest.json"))).getAsJsonObject();
+        checkRefreshAssets(root);
         int blocks=0,items=0,models=0;
         for(var pair:manifest.entrySet()){
             String name=pair.getKey();var value=pair.getValue().getAsJsonObject();

@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "id": "venus-hazard-suit-ap3udnif",
+  "version": "1",
+  "name": "Venus Hazard Suit",
+  "description": "Suit up for Venus with a rugged, copper-bright hazard set built for dangerous expeditions.",
+  "authors": [
+    "holasoynuevo using CreativeMode.net"
+  ],
+  "contact": {
+    "homepage": "https://creativemode.net",
+    "sources": "https://creativemode.net/mod/venus-hazard-suit-ap3udnif"
+  },
+  "license": "ARR - CreativeMode.net/mod-license",
+  "icon": "assets/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "venus_hazard_suit_ap3udnif.VenusHazardSuit"
+    ],
+    "client": [
+      "venus_hazard_suit_ap3udnif.VenusHazardSuitClient"
+    ],
+    "fabric-datagen": [
+      "venus_hazard_suit_ap3udnif.VenusHazardSuitDataGenerator"
+    ]
+  },
+  "mixins": [
+    "venus_hazard_suit_ap3udnif.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.18.4",
+    "minecraft": "~26.1",
+    "java": ">=25",
+    "fabric-api": "*"
+  },
+  "suggests": {
+    "another-mod": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/creativemode"
+      }
+    },
+    "creativemode:mod": {
+      "schemaVersion": 1,
+      "modId": "de85685c-1561-47b5-a6db-8024346a2209",
+      "modSlug": "venus-hazard-suit-ap3udnif",
+      "modVersion": 1
+    }
+  },
+  "jars": [
+    {
+      "file": "META-INF/jars/creativemode-telemetry.jar"
+    }
+  ]
+}

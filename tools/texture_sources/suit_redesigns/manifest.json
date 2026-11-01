@@ -1,18 +1,18 @@
 {
   "venus": {
-    "archive": "a-minecraft-armor-texture-layer-of-an-acid-proof-venusian-suit-constructed-from-.zip",
-    "sha256": "2992f14513de0309576e24617ed01c0823456bb8f0bc91661167818a044f7f38",
+    "archive": "Traje espacial para venus.jar",
+    "source_id": "venus-hazard-suit-ap3udnif",
     "textures": {
-      "humanoid": "108e4bc9265de7a3130ba139534f63163a0a49f74ee32cad15ead49f9ec13db1",
-      "humanoid_leggings": "ff4d16ea17c251a8aa0e18de5fbc269a571a59982b3449728927b8f57eb56032"
+      "humanoid": "8941212d7c4d203d7a4d212ce3af4730556bda520e5fb7dc3987a200296b7990",
+      "humanoid_leggings": "4bb23a57239420557e04033f56d3f54292a000c5587dd43cbad528fc969d0420"
     }
   },
   "vacuum": {
-    "archive": "a-minecraft-armor-texture-layer-of-a-heavy-vacuum-space-suit-featuring-thick-dar.zip",
-    "sha256": "d5ae4afd23111c670d72415c7ff513d0f124bf8c208db3c135fefe9c7f0aa48d",
+    "archive": "Traje espacial nivel 1.jar",
+    "source_id": "cosmic-sentinel-armor-cgo46mi7",
     "textures": {
-      "humanoid": "d8d6d72c1611fb9ec1390d588743c300be57f0c86649bf097e338d3d85d487ca",
-      "humanoid_leggings": "ab985b0a39d34393eca074a89f5049dbbeff0acd85e1b62e4e1867517c268a79"
+      "humanoid": "179689addd3084e19e6a9da657b8a05ea268dbaa3ab1c3ca9afb2e2cdd822684",
+      "humanoid_leggings": "c15da86686ec88c8eaecdc1ced917a569a888fa27ca59d2b998255ecc65dd804"
     }
   },
   "abyssal": {

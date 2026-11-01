@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "id": "cosmic-sentinel-armor-cgo46mi7",
+  "version": "1",
+  "name": "Cosmic Sentinel Armor",
+  "description": "Defy fire and drowning in Cosmic Sentinel armor, then leap through low gravity.",
+  "authors": [
+    "holasoynuevo using CreativeMode.net"
+  ],
+  "contact": {
+    "homepage": "https://creativemode.net",
+    "sources": "https://creativemode.net/mod/cosmic-sentinel-armor-cgo46mi7"
+  },
+  "license": "ARR - CreativeMode.net/mod-license",
+  "icon": "assets/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "cosmic_sentinel_armor_cgo46mi7.CosmicSentinelArmor"
+    ],
+    "client": [
+      "cosmic_sentinel_armor_cgo46mi7.CosmicSentinelArmorClient"
+    ],
+    "fabric-datagen": [
+      "cosmic_sentinel_armor_cgo46mi7.CosmicSentinelArmorDataGenerator"
+    ]
+  },
+  "mixins": [
+    "cosmic_sentinel_armor_cgo46mi7.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.18.4",
+    "minecraft": "~26.1",
+    "java": ">=25",
+    "fabric-api": "*"
+  },
+  "suggests": {
+    "another-mod": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/creativemode"
+      }
+    },
+    "creativemode:mod": {
+      "schemaVersion": 1,
+      "modId": "7dffbe6c-7ae3-4c0f-92f1-2da78543147a",
+      "modSlug": "cosmic-sentinel-armor-cgo46mi7",
+      "modVersion": 1
+    }
+  },
+  "jars": [
+    {
+      "file": "META-INF/jars/creativemode-telemetry.jar"
+    }
+  ]
+}

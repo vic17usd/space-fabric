@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "id": "ares-ore-dkkx3duu",
+  "version": "1",
+  "name": "Ares Ore",
+  "description": "Bring the volcanic glow of Mars to your builds with Ares Ore.",
+  "authors": [
+    "holasoynuevo using CreativeMode.net"
+  ],
+  "contact": {
+    "homepage": "https://creativemode.net",
+    "sources": "https://creativemode.net/mod/ares-ore-dkkx3duu"
+  },
+  "license": "ARR - CreativeMode.net/mod-license",
+  "icon": "assets/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "ares_ore_dkkx3duu.AresOre"
+    ],
+    "client": [
+      "ares_ore_dkkx3duu.AresOreClient"
+    ],
+    "fabric-datagen": [
+      "ares_ore_dkkx3duu.AresOreDataGenerator"
+    ]
+  },
+  "mixins": [
+    "ares_ore_dkkx3duu.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.18.4",
+    "minecraft": "~26.1",
+    "java": ">=25",
+    "fabric-api": "*"
+  },
+  "suggests": {
+    "another-mod": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/creativemode"
+      }
+    },
+    "creativemode:mod": {
+      "schemaVersion": 1,
+      "modId": "0b6c342c-02a1-4de5-bbb9-0c3974ac99ea",
+      "modSlug": "ares-ore-dkkx3duu",
+      "modVersion": 1
+    }
+  },
+  "jars": [
+    {
+      "file": "META-INF/jars/creativemode-telemetry.jar"
+    }
+  ]
+}

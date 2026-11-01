@@ -1,0 +1,6 @@
+{
+    "parent": "minecraft:item/generated",
+    "textures": {
+      "layer0": "cosmic-sentinel-armor-cgo46mi7:item/cosmic_sentinel_armor_cgo46mi7_boots"
+    }
+  }

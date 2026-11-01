@@ -1,5 +1,10 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión 0.54.4 restaura el regolito de óxido de hierro y sitúa el minimapa
+arriba a la derecha. Actualiza bauxita, Ares y los trajes de vacío y Venus con
+los diseños aportados, incluyendo iconos de inventario y capas equipadas.
+[Asignación de los cuatro archivos](docs/asset-refresh.md).
+
 La versión 0.54.3 corrige las caras superpuestas y la ocultación de bloques
 vecinos en el horno y la unidad de refrigeración venusianos.
 

@@ -57,6 +57,9 @@ def repair_machine_geometry(doc,target):
    e[end]=[round((e[end][i]-low[i])*16/(high[i]-low[i]),6) for i in range(3)]
 
 def block_model(name,target):
+ if target=='iron_oxide_regolith':
+  write(A/'models/block'/f'{target}.json',{'parent':'minecraft:block/cube_all','textures':{'all':'space_fabric:block/iron_oxide_regolith'}})
+  return
  doc=json.loads((S/'blocks'/target/'model.json').read_text());source=json.loads((S/'blocks'/target/'source.json').read_text());prefix=source['id']+':'
  textures=list((S/'blocks'/target/'textures').glob('*.png'))
  if not doc.get('elements') and not any(source['id']+':' in str(v) for v in doc.get('textures',{}).values()):
@@ -144,4 +147,6 @@ def main():
  for p in (S/'blocks').rglob('LICENSE.txt'):
   out=A/'licenses/mod_batch'/p.parent.name/'LICENSE.txt';out.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(p,out)
  print('Imported',len(BLOCKS),'block appearances,',len(ITEMS),'item textures and',len(MODELS),'3D models.')
+ from import_asset_refresh import apply
+ apply()
 if __name__=='__main__':main()
