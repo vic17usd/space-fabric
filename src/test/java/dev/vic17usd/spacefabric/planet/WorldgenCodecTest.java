@@ -3810,4 +3810,33 @@ class WorldgenCodecTest {
         dev.vic17usd.spacefabric.transport.TransportContent.blocks().values().forEach(block->assertEquals(dev.vic17usd.spacefabric.item.ModCreativeTabs.Category.MACHINES,dev.vic17usd.spacefabric.item.ModCreativeTabs.category(block.asItem())));
     }
 
+    @Test void sphericalDemoDimensionAndBiomeLoadWithNativeCodecs() throws IOException {
+        var ops=registries.createSerializationContext(JsonOps.INSTANCE);
+        var stem=LevelStem.CODEC.parse(ops,resource("dimension/sphere_demo")).getOrThrow();
+        assertInstanceOf(dev.vic17usd.spacefabric.worldgen.OrbitalChunkGenerator.class,stem.generator());
+        assertTrue(stem.generator().getBiomeSource().possibleBiomes().stream().anyMatch(b->b.is(net.minecraft.resources.ResourceKey.create(Registries.BIOME,SpaceFabric.id("sphere_demo")))));
+        assertNotNull(DimensionType.DIRECT_CODEC.parse(ops,resource("dimension_type/sphere_demo")).getOrThrow());
+    }
+    @Test void sphericalFeatureBuildsTheWholePlanetWithoutWritingAcrossChunks(){
+        var merged=new java.util.HashMap<net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState>();
+        var feature=new dev.vic17usd.spacefabric.sphere.SphereFeature();
+        for(int x=-2;x<=1;x++)for(int z=-2;z<=1;z++){
+            var world=new VoxelWorld(x,z);
+            feature.place(new net.minecraft.world.level.levelgen.feature.FeaturePlaceContext<>(Optional.empty(),world.level,null,net.minecraft.util.RandomSource.create(42),new net.minecraft.core.BlockPos(x*16,-64,z*16),net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration.INSTANCE));
+            merged.putAll(world.blocks);
+        }
+        assertTrue(merged.size()>50000&&merged.size()<65000);
+        for(int x=-25;x<=25;x++)for(int y=71;y<=121;y++)for(int z=-25;z<=25;z++)
+            assertEquals(dev.vic17usd.spacefabric.sphere.SphereGeometry.solid(x,y,z),merged.containsKey(new net.minecraft.core.BlockPos(x,y,z)));
+        assertTrue(merged.containsValue(Blocks.SNOW_BLOCK.defaultBlockState()));assertTrue(merged.containsValue(Blocks.YELLOW_CONCRETE.defaultBlockState()));
+        var distant=new VoxelWorld(100,100);assertFalse(feature.place(new net.minecraft.world.level.levelgen.feature.FeaturePlaceContext<>(Optional.empty(),distant.level,null,net.minecraft.util.RandomSource.create(1),new net.minecraft.core.BlockPos(1600,-64,1600),net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration.INSTANCE)));assertTrue(distant.blocks.isEmpty());
+    }
+    @Test void sphericalDemoReturnPointRoundTripsAndItsCameraHookMatches261(){
+        var point=new dev.vic17usd.spacefabric.sphere.SphereDemo.ReturnPoint("space_fabric:mars",123.5,79,-9123.5,47,-20);
+        var codec=dev.vic17usd.spacefabric.sphere.SphereDemo.ReturnPoint.CODEC;
+        assertEquals(point,codec.parse(JsonOps.INSTANCE,codec.encodeStart(JsonOps.INSTANCE,point).getOrThrow()).getOrThrow());
+        org.junit.jupiter.api.Assertions.assertDoesNotThrow(()->net.minecraft.client.Camera.class.getDeclaredMethod("alignWithEntity",float.class));
+        for(var field:List.of("rotation","forwards","panoramicForwards","up","left","matrixPropertiesDirty"))org.junit.jupiter.api.Assertions.assertDoesNotThrow(()->net.minecraft.client.Camera.class.getDeclaredField(field));
+    }
+
 }

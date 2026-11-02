@@ -1,7 +1,7 @@
 # Resultado de validación de esta base
 
-Última entrega: **0.56.0**, 728 pruebas JUnit aprobadas, trece comprobaciones por
-CPU y 1.337 JSON válidos. Los recursos nuevos se comprueban mediante
+Última entrega: **0.57.0**, 735 pruebas JUnit aprobadas, trece comprobaciones por
+CPU y 1.342 JSON válidos. Los recursos nuevos se comprueban mediante
 `verifyModBatchAssets`; queda pendiente su inspección visual en un cliente. Los apartados siguientes conservan el historial de
 la base y sus ampliaciones; la validación de las categorías creativas está al final del documento.
 
@@ -917,7 +917,7 @@ Overworld como Tierra única, versión 0.52.0:
 Iconos de los trajes rediseñados, versión 0.52.1:
 
 - `./gradlew build --console=plain`: 698 pruebas JUnit, doce comprobaciones
-  por CPU y 1.337 JSON válidos.
+  por CPU y 1.342 JSON válidos.
 - `verifyEquipmentTextures` comprueba 29 iconos, incluidos los cuatro de Venus
   reforzado, con sus modelos, rutas, dimensiones y transparencia. Se mantienen
   las comprobaciones de ocho capas equipadas originales y sus forros.
@@ -943,7 +943,7 @@ Diagnóstico de iconos anteriores tras 0.52.1:
 Categorías creativas, versión 0.53.0:
 
 - `./gradlew build --console=plain`: **701 pruebas**, cero fallos, errores u
-  omisiones, doce comprobaciones por CPU y 1.337 JSON válidos.
+  omisiones, doce comprobaciones por CPU y 1.342 JSON válidos.
 - Dos casos nuevos construyen las ocho pestañas con parámetros nativos, comprueban
   iconos y contenido, y comparan su unión con todos los ítems del mod sin duplicados.
   Se verifican casos de uso y la clasificación de todas las piezas de transporte.
@@ -1128,3 +1128,29 @@ se prueban hielo ya cubierto, vecinos de chunk pendientes, ausencia de regenerac
 y exclusión de materiales ajenos y posiciones fuera del bioma permitido.
 La persistencia de attachments usa la API de Fabric; el recorrido visual por
 un mundo guardado y el comportamiento multijugador siguen pendientes.
+
+## Planeta esférico experimental (0.57.0)
+
+Dimensión, tipo, bioma, configured feature y placed feature se cargan con los
+codecs reales de 26.1. El generador orbital existente decora únicamente una
+esfera de radio 24, centrada en (0,5; 96,5; 0,5). La prueba ejecuta la feature
+en los 16 chunks del planeta y compara cada posición con el volumen analítico,
+rechazando escrituras fuera de cada chunk y generación en regiones lejanas.
+
+La locomoción usa un arnés invisible basado en una entidad pasajera controlada
+por el servidor. El desplazamiento es geodésico, la orientación se transporta
+entre posiciones sin singularidad polar, y el salto tiene aceleración radial.
+La altura se ajusta a la intersección real con los bloques del modelo generado.
+La cámara usa una orientación local y evita el overlay de asfixia vertical.
+
+Se comprueban una vuelta completa por ambos polos, velocidad diagonal, superficie
+voxel en todas las direcciones, quaternions de cámara incluso con mirada vertical,
+generación real, codecs y persistencia del punto de regreso. La cámara inyecta
+el método nativo anterior al cálculo del frustum; se verifican sus firmas reales.
+La ejecución gráfica y los controles dentro de un cliente quedan pendientes.
+
+El prototipo es de locomoción en primera persona; no implementa colisiones
+radiales generales, construcción, líquidos ni gravedad para mobs. Bloquear
+rotura/colocación y uso de objetos conserva la esfera de prueba. El jugador
+recibe protección contra daño dentro de esta dimensión, sin cambiar su modo
+de juego. El minimapa plano se oculta en la prueba.

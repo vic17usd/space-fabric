@@ -13,7 +13,8 @@
     "RocketPilotRendererMixin",
     "SuitRendererMixin",
     "ChatMessagesAccessor",
-    "ChatDraftAccessor"
+    "ChatDraftAccessor",
+    "SphereCameraMixin"
   ],
   "injectors": {
     "defaultRequire": 1

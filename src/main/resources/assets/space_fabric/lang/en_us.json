@@ -843,5 +843,8 @@
   "atlas.space_fabric.cave": "Underground · Y %s",
   "chat_tools.space_fabric.copy_image_hint": "Click to copy this screenshot as an image",
   "chat_tools.space_fabric.capture_missing": "Could not find the file for this screenshot",
-  "chat_tools.space_fabric.capture_copy_failed": "Could not copy the image. The PNG remains in screenshots."
+  "chat_tools.space_fabric.capture_copy_failed": "Could not copy the image. The PNG remains in screenshots.",
+  "biome.space_fabric.sphere_demo": "Spherical test planet",
+  "destination.space_fabric.sphere_demo": "Spherical test planet",
+  "entity.space_fabric.sphere_walker": "Experimental gravity harness"
 }

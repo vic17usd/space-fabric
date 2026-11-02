@@ -843,5 +843,8 @@
   "atlas.space_fabric.cave": "Subsuelo · Y %s",
   "chat_tools.space_fabric.copy_image_hint": "Clic para copiar esta captura como imagen",
   "chat_tools.space_fabric.capture_missing": "No se encontró el archivo de esta captura",
-  "chat_tools.space_fabric.capture_copy_failed": "No se pudo copiar la imagen. El PNG permanece en screenshots."
+  "chat_tools.space_fabric.capture_copy_failed": "No se pudo copiar la imagen. El PNG permanece en screenshots.",
+  "biome.space_fabric.sphere_demo": "Planeta esférico de prueba",
+  "destination.space_fabric.sphere_demo": "Planeta esférico de prueba",
+  "entity.space_fabric.sphere_walker": "Arnés de gravedad experimental"
 }

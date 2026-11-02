@@ -1,5 +1,10 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión 0.57.0 incorpora un planeta esférico experimental de 49 bloques
+de diámetro, con locomoción radial asistida y cámara local en primera persona.
+Entra con `/planetaprueba entrar`; vuelve con `/planetaprueba salir` o Mayús.
+[Controles, alcance y validación](docs/sphere-demo.md).
+
 La versión 0.56.0 recubre físicamente el hielo glaciar expuesto de Marte
 con CO₂ blanco, también en paredes y techos. Se aplica una vez por zona
 al cargarla y conserva las excavaciones posteriores.

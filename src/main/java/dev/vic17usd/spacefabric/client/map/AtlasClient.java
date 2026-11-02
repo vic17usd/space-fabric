@@ -140,6 +140,7 @@ public final class AtlasClient {
         });
         HudElementRegistry.addLast(SpaceFabric.id("planet_minimap"),(gui,delta)->{
             var c=Minecraft.getInstance();if(!mini||root==null||failed||c.level==null||c.player==null||!c.player.isAlive()||c.screen!=null||c.options.hideGui)return;
+            if(dev.vic17usd.spacefabric.sphere.SphereDemo.active(c.level))return;
             if(c.player.getVehicle() instanceof dev.vic17usd.spacefabric.space.RocketEntity rocket&&rocket.isFlying())return;
             try {
                 int x=gui.guiWidth()-84,y=24;

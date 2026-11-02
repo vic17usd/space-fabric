@@ -10,6 +10,7 @@ import net.minecraft.resources.Identifier;
 public final class SpaceFabricClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
+        dev.vic17usd.spacefabric.client.sphere.SphereDemoClient.initialize();
         dev.vic17usd.spacefabric.client.chat.ChatTools.initialize();
         net.minecraft.client.gui.screens.MenuScreens.register(dev.vic17usd.spacefabric.menu.ModMenus.TRANSPORT_TANK,dev.vic17usd.spacefabric.client.menu.TransportTankScreen::new);
         net.minecraft.client.gui.screens.MenuScreens.register(dev.vic17usd.spacefabric.menu.ModMenus.MACHINE_INTERFACE,dev.vic17usd.spacefabric.client.menu.MachineInterfaceScreen::new);

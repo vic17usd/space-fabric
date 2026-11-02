@@ -32,6 +32,7 @@ public final class SpaceFabric implements ModInitializer {
     @Override
     public void onInitialize() {
         PlanetFeatures.initialize();
+        dev.vic17usd.spacefabric.sphere.SphereDemo.initialize();
         PlanetFluids.initialize();
         ModItems.initialize();
         dev.vic17usd.spacefabric.maintenance.MaintenanceContent.initialize();

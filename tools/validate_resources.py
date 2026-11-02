@@ -14,7 +14,7 @@ def main():
     expected = {"mercury", "venus", "moon", "mars", "jupiter", "saturn", "uranus", "neptune"}
     for directory in ("dimension", "dimension_type"):
         actual = {path.stem for path in (data / directory).glob("*.json")}
-        if actual != (expected | {"earth"} if directory=="dimension_type" else expected):
+        if actual != (expected | {"earth", "sphere_demo"} if directory=="dimension_type" else expected | {"sphere_demo"}):
             raise ValueError(f"{directory}: faltan/sobran planetas: {actual ^ expected}")
     for planet in expected:
         dimension = documents[data / "dimension" / f"{planet}.json"]
@@ -121,7 +121,7 @@ def main():
         channels = 3 if color_type == 2 else 4
         if len(zlib.decompress(compressed)) != height * (1 + width * channels):
             raise ValueError(f"Textura RGB/RGBA incompleta: {path}")
-    print(f"OK: {len(documents)} JSON; ocho dimensiones planetarias y referencias internas coherentes.")
+    print(f"OK: {len(documents)} JSON; ocho dimensiones planetarias, una prueba esférica y referencias internas coherentes.")
     print("Modelos, texturas PNG, loot y traducciones de materiales: OK.")
     print("Los codecs se prueban con ./gradlew test; la comprobación en el juego es independiente.")
 

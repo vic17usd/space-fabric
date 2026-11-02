@@ -1,0 +1,13 @@
+{
+  "type": "space_fabric:sphere_demo",
+  "generator": {
+    "type": "space_fabric:orbital",
+    "settings": {
+      "biome": "space_fabric:sphere_demo",
+      "layers": [],
+      "lakes": false,
+      "features": true,
+      "structure_overrides": []
+    }
+  }
+}
