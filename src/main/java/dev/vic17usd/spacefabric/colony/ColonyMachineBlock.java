@@ -31,6 +31,8 @@ public final class ColonyMachineBlock extends BaseEntityBlock {
     }
     @Override protected InteractionResult useWithoutItem(BlockState state,Level level,BlockPos pos,Player player,BlockHitResult hit) {
         if(!level.isClientSide() && level.getBlockEntity(pos) instanceof ColonyMachineBlockEntity machine) {
+            if(player instanceof net.minecraft.server.level.ServerPlayer server)
+                MarsOnboarding.selectRefuge(server,machine);
             player.sendOverlayMessage(machine.status());
             if(player.isSecondaryUseActive()&&player.mayBuild()&&level.mayInteract(player,pos)){
                 if(machine.kind()==ColonyContent.Machine.DRILL){

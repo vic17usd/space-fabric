@@ -1,5 +1,11 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión **0.58.0** añade la primera expedición de Marte: aterrizaje real,
+selección de refugio, sellado, oxígeno, energía y reserva de agua. La guía
+transparente y `/marte guia` usan comprobaciones del servidor y progreso personal
+guardado. Completarla desbloquea el objetivo narrativo de investigar un asentamiento.
+[Preparación, recetas, cantidades y prueba en supervivencia](docs/mars-first-expedition.md).
+
 La versión 0.57.0 incorpora un planeta esférico experimental de 49 bloques
 de diámetro, con locomoción radial asistida y cámara local en primera persona.
 Entra con `/planetaprueba entrar`; vuelve con `/planetaprueba salir` o Mayús.

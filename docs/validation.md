@@ -1154,3 +1154,40 @@ radiales generales, construcción, líquidos ni gravedad para mobs. Bloquear
 rotura/colocación y uso de objetos conserva la esfera de prueba. El jugador
 recibe protección contra daño dentro de esta dimensión, sin cambiar su modo
 de juego. El minimapa plano se oculta en la prueba.
+
+## Primera expedición de Marte (0.58.0)
+
+Se añade la llegada física al final del descenso del cohete, la selección de un
+controlador existente y una guía transparente con cuatro comprobaciones. La
+validación usa el recinto real del controlador, su estado operativo, sus reservas
+y el agua almacenada en ese controlador o depósitos interiores. El objetivo final
+requiere todas las condiciones simultáneas y al jugador dentro de la sala.
+
+Las 14 pruebas nuevas comprueban:
+
+- La regla de llegada distingue descenso con colisión de ascenso, crucero,
+  dimensión incorrecta y retorno por despegue abortado en Marte.
+- Un UUID sin llegada o sin controlador elegido no progresa. Dos jugadores y dos
+  bases mantienen estados independientes; la unión de hitos históricos no basta.
+- Sellado mediante `SealScanner` y estados nativos: paredes completas, fuga,
+  losas, toma obstruida y zona descargada; el jugador exterior no finaliza.
+- Conversión real de bombonas y baterías en el controlador, presurización con
+  `LifeSupport`, venteo, máquina detenida y umbrales de cinco minutos/dos ocupantes.
+- Agua en la tercera casilla, depósitos interiores con `processContainer`,
+  rechazo de tanques exteriores y refrigerante; guardado nativo de máquinas.
+- Electrólisis real y recetas disponibles sin materiales de Venus.
+- Guardado y lectura de progreso parcial/completo como NBT comprimido en disco,
+  repeticiones sin nuevo desbloqueo, paquetes acotados y caducidad del HUD.
+- Ambos avances se decodifican con Minecraft, requieren criterio del servidor
+  y carecen de recompensas de objetos, experiencia o funciones.
+
+No se ha ejecutado un cliente gráfico, un vuelo completo ni un reinicio de servidor
+de juego para esta entrega. La validación automática de las reglas y del NBT es
+distinta de observar su integración durante una partida. El procedimiento manual
+está en [Primera expedición de Marte](mars-first-expedition.md).
+
+Resultado de esta entrega: **749 pruebas JUnit aprobadas**, cero fallos, errores
+o pruebas omitidas; **13 comprobaciones de render/modelos por CPU**, **1344 JSON**
+y compilación `./gradlew build` correctos. Se verificaron integridad ZIP, versión
+0.58.0 y coincidencia de los 2432 recursos empaquetados (excluyendo el descriptor
+con versión expandida). JAR instalable en `dist/space-fabric-0.58.0.jar`, con SHA-256.

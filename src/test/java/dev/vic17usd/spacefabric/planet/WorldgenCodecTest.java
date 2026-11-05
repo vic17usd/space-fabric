@@ -3839,4 +3839,229 @@ class WorldgenCodecTest {
         for(var field:List.of("rotation","forwards","panoramicForwards","up","left","matrixPropertiesDirty"))org.junit.jupiter.api.Assertions.assertDoesNotThrow(()->net.minecraft.client.Camera.class.getDeclaredField(field));
     }
 
+    @Test void marsArrivalRequiresDestinationTouchdownRatherThanTeleportLaunchOrCruise() {
+        for (var current : Planet.values()) for (var destination : Planet.values())
+            for (int phase = 0; phase <= 4; phase++) for (boolean collision : new boolean[]{false, true}) {
+                boolean expected = current == Planet.MARS && destination == Planet.MARS
+                        && phase == dev.vic17usd.spacefabric.space.RocketJourney.DESCENDING && collision;
+                assertEquals(expected, MarsExpeditionChecks.landed(current, destination, Planet.EARTH, phase, collision));
+            }
+        int descent = dev.vic17usd.spacefabric.space.RocketJourney.DESCENDING;
+        assertFalse(MarsExpeditionChecks.landed(Planet.MARS, Planet.MARS, Planet.MARS, descent, true), "An aborted launch back to Mars is not arrival");
+        assertFalse(MarsExpeditionChecks.landed(null, Planet.MARS, Planet.EARTH, descent, true));
+        assertFalse(MarsExpeditionChecks.landed(Planet.MARS, Planet.MARS, null, descent, true));
+        assertTrue(MarsExpeditionChecks.landed(Planet.MARS, Planet.MARS, Planet.MOON, descent, true));
+    }
+
+    private static final net.minecraft.core.BlockPos MARS_CONTROLLER = new net.minecraft.core.BlockPos(2, 1, 2);
+    private static final net.minecraft.core.BlockPos MARS_HEAD = new net.minecraft.core.BlockPos(3, 2, 3);
+    private SealScanner.World marsRoom(java.util.Map<net.minecraft.core.BlockPos, net.minecraft.world.level.block.state.BlockState> changes) {
+        return pos -> {
+            boolean inBox = pos.getX() >= 0 && pos.getX() <= 6 && pos.getZ() >= 0 && pos.getZ() <= 6 && pos.getY() >= 0 && pos.getY() <= 4;
+            boolean wall = inBox && (pos.getX() == 0 || pos.getX() == 6 || pos.getZ() == 0 || pos.getZ() == 6 || pos.getY() == 0 || pos.getY() == 4);
+            var fallback = pos.equals(MARS_CONTROLLER) ? ColonyContent.HABITAT_CONTROLLER.defaultBlockState()
+                    : (wall ? Blocks.STONE : Blocks.AIR).defaultBlockState();
+            return HabitatSystem.classify(changes.getOrDefault(pos, fallback), net.minecraft.world.level.EmptyBlockGetter.INSTANCE, pos);
+        };
+    }
+    private MarsExpeditionChecks.Observation marsReady() {
+        return new MarsExpeditionChecks.Observation(true, true, true, true, 600, 1500, 2000);
+    }
+
+    @Test void marsMissionRequiresArrivalAndAnExplicitControllerAndKeepsPlayersIndependent() {
+        var progress = new MarsProgress(); var p = java.util.UUID.randomUUID(); var other = java.util.UUID.randomUUID();
+        assertFalse(progress.select(p, MARS_CONTROLLER));
+        assertFalse(progress.observe(p, MARS_CONTROLLER, marsReady()));
+        assertTrue(progress.land(p)); assertFalse(progress.land(p));
+        assertFalse(progress.observe(p, MARS_CONTROLLER, marsReady()));
+        assertTrue(progress.select(p, MARS_CONTROLLER)); assertFalse(progress.select(p, MARS_CONTROLLER));
+        assertFalse(progress.observe(other, MARS_CONTROLLER, marsReady()));
+        assertFalse(progress.observe(p, MARS_CONTROLLER.above(), marsReady()));
+        assertTrue(progress.observe(p, MARS_CONTROLLER, marsReady()));
+        assertTrue(progress.entry(p).complete()); assertFalse(progress.entry(other).started());
+        assertFalse(progress.observe(p, MARS_CONTROLLER, marsReady()));
+        assertFalse(progress.select(p, MARS_CONTROLLER.above()));
+    }
+
+    @Test void marsHistoricalChecksCannotBeCombinedAcrossTimesRoomsOrOutsidePlayers() {
+        var progress = new MarsProgress(); var p = java.util.UUID.randomUUID();
+        progress.land(p); progress.select(p, MARS_CONTROLLER);
+        assertFalse(progress.observe(p, MARS_CONTROLLER, new MarsExpeditionChecks.Observation(true, true, true, true, 600, 1500, 0)));
+        assertFalse(progress.observe(p, MARS_CONTROLLER, new MarsExpeditionChecks.Observation(true, false, false, false, 0, 0, 2000)));
+        assertEquals(MarsProgress.ARRIVAL | MarsProgress.REQUIREMENTS, progress.entry(p).milestones());
+        assertFalse(progress.entry(p).complete(), "Historical union must not complete a currently broken base");
+        assertFalse(progress.observe(p, MARS_CONTROLLER, new MarsExpeditionChecks.Observation(true, true, true, false, 600, 1500, 2000)));
+        progress.select(p, MARS_CONTROLLER.east());
+        assertFalse(progress.observe(p, MARS_CONTROLLER, marsReady()));
+        assertFalse(progress.observe(p, MARS_CONTROLLER.east(), MarsExpeditionChecks.Observation.ABSENT));
+        assertTrue(progress.observe(p, MARS_CONTROLLER.east(), marsReady()));
+    }
+
+    @Test void marsProgressPersistsPartialAndCompletedStateThroughNativeNbtWithoutRepeatingUnlocks() throws IOException {
+        var codec = MarsProgress.CODEC; var ops = net.minecraft.nbt.NbtOps.INSTANCE;
+        var progress = new MarsProgress(); var p = java.util.UUID.randomUUID();
+        progress.land(p); progress.select(p, MARS_CONTROLLER);
+        progress.observe(p, MARS_CONTROLLER, new MarsExpeditionChecks.Observation(true, true, false, true, 0, 0, 0));
+        var path = java.nio.file.Files.createTempFile("mars-expedition-", ".dat");
+        try {
+            var tag = assertInstanceOf(net.minecraft.nbt.CompoundTag.class, codec.encodeStart(ops, progress).getOrThrow());
+            net.minecraft.nbt.NbtIo.writeCompressed(tag, path);
+            var loaded = codec.parse(ops, net.minecraft.nbt.NbtIo.readCompressed(path, net.minecraft.nbt.NbtAccounter.unlimitedHeap())).getOrThrow();
+            assertEquals(progress.entry(p), loaded.entry(p)); assertFalse(loaded.land(p));
+            assertTrue(loaded.observe(p, MARS_CONTROLLER, marsReady()));
+            tag = assertInstanceOf(net.minecraft.nbt.CompoundTag.class, codec.encodeStart(ops, loaded).getOrThrow());
+            net.minecraft.nbt.NbtIo.writeCompressed(tag, path);
+            loaded = codec.parse(ops, net.minecraft.nbt.NbtIo.readCompressed(path, net.minecraft.nbt.NbtAccounter.unlimitedHeap())).getOrThrow();
+            assertTrue(loaded.entry(p).complete());
+            for (int reconnect = 0; reconnect < 5; reconnect++) {
+                assertFalse(loaded.land(p)); assertFalse(loaded.observe(p, MARS_CONTROLLER, marsReady()));
+            }
+            assertFalse(loaded.entry(java.util.UUID.randomUUID()).started());
+            assertEquals(MarsProgress.Entry.EMPTY, codec.parse(JsonOps.INSTANCE, JsonParser.parseString("{}")).getOrThrow().entry(p));
+            assertTrue(codec.parse(JsonOps.INSTANCE, JsonParser.parseString("{\"players\":{\"x\":{\"milestones\":64}}}")).error().isPresent());
+        } finally { java.nio.file.Files.deleteIfExists(path); }
+    }
+
+    @Test void marsSealEvidenceUsesNativeRoomGeometryAndInvalidatesBreachesBlockedVentsAndUnloadedWalls() {
+        var changes = new java.util.HashMap<net.minecraft.core.BlockPos, net.minecraft.world.level.block.state.BlockState>();
+        var world = marsRoom(changes); var room = SealScanner.scan(world, MARS_CONTROLLER.above(), false);
+        assertTrue(room.sealed());
+        var support = new LifeSupport(); support.restore(2400, 2400, 0, room.air().size(), true);
+        assertTrue(MarsExpeditionChecks.evaluate(room, world, MARS_HEAD, support, true, 2000).ready());
+        assertFalse(MarsExpeditionChecks.evaluate(room, world, new net.minecraft.core.BlockPos(8, 2, 3), support, true, 2000).ready());
+        var wall = new net.minecraft.core.BlockPos(0, 2, 3);
+        changes.put(wall, Blocks.AIR.defaultBlockState());
+        assertFalse(MarsExpeditionChecks.evaluate(room, world, MARS_HEAD, support, true, 2000).ready());
+        assertFalse(SealScanner.scan(world, MARS_CONTROLLER.above(), false).sealed());
+        changes.put(wall, Blocks.STONE_SLAB.defaultBlockState());
+        assertFalse(SealScanner.scan(world, MARS_CONTROLLER.above(), false).sealed());
+        changes.clear(); changes.put(MARS_CONTROLLER.above(), Blocks.STONE.defaultBlockState());
+        assertEquals(SealScanner.Status.BLOCKED_VENT, SealScanner.scan(world, MARS_CONTROLLER.above(), false).status());
+        changes.clear();
+        SealScanner.World unloaded = pos -> pos.equals(wall) ? SealScanner.Cell.UNLOADED : world.cell(pos);
+        assertFalse(MarsExpeditionChecks.evaluate(room, unloaded, MARS_HEAD, support, true, 2000).ready());
+        assertEquals(SealScanner.Status.UNLOADED, SealScanner.scan(unloaded, MARS_CONTROLLER.above(), false).status());
+    }
+
+    @Test void marsControllerMustConsumeRealSuppliesAndPressurizeBeforeEvidenceCanComplete() {
+        var controller = new ColonyMachineBlockEntity(MARS_CONTROLLER, ColonyContent.HABITAT_CONTROLLER.defaultBlockState());
+        var world = marsRoom(java.util.Map.of()); var room = SealScanner.scan(world, MARS_CONTROLLER.above(), false);
+        controller.setItem(0, new ItemStack(ColonyContent.OXYGEN_CANISTER));
+        controller.setItem(1, new ItemStack(ColonyContent.CHARGED_POWER_CELL));
+        controller.setItem(2, new ItemStack(ColonyContent.WATER_CANISTER, 2));
+        int water = MarsExpeditionChecks.storedWater(controller, room, world, p -> null);
+        assertFalse(MarsExpeditionChecks.evaluate(room, world, MARS_HEAD, controller.support(), true, water).ready());
+        controller.refillFromItems(false);
+        assertFalse(MarsExpeditionChecks.evaluate(room, world, MARS_HEAD, controller.support(), true, water).ready(), "Budgets alone have not pressurized a room");
+        boolean operating = controller.support().tick(room.air().size(), 1, false);
+        assertTrue(MarsExpeditionChecks.evaluate(room, world, MARS_HEAD, controller.support(), operating, water).ready());
+        assertTrue(controller.getItem(0).isEmpty()); assertTrue(controller.getItem(1).isEmpty());
+        assertTrue(controller.getItem(5).is(ColonyContent.EMPTY_POWER_CELL)); assertTrue(controller.getItem(6).is(ColonyContent.EMPTY_CANISTER));
+        assertEquals(2, controller.getItem(2).getCount()); assertEquals(0, controller.support().coolant());
+        assertFalse(MarsExpeditionChecks.evaluate(room, world, MARS_HEAD, controller.support(), false, water).ready(), "A stopped/failed controller must not pass with stored budgets");
+        controller.support().vent();
+        assertFalse(MarsExpeditionChecks.evaluate(room, world, MARS_HEAD, controller.support(), operating, water).ready());
+    }
+
+    @Test void marsThresholdsCoverFiveMinutesForTwoOccupantsWithoutChangingAtmosphereBudgets() {
+        var world = marsRoom(java.util.Map.of()); var room = SealScanner.scan(world, MARS_CONTROLLER.above(), false);
+        var support = new LifeSupport(); support.restore(600, 1500, 0, room.air().size(), true);
+        assertTrue(MarsExpeditionChecks.evaluate(room, world, MARS_HEAD, support, true, 2000).ready());
+        for (int second = 0; second < 300; second++) assertTrue(support.tick(room.air().size(), 2, false));
+        assertEquals(0, support.oxygen()); assertEquals(0, support.energy()); assertFalse(support.tick(room.air().size(), 2, false));
+        assertFalse(new MarsExpeditionChecks.Observation(true, true, true, true, 599, 1500, 2000).ready());
+        assertFalse(new MarsExpeditionChecks.Observation(true, true, true, true, 600, 1499, 2000).ready());
+        assertFalse(new MarsExpeditionChecks.Observation(true, true, true, true, 600, 1500, 1999).ready());
+        support = new LifeSupport(); support.fill(0); support.fill(1);
+        assertTrue(support.tick(SealScanner.MAX_VOLUME, 2, false));
+        assertTrue(support.oxygen() >= MarsExpeditionChecks.OXYGEN); assertTrue(support.energy() >= MarsExpeditionChecks.ENERGY);
+    }
+
+    @Test void marsWaterCountsOnlyStoredCanistersAndProcessedWaterTanksInsideTheSelectedRoom() {
+        var controller = new ColonyMachineBlockEntity(MARS_CONTROLLER, ColonyContent.HABITAT_CONTROLLER.defaultBlockState());
+        var tankPos = new net.minecraft.core.BlockPos(4, 1, 4); var outsidePos = new net.minecraft.core.BlockPos(0, 1, 4);
+        var tank = new TransportTankBlockEntity(tankPos, TransportContent.tank(TransportChannel.LIQUID).defaultBlockState());
+        var outside = new TransportTankBlockEntity(outsidePos, tank.getBlockState());
+        var world = marsRoom(java.util.Map.of(tankPos, tank.getBlockState(), outsidePos, outside.getBlockState()));
+        var room = SealScanner.scan(world, MARS_CONTROLLER.above(), false); assertTrue(room.sealed());
+        var entities = java.util.Map.of(tankPos, tank, outsidePos, outside);
+        outside.buffer().insert(TransportResource.WATER, 2000);
+        assertEquals(0, MarsExpeditionChecks.storedWater(controller, room, world, entities::get), "Exterior wall tank is not stored inside");
+        tank.setItem(0, new ItemStack(ColonyContent.WATER_CANISTER, 2));
+        assertEquals(0, MarsExpeditionChecks.storedWater(controller, room, world, entities::get), "Input awaiting conversion is not bulk storage");
+        assertTrue(tank.processContainer()); assertEquals(1000, MarsExpeditionChecks.storedWater(controller, room, world, entities::get));
+        assertTrue(tank.processContainer()); assertEquals(2000, MarsExpeditionChecks.storedWater(controller, room, world, entities::get));
+        tank.buffer().extract(TransportResource.WATER, 2000);
+        tank.buffer().select(TransportResource.CHILLED_COOLANT); tank.buffer().insert(TransportResource.CHILLED_COOLANT, 2000);
+        assertEquals(0, MarsExpeditionChecks.storedWater(controller, room, world, entities::get));
+        controller.setItem(2, new ItemStack(ColonyContent.WATER_CANISTER)); assertEquals(1000, MarsExpeditionChecks.storedWater(controller, room, world, entities::get));
+        controller.setItem(2, new ItemStack(ColonyContent.OXYGEN_CANISTER, 2)); assertEquals(0, MarsExpeditionChecks.storedWater(controller, room, world, entities::get));
+        controller.setItem(2, new ItemStack(ColonyContent.WATER_CANISTER, 16)); assertEquals(2000, MarsExpeditionChecks.storedWater(controller, null, world, entities::get));
+    }
+
+    @Test void marsWaterAndControllerReservesPersistInExistingBlockEntitiesButRequireRevalidation() {
+        var controller = new ColonyMachineBlockEntity(MARS_CONTROLLER, ColonyContent.HABITAT_CONTROLLER.defaultBlockState());
+        controller.setItem(0, new ItemStack(ColonyContent.OXYGEN_CANISTER)); controller.setItem(1, new ItemStack(ColonyContent.CHARGED_POWER_CELL));
+        controller.setItem(2, new ItemStack(ColonyContent.WATER_CANISTER, 2)); controller.refillFromItems(false);
+        var loaded = assertInstanceOf(ColonyMachineBlockEntity.class, net.minecraft.world.level.block.entity.BlockEntity.loadStatic(
+                MARS_CONTROLLER, controller.getBlockState(), controller.saveWithFullMetadata(registries), registries));
+        assertEquals(2400, loaded.support().oxygen()); assertEquals(2400, loaded.support().energy()); assertEquals(2, loaded.getItem(2).getCount());
+        assertFalse(loaded.operating()); assertFalse(loaded.protects(MARS_HEAD));
+        var tank = transportTank(TransportChannel.LIQUID); tank.setItem(0, new ItemStack(Items.WATER_BUCKET));
+        assertTrue(tank.processContainer());
+        var restored = assertInstanceOf(TransportTankBlockEntity.class, net.minecraft.world.level.block.entity.BlockEntity.loadStatic(
+                tank.getBlockPos(), tank.getBlockState(), tank.saveWithFullMetadata(registries), registries));
+        assertEquals(1000, restored.buffer().available(TransportResource.WATER));
+    }
+
+    @Test void marsOxygenUsesTheExistingElectrolysisRecipeWithoutVenusTechnology() throws IOException {
+        var electrolyzer = new ColonyMachineBlockEntity(MARS_CONTROLLER, ColonyContent.ELECTROLYZER.defaultBlockState());
+        electrolyzer.setItem(0, new ItemStack(ColonyContent.WATER_CANISTER));
+        electrolyzer.setItem(1, new ItemStack(ColonyContent.CHARGED_POWER_CELL));
+        electrolyzer.setItem(2, new ItemStack(ColonyContent.EMPTY_CANISTER));
+        for (int tick = 0; tick < 200; tick++) electrolyzer.processTick(new ColonyEnvironment(false, true, false, false));
+        assertEquals(1, electrolyzer.completedBatches()); assertEquals("electrolysis", electrolyzer.lastCompletedRecipe());
+        assertTrue(electrolyzer.getItem(3).is(ColonyContent.OXYGEN_CANISTER)); assertTrue(electrolyzer.getItem(4).is(ColonyContent.HYDROGEN_CANISTER));
+        assertTrue(electrolyzer.getItem(5).is(ColonyContent.EMPTY_POWER_CELL));
+        for (var name : List.of("habitat_controller", "pressure_hull", "water_electrolyzer", "empty_canister", "empty_power_cell", "charged_power_cell", "water_canister")) {
+            var json = resource("recipe/" + name);
+            assertFalse(json.toString().contains("venus")); assertFalse(json.toString().contains("research_report"));
+            assertNotNull(Recipe.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE), json).getOrThrow());
+        }
+    }
+
+    @Test void marsPacketsRoundTripAndRejectOutOfRangeReserves() {
+        var buffer = new net.minecraft.network.RegistryFriendlyByteBuf(io.netty.buffer.Unpooled.buffer(), (RegistryAccess) registries);
+        try {
+            for (int flags = 0; flags <= 63; flags++) {
+                buffer.clear(); var state = new MarsGuideNetwork.State(flags, Optional.of(MARS_CONTROLLER), true, 600, 1500, 2000);
+                MarsGuideNetwork.State.CODEC.encode(buffer, state); assertEquals(state, MarsGuideNetwork.State.CODEC.decode(buffer)); assertEquals(0, buffer.readableBytes());
+            }
+            buffer.clear(); MarsGuideNetwork.State.CODEC.encode(buffer, MarsGuideNetwork.State.EMPTY);
+            assertEquals(MarsGuideNetwork.State.EMPTY, MarsGuideNetwork.State.CODEC.decode(buffer));
+            buffer.clear(); buffer.writeVarInt(64); buffer.writeBoolean(false); buffer.writeBoolean(false); buffer.writeVarInt(0); buffer.writeVarInt(0); buffer.writeVarInt(0);
+            assertThrows(IllegalArgumentException.class, () -> MarsGuideNetwork.State.CODEC.decode(buffer));
+            assertThrows(IllegalArgumentException.class, () -> new MarsGuideNetwork.State(1, Optional.empty(), false, -1, 0, 0));
+            assertThrows(IllegalArgumentException.class, () -> new MarsGuideNetwork.State(1, Optional.empty(), false, 0, 9601, 0));
+            assertThrows(IllegalArgumentException.class, () -> new MarsGuideNetwork.State(1, Optional.empty(), false, 0, 0, 2001));
+        } finally { buffer.release(); }
+    }
+
+    @Test void marsHudExpiresDisconnectsAndCanDisplayCurrentFailuresWithoutDeletingHistory() {
+        var tracker = new MarsMissionTracker(); assertFalse(tracker.ready());
+        tracker.accept(new MarsGuideNetwork.State(31, Optional.of(MARS_CONTROLLER), true, 600, 1500, 2000)); assertTrue(tracker.ready());
+        tracker.accept(new MarsGuideNetwork.State(3, Optional.of(MARS_CONTROLLER), false, 0, 1500, 0));
+        assertFalse(tracker.state().has(MarsProgress.SEALED));
+        for (int tick = 0; tick < 61; tick++) tracker.tick(); assertFalse(tracker.ready());
+        tracker.accept(new MarsGuideNetwork.State(63, Optional.of(MARS_CONTROLLER), false, 0, 0, 0)); assertTrue(tracker.ready());
+        tracker.clear(); assertFalse(tracker.ready()); assertEquals(MarsGuideNetwork.State.EMPTY, tracker.state());
+    }
+
+    @ParameterizedTest @ValueSource(strings = {"arrival", "refuge"})
+    void marsAdvancementsDecodeWithServerOnlyCriteriaAndNoRepeatableReward(String name) throws IOException {
+        var json = resource("advancement/mars_guide/" + name);
+        assertNotNull(net.minecraft.advancements.Advancement.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE), json).getOrThrow());
+        assertEquals("minecraft:impossible", json.getAsJsonObject().getAsJsonObject("criteria").getAsJsonObject("observed").get("trigger").getAsString());
+        assertFalse(json.getAsJsonObject().has("rewards"));
+    }
 }
