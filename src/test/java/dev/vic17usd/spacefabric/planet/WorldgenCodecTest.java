@@ -4064,4 +4064,34 @@ class WorldgenCodecTest {
         assertEquals("minecraft:impossible", json.getAsJsonObject().getAsJsonObject("criteria").getAsJsonObject("observed").get("trigger").getAsString());
         assertFalse(json.getAsJsonObject().has("rewards"));
     }
+
+    @Test void animatedMarsGuideShellSealsWithTheNativeScannerAndItsControllerVentStaysClear() {
+        var blocks = new java.util.HashMap<net.minecraft.core.BlockPos, net.minecraft.world.level.block.state.BlockState>();
+        var shell = dev.vic17usd.spacefabric.client.colony.MarsGuideAnimation.shell();
+        assertEquals(170, shell.size());
+        for (var v : shell) blocks.put(new net.minecraft.core.BlockPos(v.x(), v.y(), v.z()), v.door()
+                ? ColonyContent.AIRLOCK_DOOR.defaultBlockState() : Blocks.STONE.defaultBlockState());
+        var controller = new net.minecraft.core.BlockPos(3, 1, 3);
+        blocks.put(controller, ColonyContent.HABITAT_CONTROLLER.defaultBlockState());
+        SealScanner.World world = p -> HabitatSystem.classify(blocks.getOrDefault(p, Blocks.AIR.defaultBlockState()), net.minecraft.world.level.EmptyBlockGetter.INSTANCE, p);
+        var room = SealScanner.scan(world, controller.above(), false);
+        assertTrue(room.sealed()); assertEquals(74, room.air().size());
+        var support = new LifeSupport(); support.fill(0); support.fill(1);
+        assertTrue(support.tick(room.air().size(), 1, false));
+        assertEquals(2251, support.oxygen()); assertEquals(2395, support.energy());
+        blocks.put(new net.minecraft.core.BlockPos(3, 1, 6), ColonyContent.AIRLOCK_DOOR.defaultBlockState()
+                .setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.OPEN, true));
+        assertFalse(room.unchanged(world)); assertFalse(SealScanner.scan(world, controller.above(), false).sealed());
+    }
+    @Test void animatedMarsGuideOpenPacketPreservesServerStateAndRejectsInvalidProgress() {
+        var buffer = new net.minecraft.network.RegistryFriendlyByteBuf(io.netty.buffer.Unpooled.buffer(), (RegistryAccess) registries);
+        try {
+            var packet = new MarsGuideNetwork.OpenGuide(new MarsGuideNetwork.State(31, Optional.of(MARS_CONTROLLER), true, 600, 1500, 2000));
+            MarsGuideNetwork.OpenGuide.CODEC.encode(buffer, packet);
+            assertEquals(packet, MarsGuideNetwork.OpenGuide.CODEC.decode(buffer)); assertEquals(0, buffer.readableBytes());
+            buffer.clear(); buffer.writeVarInt(64); buffer.writeBoolean(false); buffer.writeBoolean(false);
+            buffer.writeVarInt(0); buffer.writeVarInt(0); buffer.writeVarInt(0);
+            assertThrows(IllegalArgumentException.class, () -> MarsGuideNetwork.OpenGuide.CODEC.decode(buffer));
+        } finally { buffer.release(); }
+    }
 }

@@ -1,4 +1,4 @@
-# Primera expedición de Marte — 0.58.0
+# Primera expedición de Marte — 0.59.0
 
 La etapa empieza cuando el cohete termina físicamente su descenso en Marte con
 el jugador a bordo. El servidor comprueba destino, origen, fase de descenso,
@@ -8,13 +8,46 @@ despegue desde Marte no inicia la expedición. En un mundo antiguo ya situado en
 Marte, realiza un nuevo viaje de llegada; puedes reutilizar después tu base.
 
 La guía aparece **arriba a la izquierda, sin panel de fondo**, con cuatro objetivos.
-`/marte` muestra estado, reservas y coordenadas; `/marte guia` explica en español
-el montaje y las recetas. Son comandos normales, sin permisos de operador.
+`/marte` muestra estado, reservas y coordenadas; `/marte guia` abre un tutorial
+visual en español. `/marte texto` conserva las instrucciones largas en el chat.
+Son comandos normales, sin permisos de operador.
 El visor de recetas existente muestra las cuadrículas y los procesos exactos.
+
+## Guía visual animada
+
+Abre `/marte guia` o pulsa **Guía de Marte** en la esquina superior izquierda del
+inventario. También puedes pulsar el aviso del primer aterrizaje. La guía puede
+consultarse antes de aterrizar para preparar la expedición; abrirla no inicia ni
+completa objetivos.
+
+Los ocho pasos muestran el equipo inicial, el montaje del refugio, la toma de
+ventilación, el uso de dos esclusas, la carga de O₂ y batería, la reserva de agua,
+las recetas y la validación final dentro de la base. El dibujo del refugio es un
+**corte didáctico** con el techo levantado y las paredes delanteras ocultas: en la
+construcción real debes cerrar la envolvente completa. Los ejemplos de inventario
+no mueven ni consumen tus objetos. El pie muestra por separado los requisitos
+reales enviados por el servidor.
+
+- **Anterior / Siguiente** o **flechas del teclado** cambian de paso.
+- Los **números 1–8** de arriba permiten saltar directamente a cualquier paso.
+- **Pausa / Reproducir** o **Espacio** detienen/reanudan la animación.
+- **Repetir** o **Inicio** vuelven al comienzo; la barra permite buscar otro instante.
+- **Esc** cierra la guía y vuelve al juego.
+- En el paso **7**, elige un objeto con los iconos superiores. Las cuadrículas y
+  productos proceden del visor de recetas existente del servidor, incluidas las
+  modificaciones de datapacks. Las flechas cambian de receta cuando hay varias;
+  al pasar el ratón sobre los objetos se muestran sus nombres.
+
+La animación dura diez segundos por ciclo y cada paso se repite hasta que elijas
+otro. Pausa la partida local; en multijugador el servidor sigue funcionando, por
+lo que conviene abrirla desde un lugar seguro. El aviso también aparece al pasar
+el ratón sobre el pie de la pantalla. Las misiones conservan sus requisitos y su
+persistencia de 0.58.0. Si el cliente no admite la nueva pantalla, el comando
+informa de la actualización necesaria y ofrece el estado breve.
 
 ## Preparación en supervivencia
 
-Instala `space-fabric-0.58.0.jar` en cliente y servidor, sustituyendo la versión
+Instala `space-fabric-0.59.0.jar` en cliente y servidor, sustituyendo la versión
 anterior, con Minecraft Java 26.1, Java 25, Fabric Loader 0.20.1 y Fabric API
 0.145.1+26.1. No hace falta generar otro mundo ni reconstruir una base válida.
 

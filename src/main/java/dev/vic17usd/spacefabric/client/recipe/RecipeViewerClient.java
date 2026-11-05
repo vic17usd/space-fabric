@@ -11,6 +11,8 @@ import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.network.chat.Component;
 
 public final class RecipeViewerClient {
+    private static final java.util.concurrent.atomic.AtomicInteger SEQUENCES = new java.util.concurrent.atomic.AtomicInteger();
+    public static int nextSequence() { return SEQUENCES.incrementAndGet(); }
     private RecipeViewerClient() { }
     public static void initialize() {
         var key=dev.vic17usd.spacefabric.client.ModKeyBindings.RECIPES;
@@ -28,6 +30,7 @@ public final class RecipeViewerClient {
         });
         ClientPlayNetworking.registerGlobalReceiver(RecipeViewerNetwork.Reply.TYPE,(reply,context)->{
             if(context.client().screen instanceof RecipeViewerScreen viewer)viewer.accept(reply);
+            else if(context.client().screen instanceof dev.vic17usd.spacefabric.client.colony.MarsGuideScreen guide)guide.accept(reply);
         });
     }
 }

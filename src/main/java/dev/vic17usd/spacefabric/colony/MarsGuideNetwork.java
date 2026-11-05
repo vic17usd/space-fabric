@@ -37,7 +37,20 @@ public final class MarsGuideNetwork {
         @Override public Type<State> type() { return TYPE; }
         public boolean has(int flag) { return (flags & flag) != 0; }
     }
-    public static void initialize() { PayloadTypeRegistry.clientboundPlay().register(State.TYPE, State.CODEC); }
+    public record OpenGuide(State state) implements CustomPacketPayload {
+        public static final Type<OpenGuide> TYPE = new Type<>(SpaceFabric.id("mars_guide_open"));
+        public static final StreamCodec<RegistryFriendlyByteBuf, OpenGuide> CODEC = State.CODEC.map(OpenGuide::new, OpenGuide::state);
+        @Override public Type<OpenGuide> type() { return TYPE; }
+    }
+    public static void initialize() {
+        PayloadTypeRegistry.clientboundPlay().register(State.TYPE, State.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(OpenGuide.TYPE, OpenGuide.CODEC);
+    }
+    public static boolean open(ServerPlayer player, State state) {
+        if (!ServerPlayNetworking.canSend(player, OpenGuide.TYPE)) return false;
+        ServerPlayNetworking.send(player, new OpenGuide(state));
+        return true;
+    }
     public static void send(ServerPlayer player, State state) {
         if (ServerPlayNetworking.canSend(player, State.TYPE)) ServerPlayNetworking.send(player, state);
     }

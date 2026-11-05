@@ -5,7 +5,6 @@ import dev.vic17usd.spacefabric.recipe.RecipeCard;
 import dev.vic17usd.spacefabric.recipe.RecipeSearch;
 import dev.vic17usd.spacefabric.recipe.RecipeViewerNetwork;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
@@ -21,7 +20,6 @@ import dev.vic17usd.spacefabric.client.ModKeyBindings;
 
 /** Searchable registry catalog and server-backed recipe cards. All interaction is read-only. */
 public final class RecipeViewerScreen extends Screen {
-    private static final AtomicInteger SEQUENCES=new AtomicInteger();
     private final Screen previous;
     private List<ItemStack> all=List.of(),filtered=List.of();
     private ItemStack selected=new ItemStack(ModItems.ROCKET),hovered=ItemStack.EMPTY;
@@ -64,7 +62,7 @@ public final class RecipeViewerScreen extends Screen {
     private void select(ItemStack stack,boolean usages) {if(stack.isEmpty())return;selected=stack.copy();this.usages=usages;request(0);}
     private void request(int page) {
         unsupported=!ClientPlayNetworking.canSend(RecipeViewerNetwork.Request.TYPE);
-        card=null;total=0;recipePage=Math.max(0,page);loading=!unsupported;sequence=SEQUENCES.incrementAndGet();requestedAt=Util.getMillis();
+        card=null;total=0;recipePage=Math.max(0,page);loading=!unsupported;sequence=RecipeViewerClient.nextSequence();requestedAt=Util.getMillis();
         if(!unsupported)ClientPlayNetworking.send(new RecipeViewerNetwork.Request(sequence,BuiltInRegistries.ITEM.getKey(selected.getItem()).toString(),usages,recipePage));
         updateButtons();
     }

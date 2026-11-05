@@ -115,6 +115,14 @@ public final class MarsOnboarding {
         });
         CommandRegistrationCallback.EVENT.register((dispatcher, context, selection) -> dispatcher.register(
                 Commands.literal("marte").executes(c -> show(c.getSource().getPlayerOrException(), false))
-                        .then(Commands.literal("guia").executes(c -> show(c.getSource().getPlayerOrException(), true)))));
+                        .then(Commands.literal("guia").executes(c -> {
+                            var player = c.getSource().getPlayerOrException();
+                            if (!MarsGuideNetwork.open(player, inspect(player))) {
+                                player.sendSystemMessage(Component.translatable("mars.tutorial.update_client"));
+                                return show(player, false);
+                            }
+                            return 1;
+                        }))
+                        .then(Commands.literal("texto").executes(c -> show(c.getSource().getPlayerOrException(), true)))));
     }
 }

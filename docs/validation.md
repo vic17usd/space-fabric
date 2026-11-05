@@ -1191,3 +1191,31 @@ o pruebas omitidas; **13 comprobaciones de render/modelos por CPU**, **1344 JSON
 y compilación `./gradlew build` correctos. Se verificaron integridad ZIP, versión
 0.58.0 y coincidencia de los 2432 recursos empaquetados (excluyendo el descriptor
 con versión expandida). JAR instalable en `dist/space-fabric-0.58.0.jar`, con SHA-256.
+
+## Guía visual animada de Marte (0.59.0)
+
+`/marte guia` abre una pantalla de ocho pasos mediante un paquete exclusivo del
+servidor. El inventario incluye el mismo acceso y `/marte texto` conserva la
+consulta escrita. El tutorial utiliza cuboides proyectados, objetos nativos y
+las recetas del visor existente, con una secuencia de solicitudes compartida
+para descartar respuestas antiguas. No añade operaciones de inventario ni
+mensajes de progreso del cliente al servidor.
+
+Las nuevas pruebas verifican pausa, reproducción, búsqueda temporal, repetición,
+límites de navegación, alternancia de esclusas, ajuste desde 320×240 y geometría
+de las caras sin redondear sus vértices. También comprueban que el techo elevado
+cabe en el marco durante todos los fotogramas. El cerramiento de 7×7×5 empleado
+por el dibujo se prueba con `SealScanner` y bloques nativos: contiene 74 celdas
+de aire tras colocar el controlador, mantiene libre la toma y pierde el sellado
+al abrir la puerta. Sus reservas iniciales coinciden con las del ejemplo animado.
+El paquete de apertura conserva el estado del servidor y rechaza flags inválidos.
+
+Se inspeccionó una representación de la geometría calculada por CPU. No se ha
+abierto esta pantalla dentro de un cliente Minecraft: quedan pendientes el
+aspecto nativo, los clics/teclado, el ajuste del texto con los paquetes de fuentes
+del usuario y la consulta de recetas durante una partida local o multijugador.
+
+Resultado 0.59.0: **757 pruebas JUnit aprobadas**, cero fallos, errores u omisiones;
+13 comprobaciones de modelos/render por CPU y 1344 JSON correctos. Compilación
+`./gradlew build` correcta. JAR verificado como ZIP, versión y 2432 recursos
+coincidentes con el código fuente, con descriptor de versión expandido.

@@ -16,7 +16,24 @@ public final class MarsGuideHud {
     private static final MarsMissionTracker STATE = new MarsMissionTracker();
     private MarsGuideHud() { }
     public static void initialize() {
-        ClientPlayNetworking.registerGlobalReceiver(MarsGuideNetwork.State.TYPE, (payload, context) -> STATE.accept(payload));
+        ClientPlayNetworking.registerGlobalReceiver(MarsGuideNetwork.State.TYPE, (payload, context) -> {
+            STATE.accept(payload);
+            if (context.client().screen instanceof MarsGuideScreen guide) guide.accept(payload);
+        });
+        ClientPlayNetworking.registerGlobalReceiver(MarsGuideNetwork.OpenGuide.TYPE, (payload, context) -> {
+            var client = context.client();
+            if (client.player == null) return;
+            if (client.screen instanceof MarsGuideScreen guide) guide.accept(payload.state());
+            else { client.player.closeContainer(); client.setScreen(new MarsGuideScreen(payload.state())); }
+        });
+        net.fabricmc.fabric.api.client.screen.v1.ScreenEvents.AFTER_INIT.register((client, screen, width, height) -> {
+            if (screen instanceof net.minecraft.client.gui.screens.inventory.InventoryScreen
+                    || screen instanceof net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen)
+                net.fabricmc.fabric.api.client.screen.v1.Screens.getWidgets(screen).add(
+                        net.minecraft.client.gui.components.Button.builder(Component.translatable("mars.tutorial.button"), b -> {
+                            if (client.player != null) { client.player.closeContainer(); client.player.connection.sendCommand("marte guia"); }
+                        }).bounds(6, 6, 108, 20).build());
+        });
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> STATE.clear());
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (client.level == null || client.player == null || !client.player.isAlive()

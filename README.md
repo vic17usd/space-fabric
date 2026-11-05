@@ -1,5 +1,11 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión **0.59.0** transforma `/marte guia` en un tutorial visual con ocho pasos:
+montaje animado del refugio, toma de aire, esclusas, suministros, reserva de agua
+y cuadrículas de recetas del servidor. Incluye pausa, repetición y navegación con
+el ratón o teclado. También se abre con **Guía de Marte** en el inventario;
+`/marte texto` conserva la consulta escrita. [Uso](docs/mars-first-expedition.md).
+
 La versión **0.58.0** añade la primera expedición de Marte: aterrizaje real,
 selección de refugio, sellado, oxígeno, energía y reserva de agua. La guía
 transparente y `/marte guia` usan comprobaciones del servidor y progreso personal
