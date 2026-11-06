@@ -71,3 +71,19 @@ no una partida en supervivencia. No se ha realizado una prueba del cliente real 
 una sesión multijugador; deben comprobarse los comandos, las reconexiones y el
 recorrido anterior dentro de Minecraft. No se han modificado las recetas ni las
 capacidades para esta demostración.
+
+### Lectura preliminar de reservas del controlador
+
+`/marte autonomia` muestra una estimación parcial del propio controlador cuando el
+recinto seleccionado está sellado y disponible. Incluye presupuestos internos y
+bombonas o baterías en las entradas cuyo envase de retorno cabe en la salida. El
+agua de la tercera entrada se muestra como almacenamiento, no como consumo del
+soporte vital. Se presupuesta una presurización completa de 2 unidades por bloque
+de aire y un margen del 25 % sobre 600 ciclos de soporte vital para una noche de
+12.000 ticks. La cifra es conservadora y no equivale a una prueba de autonomía.
+
+**Pendiente:** esta lectura no inspecciona depósitos ni redes externas, no vincula
+instalaciones y no declara que el refugio esté preparado. La comprobación real deberá
+verificar las interfaces, envases, recursos compartidos, topología y disponibilidad
+antes de incluirlos. Unidades de red de oxígeno (1.000 por bombona) y unidades del
+soporte vital (2.400 por bombona consumida) no son intercambiables directamente.

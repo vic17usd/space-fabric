@@ -1078,5 +1078,7 @@
   "mars.production.cancelled": "Encargo cancelado; las producciones ya acreditadas se conservan.",
   "mars.production.status": "Producción local: %s agua del hielo | %s oxígeno | %s energía solar.",
   "mars.production.help": "Mira la máquina vacía y usa /marte autonomia produccion agua, oxigeno o solar. Una tanda nueva acredita cada proceso. Reservas y noche pendientes.",
-  "mars.production.credited": "Producción real acreditada."
+  "mars.production.credited": "Producción real acreditada.",
+  "mars.autonomy.reserves.controller": "Controlador (interior y entradas utilizables): O2 %s/%s, energía %s/%s, agua %s/%s. Previsión conservadora con presurización.",
+  "mars.autonomy.reserves.pending": "Cifras parciales: redes y depósitos externos aún no evaluados. La preparación y la prueba nocturna siguen pendientes."
 }

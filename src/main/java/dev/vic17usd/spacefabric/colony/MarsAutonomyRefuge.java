@@ -54,7 +54,22 @@ final class MarsAutonomyRefuge {
         var status = inspect(machine.scannedRoom(), world, pos.above());
         if (status != null) { message(player, status); return; }
         var room = machine.scannedRoom();
-        player.sendSystemMessage(Component.translatable("mars.autonomy.refuge.sealed", room.air().size(), ColonyMachineBlockEntity.occupants(level, room)));
+        int occupants = ColonyMachineBlockEntity.occupants(level, room);
+        player.sendSystemMessage(Component.translatable("mars.autonomy.refuge.sealed", room.air().size(), occupants));
+        var required = MarsReserveBudget.requirement(room.air().size(), occupants, false);
+        var oxygenInput = machine.getItem(0); var powerInput = machine.getItem(1); var waterInput = machine.getItem(2);
+        var stock = MarsReserveBudget.controllerStock(machine.support().oxygen(), machine.support().energy(),
+                oxygenInput.is(ColonyContent.OXYGEN_CANISTER) ? oxygenInput.getCount() : 0,
+                powerInput.is(ColonyContent.CHARGED_POWER_CELL) ? powerInput.getCount() : 0,
+                waterInput.is(ColonyContent.WATER_CANISTER) ? waterInput.getCount() : 0,
+                returnCapacity(machine.getItem(6), ColonyContent.EMPTY_CANISTER),
+                returnCapacity(machine.getItem(5), ColonyContent.EMPTY_POWER_CELL));
+        player.sendSystemMessage(Component.translatable("mars.autonomy.reserves.controller", stock.oxygen(), required.oxygen(), stock.energy(), required.energy(), stock.water(), required.water()));
+        player.sendSystemMessage(Component.translatable("mars.autonomy.reserves.pending"));
+    }
+    private static int returnCapacity(net.minecraft.world.item.ItemStack stack, net.minecraft.world.item.Item item) {
+        return stack.isEmpty() ? item.getDefaultInstance().getMaxStackSize()
+                : stack.is(item) ? stack.getMaxStackSize() - stack.getCount() : 0;
     }
     /** Null means the cached room is still sealed. Never loads chunks or changes the controller. */
     static String inspect(SealScanner.Room room, SealScanner.World world, BlockPos vent) {

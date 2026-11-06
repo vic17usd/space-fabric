@@ -1078,5 +1078,7 @@
   "mars.production.cancelled": "Commission cancelled; credited production is retained.",
   "mars.production.status": "Local production: %s ice water | %s oxygen | %s solar power.",
   "mars.production.help": "Look at an empty machine and use /marte autonomia produccion agua, oxigeno or solar. One new batch credits each process. Reserves and night trial pending.",
-  "mars.production.credited": "Actual production credited."
+  "mars.production.credited": "Actual production credited.",
+  "mars.autonomy.reserves.controller": "Controller (internal and usable inputs): O2 %s/%s, energy %s/%s, water %s/%s. Conservative estimate includes pressurization.",
+  "mars.autonomy.reserves.pending": "Partial figures: external networks and tanks are not yet evaluated. Readiness and the night trial remain pending."
 }
