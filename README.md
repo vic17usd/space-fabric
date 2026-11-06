@@ -1,5 +1,8 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión **0.61.2** permite al piloto abrir el menú de navegación con clic derecho
+mientras está sentado en un cohete detenido.
+
 La versión **0.61.1** ajusta la cámara del cohete también en tierra e incluye los
 cambios de expediciones y hábitats integrados en la rama de desarrollo.
 
@@ -7,6 +10,8 @@ cambios de expediciones y hábitats integrados en la rama de desarrollo.
 > número (por ejemplo, 0.61.0 → 0.61.1). Las actualizaciones que incorporan varios
 > cambios incrementan el número intermedio y reinician el último (0.61.x → 0.62.0).
 > Cada versión instalable se conserva con su propio JAR y SHA-256 en `dist/`.
+>
+> [Descargar 0.61.2](dist/space-fabric-0.61.2.jar) · [SHA-256](dist/space-fabric-0.61.2.jar.sha256)
 >
 > [Descargar 0.61.1](dist/space-fabric-0.61.1.jar) · [SHA-256](dist/space-fabric-0.61.1.jar.sha256)
 

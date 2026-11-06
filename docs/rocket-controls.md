@@ -71,3 +71,8 @@ la conservación al recoger y guardar, las mejoras y los doce campos sincronizad
 en un menú nativo receptor. También se verifican las cantidades del tooltip de
 combustible, la capacidad de la barra y las causas de bloqueo. La inspección
 visual y el vuelo interactivo dentro de una partida siguen pendientes.
+
+
+Desde 0.61.2, estando sentado en un cohete detenido, pulsa clic derecho para
+abrir su menú de navegación sin apuntar al exterior. Durante el vuelo se mantienen
+las restricciones del viaje. El servidor comprueba que sigues siendo el piloto.

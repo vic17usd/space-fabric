@@ -16,6 +16,7 @@
     "ChatDraftAccessor",
     "SphereCameraMixin",
     "RocketCameraMixin",
+    "RocketCockpitUseMixin",
     "GuideGuiStateAccessor"
   ],
   "injectors": {
