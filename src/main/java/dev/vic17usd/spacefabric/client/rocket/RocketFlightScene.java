@@ -38,7 +38,8 @@ public final class RocketFlightScene {
             quad(pose,out,i%5==0?0xFF93B9E8:0xFFE5E7DF,new float[][]{xyz(a),xyz(b),xyz(c),xyz(d)});
         }
         sphere(pose,out,origin,-7-p*8,-2,15,3.6F*(1-p)+.15F,p*.4F);
-        sphere(pose,out,destination,.8F*(1-p),.4F,12,.3F+p*5.3F,p*.4F);
+        var target=RocketCruiseOrientation.destination(progress);
+        sphere(pose,out,destination,target.x,target.y,target.z,.3F+p*5.3F,p*.4F);
     }
     private static float[] xyz(Vector3f v){return new float[]{v.x,v.y,v.z};}
     private static void sphere(Pose pose,VertexConsumer out,Planet planet,float cx,float cy,float cz,float radius,float rotation) {

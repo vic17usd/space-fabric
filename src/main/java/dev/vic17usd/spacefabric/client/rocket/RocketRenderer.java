@@ -63,6 +63,18 @@ public final class RocketRenderer extends EntityRenderer<RocketEntity, RocketRen
             return;
         }
         poses.pushPose(); poses.mulPose(Axis.YP.rotationDegrees(-state.yaw));
+        if (state.spaceView) {
+            float pivot=dev.vic17usd.spacefabric.space.RocketHullGeometry.height(state.variant)*.5F;
+            // The planets are anchored to the camera and rotated by -yaw; bring the
+            // camera-to-rocket offset into that same local frame before aiming.
+            var cameraOffset=new org.joml.Vector3f((float)(camera.pos.x-state.x),
+                    (float)(camera.pos.y-state.y-pivot),(float)(camera.pos.z-state.z))
+                    .rotateY((float)Math.toRadians(state.yaw));
+            var direction=RocketCruiseOrientation.destination(state.journeyProgress).add(cameraOffset);
+            poses.translate(0,pivot,0);
+            poses.mulPose(RocketCruiseOrientation.attitude(state.journeyProgress,direction));
+            poses.translate(0,-pivot,0);
+        }
         // Las UV libres de Blockbench no siguen el despliegue UV del cubo vanilla.
         // Enviar los vértices evita que Sodium reutilice las UV del constructor Cube.
         int light = state.lightCoords;
