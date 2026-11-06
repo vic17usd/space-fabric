@@ -1,5 +1,12 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión **0.61.0** hace jugable la segunda expedición marciana: investigar un
+pueblo natural, encargar un análisis real y registrar el resultado para recibir
+una recompensa única. Incluye instrucciones, progreso guardado y una sección
+**Expedición II** dentro de la guía. [Recorrido en supervivencia](docs/mars-settlement-expedition.md).
+[Descargar 0.61.0](dist/space-fabric-0.61.0.jar) · [SHA-256](dist/space-fabric-0.61.0.jar.sha256) ·
+[Captura real](docs/assets/mars-settlement-0.61.0.png).
+
 La versión **0.60.0** rediseña la guía como una consola de entrenamiento marciano:
 maqueta 3D con modelos reales, profundidad y cámara suave, ocho capítulos con
 pausas de lectura y composición adaptable hasta 320×240. Conserva las recetas del

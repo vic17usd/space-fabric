@@ -217,3 +217,9 @@ del HUD en pantalla. La lista de comprobación manual es:
   completar su propia etapa seleccionando el mismo refugio tras aterrizar.
 - Comprueba la guía a varias escalas GUI, F1, menús, viaje de vuelta y una visita
   a Venus; confirma que sus misiones siguen mostrando su progreso anterior.
+
+## Continuación
+
+Desde 0.61.0 puedes [investigar un asentamiento marciano](mars-settlement-expedition.md)
+tras completar el refugio. Usa `/marte expedicion` o el botón **Expedición II**
+en la consola de entrenamiento.

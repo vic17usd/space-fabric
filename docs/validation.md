@@ -1,9 +1,43 @@
 # Resultado de validación de esta base
 
-Última entrega: **0.60.0**. Compilación completa correcta: **760 pruebas JUnit**,
-**14 comprobaciones de render/recursos por CPU** y **1.344 JSON** válidos.
-La guía de Marte también se inspeccionó en un cliente real de Minecraft 26.1.
-Los apartados posteriores conservan el historial de validación de la base.
+Última entrega: **0.61.0**. La segunda expedición de Marte tiene un recorrido
+jugable con progreso personal guardado, análisis acreditado por el servidor y
+recompensa única. Los apartados posteriores conservan la validación de la base.
+
+## Segunda expedición de Marte 0.61.0
+
+**Automático:** 768 pruebas JUnit sin fallos, errores u omisiones; 14 comprobaciones
+de render/recursos por CPU; 1.344 JSON y referencias de recursos correctos.
+`./gradlew build --console=plain` y `python3 tools/validate_resources.py`.
+Las pruebas añaden migración desde el guardado anterior, persistencia por etapa,
+separación de jugadores, cancelación y sustitución de encargos, salida llena,
+informe antiguo sin prueba, restauración NBT del analizador en el tick 199 y
+finalización real del ciclo. Verifican además inventario lleno, recompensa única,
+restauración del progreso completado y codec del nuevo paquete de estado.
+
+Las semillas de generación existentes comprueban el registro natural, los límites
+de la plantilla excluyendo su parcela, el inicio inválido y las piezas jigsaw
+antiguas conservadas, sin requerir habitantes vivos. Las pruebas anteriores de
+Marte y Venus siguen incluidas en la batería completa.
+
+**Minecraft real:** cliente y servidor integrado de Minecraft 26.1 con Fabric,
+Xorg virtual y Mesa llvmpipe. El fixture de desarrollo usó un pueblo generado por
+el generador normal, la interacción mirando bloques, el encargo explícito y los
+ticks reales del analizador. Completó la entrega, rechazó el inventario lleno y
+la entrega repetida, y verificó dos baterías como recompensa. El registro nativo
+finalizó con `MARS_SETTLEMENT_NATIVE_OK`. Se guardó y reabrió la partida: el
+objetivo siguió completado y las baterías permanecieron en el inventario.
+La sección de instrucciones se inspeccionó en GUI **320×240**, a escala 2.
+[Captura real](assets/mars-settlement-0.61.0.png).
+
+**Límites:** el fixture prepara explícitamente la primera expedición, equipa el
+inventario y usa creativo para aislar la segunda etapa. No representa una partida
+completa de supervivencia desde el lanzamiento del cohete. La independencia entre
+jugadores y la restauración a mitad del análisis se verificaron automáticamente;
+no se realizó una sesión con dos clientes remotos ni una medición en GPU física.
+El test de compatibilidad usa piezas antiguas nativas, sin afirmar que se visitó
+manualmente cada mundo histórico. La búsqueda no garantiza un pueblo en las zonas
+potenciales; esas sugerencias no se consideran prueba ni cargan terreno.
 
 ## Guía de Marte 0.60.0
 

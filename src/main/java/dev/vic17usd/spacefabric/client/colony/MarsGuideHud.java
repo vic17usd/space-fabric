@@ -14,9 +14,15 @@ import net.minecraft.network.chat.Component;
 /** Transparent top-left checklist, separated from the top-right minimap and habitat diagnostics. */
 public final class MarsGuideHud {
     private static final MarsMissionTracker STATE = new MarsMissionTracker();
+    public static MarsSettlementNetwork.State settlement = MarsSettlementNetwork.State.EMPTY;
     private MarsGuideHud() { }
     public static void initialize() {
         MarsGuideScene.initialize();
+        ClientPlayNetworking.registerGlobalReceiver(MarsSettlementNetwork.State.TYPE, (payload, context) -> {
+            settlement = payload;
+            if (context.client().screen instanceof MarsSettlementScreen screen) screen.accept(payload);
+            else if (payload.open()) context.client().setScreen(new MarsSettlementScreen(context.client().screen, payload));
+        });
         ClientPlayNetworking.registerGlobalReceiver(MarsGuideNetwork.State.TYPE, (payload, context) -> {
             STATE.accept(payload);
             if (context.client().screen instanceof MarsGuideScreen guide) guide.accept(payload);
@@ -35,7 +41,7 @@ public final class MarsGuideHud {
                             if (client.player != null) { client.player.closeContainer(); client.player.connection.sendCommand("marte guia"); }
                         }).bounds(6, 6, 108, 20).build());
         });
-        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> STATE.clear());
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> { STATE.clear(); settlement = MarsSettlementNetwork.State.EMPTY; });
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (client.level == null || client.player == null || !client.player.isAlive()
                     || PlanetDimensions.find(client.level).orElse(null) != Planet.MARS) STATE.clear();
@@ -65,10 +71,11 @@ public final class MarsGuideHud {
         pose.pushMatrix();
         try {
             pose.translate(8, 8); pose.scale(scale, scale);
-            int y = text(gui, Component.translatable("mars.guide.title"), 0, width, 0xFFFFD9AE) + 3;
+            int y = text(gui, Component.translatable(state.has(MarsProgress.COMPLETE) ? "mars.settlement.title" : "mars.guide.title"), 0, width, 0xFFFFD9AE) + 3;
             if (state.has(MarsProgress.COMPLETE)) {
-                y = text(gui, Component.translatable("mars.guide.complete"), y, width, 0xFF8DE9BE);
-                text(gui, Component.translatable("mars.guide.next"), y + 3, width, 0xFFE0E7EB);
+                y += 3;
+                y = text(gui, Component.translatable("mars.settlement.stage_" + settlement.stage()), y + 3, width, 0xFFE0E7EB);
+                text(gui, Component.literal("/marte expedicion"), y + 3, width, 0xFF65D9ED);
                 return;
             }
             String[] steps = {"refuge", "sealed", "supplies", "water"};

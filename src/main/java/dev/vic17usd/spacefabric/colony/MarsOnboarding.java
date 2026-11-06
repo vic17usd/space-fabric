@@ -86,6 +86,7 @@ public final class MarsOnboarding {
     private static int show(ServerPlayer player, boolean guide) {
         var state = inspect(player);
         reconcile(player);
+        if (state.has(MarsProgress.COMPLETE)) { MarsSettlementExpedition.observe(player); MarsSettlementExpedition.pages(player, guide); return 1; }
         player.sendSystemMessage(Component.translatable(state.has(MarsProgress.COMPLETE) ? "mars.guide.next"
                 : state.has(MarsProgress.ARRIVAL) ? "mars.guide.title" : "mars.guide.arrival.detail").withStyle(ChatFormatting.GOLD));
         if (state.has(MarsProgress.ARRIVAL) && !state.has(MarsProgress.COMPLETE)) {
@@ -106,23 +107,34 @@ public final class MarsOnboarding {
 
     public static void initialize() {
         MarsGuideNetwork.initialize();
+        MarsSettlementNetwork.initialize();
+        net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents.SERVER_STOPPED.register(server -> MarsSettlementExpedition.clear());
         ServerTickEvents.END_LEVEL_TICK.register(level -> {
             if (level.getGameTime() % 20 != 0 || PlanetDimensions.find(level).orElse(null) != Planet.MARS) return;
             for (var player : level.players()) {
                 MarsGuideNetwork.send(player, inspect(player));
                 reconcile(player);
+                MarsSettlementExpedition.observe(player);
+                MarsSettlementNetwork.send(player, false);
             }
         });
         CommandRegistrationCallback.EVENT.register((dispatcher, context, selection) -> dispatcher.register(
                 Commands.literal("marte").executes(c -> show(c.getSource().getPlayerOrException(), false))
                         .then(Commands.literal("guia").executes(c -> {
                             var player = c.getSource().getPlayerOrException();
+                            MarsSettlementNetwork.send(player, false);
                             if (!MarsGuideNetwork.open(player, inspect(player))) {
                                 player.sendSystemMessage(Component.translatable("mars.tutorial.update_client"));
                                 return show(player, false);
                             }
                             return 1;
                         }))
+                        .then(Commands.literal("expedicion").executes(c -> { MarsSettlementNetwork.send(c.getSource().getPlayerOrException(), true); return 1; }))
+                        .then(Commands.literal("buscar").executes(c -> MarsSettlementExpedition.search(c.getSource().getPlayerOrException())))
+                        .then(Commands.literal("investigar").executes(c -> MarsSettlementExpedition.investigate(c.getSource().getPlayerOrException())))
+                        .then(Commands.literal("analizar").executes(c -> MarsSettlementExpedition.analyze(c.getSource().getPlayerOrException())))
+                        .then(Commands.literal("cancelar").executes(c -> MarsSettlementExpedition.cancel(c.getSource().getPlayerOrException())))
+                        .then(Commands.literal("entregar").executes(c -> MarsSettlementExpedition.deliver(c.getSource().getPlayerOrException())))
                         .then(Commands.literal("texto").executes(c -> show(c.getSource().getPlayerOrException(), true)))));
     }
 }

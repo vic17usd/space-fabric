@@ -746,6 +746,24 @@ class WorldgenCodecTest {
             assertEquals(1, valid.getPieces().size(), "Sin conectores solo debe generarse el edificio inicial");
             var piece = assertInstanceOf(dev.vic17usd.spacefabric.worldgen.structure.MarsSurfacePiece.class, valid.getPieces().getFirst());
             var box = piece.templateBounds();
+            if (structureName.equals("martian_haven_settlement")) {
+                assertTrue(MarsSettlementExpedition.site(valid, piece.getLocatorPosition()).isPresent());
+                var plotOnly = new net.minecraft.core.BlockPos(piece.getBoundingBox().minX(), box.minY(), piece.getBoundingBox().minZ());
+                assertTrue(piece.getBoundingBox().isInside(plotOnly));
+                assertTrue(MarsSettlementExpedition.site(valid, plotOnly).isEmpty(), "Terrain padding cannot prove arrival");
+                assertTrue(MarsSettlementExpedition.site(net.minecraft.world.level.levelgen.structure.StructureStart.INVALID_START, piece.getLocatorPosition()).isEmpty());
+                var legacyElement = net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement.legacy("space_fabric:martian_haven_settlement")
+                        .apply(net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool.Projection.RIGID);
+                var legacyBox = legacyElement.getBoundingBox(templates, piece.templateOrigin(), piece.getRotation());
+                var legacyPiece = new net.minecraft.world.level.levelgen.structure.PoolElementStructurePiece(templates, legacyElement,
+                        piece.templateOrigin(), 0, piece.getRotation(), legacyBox,
+                        net.minecraft.world.level.levelgen.structure.templatesystem.LiquidSettings.IGNORE_WATERLOGGING);
+                var legacyStart = new net.minecraft.world.level.levelgen.structure.StructureStart(holder.value(), chunk, 0,
+                        new net.minecraft.world.level.levelgen.structure.pieces.PiecesContainer(List.of(legacyPiece)));
+                assertTrue(MarsSettlementExpedition.site(legacyStart, legacyBox.getCenter()).isPresent(), "Legacy village needs no living NPC or regenerated template");
+                assertTrue(MarsSettlementExpedition.site(legacyStart, new net.minecraft.core.BlockPos(legacyBox.maxX()+1, legacyBox.minY(), legacyBox.minZ())).isEmpty());
+
+            }
             assertTrue(piece.getBoundingBox().minX() >= chunk.getMinBlockX() - 128);
             assertTrue(piece.getBoundingBox().maxX() <= chunk.getMinBlockX() + 127);
             assertTrue(piece.getBoundingBox().minZ() >= chunk.getMinBlockZ() - 128);
@@ -4093,5 +4111,74 @@ class WorldgenCodecTest {
             buffer.writeVarInt(0); buffer.writeVarInt(0); buffer.writeVarInt(0);
             assertThrows(IllegalArgumentException.class, () -> MarsGuideNetwork.OpenGuide.CODEC.decode(buffer));
         } finally { buffer.release(); }
+    }
+
+    private MarsProgress settlementReady(java.util.UUID player, net.minecraft.core.BlockPos site, int stage) {
+        var progress = new MarsProgress(); progress.land(player); progress.select(player, MARS_CONTROLLER);
+        assertTrue(progress.observe(player, MARS_CONTROLLER, marsReady()));
+        assertTrue(progress.visitSettlement(player, site)); assertTrue(progress.inspectSettlement(player, site, site));
+        if(stage >= 3) {
+            var token = java.util.UUID.randomUUID(); assertTrue(progress.selectAnalyzer(player, MARS_CONTROLLER, 0, token));
+            if(stage >= 4) assertTrue(progress.recordAnalysis(player, MARS_CONTROLLER, token, 1, true));
+        }
+        return progress;
+    }
+    @Test void settlementRewardFullInventoryDuplicateAndRestartAreSafe() {
+        var player = java.util.UUID.randomUUID(); var progress = settlementReady(player, MARS_CONTROLLER, 4);
+        var inventory = new net.minecraft.world.SimpleContainer(36);
+        for(int i=0;i<36;i++)inventory.setItem(i,new ItemStack(Items.COBBLESTONE,64));
+        assertFalse(MarsSettlementExpedition.grant(progress,player,MARS_CONTROLLER,inventory));
+        assertEquals(4,progress.settlement(player).stage());
+        inventory.setItem(0,new ItemStack(ColonyContent.MARS_REPORT)); inventory.setItem(35,ItemStack.EMPTY);
+        assertTrue(MarsSettlementExpedition.grant(progress,player,MARS_CONTROLLER,inventory));
+        assertEquals(2,inventory.getItem(35).getCount()); assertTrue(inventory.getItem(0).is(ColonyContent.MARS_REPORT));
+        var restored=MarsProgress.CODEC.parse(net.minecraft.nbt.NbtOps.INSTANCE,MarsProgress.CODEC.encodeStart(net.minecraft.nbt.NbtOps.INSTANCE,progress).getOrThrow()).getOrThrow();
+        assertFalse(MarsSettlementExpedition.grant(restored,player,MARS_CONTROLLER,inventory));
+        assertEquals(2,inventory.getItem(35).getCount());
+    }
+    @Test void settlementRealAnalyzerCyclePersistsItsCommissionAndCannotUseAnOldReport() {
+        var player=java.util.UUID.randomUUID();var progress=settlementReady(player,MARS_CONTROLLER,3);
+        var machine=new ColonyMachineBlockEntity(MARS_CONTROLLER,ColonyContent.block(ColonyContent.Machine.ANALYZER).defaultBlockState());
+        var ticket=progress.settlement(player).ticket().orElseThrow();
+        machine.marsCommission(new ColonyMachineBlockEntity.MarsCommission(player,ticket));
+        var formula=ColonyRecipes.ALL.stream().filter(MarsSettlementExpedition::martian).findFirst().orElseThrow();
+        machine.setItem(3,new ItemStack(ColonyContent.MARS_REPORT));
+        assertFalse(MarsSettlementExpedition.creditCycle(progress,machine,formula));
+        for(var part:formula.inputs())machine.setItem(part.slot(),part.stack());
+        var env=new ColonyEnvironment(false,false,false,false);
+        for(int tick=0;tick<199;tick++)machine.processTick(env);
+        assertFalse(MarsSettlementExpedition.creditCycle(progress,machine,formula));
+        var restored=assertInstanceOf(ColonyMachineBlockEntity.class,net.minecraft.world.level.block.entity.BlockEntity.loadStatic(
+                MARS_CONTROLLER,machine.getBlockState(),machine.saveWithFullMetadata(registries),registries));
+        assertEquals(machine.marsCommission(),restored.marsCommission()); assertEquals(199,restored.progress());
+        restored.processTick(env); assertEquals(2,restored.getItem(3).getCount());
+        assertTrue(restored.getItem(5).is(ColonyContent.EMPTY_POWER_CELL));
+        assertTrue(MarsSettlementExpedition.creditCycle(progress,restored,formula));
+        assertFalse(MarsSettlementExpedition.creditCycle(progress,restored,formula));
+        assertEquals(4,progress.settlement(player).stage());
+    }
+    @Test void settlementReplacedMachineAndBlockedOutputsCannotAcknowledgeACommission() {
+        var player=java.util.UUID.randomUUID();var progress=settlementReady(player,MARS_CONTROLLER,3);
+        var machine=new ColonyMachineBlockEntity(MARS_CONTROLLER,ColonyContent.block(ColonyContent.Machine.ANALYZER).defaultBlockState());
+        var formula=ColonyRecipes.ALL.stream().filter(MarsSettlementExpedition::martian).findFirst().orElseThrow();
+        for(var part:formula.inputs())machine.setItem(part.slot(),part.stack());
+        machine.setItem(3,new ItemStack(ColonyContent.MARS_REPORT,64));
+        machine.marsCommission(new ColonyMachineBlockEntity.MarsCommission(player,progress.settlement(player).ticket().orElseThrow()));
+        for(int tick=0;tick<210;tick++)machine.processTick(new ColonyEnvironment(false,false,false,false));
+        assertEquals(0,machine.completedBatches()); assertFalse(MarsSettlementExpedition.creditCycle(progress,machine,formula));
+        var replacement=new ColonyMachineBlockEntity(MARS_CONTROLLER,machine.getBlockState());
+        for(var part:formula.inputs())replacement.setItem(part.slot(),part.stack());
+        for(int tick=0;tick<200;tick++)replacement.processTick(new ColonyEnvironment(false,false,false,false));
+        assertFalse(MarsSettlementExpedition.creditCycle(progress,replacement,formula));
+        assertEquals(3,progress.settlement(player).stage());
+    }
+    @Test void settlementSnapshotCodecPreservesServerCoordinatesAndRejectsInvalidStages() {
+        var b=new net.minecraft.network.RegistryFriendlyByteBuf(io.netty.buffer.Unpooled.buffer(),(RegistryAccess)registries);
+        try {
+            var packet=new MarsSettlementNetwork.State(true,true,3,Optional.of(MARS_CONTROLLER),Optional.of(MARS_CONTROLLER.above()),Optional.of(MARS_CONTROLLER.east()));
+            MarsSettlementNetwork.State.CODEC.encode(b,packet);assertEquals(packet,MarsSettlementNetwork.State.CODEC.decode(b));assertEquals(0,b.readableBytes());
+            assertThrows(IllegalArgumentException.class,()->new MarsSettlementNetwork.State(false,true,6,Optional.empty(),Optional.empty(),Optional.empty()));
+            assertThrows(IllegalArgumentException.class,()->new MarsSettlementNetwork.State(false,false,3,Optional.empty(),Optional.empty(),Optional.empty()));
+        } finally {b.release();}
     }
 }

@@ -66,6 +66,8 @@ public final class MarsGuideScreen extends Screen {
             b.setTooltip(Tooltip.create(text("chapter", i + 1, 8, text(MarsGuideAnimation.Chapter.values()[i].key() + ".title"))));
             chapters.add(b);
         }
+        button(MarsSettlementExpedition.text("button"), l + w - 138, t + 5, 108,
+                () -> minecraft.setScreen(new MarsSettlementScreen(this, MarsGuideHud.settlement)));
         var close = button(Component.literal("×"), l + w - 28, t + 5, 18, this::onClose);
         close.setTooltip(Tooltip.create(text("close")));
         int y = layout.controlsY(), bw = (w - 29) / 4;
@@ -162,7 +164,7 @@ public final class MarsGuideScreen extends Screen {
         gui.fill(0, 0, width, height, 0xC0080D12); gui.fill(l, t, l + w, t + h, INK);
         gui.fill(l, t, l + 3, t + 22, MARS);
         gui.text(font, text("console", animation.chapter().ordinal() + 1), l + 10, t + 10, MARS);
-        if (layout.wide()) gui.text(font, text("training"), l + w - 188, t + 10, MUTED);
+
         gui.fill(layout.sceneX(), layout.sceneY(), layout.sceneX() + layout.sceneWidth(), layout.sceneY() + layout.sceneHeight(), STAGE);
         double p = animation.progress((Util.getMillis() - lastAnimationTick) / 50F);
         gui.enableScissor(layout.sceneX(), layout.sceneY(), layout.sceneX() + layout.sceneWidth(), layout.sceneY() + layout.sceneHeight());
