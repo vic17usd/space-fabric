@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "magma-pulse-generator-znquago7:block/magma_pulse_generator_znquago7_north",
+    "up": "magma-pulse-generator-znquago7:block/magma_pulse_generator_znquago7_top",
+    "down": "magma-pulse-generator-znquago7:block/magma_pulse_generator_znquago7_bottom",
+    "north": "magma-pulse-generator-znquago7:block/magma_pulse_generator_znquago7_north",
+    "south": "magma-pulse-generator-znquago7:block/magma_pulse_generator_znquago7_south",
+    "east": "magma-pulse-generator-znquago7:block/magma_pulse_generator_znquago7_east_west",
+    "west": "magma-pulse-generator-znquago7:block/magma_pulse_generator_znquago7_east_west"
+  }
+}

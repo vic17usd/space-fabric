@@ -1,0 +1,14 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "cosmic-sentinel-armor-cgo46mi7:layer_1"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "cosmic-sentinel-armor-cgo46mi7:layer_1"
+      }
+    ]
+  }
+}

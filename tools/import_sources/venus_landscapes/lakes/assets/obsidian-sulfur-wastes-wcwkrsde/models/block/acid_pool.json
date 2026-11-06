@@ -1,0 +1,16 @@
+{
+  "textures": {"pool": "obsidian-sulfur-wastes-wcwkrsde:block/acid_pool", "particle": "obsidian-sulfur-wastes-wcwkrsde:block/acid_pool"},
+  "elements": [
+    {
+      "from": [0, 0, 0], "to": [16, 2, 16],
+      "faces": {
+        "up": {"texture": "#pool", "uv": [0, 0, 16, 16]},
+        "down": {"texture": "#pool", "uv": [0, 0, 16, 16]},
+        "north": {"texture": "#pool", "uv": [0, 0, 16, 2]},
+        "south": {"texture": "#pool", "uv": [0, 0, 16, 2]},
+        "east": {"texture": "#pool", "uv": [0, 0, 16, 2]},
+        "west": {"texture": "#pool", "uv": [0, 0, 16, 2]}
+      }
+    }
+  ]
+}

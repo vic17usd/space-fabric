@@ -1,0 +1,11 @@
+{
+  "type": "space_fabric:mercury",
+  "generator": {
+    "type": "minecraft:noise",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "space_fabric:mercury"
+    },
+    "settings": "space_fabric:mercury"
+  }
+}

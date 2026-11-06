@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PEP",
+    "LIL",
+    "HHH"
+  ],
+  "key": {
+    "P": "space_fabric:venus_composite_plate",
+    "E": "space_fabric:energy_conduit",
+    "L": "space_fabric:liquid_conduit",
+    "I": "space_fabric:machine_interface",
+    "H": "space_fabric:pressure_hull"
+  },
+  "result": {
+    "id": "space_fabric:venus_service_dock",
+    "count": 1
+  }
+}

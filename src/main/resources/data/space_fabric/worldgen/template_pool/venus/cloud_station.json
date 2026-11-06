@@ -1,0 +1,15 @@
+{
+  "name": "space_fabric:venus/cloud_station",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "space_fabric:venus/colony/venus_cloud_station",
+        "processors": "minecraft:empty",
+        "projection": "rigid"
+      }
+    }
+  ]
+}

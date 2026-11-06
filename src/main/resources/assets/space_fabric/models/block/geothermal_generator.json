@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "space_fabric:block/replacements/geothermal_generator/magma_pulse_generator_znquago7_north",
+    "up": "space_fabric:block/replacements/geothermal_generator/magma_pulse_generator_znquago7_top",
+    "down": "space_fabric:block/replacements/geothermal_generator/magma_pulse_generator_znquago7_bottom",
+    "north": "space_fabric:block/replacements/geothermal_generator/magma_pulse_generator_znquago7_north",
+    "south": "space_fabric:block/replacements/geothermal_generator/magma_pulse_generator_znquago7_south",
+    "east": "space_fabric:block/replacements/geothermal_generator/magma_pulse_generator_znquago7_east_west",
+    "west": "space_fabric:block/replacements/geothermal_generator/magma_pulse_generator_znquago7_east_west"
+  }
+}

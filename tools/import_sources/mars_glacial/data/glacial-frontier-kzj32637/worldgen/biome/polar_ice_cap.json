@@ -1,0 +1,18 @@
+{
+  "has_precipitation": true,
+  "temperature": -0.45,
+  "downfall": 0.1,
+  "effects": {
+    "fog_color": 14671839,
+    "sky_color": 11719679,
+    "water_color": 8258559,
+    "water_fog_color": 3421780,
+    "grass_color": 15066597,
+    "foliage_color": 15066597,
+    "mood_sound": {"sound":"minecraft:ambient.cave","tick_delay":6000,"block_search_extent":8,"offset":2.0}
+  },
+  "carvers": ["minecraft:cave","minecraft:cave_extra_underground","minecraft:canyon"],
+  "features": [[],[],[],[],[],[],["glacial-frontier-kzj32637:subglacial_vein","glacial-frontier-kzj32637:frost_crystal_veins","glacial-frontier-kzj32637:ice_cave_seams","glacial-frontier-kzj32637:frozen_co2_strata"],[],[],[],[]],
+  "spawners": {"ambient":[],"creature":[],"monster":[],"underground_water_creature":[],"water_ambient":[],"water_creature":[]},
+  "spawn_costs": {}
+}

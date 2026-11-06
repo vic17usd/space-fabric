@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "HGH",
+    "CAR",
+    "HCH"
+  ],
+  "key": {
+    "H": "space_fabric:pressure_hull",
+    "G": "minecraft:glass",
+    "C": "minecraft:copper_ingot",
+    "A": "minecraft:amethyst_shard",
+    "R": "minecraft:redstone"
+  },
+  "result": {
+    "id": "space_fabric:sample_analyzer",
+    "count": 1
+  }
+}

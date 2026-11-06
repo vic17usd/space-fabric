@@ -1,0 +1,66 @@
+{
+  "crystal_hum_crawler": {
+    "source_jar": "crystal-hum-crawler-rmo4iakf.jar",
+    "source_mod_id": "crystal-hum-crawler-rmo4iakf",
+    "sha256": "c7b2c2f4b33ec78ef68bc656037388ab30bd02927b8e03a16e9895ff5552c7e8",
+    "assets": {
+      "src/main/resources/assets/space_fabric/sounds/crystal_crawler_hum.ogg": {
+        "source": "assets/crystal-hum-crawler-rmo4iakf/sounds/crystal_crawler_hum.ogg",
+        "sha256": "47ea0cc5f1be7eb65a1e462d2b077ffe62502a1f8ac3816161ff6dd0384016f4"
+      },
+      "src/main/resources/assets/space_fabric/textures/entity/crystal_hum_crawler.png": {
+        "source": "assets/crystal-hum-crawler-rmo4iakf/textures/entity/crystal_hum_crawler_rmo4iakf.png",
+        "sha256": "21b77f023f7f5183a1f9695bf8b3949b8714d1fe43fa3b997db6b598624fd6e3"
+      },
+      "src/main/resources/assets/space_fabric/textures/item/crystal_hum_crawler_spawn_egg.png": {
+        "source": "assets/crystal-hum-crawler-rmo4iakf/textures/item/crystal_hum_crawler_rmo4iakf_spawn_egg.png",
+        "sha256": "4d88ae5b95a7757a049ecbad820d11e0c874a90cb10c93187ca664346f730924"
+      }
+    },
+    "authors": [
+      "17usdd using CreativeMode.net"
+    ],
+    "source_page": "https://creativemode.net/mod/crystal-hum-crawler-rmo4iakf",
+    "license": "https://creativemode.net/mod-license"
+  },
+  "golden_eye_sandwraith": {
+    "source_jar": "golden-eye-sandwraith-6xxxfsvc.jar",
+    "source_mod_id": "golden-eye-sandwraith-6xxxfsvc",
+    "sha256": "7bff43f2d6f4e67a9d2bbbf275b6109ec8d3c0333931d6b588d2c0b3fd1bd568",
+    "assets": {
+      "src/main/resources/assets/space_fabric/textures/entity/golden_eye_sandwraith.png": {
+        "source": "assets/golden-eye-sandwraith-6xxxfsvc/textures/entity/golden_eye_sandwraith_6xxxfsvc.png",
+        "sha256": "8b5dde4c3c978efcb5d623fe368698a6274f771a4560d417b26af19dfd5711e6"
+      },
+      "src/main/resources/assets/space_fabric/textures/item/golden_eye_sandwraith_spawn_egg.png": {
+        "source": "assets/golden-eye-sandwraith-6xxxfsvc/textures/item/golden_eye_sandwraith_6xxxfsvc_spawn_egg.png",
+        "sha256": "16244c97683c8e50e520c0549330a5b65557a2f83d327906a4a559227833887c"
+      }
+    },
+    "authors": [
+      "17usdd using CreativeMode.net"
+    ],
+    "source_page": "https://creativemode.net/mod/golden-eye-sandwraith-6xxxfsvc",
+    "license": "https://creativemode.net/mod-license"
+  },
+  "red_dune_ironmaw": {
+    "source_jar": "red-dune-ironmaw-4w2qsmth.jar",
+    "source_mod_id": "red-dune-ironmaw-4w2qsmth",
+    "sha256": "dcdae597afbed456fbfc11037bf7d1565bbd6ab5e4384fc519d039a75180491f",
+    "assets": {
+      "src/main/resources/assets/space_fabric/textures/entity/red_dune_ironmaw.png": {
+        "source": "assets/red-dune-ironmaw-4w2qsmth/textures/entity/red_dune_ironmaw_4w2qsmth.png",
+        "sha256": "e33a83c88cbf2d6595ae374506061b04e0adc4158b7cd7646bf07099dd96a41e"
+      },
+      "src/main/resources/assets/space_fabric/textures/item/red_dune_ironmaw_spawn_egg.png": {
+        "source": "assets/red-dune-ironmaw-4w2qsmth/textures/item/red_dune_ironmaw_4w2qsmth_spawn_egg.png",
+        "sha256": "58a3b29d1c771da8440925240f24e740e7955b2045ca50c9bc19809b13665fc8"
+      }
+    },
+    "authors": [
+      "17usdd using CreativeMode.net"
+    ],
+    "source_page": "https://creativemode.net/mod/red-dune-ironmaw-4w2qsmth",
+    "license": "https://creativemode.net/mod-license"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "has_precipitation": false,
+  "temperature": -0.45,
+  "downfall": 0,
+  "attributes": {
+    "minecraft:visual/sky_color": "#b96540",
+    "minecraft:visual/fog_color": "#9aaeb6",
+    "minecraft:visual/fog_start_distance": 0,
+    "minecraft:visual/fog_end_distance": 112
+  },
+  "effects": {
+    "water_color": "#3f76e4"
+  },
+  "spawners": {},
+  "spawn_costs": {},
+  "carvers": [
+    "space_fabric:cave",
+    "space_fabric:canyon"
+  ],
+  "features": [
+    [],
+    [],
+    [
+      "space_fabric:mars_glacial_cave"
+    ],
+    [],
+    [],
+    [],
+    [
+      "space_fabric:oxide_iron",
+      "space_fabric:mars_subglacial_vein",
+      "space_fabric:mars_frost_crystal_veins",
+      "space_fabric:mars_ice_cave_seams",
+      "space_fabric:mars_frozen_co2_strata"
+    ],
+    [],
+    [],
+    [],
+    []
+  ]
+}

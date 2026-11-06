@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "martian-ironsoil-ogekorvb:block/martian_ironsoil_ogekorvb_side",
+    "up": "martian-ironsoil-ogekorvb:block/martian_ironsoil_ogekorvb_top",
+    "down": "martian-ironsoil-ogekorvb:block/martian_ironsoil_ogekorvb_bottom",
+    "north": "martian-ironsoil-ogekorvb:block/martian_ironsoil_ogekorvb_side",
+    "south": "martian-ironsoil-ogekorvb:block/martian_ironsoil_ogekorvb_side",
+    "east": "martian-ironsoil-ogekorvb:block/martian_ironsoil_ogekorvb_side",
+    "west": "martian-ironsoil-ogekorvb:block/martian_ironsoil_ogekorvb_side"
+  }
+}

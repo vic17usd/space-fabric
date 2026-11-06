@@ -1,0 +1,308 @@
+{
+  "acido sulfurico.jar": {
+    "target": "condensed_sulfuric_acid",
+    "source_id": "venusian-greenfire-ore-yker4d33",
+    "sha256": "39624074f34706e1583a6ead01476294163f0ce1ed8157fac44fbd84fcd7fbbd",
+    "url": "https://creativemode.net/mod/venusian-greenfire-ore-yker4d33",
+    "license": "ARR - CreativeMode.net/mod-license"
+  },
+  "acumulador electrico.jar": {
+    "target": "energy_tank",
+    "source_id": "planetary-sample-analyzer-gg3e2hkl",
+    "sha256": "c93d61448e639fb2e78fdda779083e0f6bbe81e2ca7946d44a7932ea866f3723",
+    "url": "https://creativemode.net/mod/planetary-sample-analyzer-gg3e2hkl",
+    "license": "ARR - CreativeMode.net/mod-license"
+  },
+  "basalto terrestre.jar": {
+    "target": "terrestrial_basalt",
+    "source_id": "mantlestone-bastion-ap5zilty",
+    "sha256": "05f9519199e8e05cae58659d68cb2c489e7bdda7da99fca7a98f5fdec49f3930",
+    "url": "https://creativemode.net/mod/mantlestone-bastion-ap5zilty",
+    "license": "ARR - CreativeMode.net/mod-license"
+  },
+  "Cargador solar.jar": {
+    "target": "solar_charger",
+    "source_id": "sunforge-solar-charger-pvvgvihw",
+    "sha256": "a40cb655efc52c955ee23ee5b32b9620ef8076a381cc2b82367b5bac84a62ff4",
+    "url": "https://creativemode.net/mod/sunforge-solar-charger-pvvgvihw",
+    "license": "ARR - CreativeMode.net/mod-license"
+  },
+  "CO2 congelado marciano.jar": {
+    "target": "martian_frozen_co2",
+    "source_id": "martian-frostveil-qitsylls",
+    "sha256": "9f34c32a453c0220785535387eec8902e9c61dc0ec0db6b3a9a974422746fc8f",
+    "url": "https://creativemode.net/mod/martian-frostveil-qitsylls",
+    "license": "ARR - CreativeMode.net/mod-license"
+  },
+  "Consola de expediciones.jar": {
+    "target": "venus_expedition_console",
+    "source_id": "stellar-pathfinder-console-izi3zgl5",
+    "sha256": "52bbc54ba554412879811bc5d7a574a070f2b0bee4999869ac4f45dd2eb393da",
+    "url": "https://creativemode.net/mod/stellar-pathfinder-console-izi3zgl5",
+    "license": "ARR - CreativeMode.net/mod-license"
+  },
+  "Controlador de habitat.jar": {
+    "target": "habitat_controller",
+    "source_id": "habitat-lifeline-6t2bhcdt",
+    "sha256": "d42614736cb5886d12d5295424878b81ba62c0e0acacb335cc36536449e5a9f0",
+    "url": "https://creativemode.net/mod/habitat-lifeline-6t2bhcdt",
+    "license": "ARR - CreativeMode.net/mod-license"
+  },
+  "cristal de ares.jar": {
+    "target": "ares_crystal_ore",
+    "source_id": "ares-ember-ore-letdlqhf",
+    "sha256": "de0d072dbd8ccf952eccc469559c80b684fe0009f687c80a9c4010a1c8b1f896",
+    "url": "https://creativemode.net/mod/ares-ember-ore-letdlqhf",
+    "license": "ARR - CreativeMode.net/mod-license"
+  },
+  "Deposito de azufre.jar": {
+    "target": "sulfur_deposit",
+    "source_id": "sulfur-ventstone-pdsqyse6",
+    "sha256": "0c755e4775dd3feeab0a7fa888145d677bee837ab7d9c0cd5d02eb7906e9491d",
+    "url": "https://creativemode.net/mod/sulfur-ventstone-pdsqyse6",
+    "license": "ARR - CreativeMode.net/mod-license"
+  },
+  "Deposito de sulfuto marciano.jar": {
+    "target": "martian_sulfate_deposit",
+    "source_id": "martian-sulfide-vein-ap4pip5e",
+    "sha256": "4f7d195839e6ddc6bd20f2560950dab8e2460faea70fb798000cfe3f265f4864",
+    "url": "https://creativemode.net/mod/martian-sulfide-vein-ap4pip5e",
+    "license": "ARR - CreativeMode.net/mod-license"
+  },
+  "electrolizador de agua.jar": {
+    "target": "water_electrolyzer",
+    "source_id": "oxygen-forge-6mt7ympf",
+    "sha256": "6e27ec457ee4550638839747ba9c50047ea0067a6a6eca3a6d7ca5bb77b9e91c",
+    "url": "https://creativemode.net/mod/oxygen-forge-6mt7ympf",
+    "license": "ARR - CreativeMode.net/mod-license"
+  },
+  "Generador geotermico.jar": {
+    "target": "geothermal_generator",
+    "source_id": "magma-pulse-generator-znquago7",
+    "sha256": "424e55ae7bf64275f370d25efe1eab2c86e25ae435221a1a59c9bbae6a67e95d",
+    "url": "https://creativemode.net/mod/magma-pulse-generator-znquago7",
+    "license": "ARR - CreativeMode.net/mod-license"
+  },
+  "hielo de crater eterno.jar": {
+    "target": "crater_ice",
+    "source_id": "eternal-crater-ice-mk6qzwga",
+    "sha256": "1a334847d7f57beb8dca5d9a5624adb042afc2e3f934ecfb354018f2836ad3ba",
+    "url": "https://creativemode.net/mod/eternal-crater-ice-mk6qzwga",
+    "license": "ARR - CreativeMode.net/mod-license"
+  },
+  "Hielo de los anillos de saturno.jar": {
+    "target": "saturn_ring_ice",
+    "source_id": "saturn-ring-ice-oprsg5b2",
+    "sha256": "24c72e89e1680c017be44c6d048e57c06ed37fd1b3feac6f6465bb4d32f93134",
+    "url": "https://creativemode.net/mod/saturn-ring-ice-oprsg5b2",
+    "license": "ARR - CreativeMode.net/mod-license"
+  },
+  "Hielo glaciar marciano.jar": {
+    "target": "martian_glacier_ice",
+    "source_id": "martian-frostglass-block-mhquwlry",
+    "sha256": "2fd6e263965191b61257229bc8bd8dbf33f38c83cda4c42d8e9b425da734628f",
+    "url": "https://creativemode.net/mod/martian-frostglass-block-mhquwlry",
+    "license": "ARR - CreativeMode.net/mod-license"
+  },
+  "Hielo subterraneo marciano.jar": {
+    "target": "martian_ground_ice",
+    "source_id": "martian-ice-vein-rjifknox",
+    "sha256": "1f83fbf15b7ef48dcd693b1d6f71e8cc86ff38b8943f8db03e551439abb6b5ad",
+    "url": "https://creativemode.net/mod/martian-ice-vein-rjifknox",
+    "license": "ARR - CreativeMode.net/mod-license"
+  },
+  "Horno de ceramica venusiana.jar": {
+    "target": "venus_ceramic_kiln",
+    "source_id": "venusian-pressure-kiln-7lnv2h3p",
+    "sha256": "c691c3e45deacf989222679638a111087258e8396e3046490344a678db69c896",
+    "url": "https://creativemode.net/mod/venusian-pressure-kiln-7lnv2h3p",
+    "license": "ARR - CreativeMode.net/mod-license"
+  },
+  "Mena de fobosita.jar": {
+    "target": "phobosite_ore",
+    "source_id": "phobosite-moonstone-ore-xulj7sbi",
+    "sha256": "c5caeb963a97e63cafbf779e8bf5c507c2147d427859248af5de7c7b43863f00",
+    "url": "https://creativemode.net/mod/phobosite-moonstone-ore-xulj7sbi",
+    "license": "ARR - CreativeMode.net/mod-license"
+  },
+  "Mena de hierro denso.jar": {
+    "target": "dense_iron_ore",
+    "source_id": "titan-ironstone-apw55d7q",
+    "sha256": "64fdb4fd038e37d21317ed4c0317124cb7780bcbacf5a1cc05abbf69c895c635",
+    "url": "https://creativemode.net/mod/titan-ironstone-apw55d7q",
+    "license": "ARR - CreativeMode.net/mod-license"
+  },
+  "Mena de piroxeno.jar": {
+    "target": "pyroxene_ore",
+    "source_id": "asteroid-pyroxene-ore-ddun2mk3",
+    "sha256": "afbdcd4d0db910cd69348ef29aae416ffb85609ddb1fd7da1507d5528dfd00b2",
+    "url": "https://creativemode.net/mod/asteroid-pyroxene-ore-ddun2mk3",
+    "license": "ARR - CreativeMode.net/mod-license"
+  },
+  "meteorito joviano.jar": {
+    "target": "jovian_meteorite",
+    "source_id": "jovian-emberstone-32evpnw5",
+    "sha256": "e4bc3ae0fe6544393aeddee03657d8f22ae1f9e83725e2e8a2130a3757caa9cb",
+    "url": "https://creativemode.net/mod/jovian-emberstone-32evpnw5",
+    "license": "ARR - CreativeMode.net/mod-license"
+  },
+  "Neptuno hielo de metano.jar": {
+    "target": "neptunian_methane_ice",
+    "source_id": "neptune-frostcore-5rygjm2a",
+    "sha256": "f7d5635251633ba4f93f58032e9da42ed2b4aedeed72b319147dc045fec0010a",
+    "url": "https://creativemode.net/mod/neptune-frostcore-5rygjm2a",
+    "license": "ARR - CreativeMode.net/mod-license"
+  },
+  "Panel de compuesto venusiano.jar": {
+    "target": "venus_composite_hull",
+    "source_id": "venusian-aegis-wall-7kwv4i32",
+    "sha256": "b9f035fffe5499129f3046a7e29d3becd625dd0fadc76664950d3dc2d492aa0d",
+    "url": "https://creativemode.net/mod/venusian-aegis-wall-7kwv4i32",
+    "license": "ARR - CreativeMode.net/mod-license"
+  },
+  "Panel presurizado.jar": {
+    "target": "pressure_hull",
+    "source_id": "pressurelock-bulkhead-3d5jpfmy",
+    "sha256": "40603dcc8c6fc6dd6460dd025047c252e8820d0608e78bafeb562e6dd28c47b2",
+    "url": "https://creativemode.net/mod/pressurelock-bulkhead-3d5jpfmy",
+    "license": "ARR - CreativeMode.net/mod-license"
+  },
+  "Piedra con olivino marciano.jar": {
+    "target": "martian_olivine_stone",
+    "source_id": "martian-olivine-stone-4w4y3wzd",
+    "sha256": "cc212fd9af79ea90f980925552708a83b3fb08ac9a9318d9935542aa3342e1b8",
+    "url": "https://creativemode.net/mod/martian-olivine-stone-4w4y3wzd",
+    "license": "ARR - CreativeMode.net/mod-license"
+  },
+  "refineria de combustible.jar": {
+    "target": "fuel_refinery",
+    "source_id": "starfire-refinery-aywso27n",
+    "sha256": "b3f0f58dfbcfa1a616adea150d0043b66c09f73b81144dfe7fccd3129689e171",
+    "url": "https://creativemode.net/mod/starfire-refinery-aywso27n",
+    "license": "ARR - CreativeMode.net/mod-license"
+  },
+  "Regolito de oxido marciano.jar": {
+    "target": "iron_oxide_regolith",
+    "source_id": "martian-ironsoil-ogekorvb",
+    "sha256": "3356f776f83d76426185c983b8a3839b5cd8dfd26c09e413816b358de601f030",
+    "url": "https://creativemode.net/mod/martian-ironsoil-ogekorvb",
+    "license": "ARR - CreativeMode.net/mod-license"
+  },
+  "silicatos de mercurio.jar": {
+    "target": "mercury_silicate",
+    "source_id": "mercury-scorchstone-mlootuiq",
+    "sha256": "7285da33fb28270f8c25ac3e04771932061da6e949fff433faa1a5cbef000bf2",
+    "url": "https://creativemode.net/mod/mercury-scorchstone-mlootuiq",
+    "license": "ARR - CreativeMode.net/mod-license"
+  },
+  "Unidad de refrigeracion venusiana.jar": {
+    "target": "venus_cooling_unit",
+    "source_id": "venusian-frost-engine-4ttkttcr",
+    "sha256": "32d52bd374e3f7238ad69912d4a987dafef12902742302bc1895a3ba58d7547a",
+    "url": "https://creativemode.net/mod/venusian-frost-engine-4ttkttcr",
+    "license": "ARR - CreativeMode.net/mod-license"
+  },
+  "Urano hielo de metano.jar": {
+    "target": "uranian_methane_ice",
+    "source_id": "uranian-methane-frost-block-nmopsgxz",
+    "sha256": "5fc92800831a3d06d487246899822b26e8a3e942b35ddedb94bcbb1d3c75b72b",
+    "url": "https://creativemode.net/mod/uranian-methane-frost-block-nmopsgxz",
+    "license": "ARR - CreativeMode.net/mod-license"
+  },
+  "Celda de energia vacia.png": {
+    "target": "empty_power_cell",
+    "sha256": "b35a3c8e8a37ffae6f141aa8aeccbb49a83c2a6289c111f23db82280766a0aed"
+  },
+  "Celda de energia.png": {
+    "target": "charged_power_cell",
+    "sha256": "0ffa2fb85c5c8ceb912eaa813fe1a0bf08fc03fde7f0283fab537c3f491429a4"
+  },
+  "Cristal de ares.png": {
+    "target": "ares_crystal",
+    "sha256": "7f0862edb86e158d758dc504a1ef26907dbe79038caaa51c2970b6683e3d8d56"
+  },
+  "Cristal de escarcha marciano.png": {
+    "target": "martian_frost_crystal",
+    "sha256": "eec25f0aa2bbdf920f19d060c1e6197a56e878984528942ea2ff7c8ae71dc1d5"
+  },
+  "Fobosita en bruto.png": {
+    "target": "raw_phobosite",
+    "sha256": "31b00d562a63f917dde9bcd19b40a396b7e7a9c47dbed4e629bfe91556e4831b"
+  },
+  "Fragmento de cristal de energia.png": {
+    "target": "energy_crystal_shard",
+    "sha256": "d6938ae8d911330fc44bab8ca7bfc6c49c062d1607255fbe573a0b80ab7e64af"
+  },
+  "Fragmento de hielo de crater.png": {
+    "target": "crater_ice_shard",
+    "sha256": "afa31377ba02da08088e99cc14d278ea87b6bac4ed1b40a8a9fdbe1024dc4bce"
+  },
+  "mineral de hierro triturado.png": {
+    "target": "crushed_iron_ore",
+    "sha256": "7e73552213ac2f507bfb8813017b8c6fe6d48142405dd8d947b6e96d5652e26c"
+  },
+  "Nucleo de azufre.png": {
+    "target": "sulfur_core",
+    "sha256": "92f780eab144c7ceef04b2fef337e6ef1e3813222cba98ef4aca17a2dd98b963"
+  },
+  "Olivino venusiano.png": {
+    "target": "venusian_olivine",
+    "sha256": "b17ca99df4f7c8b96eee1d3dc2b6f316772fb7a04f0d3b4de9b35773d801262a"
+  },
+  "Polvo estelar condensado.png": {
+    "target": "condensed_stardust",
+    "sha256": "0b4c8baef2ad39a0e7805882e181550f969775e44d88482925f6ddb8361d29e0"
+  },
+  "Sensor de vibracion.png": {
+    "target": "vibration_sensor",
+    "sha256": "3d5bf4e680fbc66b9c4cc535b32e634ae955f6afa240bfaf7b63c05c68155fb7"
+  },
+  "Trozo de hierro denso.png": {
+    "target": "dense_iron_chunk",
+    "sha256": "14cab54683212a4515c390edc463e1e62468d1b28e1a6c6a93613de83c7b539c"
+  },
+  "Kit del cohete de jupiter.png": {
+    "target": "jupiter_rocket_kit",
+    "sha256": "a92dc652c3d9d327e7ca9d1abcda559f5cf8622a36f9de8a7f15acf59a27eb0e"
+  },
+  "kit del cohete de la luna.png": {
+    "target": "moon_rocket_kit",
+    "sha256": "3874f1d73c1c002fa4b1424685e8e11644e5f3be17882bd39a4b32b55a7c4d26"
+  },
+  "Kit del cohete de marte.png": {
+    "target": "mars_rocket_kit",
+    "sha256": "622ac059b4c530ce9ea911cb5bdaca7349c3a9bca849b479ef41e775f214b22b"
+  },
+  "kit del cohete de mercurio.png": {
+    "target": "mercury_rocket_kit",
+    "sha256": "2c0c8f8016e4e83735540a779b506056a365425add39652723e9813d9923a804"
+  },
+  "Kit del cohete de neptuno.png": {
+    "target": "neptune_rocket_kit",
+    "sha256": "7f831d37b9661df4685bf9b4c1d7189c3f1b1877a8c3dae0fe340cd32c9b4fb8"
+  },
+  "Kit del cohete de saturno.png": {
+    "target": "saturn_rocket_kit",
+    "sha256": "f00123e8158274b97c954d99ce10c365813e511b2637912aeb1ff108726d1580"
+  },
+  "Kit del cohete de urano.png": {
+    "target": "uranus_rocket_kit",
+    "sha256": "deb9143743851d4e5cb972dc197ecf0611e9435c617e0b8eeec890edccb7b699"
+  },
+  "Kit del cohete de venus.png": {
+    "target": "venus_rocket_kit",
+    "sha256": "61c760c0e89a100bb24355fa0a71c29d344adc1bc147a5c79829be3016e98e8b"
+  },
+  "Perforadora de sondeo venus.bbmodel": {
+    "target": "venus_core_drill",
+    "sha256": "27c14ebe61c101b04ef535c88b6d493a9d036edda5a52a2a646351dfae6f09ab"
+  },
+  "Separador de gases industrial.bbmodel": {
+    "target": "venus_gas_separator",
+    "sha256": "497c42055869cbce3791d8955d3f786719540a8e9d6f54bab4939451ae843c52"
+  },
+  "glacial-frontier-kzj32637.jar": {
+    "status": "previously_integrated",
+    "sha256": "b7d1c92fbf6c56fb852547419fe4df8ef8932205c68df2be43a8547f45239fcb"
+  }
+}

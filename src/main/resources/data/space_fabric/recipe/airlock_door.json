@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "HGH",
+    "HDH",
+    "HGH"
+  ],
+  "key": {
+    "H": "space_fabric:pressure_hull",
+    "G": "minecraft:glass",
+    "D": "minecraft:iron_door"
+  },
+  "result": {
+    "id": "space_fabric:airlock_door",
+    "count": 1
+  }
+}

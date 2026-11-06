@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "space_fabric:martian_glacier_ice",
+    "space_fabric:empty_canister",
+    "space_fabric:martian_heatstone"
+  ],
+  "result": {
+    "id": "space_fabric:water_canister",
+    "count": 1
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "HPH",
+    "PCP",
+    "HPH"
+  ],
+  "key": {
+    "H": "space_fabric:pressure_hull",
+    "P": "space_fabric:energy_conduit",
+    "C": "space_fabric:venus_composite_plate"
+  },
+  "result": {
+    "id": "space_fabric:energy_bulkhead",
+    "count": 2
+  }
+}

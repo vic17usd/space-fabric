@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "space_fabric:empty_power_cell",
+    "minecraft:redstone",
+    "minecraft:redstone",
+    "minecraft:copper_ingot"
+  ],
+  "result": {
+    "id": "space_fabric:charged_power_cell",
+    "count": 1
+  }
+}

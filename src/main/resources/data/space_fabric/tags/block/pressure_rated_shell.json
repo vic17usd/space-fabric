@@ -1,0 +1,33 @@
+{
+  "replace": false,
+  "values": [
+    "space_fabric:pressure_hull",
+    "space_fabric:pressure_window",
+    "space_fabric:airlock_door",
+    "space_fabric:habitat_controller",
+    "space_fabric:water_electrolyzer",
+    "space_fabric:solar_charger",
+    "space_fabric:geothermal_generator",
+    "space_fabric:sample_analyzer",
+    "space_fabric:venus_atmospheric_collector",
+    "space_fabric:venus_gas_separator",
+    "space_fabric:venus_sulfur_processor",
+    "space_fabric:venus_ceramic_kiln",
+    "space_fabric:venus_composite_hull",
+    "space_fabric:venus_cooling_unit",
+    "space_fabric:liquid_bulkhead",
+    "space_fabric:liquid_tank",
+    "space_fabric:gas_bulkhead",
+    "space_fabric:gas_tank",
+    "space_fabric:energy_bulkhead",
+    "space_fabric:energy_tank",
+    "space_fabric:machine_interface",
+    "space_fabric:venus_heat_exchanger",
+    "space_fabric:venus_greenhouse",
+    "space_fabric:venus_life_reclaimer",
+    "space_fabric:venus_service_dock",
+    "space_fabric:venus_expedition_console",
+    "space_fabric:venus_grow_lamp",
+    "space_fabric:venus_core_drill"
+  ]
+}

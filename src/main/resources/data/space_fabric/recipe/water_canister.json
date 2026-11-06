@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "space_fabric:empty_canister",
+    "minecraft:water_bucket"
+  ],
+  "result": {
+    "id": "space_fabric:water_canister",
+    "count": 1
+  }
+}

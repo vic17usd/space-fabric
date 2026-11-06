@@ -1,0 +1,8 @@
+{
+  "type": "space_fabric:orbital_material",
+  "config": {
+    "state": {
+      "Name": "space_fabric:uranian_methane_ice"
+    }
+  }
+}

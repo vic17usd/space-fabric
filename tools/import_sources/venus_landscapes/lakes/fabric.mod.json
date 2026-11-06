@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "id": "obsidian-sulfur-wastes-wcwkrsde",
+  "version": "1.0.0",
+  "name": "Obsidian Sulfur Wastes",
+  "description": "Explore the fog-shrouded Obsidian Sulfur Wastes, a volcanic plain dotted with deadly acid pools.",
+  "authors": [
+    "vic17usd using CreativeMode.net"
+  ],
+  "contact": {
+    "homepage": "https://creativemode.net",
+    "sources": "https://creativemode.net/mod/obsidian-sulfur-wastes-wcwkrsde"
+  },
+  "license": "ARR - CreativeMode.net/mod-license",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "obsidian_sulfur_wastes_wcwkrsde.ObsidianSulfurWastes"
+    ],
+    "client": [
+      "obsidian_sulfur_wastes_wcwkrsde.ObsidianSulfurWastesClient"
+    ],
+    "terrablender": [
+      "obsidian_sulfur_wastes_wcwkrsde.ObsidianSulfurWastes"
+    ]
+  },
+  "mixins": [
+    "obsidian_sulfur_wastes_wcwkrsde.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.18.4",
+    "minecraft": "~26.1",
+    "java": ">=25",
+    "fabric-api": "*",
+    "terrablender": ">=26.1.0.2"
+  },
+  "suggests": {
+    "another-mod": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/creativemode"
+      }
+    },
+    "creativemode:mod": {
+      "schemaVersion": 1,
+      "modId": "02bf91bc-cabd-4721-b80e-76bdb71ff27e",
+      "modSlug": "obsidian-sulfur-wastes-wcwkrsde",
+      "modVersion": 1
+    }
+  },
+  "jars": [
+    {
+      "file": "META-INF/jars/creativemode-telemetry.jar"
+    }
+  ]
+}

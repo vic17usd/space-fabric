@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "venus-hazard-suit-ap3udnif:item/venus_hazard_suit_ap3udnif_helmet"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "space_fabric:item/golden_eye_sandwraith_spawn_egg"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "space_fabric:block/replacements/martian_olivine_stone/martian_olivine_stone_4w4y3wzd"
+  }
+}

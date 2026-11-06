@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "#c:ores/bauxite",
+    "#c:ores/cassiterite",
+    "#c:ores/sphalerite",
+    "#c:ores/galena",
+    "#c:ores/argentite",
+    "#c:ores/pentlandite",
+    "#c:ores/ilmenite",
+    "#c:ores/fluorite"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "parent": "space_fabric:industry/transport",
+  "criteria": {
+    "exchanger": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "space_fabric:venus_heat_exchanger"
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "recipes": [
+      "space_fabric:venus_heat_exchanger"
+    ]
+  }
+}

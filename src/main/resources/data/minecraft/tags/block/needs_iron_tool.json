@@ -1,0 +1,27 @@
+{
+  "replace": false,
+  "values": [
+    "space_fabric:galena_ore",
+    "space_fabric:deepslate_galena_ore",
+    "space_fabric:argentite_ore",
+    "space_fabric:deepslate_argentite_ore",
+    "space_fabric:pentlandite_ore",
+    "space_fabric:deepslate_pentlandite_ore",
+    "space_fabric:venus_composite_hull",
+    "space_fabric:liquid_bulkhead",
+    "space_fabric:liquid_tank",
+    "space_fabric:gas_bulkhead",
+    "space_fabric:gas_tank",
+    "space_fabric:energy_bulkhead",
+    "space_fabric:energy_tank",
+    "space_fabric:machine_interface",
+    "space_fabric:venus_heat_exchanger",
+    "space_fabric:venus_greenhouse",
+    "space_fabric:venus_life_reclaimer",
+    "space_fabric:venus_service_dock",
+    "space_fabric:venus_expedition_console",
+    "space_fabric:venus_grow_lamp",
+    "space_fabric:venus_core_drill",
+    "space_fabric:venus_rift_iron"
+  ]
+}

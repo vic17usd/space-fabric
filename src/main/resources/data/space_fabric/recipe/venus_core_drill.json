@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PCP",
+    "LML",
+    "HEH"
+  ],
+  "key": {
+    "P": "space_fabric:venus_composite_plate",
+    "C": "space_fabric:pyroxene_ceramic",
+    "L": "space_fabric:liquid_conduit",
+    "M": "minecraft:piston",
+    "H": "space_fabric:pressure_hull",
+    "E": "space_fabric:energy_conduit"
+  },
+  "result": {
+    "id": "space_fabric:venus_core_drill",
+    "count": 1
+  }
+}

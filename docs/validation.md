@@ -1,0 +1,1294 @@
+# Resultado de validación de esta base
+
+Última entrega: **0.61.0**. La segunda expedición de Marte tiene un recorrido
+jugable con progreso personal guardado, análisis acreditado por el servidor y
+recompensa única. Los apartados posteriores conservan la validación de la base.
+
+## Segunda expedición de Marte 0.61.0
+
+**Automático:** 768 pruebas JUnit sin fallos, errores u omisiones; 14 comprobaciones
+de render/recursos por CPU; 1.344 JSON y referencias de recursos correctos.
+`./gradlew build --console=plain` y `python3 tools/validate_resources.py`.
+Las pruebas añaden migración desde el guardado anterior, persistencia por etapa,
+separación de jugadores, cancelación y sustitución de encargos, salida llena,
+informe antiguo sin prueba, restauración NBT del analizador en el tick 199 y
+finalización real del ciclo. Verifican además inventario lleno, recompensa única,
+restauración del progreso completado y codec del nuevo paquete de estado.
+
+Las semillas de generación existentes comprueban el registro natural, los límites
+de la plantilla excluyendo su parcela, el inicio inválido y las piezas jigsaw
+antiguas conservadas, sin requerir habitantes vivos. Las pruebas anteriores de
+Marte y Venus siguen incluidas en la batería completa.
+
+**Minecraft real:** cliente y servidor integrado de Minecraft 26.1 con Fabric,
+Xorg virtual y Mesa llvmpipe. El fixture de desarrollo usó un pueblo generado por
+el generador normal, la interacción mirando bloques, el encargo explícito y los
+ticks reales del analizador. Completó la entrega, rechazó el inventario lleno y
+la entrega repetida, y verificó dos baterías como recompensa. El registro nativo
+finalizó con `MARS_SETTLEMENT_NATIVE_OK`. Se guardó y reabrió la partida: el
+objetivo siguió completado y las baterías permanecieron en el inventario.
+La sección de instrucciones se inspeccionó en GUI **320×240**, a escala 2.
+[Captura real](assets/mars-settlement-0.61.0.png).
+
+**Límites:** el fixture prepara explícitamente la primera expedición, equipa el
+inventario y usa creativo para aislar la segunda etapa. No representa una partida
+completa de supervivencia desde el lanzamiento del cohete. La independencia entre
+jugadores y la restauración a mitad del análisis se verificaron automáticamente;
+no se realizó una sesión con dos clientes remotos ni una medición en GPU física.
+El test de compatibilidad usa piezas antiguas nativas, sin afirmar que se visitó
+manualmente cada mundo histórico. La búsqueda no garantiza un pueblo en las zonas
+potenciales; esas sugerencias no se consideran prueba ni cargan terreno.
+
+## Guía de Marte 0.60.0
+
+**Automático:** `./gradlew build --console=plain` completado; 760 pruebas, cero
+fallos, errores u omisiones. `python3 tools/validate_resources.py` correcto.
+La cronología comprueba pausa y subticks, repetición, final de escena, selección,
+interpolación suave, envolvente completa antes del corte y paso por las puertas
+solo cuando están abiertas. El gestor de recetas descarta respuestas antiguas,
+duplicadas y posteriores al plazo, incluso antes del siguiente tick.
+
+`verifyMarsGuide` comprueba el accessor nativo de 26.1, los encuadres de todos los
+fotogramas, el centro de cámara y la orientación de caras exigida por PiP. Una
+reflexión de un solo eje expondría caras traseras: la cámara conserva la rotación
+nativa de inventario. Los tests del escáner, soporte vital, aterrizaje, guardado y
+recompensas existentes siguen pasando. El JAR se verifica por ZIP, versión y
+coincidencia con las clases compiladas y los recursos; el fixture visual queda
+fuera del instalable.
+
+**Cliente real:** Minecraft 26.1 + Fabric, mundo de supervivencia desechable,
+Xorg virtual y Mesa llvmpipe (OpenGL por software). Se comprobó `/marte guia`, el
+botón del inventario, selección de capítulos, repetición, pausa y búsqueda en la
+barra; las recetas reales de mesa y electrolizador y el cambio rápido de objeto.
+Se revisaron encuadres, cortes, materiales, toma de aire, personaje, casillas y
+orden de dibujo. Distribuciones verificadas: 854×480 GUI a escala 1, 640×360 GUI
+a escala 2 y **320×240 GUI a escala 2**. Dos capturas separadas un segundo
+mantienen idénticos los píxeles de la maqueta pausada.
+
+**Capturas y vídeo:** [maqueta](assets/mars-guide-0.60.0.png),
+[recetas en 320×240 GUI](assets/mars-guide-0.60.0-compact.png) y
+[construcción animada, 17 segundos](assets/mars-guide-0.60.0.mp4).
+Proceden del cliente real; no son maquetas externas ni imágenes generadas. El
+vídeo se decodificó completo para verificar su integridad. Las capturas muestran
+la demostración dentro de una partida nueva y el estado real pendiente de llegada.
+
+**Límites:** no se repitió una expedición completa de supervivencia hasta Marte,
+ni se midió rendimiento en GPU física. La latencia y las respuestas fuera de
+orden se verificaron automáticamente, sin una sesión de multijugador remoto.
+La recarga manual de recursos y los packs de terceros quedan para revisión en
+el equipo del jugador. No se cambian requisitos, recetas ni formato de guardado.
+
+Verificado con JDK 25, Gradle 9.8.2, Loom 1.19.3, Minecraft 26.1,
+Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.
+
+- `./gradlew build --console=plain`: compilación Java, recursos, JAR y pruebas correctos.
+- JUnit: **248 ejecutadas, 248 aprobadas, 0 omitidas**.
+- `ExposureTest`: 29 casos de atmósfera, inmunidad y protección por sellado.
+- `WorldgenCodecTest`: 171 casos con los codecs reales de Minecraft; nueve tipos
+  de dimensión, nueve mundos con sus generadores y cuatro tipos de daño aceptados.
+- `EnvironmentRulesTest`: 12 casos de velocidades solares, niebla y corrosión.
+- Cielos y ciclos: las nueve timelines nativas producen distinta luz de día/noche
+  y los cielos sin atmósfera conservan RGB negro.
+- Mixins: el de clima se aplica a `ServerLevel` y los métodos gráficos coinciden
+  con las firmas reales de 26.1; no se abrió un cliente para validar su renderizado.
+- Cavernas: se ejecuta la feature real en un volumen de prueba, comprobando
+  cámara, entrada, hielo y límites de escritura.
+- `PlanetHazardsTest`: 10 casos de presión por altitud y exposición a lluvia ácida.
+- La carga conjunta usa `RegistryDataLoader` con los recursos vanilla y del mod,
+  incluidos biomas, features, carvers, tags, fluidos y ruido.
+- `python3 tools/validate_resources.py`: 389 JSON y referencias internas coherentes.
+- Comprobaciones de materiales: 24 loot tables y recetas aceptadas por los codecs;
+  etiquetas de botas térmicas, componentes de armadura y requisitos de herramientas.
+- Modificaciones reales de Fabric: vetas marcianas presentes y decoración orbital
+  conservada por el generador vacío.
+- Assets: modelos e inventario, traducciones y CRC/contenido de 60 texturas PNG validados,
+  incluido el atlas de 512×512 importado de `space-rocket.bbmodel`.
+  También se comprueban las rutas de texturas declaradas con `Identifier.fromNamespaceAndPath`
+  en los renderers Java para detectar referencias al namespace de los mods fuente.
+- Geología: extracción con netherita; recetas ensambladas de hierro y pigmentos;
+  nueve features restringidas a sus biomas y hielo con techo opaco en ambas bandas polares.
+- Transporte: 8 casos de reglas de vuelo y 6 de llegada: ocupación, obstáculos,
+  borde, plataformas reutilizables, presión profunda y límite de búsqueda.
+- Refinería: fórmulas inicial/planetaria con pilas reales, consumo al terminar,
+  pausa de salida bloqueada, cambio de fórmula y filtrado de automatización.
+- Persistencia: se guarda y restaura una BlockEntity real con inventario y progreso;
+  tanque, destino y carga del cohete restaurados con sus métodos reales de NBT;
+  combustible parcial del ítem empaquetado validado con `ItemStack.CODEC`.
+- Recetas de cohete, refinería, celda vacía y plataforma realmente ensambladas
+  desde sus JSON usando ingredientes vanilla.
+- Martian Breathforge: `structure`, `template_pool`, `structure_set` y tag de bioma
+  aceptados en la carga conjunta; el único bioma válido es Marte.
+- Plantilla NBT original: `NbtIo` y `StructureTemplate` cargan 89 × 73 × 89, 22 materiales y
+  30.608 bloques, comparados posición e índice de paleta con el archivo original.
+- Los cráteres marcianos aparecen en la fase anterior a las estructuras de superficie.
+- Regresión de `/locate`: `Structure.generate` real con tres semillas reproduce
+  el inicio inválido de `size: 0` y obtiene una pieza válida con `size: 1`, usando
+  el generador de ruido de Marte y la plantilla cargada por `StructureTemplateManager`.
+  Esto comprueba generación de inicios, sin arrancar una partida ni ejecutar una
+  búsqueda completa de `/locate` en un servidor de juego.
+- Haven: sus registros cargan correctamente; 45.380 bloques y seis entidades
+  persistentes se conservan en la plantilla nativa con posiciones iniciales despejadas.
+- Haven también genera un inicio válido de una pieza con tres semillas. La plantilla
+  de superficie mide 124 × 81 × 125 bajo sus rotaciones; la original conserva 124 × 84 × 125.
+- Comerciantes: tipo de entidad, atributos y huevo funcional registrados; dos ofertas originales
+  probadas con consumo real de materiales y serialización nativa de existencias.
+- Gravedad del comerciante: 0.0304 en Marte sin acumulación; conservación de
+  modificadores ajenos al volver a gravedad normal. Hipoxia/descompresión protegidas,
+  con daño de combate y presión profunda todavía permitidos por la regla de protección.
+- Gradle Wrapper y distribución: SHA-256 verificado con los checksums oficiales.
+- JDK descargado para este entorno: SHA-256 verificado con el checksum oficial.
+
+Artefacto generado: `build/libs/space-fabric-0.16.0.jar`.
+Los informes de la ejecución están en `build/test-results/test/` y
+`build/reports/tests/test/`; son salidas locales ignoradas por Git.
+
+No se ejecutó un cliente gráfico, un servidor de juego ni una sesión multijugador.
+Los codecs no demuestran que el terreno se genere correctamente durante una
+exploración ni que el movimiento se sincronice en un cliente. El procedimiento
+manual del README y de `docs/space-travel.md` cubre esos puntos y queda pendiente.
+Tampoco se ha ejecutado un vuelo real ni un traslado con pasajeros en una sesión
+de juego. La compilación comprueba el uso de las firmas 26.1; las pruebas del
+planificador y de combustible no sustituyen esa verificación multijugador.
+La adaptación visual del edificio al relieve marciano también queda pendiente;
+la preparación de parcela despeja el terreno antes de colocar los vacíos del NBT.
+La IA, la interfaz de comercio y la apariencia del comerciante requieren además
+comprobación visual en una partida real. No se simula esa sesión mediante los tests de NBT.
+Los nuevos mobs compilan con sus modelos y animaciones originales; su comportamiento,
+renderizado y frecuencia efectiva de aparición requieren también esa prueba en juego.
+
+El entorno utiliza un JDK local en `/workspace/.space-fabric-tools/jdk` y caché
+Gradle fuera del checkout. Los scripts reutilizables del entorno activan esas
+rutas y mantienen el proxy y la confianza TLS de la máquina. No se guardaron
+credenciales ni se desactivó su verificación.
+
+La configuración de red guardada como borrador añade los destinos oficiales de
+Fabric y Mojang para desarrollo. Guardar ese borrador no publica el entorno ni
+confirma que una máquina futura se haya restaurado o validado.
+
+Comprobaciones añadidas en 0.10.0:
+
+- Textura, icono y OGG originales comparados por SHA-256 con el manifiesto del JAR importado.
+- Dos ofertas de amatista/cobre comprobadas con consumo de ambos ingredientes y stock persistente.
+- Preparación real sobre picos y cañones; suelo continuo y límites del chunk respetados.
+- `MarsSurfacePiece.postProcess` coloca el NBT real de Breathforge sobre roca: sus bloques
+  se conservan y los huecos de habitación quedan como aire en el volumen VoxelWorld de prueba.
+- Ambas piezas conservan plano, rotación y límites al guardar/cargar y moverse;
+  sus parcelas quedan dentro del alcance de referencias de Minecraft.
+- El muestreo de altura es acotado e incluye los bordes de la parcela.
+
+Comprobaciones añadidas en 0.11.0:
+
+- Tres tipos de fauna, atributos, huevos y cuatro materiales registrados en el bootstrap real.
+- `SpawnPlacements` devuelve `ON_GROUND` y `MOTION_BLOCKING_NO_LEAVES` para cada especie;
+  el Mixin de acceso al registro privado se aplica durante las pruebas.
+- Tablas de bioma nativas: pesos y grupos exactos, presentes solo en Marte; ruido
+  marciano con generación inicial de criaturas habilitada.
+- Regla de hábitat: rechaza otra dimensión, otro bioma, suelo ajeno, agua, techo,
+  cuevas y posiciones suspendidas; acepta suelo marciano exterior a ras del heightmap.
+- PNG y OGG de los tres JAR fuente comparados por SHA-256 con el manifiesto importado.
+- Recorte reproducible de pedestales: 28.147 bloques de Breathforge y 20.406 de Haven,
+  sin alterar los bloques arquitectónicos por encima del recorte; seis residentes válidos.
+- Generación nativa con tres semillas por estructura: origen del piso en el suelo sólido.
+  Guardado/carga conserva la alineación nueva y la de piezas antiguas sin `FloorAligned`.
+- `MarsSurfacePiece.postProcess` coloca ambas plantillas recortadas sobre roca en
+  VoxelWorld, verificando pisos, huecos con regolito y habitaciones despejadas.
+
+Cambios visuales de 0.12.0:
+
+- Cohete: 48 cubos y 288 caras importados del archivo Blockbench del usuario.
+- Atlas PNG 512×512 extraído sin modificaciones; UV por cara conservadas.
+- Modelo de entidad ajustado uniformemente a 1,6 bloques de ancho y unos 3,28 de
+  alto, apoyado en Y=0 dentro de la colisión existente de 1,6 × 3,5.
+- El ítem de inventario usa las mismas 48 piezas y el mismo atlas mediante JSON vanilla.
+- Compilación y validación de recursos correctas; renderizado en partida pendiente.
+
+Corrección 0.12.1 tras la captura del usuario:
+
+- Se elimina el contorno blanco forzado: en la sobrecarga corta de `submitModel`,
+  el último entero representa `outlineColor`, no el tinte. Se usa la sobrecarga
+  explícita con tinte -1 y contorno de `EntityRenderState`.
+- El ítem utiliza `item/rocket`, descubierto por el atlas vanilla. El PNG se copia
+  sin modificar a `textures/item/rocket.png`; el modelo colocado conserva su textura
+  de entidad. La validación comprueba que ambos PNG coincidan con el original y
+  que las referencias del modelo de ítem pertenezcan a las carpetas del atlas.
+- El resultado gráfico de esta corrección aún requiere prueba dentro del juego.
+
+Corrección del cohete incluida en 0.13.0, tras confirmar el uso de un optimizador gráfico:
+
+- El modelo colocado emite directamente las 288 caras con sus UV por vértice
+  mediante `submitCustomGeometry`. No usa el renderizado de cubos de `ModelPart`
+  ni `Cube.compile`, que puede sustituirse por una caché con UV estándar.
+- Conserva geometría, escala, atlas, luz y orientación. El ítem mantiene su JSON
+  y textura, confirmados visualmente por el usuario en 0.12.1.
+- Compilación y recursos validados; la corrección del cohete colocado aún requiere
+  confirmación en la instalación del usuario con su optimizador gráfico.
+
+Comprobaciones añadidas en 0.13.0:
+
+- La carga conjunta acepta el santuario y restringe su único bioma a Marte.
+- `RandomSpreadStructurePlacement` nativo: 25 regiones positivas/negativas y tres
+  puntos por región, con tres semillas, devuelven exactamente un candidato y
+  20.000 bloques entre centros vecinos; separación 1249 elimina el desplazamiento aleatorio.
+- Nueve inicios reales válidos: tres regiones por semilla, base Y=-60 y límites
+  hasta Y=-13 con la cubierta. Guardado, carga, rotación y movimiento conservan el localizador.
+- NBT nativo de 53×32×53: 89.888 posiciones explícitas, incluido aire; un jefe
+  central y cuatro guardias persistentes, con volumen libre para sus cuerpos.
+- Colocación real sobre roca y sobre un cañón vacío: interior excavado, cubierta
+  sólida de 16 capas, sin escrituras fuera del chunk ni por encima de Y=-13.
+- Registro de ambos mobs, atributos y huevos; ausencia de apariciones salvajes
+  en todos los biomas. Recursos importados comparados por SHA-256.
+- `./gradlew verifyRocketMesh`: emisor real de 1.152 vértices, 288 caras con UV
+  comparadas con Blockbench, escala, color y luz. Usa las clases cliente de Minecraft
+  sin GPU ni sesión de juego; no simula la ejecución de Sodium. Se ejecuta también con `build`.
+
+La colocación de entidades en una partida, el combate, la barra de jefe y la
+inspección visual con el optimizador del usuario siguen pendientes de prueba en juego.
+
+Correcciones visuales de 0.13.1:
+
+- El snapshot del cohete distingue primera persona dentro de su propia cabina
+  del resto de observadores y modos de cámara. Solo en ese caso omite el exterior.
+- Dos Mixins cliente marcan el snapshot del jugador montado y omiten su envío
+  completo al renderizador: cuerpo, armadura y capas no sobresalen de la cabina.
+  La marca vuelve a false cuando el jugador ya no ocupa un cohete.
+- Los puntos de inyección `EntityRenderDispatcher.extractEntity` y `submit` se
+  comprueban contra el bytecode real de Minecraft 26.1 en la prueba existente de
+  descriptores. No equivale a ejecutar los Mixins ni a comprobar la cámara en juego.
+- Se conservan las 226 pruebas JUnit y la verificación de 1.152 vértices del cohete;
+  la inspección visual en primera/tercera persona y multijugador sigue pendiente.
+
+Cabina interior de 0.14.0:
+
+- `verifyRocketCockpit` ejecuta el emisor real de geometría: 772 vértices con
+  coordenadas y normales finitas, UV válidas, materiales opacos, luz y overlay conservados.
+- Una prueba de intersección contra las caras emitidas confirma nueve rayos
+  libres por el visor, y seis direcciones cerradas por paredes, marco, techo o suelo.
+  Detectaría tanto una cabina vacía como una carcasa que bloquee la ventana.
+- Se conserva `verifyRocketMesh` para los 1.152 vértices del exterior, junto con
+  las 226 pruebas JUnit. La selección del modo de cámara, la orientación al
+  montar y el resultado visual durante el vuelo requieren prueba en partida.
+- El interior reutiliza el atlas importado: no se añaden texturas ni cambia el
+  modelo del ítem. La validación sigue cubriendo 303 JSON y 52 PNG.
+
+Fauna de Venus, versión 0.15.0:
+
+- Cuatro mobs y sus huevos cargados en el bootstrap nativo; pruebas de presencia
+  exclusiva en el bioma de Venus. Modelos y animaciones importados compilan.
+- Base VenusMob para presión, hipoxia, veneno y calor; roca caliente sin lentitud.
+- Acidstone cambia de WaterAnimal a navegación terrestre; Sulfurwing obtiene
+  FlyingPathNavigation, FlyingMoveControl, sustentación y protección contra caídas.
+- Pesos/grupos: Acidstone 18/1–3, Lavafang 10/1–2, Emberwalker 16/1–3,
+  Sulfurwing 4/1. Se habilita generación inicial de criaturas en Venus.
+- Frecuencia efectiva, movimiento y renderizado dentro del juego siguen pendientes.
+
+Recursos actuales: 320 JSON y 60 PNG, validados con el comprobador de recursos.
+
+Presión y equipo de 0.16.0:
+
+- Nueve perfiles: presión, O₂ y rangos térmicos; 1 bar de referencia en gigantes.
+- Presión y temperatura crecientes al descender; la cabina no protege por encima de 100 bar.
+- Doce casos puros de referencia, tiempos 1:72, dosis acumulada y fallos de trajes.
+- Dieciséis piezas de equipo: componentes, lore, tags, conjuntos completos, incompletos
+  y mezclados; las 16 recetas se ensamblan con los ingredientes reales de sus JSON.
+- Los cuatro DamageType cargan; se verifica que sus tags atraviesen armadura,
+  escudo, resistencia, encantamientos, cooldown e invulnerabilidad temporal.
+- Venus carga sin precipitación de superficie. El equipo apropiado resiste ácido.
+- 248 pruebas JUnit aprobadas; se conservan las dos comprobaciones de mallas del cohete.
+- Pendiente: observación del daño, interfaz, protección y sincronización en partida real.
+
+Las cifras físicas son aproximadas; los tiempos letales y las capacidades de los
+trajes son calibración de juego y equipo futurista, no resultados clínicos.
+
+Colonias de Marte y Venus, versión 0.29.0:
+
+- `./gradlew build --console=plain`: 417 pruebas JUnit, sin fallos, errores ni
+  pruebas omitidas, y ocho comprobaciones nativas de recursos/renderizado por CPU.
+- `python3 tools/validate_resources.py`: 867 JSON válidos. La regeneración de los
+  recursos coloniales produce los mismos archivos sin modificar los anteriores.
+- Se comprueban habitaciones cerradas, puertas abiertas, roturas de piso/techo,
+  zonas descargadas y límites del escaneo. Una mesa de trabajo dentro de la
+  envolvente certificada de Venus no invalida su cierre exterior.
+- Las reservas requieren oxígeno, energía y, en Venus, refrigeración. Las pruebas
+  cubren consumo, pérdida de oxígeno por fuga, límites y carga de reservas.
+- Las 13 fórmulas procesan entradas y salidas de forma atómica, devuelven baterías
+  o recipientes y aparecen en el visor. Las 15 recetas y los cinco avances se
+  decodifican con los registros nativos de Minecraft 26.1.
+- Se verifica el guardado y la carga NBT de las cinco máquinas, el rechazo de
+  inserciones automáticas en salidas y la receta de combustible de hidrógeno con
+  devolución de bombona. El hielo subterráneo se asigna solamente a Marte.
+- La ventana usa el material translúcido nativo de 26.1; se comprueban su alfa,
+  los modelos coloniales y las ocho variantes de la puerta sin usar una GPU.
+
+No se ha ejecutado una partida interactiva ni una sesión multijugador para esta
+entrega. La inspección visual, el recorrido por esclusas y la automatización con
+tolvas requieren comprobación en juego. Las pruebas no sustituyen esa observación.
+
+Suelo de Venus, versión 0.30.0:
+
+- Compilación completa correcta: 422 pruebas JUnit sin fallos, errores ni omisiones,
+  y nueve comprobaciones de recursos/renderizado por CPU. 896 JSON válidos.
+- Los cuatro PNG importados coinciden byte por byte con los originales. La
+  regeneración desde las fuentes guardadas produce los mismos recursos.
+- Los modelos de las tres rocas, las 21 piezas del afloramiento y su modelo
+  completo de inventario se decodifican con el cliente nativo 26.1, sin GPU.
+- Colocación real sobre un volumen de prueba en 16 semillas: 21 estados distintos,
+  entre una y tres capas sobre el terreno, sin escrituras fuera del chunk.
+- Se rechazan huecos en la base, lava, obstáculos en el volumen y chunks
+  descargados. Se comprueban cajas de colisión, herramienta mínima, loot y
+  asignación de la característica exclusivamente al bioma de Venus.
+- Los bloques existentes mantienen sus IDs y comportamientos. Los afloramientos
+  naturales requieren chunks nuevos. Inspección visual y multijugador pendientes.
+
+Nombres de estructuras, versión 0.30.1:
+
+- Compilación correcta: 422 pruebas JUnit y nueve comprobaciones por CPU;
+  901 JSON válidos. Los cinco alias apuntan a las estructuras existentes.
+- El JAR contiene el catálogo `/estructuras`, las traducciones y las etiquetas
+  para `/locate structure`. Los JSON de registro de estructuras permanecen
+  idénticos a 0.30.0; no cambian generación, habitantes ni plantillas.
+- La presentación del chat y sus enlaces requiere comprobación en una partida.
+
+Interiores de hábitats, versión 0.31.0:
+
+- `./gradlew build --console=plain`: 429 pruebas JUnit aprobadas, sin errores ni
+  omisiones, y diez comprobaciones por CPU. 901 JSON válidos.
+- Se distinguen fallos por oxígeno, energía y refrigerante. Las lecturas reguladas
+  muestran objetivos de 101,3 kPa y 22 °C; todos los estados de fallo los retiran.
+- Paquetes completos, incrementales y de salida conservan sus campos y geometría.
+  Se rechazan enumeraciones y tamaños de geometría inválidos antes de leer posiciones.
+- El menú nativo conserva nueve slots, muestra las reservas sincronizadas, filtra
+  entradas y permite transferir suministros/productos con Shift sin duplicarlos.
+- `verifyHabitatView` usa el estado real del cliente y `FogData`: comprueba cámara
+  exterior, jugador exterior, fuga local, zona descargada, cambio de dimensión o
+  controlador, estados de fallo, mensajes caducados y limpieza de sesión.
+- El ajuste interior conserva los campos nativos de distancia de renderizado,
+  cielo y nubes. Agua/lava y efectos de ceguera/oscuridad se excluyen en la ruta
+  del Mixin. Estos caminos no se han observado en una partida interactiva.
+- La geometría cambia solamente al cambiar sala/cierre y se valida localmente
+  una vez por tick; no se solicitan acciones de protección al cliente.
+
+Pendientes: aspecto del panel/HUD, transición de niebla con ventanas, recorrido
+por esclusas y sincronización multijugador en una partida real. Los objetivos
+regulados no equivalen a una simulación termodinámica ni a presión volumétrica.
+
+Paisajes de Venus, versión 0.32.0:
+
+- Compilación completa: 436 pruebas JUnit y diez comprobaciones por CPU, sin
+  fallos. 949 JSON válidos.
+- La fuente multi_noise selecciona los tres biomas con tres semillas. Todos
+  mantienen minerales, seis especies, límites de grupos y ausencia de precipitación.
+- Caldera: generación nativa de inicio válido, 56 piezas sin parcela rectangular,
+  serialización de la marca Natural y colocación de sus 295.678 posiciones
+  por chunks, comparadas con sus plantillas, despeje del terreno que las enterraría
+  y apoyo sobre terreno más bajo. Se conservan las pruebas
+  de los dos asentamientos, sus apoyos y plantillas heredadas.
+- Fumarolas, lagunas y grietas se colocan sobre terreno de prueba con escrituras
+  limitadas al chunk. Lagunas/grietas rechazan relieve excesivo sin cambios parciales.
+- Se verifican registros, tablas de loot, herramientas, altura del depósito ácido,
+  colisión vacía y admisión de las rocas nuevas como suelo natural de aterrizaje.
+- Los nueve modelos nuevos se decodifican con el cliente nativo por CPU. Los PNG
+  y los modelos proceden de los JAR; la adaptación conserva los primeros sin cambios.
+
+Pendientes de partida real: aspecto del volcán y las transiciones de bioma,
+frecuencia efectiva, daño de contacto, partículas, recorrido de fauna y multijugador.
+Las comprobaciones no equivalen a observar el juego con GPU u optimizadores.
+
+Corrosión y mantenimiento, versión 0.33.0:
+
+- Compilación completa: 451 pruebas JUnit sin fallos y diez comprobaciones por
+  CPU. 963 JSON válidos. Cuatro recetas nuevas y un avance nativo.
+- Modelo de desgaste: tiempo cargado, fases, daño absorbido por capa, reducción
+  por filtro, saturación, límites, reparación reversible y fracciones de segundo
+  conservadas al mover la máquina. Un recinto abierto o una cara exterior libre
+  impiden el aislamiento; las pruebas también invalidan un cierre modificado.
+- Las seis máquinas guardan inventario y mantenimiento en NBT. La operación
+  nativa CopyCustomDataFunction conserva solamente Maintenance en el objeto,
+  sin copiar Items. Se decodifican los seis loot tables con los registros reales.
+- La refinería conserva un lote parcial al guardar/cargar, permanece detenida
+  durante la avería y termina el lote después de reparar a velocidad reducida.
+- Se sincronizan estado de protección e integridad mediante datos nativos de
+  menú y telemetría del hábitat. Las pruebas cubren slots, Shift y paquetes con
+  campos nuevos. La condición de controlador averiado retira la vista despejada
+  en la comprobación del cliente existente.
+
+Pendientes en partida real: uso de los materiales con clic derecho, recogida y
+colocación, recepción de avisos, lectura visual de paneles y multijugador. Los
+ensayos por CPU no sustituyen la observación de esos recorridos.
+
+Industria exclusiva de Venus, versión 0.34.0:
+
+- Compilación completa: **479 pruebas JUnit, sin fallos, errores ni omisiones**,
+  diez comprobaciones por CPU y **1.024 JSON** válidos con referencias internas.
+- Cuatro máquinas, doce recetas y cuatro avances nuevos se interpretan con
+  registros/codecs nativos de 26.1. Las siete fórmulas industriales usan el mismo
+  motor que las trece anteriores, con entradas y salidas atómicas.
+- El procesamiento del colector se pausa con planeta incorrecto, toma bloqueada
+  o salida ocupada; conserva suministros y progreso. El horno requiere calor,
+  guarda un lote parcial mediante NBT de una BlockEntity real y lo termina al
+  restaurar. El servidor obtiene las condiciones del mundo y su heightmap;
+  estas pruebas inyectan una lectura ambiental, sin construir un ServerLevel.
+- Las siete fórmulas conservan la cantidad de recipientes y devuelven la batería
+  descargada. La receta alternativa de cohete realmente se ensambla y devuelve
+  ambas bombonas de nitrógeno vacías. Se mantiene la receta original.
+- La herrería nativa produce las cuatro piezas reforzadas con doble durabilidad
+  y conserva daño, nombre y encantamientos. Tags, slots independientes y mezcla
+  de piezas venusianas originales/reforzadas mantienen la categoría Venus.
+- La mejora de carcasa reduce el ataque previo al filtro, evita la reaplicación,
+  conserva el ritmo de saturación y no repara daño. Los guardados anteriores sin
+  el campo nuevo siguen cargando. Las diez máquinas conservan mantenimiento y
+  refuerzo en NBT y en la copia nativa al objeto, sin copiar su inventario.
+- El visor conserva las entradas vacías y lista todos los productos del proceso.
+  Los cinco modelos de bloque nuevos se decodifican con el cliente nativo por
+  CPU, con texturas presentes; el validador comprueba modelos, PNG y traducciones.
+
+Pendientes en partida real: toma bajo cristal/hojas/techos, colocación del horno,
+recorrido completo de producción, interacción y aspecto de menús/objetos,
+uso de la herrería con otros mods y sincronización multijugador. No se abrió un
+cliente con GPU ni se ejecutó un mundo interactivo para esta entrega.
+
+
+Construcciones de Venus, versión 0.35.0:
+
+- Compilación completa: **483 pruebas JUnit**, cero fallos, errores u omisiones,
+  diez comprobaciones por CPU y **1.037 JSON** válidos.
+- Se auditan catorce JAR: cuatro diseños nuevos seleccionados, dos torres
+  aplazadas y ocho diseños ya integrados. Se conservan fuentes, hashes y licencias.
+- Cuatro registros de estructura, cuatro tags de bioma, cuatro alias españoles
+  y un conjunto con exclusión de candidatos cercanos a asentamientos anteriores.
+- Las 113 plantillas suman 72.020 bloques. El cliente/servidor nativo carga sus
+  paletas y tamaños; las pruebas detectan posiciones duplicadas, materiales
+  inapropiados y componentes desconectadas del suelo.
+- La prueba de generación existente ahora incluye los siete diseños de Venus.
+  Obtiene un inicio válido en sus biomas permitidos, conserva cota y rotación al
+  serializar, y ejecuta la colocación real por chunks sobre terreno simulado,
+  comparando cada bloque con la plantilla y verificando apoyo de las bases.
+- Se conservan los registros y plantillas de las versiones anteriores.
+
+Pendientes en partida real: lectura visual de la arquitectura y las parcelas,
+frecuencia efectiva, búsqueda completa de /locate y multijugador. No se abrió un
+cliente con GPU. Los nuevos edificios requieren chunks aún no generados.
+
+
+Consola, recuperación y rover, versión 0.36.0:
+
+- Compilación completa: **498 pruebas JUnit**, cero fallos, errores u omisiones,
+  once comprobaciones por CPU y **1.061 JSON** válidos.
+- Los marcadores NBT de la fundición nueva crean una consola natural y tres
+  BlockEntities reales con mantenimiento agotado. Las pruebas comprueban pausa
+  durante avería, reparación, filtro, producción y contador persistente de lotes.
+- Se conservan las plantillas `ruins_v1`. Los inicios nuevos usan `ruins_v2`, con
+  cuatro bloques funcionales añadidos y lava bajo el generador. La generación y
+  colocación por chunks siguen comprobándose con el motor nativo.
+- El registro de recompensas conserva la activación tras serializar/cargar y al
+  volver a registrar la misma ubicación. Se rechazan activaciones repetidas y
+  consolas sin instalación; cada ubicación natural conserva su propio estado.
+- El rover guarda casco, tres reservas e inventario mediante NBT nativo. El
+  objeto recogido conserva reservas y daño con ItemStack.CODEC; la carga no se
+  copia dentro del objeto. Se valida la fábrica real de colocación y se rechazan
+  ítems de otro tipo.
+- La recarga devuelve recipientes, rechaza cargas parciales y salidas bloqueadas.
+  Se prueban límites de energía/oxígeno/refrigerante, consumo ocupado y pausa
+  vacía, frenado, aceleración, marcha atrás y límites térmicos/de presión.
+- El menú filtra suministros, separa carga y envases, conserva sus 50 slots y
+  permite Shift sin duplicación. El asiento conserva su posición al rotar con
+  el vehículo mediante el contrato nativo de anclajes.
+- Los atlas PNG de ambos modelos coinciden byte por byte con los originales.
+  La comprobación nueva interpreta los modelos nativos de consola e inventario,
+  emite 3.624 vértices del rover, comprueba seis ruedas en tres ángulos y nueve
+  rayos de visión libres por el visor con suelo/techo/paredes interiores presentes.
+
+Pendientes en partida real: recuperación de principio a fin con inventarios de
+jugadores, entrega con inventario lleno, sustitución de consola, conducción en
+pendientes, colisiones, confort/interpolación de cámara, tecla V, aspecto con GPU
+u optimizadores y sincronización multijugador. Las pruebas de registro y menús
+no sustituyen esos recorridos interactivos.
+
+
+Automatización industrial, versión 0.37.0:
+
+- Compilación completa: **514 pruebas JUnit**, cero fallos, errores u omisiones,
+  once comprobaciones por CPU y **1.136 JSON** válidos.
+- Diez bloques con recetas y loot nativos, tres canales, depósitos con tipo y
+  cantidades persistentes, válvulas axiales y una interfaz para las máquinas
+  coloniales. Se comprueban etiquetas, herramientas y modelos de seis brazos.
+- Los pasamuros sustituyen paneles certificados sin un estado intermedio de
+  aire. La prueba de cierre usa los estados reales y la función de sustitución:
+  cerrar o alimentar la válvula con redstone mantiene el recinto; sustituirla
+  por una tubería estrecha o aire invalida inmediatamente el cierre guardado.
+- El grafo se prueba con ramas y ciclos, depósitos alcanzados por caminos
+  repetidos, tipos incompatibles incluso vacíos, válvulas cerradas, canales
+  distintos, límites de 128 nodos y áreas descargadas que rechazan toda lectura.
+  Una transferencia fallida no cambia las cantidades.
+- El presupuesto de 64 interfaces rota por grupos y atiende primero el soporte
+  vital seleccionado. La prueba nativa de escasez entrega la única batería
+  disponible al controlador antes que al refrigerador industrial.
+- Un ciclo con BlockEntities reales alimenta un electrolizador desde depósitos,
+  procesa su receta, almacena oxígeno/hidrógeno y abastece soporte vital venusiano.
+  Conserva cuatro bombonas y dos baterías físicas, con los consumos de agua y
+  energía esperados. Tener suministros nunca concede protección sin sala válida.
+- Los depósitos convierten cubos, bombonas y baterías con devolución de sus
+  recipientes. Capacidad, contenido incompatible, salidas bloqueadas y envases
+  faltantes impiden consumos indebidos. Los productos terminados esperan dentro
+  de la máquina mientras su depósito no tenga espacio.
+- El NBT nativo conserva contenido, filtros y slots. La función de loot real
+  copia solamente TransportTank al objeto: el inventario no se duplica. Los
+  menús filtran entradas/salidas, sincronizan cantidades y permiten Shift.
+
+Pendientes en partida real: sustitución de panel con devolución al jugador,
+montaje completo de una fábrica/base, controles de válvulas y redstone, aspecto
+con GPU, descarga/recarga de chunks durante una sesión y multijugador. Los
+ensayos por CPU usan un mundo de topología de prueba; no arrancan ServerLevel
+ni equivalen a una sesión interactiva con jugadores.
+
+
+Refrigeración industrial, versión 0.38.0:
+
+- `./gradlew build --console=plain`: **525 pruebas JUnit**, cero fallos, errores
+  u omisiones; once comprobaciones de modelos/renderizado por CPU aprobadas.
+- `python3 tools/validate_resources.py`: **1.142 JSON** válidos, referencias de
+  modelos, PNG, loot y traducciones coherentes.
+- Nuevo bloque de intercambiador registrado en el tipo de entidad colonial,
+  inventario creativo, receta, avance, visor y etiquetas de herramienta/cerramiento.
+- Balance térmico por segundo: generación solo si hubo trabajo, disipación básica,
+  agrupación mediante la geometría de habitaciones verificadas y destinos adyacentes.
+  El servicio usa el registro de entidades cargadas y `getChunkNow`; no genera chunks.
+- Pruebas nuevas: umbrales e histéresis, saturación de entradas, reserva de frío,
+  salida bloqueada, parada sin consumo de ingredientes, recuperación, presupuesto
+  compartido sin doble débito, avería del intercambiador y ausencia de destino.
+- Ciclo nativo probado: depósito de agua → interfaz → unidad de refrigeración →
+  depósito de refrigerante → interfaz → intercambiador → retorno al depósito de
+  agua; conserva bombonas y baterías, y consume energía de ambas operaciones.
+- Guardado/carga NBT de calor, disparo térmico y frío; copia escalar de datos de
+  minería y restauración del objeto sin copiar inventarios. Menús y telemetría
+  incluyen lecturas térmicas con límites de tamaño.
+- La parada térmica afecta a los procesadores coloniales de Venus, exceptuando
+  el intercambiador para permitir la recuperación. La protección de hábitat sigue
+  dependiendo de la habitación, sus suministros y el mantenimiento.
+
+No se ha ejecutado una partida gráfica ni un servidor multijugador. La selección
+espacial de propietarios, los mensajes de transición, el montaje físico completo,
+los controles de inventario y la apariencia necesitan también comprobación en juego;
+las pruebas con el presupuesto compartido inyectan explícitamente la pertenencia
+al recinto. Los valores térmicos son unidades de juego, no temperaturas físicas.
+
+
+Ampliación de la colonia de Venus, versión 0.39.0:
+
+- `./gradlew build --console=plain`: **541 pruebas JUnit**, cero fallos, errores
+  u omisiones. Once comprobaciones de modelos y renderizado por CPU aprobadas.
+- `python3 tools/validate_resources.py`: **1.186 JSON** válidos, referencias de
+  modelos, texturas, tablas de loot y traducciones coherentes.
+- Invernadero: receta de trigo y algas, dependencia de recinto regulado y luz,
+  pausa sin consumo y conservación de semillas/recipientes. El contexto de recinto
+  e iluminación se inyecta en las pruebas de producción; no es una partida real.
+- Recuperador: gasto único de 4.800 unidades de respiración compartidas, filtros,
+  salida bloqueada, persistencia de residuos, límite de recuperación y ausencia
+  de producción de residuos cuando el soporte vital falla.
+- Estación: apagada de fábrica, servicio mediante recipientes y reservas nativas
+  del rover, conservación de carga/componentes, reparación, salidas bloqueadas,
+  integración con las redes y persistencia del estado/repuestos. La selección
+  espacial del vehículo aparcado y las interacciones necesitan comprobación en juego.
+- Aerostato: tipo de entidad y estado empaquetado, control vertical acotado,
+  presión/temperatura por altura sin oxígeno respirable. Emisión de vértices
+  nativos, límites de la caja de colisión, nueve rayos libres por el visor y
+  superficies interiores opacas comprobados por CPU. Vuelo no observado con GPU.
+- Expediciones: registro persistente de premio por UUID/tipo, sin repetición tras
+  recargar el ledger; recetas, estructura, paleta y entidad de consola naturales.
+  Generación nativa de laboratorio/refugio/estación en semillas 42, 1729 y 8128;
+  la estación atmosférica produce una pieza con cota inferior Y=300. El pool
+  jigsaw usa tamaño 1 y altura inicial 301 para compensar su desplazamiento nativo.
+- Dos pruebas largas de cuatro horas simuladas: una avanza LifeSupport con dos
+  ocupantes, cuentas exactas de consumo y restauraciones periódicas; otra ejecuta
+  soporte vital, recuperador, algas e interfaces sobre depósitos reales de la
+  capa de transporte. Esta última conserva seis bombonas y tres baterías, termina
+  cinco ciclos de recuperación/fotosíntesis y mantiene suministros disponibles.
+  Ambas pruebas reponen recursos desde sus fuentes preparadas; no equivalen a
+  cuatro horas ejecutando todos los sistemas del mundo ni certifican autonomía
+  con calor, corrosión, entidades y chunks en una partida.
+
+No se ha realizado una sesión gráfica ni multijugador. Se incluye una lista
+reproducible de comprobaciones pendientes en `docs/venus-colony-playtest.md`.
+No se afirma haber validado entrada de jugador, vuelo, mensajes, recompensas por
+clic, toda la instalación física o rendimiento de una colonia real con GPU.
+
+
+Navegación y operaciones de Venus, versión 0.40.0:
+
+- `./gradlew cleanTest build --console=plain`: **548 pruebas JUnit**, cero fallos,
+  errores u omisiones, y once comprobaciones por CPU. Se ejecutó secuencialmente
+  tras detectar un conflicto de archivos temporales entre comprobaciones solapadas.
+- `python3 tools/validate_resources.py`: **1.194 JSON** válidos y referencias
+  internas, PNG, modelos y traducciones coherentes.
+- Navegador: componente de libro nativo, receta, lista NBT de hasta 32 puntos,
+  dimensiones separadas, deduplicación, persistencia, selección sin reordenar el
+  historial y descubrimiento sin cambiar el destino elegido. Rumbos cardinales
+  y cálculo de autonomía local comprobados con los métodos usados por el servidor.
+- Proyectos adicionales: ampliación compatible del ledger a cinco recompensas,
+  gasto único y persistencia de las dos nuevas entradas por UUID. La obtención y
+  entrega por interacción dependen de jugador/posición/propietario y no se han
+  observado en un servidor vivo; las pruebas del ledger no equivalen a ese recorrido.
+- Revisión del camino nativo del libro: el servidor admite el componente
+  WRITTEN_BOOK_CONTENT, se difunde el inventario antes de abrirlo y la interacción
+  de máquina enruta el navegador antes de abrir el menú normal del controlador.
+- Renderizado: el comprobador del aerostato también emite las lentes delanteras
+  y verifica límites de la malla. Son emisivas; no generan luz dinámica en el mundo.
+- El indicador de vuelo mide desplazamiento vertical observado por tick de cliente.
+  Sonidos y emisiones locales consultan posiciones cargadas. El objetivo de hábitat
+  de fauna pacífica conserva prioridad inferior a sus comportamientos existentes.
+
+Siguen pendientes las comprobaciones gráficas, de sonidos, comportamiento completo
+de fauna, vuelo y multijugador de `docs/venus-colony-playtest.md`. No se afirma haber
+certificado rendimiento de una colonia real ni cuatro horas de mundo ejecutándose;
+las dos pruebas largas previas son simulaciones de componentes/recursos.
+
+Progresión e interiores de Venus, versión 0.41.0:
+
+- `./gradlew test --console=plain`: **571 pruebas JUnit**, cero fallos, errores
+  u omisiones. `./gradlew build --console=plain` completa compilación, JAR y las
+  **once comprobaciones por CPU** de modelos, recursos y cámaras.
+- `python3 tools/validate_resources.py`: **1.205 JSON** válidos y referencias
+  internas coherentes. El esquema SVG de interiores también es XML válido.
+- 23 casos nuevos: cálculo de reservas contrastado con 900 segundos de soporte
+  real de componentes para dos ocupantes; límites y redondeo; 100 ciclos
+  geotérmicos recirculando una bombona y una batería física, con extracción de
+  energía producida; ausencia de lava y retorno bloqueado; compuesto con hierro
+  común guardado a mitad de lote y su presencia en el visor.
+- Progreso personal: observaciones fuera de orden, llegada única, separación por
+  UUID, persistencia y rechazo de máscaras inválidas. Los siete avances usan el
+  codec nativo, criterio imposible concedido por el servidor y ningún premio de
+  objetos. Receta de navegador fabricable antes de viajar y desbloqueo válidos.
+- Las tres plantillas contienen estados nativos válidos, mitades de puerta,
+  botones y cofres con botín limitado. El escáner real certifica su sala, conserva
+  el cierre al abrir solo la puerta exterior y detecta exposición al abrir ambas.
+  Se comprueba pasillo central libre, cubierta de aterrizaje despejada de 7×7×8,
+  ausencia de camas explosivas y controladores
+  inicialmente sin O₂, energía ni agua. Las tres tablas de cofre decodifican con
+  el codec nativo; el botín no se ha abierto dentro de una partida.
+- Se conservan las pruebas de generación en tres semillas de las instalaciones,
+  expediciones y recursos de cuatro horas de la entrega anterior. La simulación
+  de los 100 ciclos nuevos aísla inventarios y red: no es una simulación de calor,
+  corrosión o un mundo servidor completo.
+- No se ha ejecutado cliente gráfico ni sesión multijugador. El clic del chat,
+  comandos reales con jugadores, páginas, avances, botones/redstone, decoración,
+  recuperación de equipos y ritmo de supervivencia quedan en la lista manual
+  actualizada, puntos 14–18. No se atribuye a esta validación una partida observada.
+
+[Balance, guía e interiores](venus-progression.md) ·
+[Comprobaciones pendientes en juego](venus-colony-playtest.md).
+
+Guía de Venus en pantalla, versión 0.42.0:
+
+- Compilación completa con `./gradlew build --console=plain`: 574 pruebas JUnit
+  y once comprobaciones por CPU. Se mantienen los 1.205 JSON válidos.
+- Tres pruebas nuevas verifican el objetivo pendiente cuando hay etapas posteriores
+  completadas, limpieza/caducidad de estados, actualización y los 128 valores
+  válidos del paquete nativo, rechazando bits desconocidos y máscaras negativas.
+- El servidor sincroniza marcas personales de la guía existente, sin canal para
+  que el cliente conceda objetivos. Se conserva el registro guardado de 0.41.
+- Indicador en la esquina superior izquierda con texto ajustado al ancho, acción
+  actual, siguiente paso y contador. El renderer no dibuja paneles de fondo.
+  No requiere llevar un objeto. El aerostato se dibuja debajo; el indicador se
+  oculta durante el vuelo del cohete, las pantallas, F1 y fuera de Venus.
+- No se ha abierto un cliente gráfico. La composición final del HUD, los idiomas,
+  escalas de interfaz y convivencia con otros mods necesitan la comprobación
+  manual 19 de `docs/venus-colony-playtest.md`. Las pruebas de paquetes y estado
+  no equivalen a una observación visual ni una sesión multijugador.
+
+Ajuste visual del indicador, versión 0.42.1:
+
+- Encabezado blanco, separador fino, círculo cian hueco y un objetivo breve con
+  texto al 85 %. El fondo sigue transparente. Se mantiene el estado y protocolo
+  de progreso de 0.42; no se reinician partidas ni se alteran recompensas.
+- Compilación y comprobaciones de recursos/modelos por CPU; 574 pruebas previas
+  de reglas, registros, persistencia y red. No se añaden pruebas que reproduzcan
+  posiciones decorativas del renderer.
+- No se ha observado un cliente gráfico: la comparación visual dentro de Minecraft
+  con la referencia, las escalas GUI y el texto reducido siguen pendientes.
+
+Apoyo de estructuras superficiales de Marte, versión 0.43.0:
+
+- `./gradlew build --console=plain`: **582 pruebas JUnit** sin fallos, errores ni
+  omisiones, y once comprobaciones por CPU. Se mantienen **1.205 JSON** válidos.
+- La Base de Marte y el Pueblo de Marte usan una cota del terreno predominante:
+  el intervalo de alturas más compacto que reúne al menos el 75 % de muestras.
+  Se rechazan pendientes extensas y se evita que un pico aislado eleve la parcela
+  o que una grieta aislada hunda el edificio. La tolerancia distribuida es 16.
+- Ocho casos nuevos: seis pruebas de alturas (pico 50 bloques más alto, fisuras
+  profundas, bordes de fisura, pendientes, cota limitada y presupuesto de consultas)
+  y dos pruebas de preparación real de márgenes sobre terreno alto/bajo. Se verifica
+  continuidad, apoyo de columnas y ausencia de escrituras fuera del chunk.
+- Las pruebas nativas existentes se actualizan para comprobar el nuevo criterio:
+  ambas estructuras encuentran emplazamientos válidos en semillas 0, 42 y 8675309,
+  con búsqueda acotada. Las plantillas reales se colocan después de limpiar sus
+  interiores y mantienen su suelo y arquitectura.
+- Origen, rotación, plano y transición persisten en NBT. Los guardados anteriores
+  sin TerrainBlend conservan su comportamiento. No se desplazan edificios ya
+  colocados. El santuario subterráneo y sus pruebas siguen sin cambios.
+- La generación se ha verificado mediante APIs nativas y volúmenes de prueba;
+  no se ha observado un cliente gráfico ni cronometrado /locate en un servidor
+  de juego completo. La inspección visual en chunks nuevos continúa pendiente.
+
+[Configuración y comandos de comprobación](martian-surface-plots.md).
+
+Atlas y minimapa planetarios, versión 0.44.0:
+
+- `./gradlew build --console=plain`: **596 pruebas JUnit**, cero fallos, errores
+  u omisiones; once comprobaciones por CPU de recursos, modelos y vistas existentes.
+  `python3 tools/validate_resources.py`: **1.205 JSON** válidos.
+- Doce pruebas nuevas de archivos y modelo: separación entre planetas, mundos y
+  jugadores; nueve cuerpos y Overworld; coordenadas negativas y límites de región;
+  terreno desconocido; edición, ocultación, selección y borrado; límite de puntos;
+  claves privadas de almacenamiento; metadatos/regiones dañados preservados;
+  posición anterior, guardado y lectura con presupuestos; validación de coordenadas.
+- Dos pruebas nativas verifican el codec de SavedData del UUID del mundo y su
+  paquete de 16 bytes. La conexión del cliente y el envío en JOIN requieren todavía
+  comprobación en partida: no se presenta una conexión real como resultado de JUnit.
+- El cliente muestrea solo chunks ya cargados, usando getChunk con carga desactivada.
+  Las lecturas de altura y color se limitan a dos chunks por tick. La superficie se
+  conserva en celdas de cuatro bloques y regiones comprimidas con caché limitada.
+  El guardado usa archivos temporales y sustitución atómica cuando está disponible.
+- Compilan las pantallas nativas, teclas reasignables y texturas dinámicas de 26.1.
+  Se verificó la API nativa para ARGB y el escalado de la textura. Las pruebas de
+  modelos por CPU anteriores no ejecutan el renderer GPU del nuevo atlas.
+- No se ha ejecutado cliente gráfico ni multijugador. Minimapa, zoom, arrastre,
+  marcadores, selector, importación del navegador, colores, teclas y reconexión
+  deben verificarse con la lista en docs/planetary-atlas.md. No se afirma que se
+  haya observado en juego el muestreo o la composición de la nueva interfaz.
+
+[Controles, guardado y pruebas en partida](planetary-atlas.md).
+
+Minimapa circular, versión 0.44.1:
+
+- `./gradlew build --console=plain`: **599 pruebas JUnit**, cero fallos, errores
+  u omisiones; once comprobaciones por CPU existentes. **1.205 JSON** válidos.
+- Tres pruebas nuevas comprueban esquinas transparentes, recorte circular y marco,
+  proyección radial del destino en las ocho direcciones, símbolos acotados y
+  orientación de la flecha con el yaw de Minecraft.
+- El minimapa usa una textura dinámica de 104×104 con marco y máscara; los iconos
+  tienen contorno oscuro y se recortan dentro del círculo. El mapa grande mantiene
+  su formato rectangular y comparte los símbolos de estrella, rombo y flecha.
+- Se inspeccionó una previsualización por CPU de la geometría y los símbolos sobre
+  terreno sintético; no es una captura de Minecraft ni valida la composición GPU.
+- Se mantienen el formato de guardado y los controles. Falta revisar en cliente
+  gráfico el marco, las escalas de interfaz, los marcadores y Sodium.
+
+Minimapa compacto, versión 0.44.2:
+
+- Minimapa de 76×76 píxeles de interfaz, antes 104×104, anclado al borde inferior
+  derecho con margen horizontal de ocho píxeles. Coordenadas y título se ajustan
+  al nuevo ancho; la flecha del personaje usa escala 1/1,6 en ambas vistas.
+- `./gradlew build --console=plain`: 599 pruebas JUnit sin fallos, errores
+  ni omisiones; once comprobaciones de recursos y modelos por CPU.
+- 1.205 JSON válidos; JAR y versión comprobados. Ajuste visual pendiente de
+  observar en cliente gráfico y con Sodium. No cambia el formato de guardado.
+
+Prospección y minería industrial, versión 0.45.0:
+
+- `./gradlew build --console=plain`: **617 pruebas JUnit**, cero fallos, errores
+  u omisiones. Once comprobaciones por CPU; la de colonia incluye la nueva textura
+  y el modelo nativo de la perforadora. **1.217 JSON** válidos.
+- Dieciocho casos añadidos: dos volúmenes completos sin celdas repetidas; extracción
+  de un bloque real y retorno de recipientes; salidas bloqueadas y calor; pausa
+  sin leer celdas descargadas; denegación y revalidación tras callbacks; sustitución
+  fallida; guardado del propietario, cursor y extracción parcial; dimensiones y
+  producción sin mundo rechazadas; búsqueda acotada y agotamiento; rotura de broca;
+  puertos reales de energía/frío/agua; puntos del escáner en ItemStack; tres recetas,
+  avance y loot nativos; consultas del visor para los tres minerales.
+- El contrato de suministro de la perforadora no puede ejecutarse mediante
+  Formula.commit ni el procesador de recetas: la transacción del mundo es obligatoria.
+  La prueba general de recetas distingue este contrato de las recetas de fabricación.
+- Escáner: 512 celdas por tick compartidas entre un máximo de dos trabajos activos
+  de Venus. Perforadora: 16 comprobaciones de búsqueda por tick de trabajo y volumen
+  finito de 864 posiciones. Ninguno solicita chunks remotos ni utiliza /locate.
+- La capa de servidor consulta propietario, dimensión, permisos, borde, spawn y el
+  evento BEFORE de Fabric. Las pruebas usan un mundo en memoria para observar
+  denegaciones y cambios; no se ha probado un mod de parcelas concreto.
+- No se ha ejecutado cliente gráfico ni partida multijugador. Sondeo interactivo,
+  importación visual al atlas, control por redstone, conexión física completa y
+  permisos con otros mods quedan pendientes del checklist de docs/venus-mining.md.
+
+Sección de controles, versión 0.45.1:
+
+- `./gradlew build --console=plain`: 617 pruebas JUnit sin fallos, errores
+  ni omisiones; once comprobaciones por CPU. 1.217 JSON válidos.
+- Categoría nativa registrada una vez: `space_fabric:controls`, con ocho
+  asignaciones. Se conservan los seis identificadores anteriores de options.txt.
+- Los atajos contextuales del visor R/U usan KeyMapping.matches y matchesMouse;
+  no disparan acciones de teclado mientras se escribe en la búsqueda.
+- El atajo de despegue en el panel del cohete usa la tecla de salto configurada.
+- Compilación y empaquetado verificados; no se ha abierto un cliente gráfico para
+  observar la lista, reasignación, conflictos o persistencia de las preferencias.
+
+Proyecto Aurora y mejoras, versión 0.46.0:
+
+- `./gradlew build --console=plain`: **630 pruebas JUnit**, cero fallos, errores
+  u omisiones; once comprobaciones de modelos y recursos existentes por CPU.
+  **1.225 JSON** válidos; las tres texturas nuevas y el contenido del JAR se verifican.
+- Trece casos nuevos: reglas de sitio, orden, altitud y estación vinculada; progreso
+  personal y codec de SavedData; pagos incompletos y materiales repetidos; costes de
+  todas las entregas; lente persistente conservando marcadores; rover sin acumulación,
+  reservas intactas, persistencia en entidad e ítem y exclusión de aerostatos; receta
+  del diario, avance, ausencia de recetas de mesa para módulos y visor K; paquetes
+  con etapas válidas e inválidas; componentes dañados y calientes; simulación de
+  consumo optimizado durante 200 ticks y conservación al rellenar/reparar/cargar.
+- Progreso y fabricación se validan en el servidor. Solo hay sincronización S2C;
+  ningún paquete permite reclamar etapas desde el cliente. Las expediciones 1–5 y
+  las siete observaciones iniciales conservan sus datos y reglas anteriores.
+- Rover: campo booleano opcional en el codec, falso por defecto para guardados
+  anteriores; sincronización nativa de la entidad. No cambia presión, temperaturas,
+  capacidades, consumo auxiliar u oxígeno. La lente conserva el presupuesto global
+  de lectura del sondeo; solo amplía el volumen y aumenta el tiempo necesario.
+- No se ha ejecutado una partida completa ni cliente gráfico o multijugador. Las
+  pruebas de reglas e inventarios no equivalen a observar la validación de una sala
+  real por ResearchSystem.stationReady durante una sesión. Falta recorrer los
+  sitios, restaurar sus componentes, validar las entregas e inspeccionar diario,
+  HUD e instalación de módulos con el checklist de docs/venus-research.md.
+
+Actividad volcánica local, versión 0.47.0:
+
+- `./gradlew build --console=plain`: **649 pruebas JUnit**, cero fallos, errores
+  u omisiones; once comprobaciones de modelos y recursos anteriores por CPU.
+  **1.228 JSON** válidos; CRC, versión, clases nuevas y recursos del JAR comprobados.
+- Diecinueve casos nuevos: ciclos completos de gas/erupción, espera por límite
+  simultáneo, temporizadores y recarga sin avance offline; volumen, protecciones,
+  daño/desgaste y no acumulación; opciones estrictas; detección de respiraderos
+  apilados, cobertura, lava fuente y bordes rocosos; rechazo de consultas descargadas;
+  colisiones nativas con cascos, cristales y puertas cerradas/abiertas; intersección
+  diagonal breve, ausencia de escrituras y alcance limitado; registro compartido
+  acotado, separación de focos y máximo de cuatro avisos/episodios; retirada/recarga
+  de focos; dos codecs de daño, etiquetas de fuego y cooldowns normales.
+- Los efectos se aplican como máximo una vez por segundo y jugador, combinando
+  exposiciones por máximo. Se respetan los hábitats y cabinas existentes; los mobs
+  no son objetivos del nuevo sistema. No existen explosiones ni escrituras de terreno.
+- La detección comparte 48 columnas cada cinco ticks por dimensión. La travesía
+  nativa de rayos verifica carga antes de leer bloques; nunca fuerza chunks.
+- No se ha ejecutado cliente gráfico ni una partida multijugador. Las pruebas de
+  formas de colisión y reglas no equivalen a observar partículas, sonido, avisos,
+  daño/desgaste real ni el circuito completo de protección durante una sesión.
+  Pendiente el checklist de docs/venus-volcanism.md en partida y con Sodium.
+
+Biomas de Venus aportados para 1.21.5, versión 0.48.0:
+
+- `./gradlew build --console=plain`: **668 pruebas JUnit**, cero fallos, errores
+  u omisiones; once comprobaciones por CPU, con los nueve modelos importados en
+  la de colonia. **1.283 JSON** válidos. JAR, versión, CRC y recursos verificados.
+- Diecinueve casos nuevos: relieve acotado y continuo, semilla determinista; tres
+  biomas y features con codecs nativos; tres terrenos limitados a su chunk/bioma;
+  reservas de inicios/referencias de estructuras en ProtoChunk; estaciones que
+  admiten seis biomas; orden acíclico de features y minerales compartidos; cuatro
+  recetas nativas; nueve loot tables, niveles de herramienta y capa de ceniza;
+  extracción finita del hierro nuevo; pozos de lava con paredes y fondo sólidos.
+- La prueba de clima existente encuentra ahora los seis biomas en la cuadrícula
+  de las semillas 42, 971 y −200 y conserva los seis tipos de fauna. Los controles
+  de asentamientos se actualizan de tres a seis biomas; no se alteran sus plantillas.
+- Texturas PNG de los nueve bloques idénticas a sus fuentes. Los modelos solo
+  cambian referencias y, para ceniza, heredan las transformaciones GUI de un bloque.
+  Créditos y licencias incluidos. No se añaden clases, entrypoints, TerraBlender
+  ni telemetría de los JAR antiguos al mod construido.
+- No se ha ejecutado cliente gráfico ni multijugador. El muestreo de biomas, los
+  volúmenes de feature y ProtoChunk no equivalen a inspeccionar regiones completas,
+  apoyo de estructuras, spawns, sonido, niebla o cambios de versión en una partida.
+  Pendiente el checklist de docs/venus-imported-regions.md.
+
+Coloso de Azufre y lugares de Venus, versión 0.49.0:
+
+- `./gradlew build --console=plain`: **676 pruebas JUnit**, cero fallos, errores
+  u omisiones; doce comprobaciones por CPU y **1.297 JSON** válidos.
+- Ocho casos nuevos: registro y atributos del boss; ausencia de spawn adicional
+  en biomas; exactamente un residente persistente en el NBT; excavación explícita
+  y suelo para toda su caja; conexión del nido al piso; generación de ambos sitios
+  con semillas 42, 1729 y 8128; persistencia de piezas rotadas; colocación nativa
+  de una cámara entre roca y sobre vacío, cubierta y escrituras acotadas al chunk.
+- El nido se coloca por completo a través de los límites de chunks en las tres
+  semillas, preservando cada bloque y el apoyo en el suelo. Ambas estructuras
+  admiten los seis biomas venusianos y tienen alias de localización en español.
+- La comprobación `verifyColossusModel` ejecuta los 124 cubos, UV originales,
+  reposo, caminar, seis acciones y apertura/cierre del pecho sin acumular rotaciones.
+- El combate hereda inmunidad y gravedad de Venus; usa objetivos de servidor,
+  recuperación entre ataques, suelo local para las marcas, filtros de traje y
+  protección de cabina/hábitat. La recompensa se concede por muerte atribuida
+  a un jugador; su guardia de guardado impide repetir la entrega.
+- Se incluyen textura, sonido, huevo y licencias; no se cargan inicializadores
+  ni dependencias de los tres JAR originales. Se conservan fuentes de diseños
+  y conversores reproducibles.
+- No se abrió un cliente gráfico ni una partida multijugador. Las pruebas de
+  generación y malla no equivalen a observar el combate, las apariciones de
+  entidades, el sonido y la sincronización durante una partida. Pendiente la
+  comprobación manual de docs/venus-colossus.md.
+
+Expedición La señal del Coloso, versión 0.50.0:
+
+- `./gradlew build --console=plain`: **681 pruebas JUnit**, cero fallos, errores
+  u omisiones; doce comprobaciones por CPU. **1.297 JSON** válidos.
+- Cinco casos nuevos verifican orden y rechazo de repeticiones/saltos, destino
+  requerido, persistencia personal y coordenadas tras recargar, etapas inválidas
+  y presupuesto de 81 regiones sin repeticiones. El caso nativo encuentra
+  candidatos del búnker con semillas 42, 1729 y 8128 sin cargar plantillas.
+- Diario de Aurora ampliado; comando de lectura `/venus coloso`, guía transparente
+  y paquete S2C de etapa, sin mensajes del cliente para acreditar objetivos.
+- Evidencia en piezas naturales cargadas, excluyendo parcelas; cámara y boss
+  vinculados al destino asignado. La prospección usa un candidato por segundo
+  global y una comprobación asíncrona de inicio de estructura pendiente; rechaza
+  chunks ya completos para seleccionar un búnker nuevo.
+- Pendiente partida manual: pistas con el diario, permisos, reanudación al
+  reconectar, generación asíncrona en mundos antiguos, HUD, baja y cooperación.
+  No se ha ejecutado un cliente gráfico ni una sesión multijugador.
+
+Rediseños de trajes aportados, versión 0.50.1:
+
+- `./gradlew build --console=plain`: 681 pruebas JUnit, doce comprobaciones
+  por CPU y 1.297 JSON válidos.
+- `verifyEquipmentTextures` lee cuatro definiciones con el codec nativo, verifica
+  sus capas interior/exterior, ocho PNG originales idénticos a sus fuentes,
+  transparencia de los márgenes y cobertura combinada de todas las piezas.
+- Se conservan los ocho dibujos RGBA de 128×64. Ocho forros de 256×128 cubren
+  sus transparencias; los iconos, recetas, física y protección permanecen iguales.
+- Venus reforzado utiliza la misma apariencia equipada; las ranuras dedicadas
+  mantienen su renderizador nativo bajo la armadura. Regenerar recursos reaplica
+  el rediseño desde los PNG conservados, sin procesar ni alterar esas imágenes.
+- Pendiente revisión visual en Minecraft y con Sodium; no se ejecutó cliente
+  gráfico ni multijugador. Véase docs/suit-redesigns.md.
+
+Casquetes polares de Marte, versión 0.51.0:
+
+- `./gradlew build --console=plain`: **692 pruebas JUnit**, cero fallos, errores
+  u omisiones; doce comprobaciones por CPU y **1.338 JSON** válidos.
+- Once casos nuevos: tres semillas en ecuador y ambos polos, conservación
+  del bioma en profundidad y serialización del codec; cuatro materiales con
+  ítems, loot, herramientas, hielo estable, aterrizaje y arte original;
+  excavación nativa acotada y rechazo atómico de agua/cofres/bedrock;
+  recetas selladas que exigen recipientes; exclusividad de las cinco features
+  y conservación de los cinco minerales habituales bajo los casquetes.
+- Cámaras antes de las vetas y con prevalidación; superficie de CO₂ y hielo
+  seleccionada por bioma. Fuente geográfica configurable, por defecto ±8.192
+  bloques con borde irregular, sin introducir el bioma en el Overworld.
+- Seis texturas originales, bloques, materiales, modelos y receta de piedra
+  térmica; recipientes industriales existentes para agua y CO₂. Licencia y
+  procedencia conservadas. No se importa código ni TerraBlender del JAR fuente.
+- Pendiente cliente gráfico y multijugador: superficie en chunks completos,
+  transición con terreno antiguo, frecuencia real de cámaras y vetas,
+  navegación, aspecto y aterrizajes polares. Véase docs/mars-polar.md.
+
+Overworld como Tierra única, versión 0.52.0:
+
+- `./gradlew build --console=plain`: **698 pruebas JUnit**, cero fallos, errores
+  u omisiones; doce comprobaciones por CPU y **1.337 JSON** válidos.
+- Seis casos nuevos: traducción de los diez índices antiguos y claves estables;
+  Tierra como Overworld y ausencia del stem retirado; codec de un mapa antiguo
+  y bake real con el Mixin; NBT de jugador con inventario, experiencia, vehículo
+  y pasajeros; conservación de jugadores en otras dimensiones; descenso de un
+  cohete trasladado conservando combustible y destino.
+- Las pruebas anteriores de navegación reconocen que Overworld y Tierra son
+  el mismo destino. Los guardados de cohetes conservan Marte, Neptuno y demás
+  cuerpos; el menú requiere la revisión 2 del protocolo de destinos.
+- El atlas omite el mapa retirado y conserva sus archivos. Se mantiene el tipo
+  legado y sus relojes para decodificar partidas antiguas, sin generar ese mundo.
+- La carga de registros, genérico de viajes, modelos y todos los controles de
+  minerales y atmósfera pasan. Pendiente actualización de una partida real en
+  cliente/multijugador, ida y vuelta y reconexión con vehículo.
+
+Iconos de los trajes rediseñados, versión 0.52.1:
+
+- `./gradlew build --console=plain`: 698 pruebas JUnit, doce comprobaciones
+  por CPU y 1.342 JSON válidos.
+- `verifyEquipmentTextures` comprueba 29 iconos, incluidos los cuatro de Venus
+  reforzado, con sus modelos, rutas, dimensiones y transparencia. Se mantienen
+  las comprobaciones de ocho capas equipadas originales y sus forros.
+- Veinte PNG de inventario sustituidos a partir de la hoja nueva, con extracción
+  técnica por regiones, escalado de píxeles y margen transparente uniforme. Los
+  importadores y el generador industrial conservan el diseño al regenerar recursos.
+- Las capas equipadas aportadas conservan sus bytes; recetas y jugabilidad intactas.
+  Pendiente inspección visual de inventario y visor de recetas en Minecraft.
+
+Diagnóstico de iconos anteriores tras 0.52.1:
+
+- El usuario confirmó usar 0.52.0; esa versión precede al cambio de iconos.
+- Se verificó el JAR 0.52.1 almacenado en el commit publicado: sus cuatro cascos
+  coinciden con los PNG nuevos del repositorio.
+- `./gradlew build suitIconsPack --console=plain`: **699 pruebas**, cero fallos,
+  errores u omisiones, y doce comprobaciones por CPU. El nuevo caso valida el
+  componente `ITEM_MODEL` de las veinte piezas, su cadena modelo-textura y el
+  codec nativo del paquete de recursos.
+- Paquete opcional para el cliente: formato 84.0, metadatos en raíz y sesenta
+  archivos de recursos, idénticos a los del mod. No hay cambios de código de
+  producción ni se reemplaza el JAR 0.52.1 ya publicado.
+
+Categorías creativas, versión 0.53.0:
+
+- `./gradlew build --console=plain`: **701 pruebas**, cero fallos, errores u
+  omisiones, doce comprobaciones por CPU y 1.342 JSON válidos.
+- Dos casos nuevos construyen las ocho pestañas con parámetros nativos, comprueban
+  iconos y contenido, y comparan su unión con todos los ítems del mod sin duplicados.
+  Se verifican casos de uso y la clasificación de todas las piezas de transporte.
+- Registro dinámico de contenido por utilidad, con orden estable y categorías
+  traducidas; se conserva la clave antigua de materiales. No cambian identificadores
+  de objetos, recetas, física o datos de las partidas.
+- Incluye los iconos nuevos de los trajes de 0.52.1. Pendiente comprobación visual
+  en cliente de títulos, paginación, orden y búsqueda del inventario creativo.
+
+## Corrección de texturas importadas (0.54.1)
+
+Diez modelos conservaban referencias `namespace_original:gui/...` que no existían
+en Space Fabric ni en su atlas de bloques. El importador ahora extrae también
+las imágenes de interfaz de los JAR aportados y las copia bajo
+`space_fabric:block/replacements/...`, conservando bytes y UV originales.
+`verifyModBatchAssets` comprueba además que cada textura no vanilla pertenezca
+al atlas del mod y que su PNG exista y pueda decodificarse. Resolver un nombre
+de textura en el modelo no era suficiente para detectar un archivo ausente.
+La verificación del renderizado dentro de una partida sigue pendiente.
+
+## Referencias vanilla de las máquinas (0.54.2)
+
+La comprobación anterior omitía los archivos de textura de Minecraft. En el JAR
+real de 26.1, `block/smooth_quartz.png` y `block/polished_basalt.png` no existen.
+Se usan `quartz_block_bottom` y `polished_basalt_side`/`polished_basalt_top`,
+respectivamente, siguiendo los modelos vanilla. Se mantienen geometría, UV y
+funcionamiento. El importador aplica estas correcciones al regenerar recursos.
+
+La comprobación ampliada reproduce el fallo anterior del horno con
+`Missing vanilla texture PNG` y ahora verifica también los PNG vanilla desde el
+classpath real de Minecraft, incluyendo su decodificación. La inspección de todos
+los modelos del mod contra el JAR cliente no encontró otras referencias vanilla
+ausentes. La validación visual en una partida sigue pendiente.
+
+## Geometría y ocultación de las máquinas (0.54.3)
+
+La captura posterior a 0.54.2 mostró un problema distinto al de referencias
+ausentes: una pareja de caras coincidentes en la refrigeración y quince en el
+horno, además de detalles fuera del bloque y una ocultación de vecinos propia
+de un cubo completo. Los relieves de puerta, rejilla, tapa y pantalla ahora
+tienen profundidad diferenciada y se ajustan al volumen del bloque. Los paneles
+usan material opaco, manteniendo sus colores.
+
+Ambas máquinas desactivan la ocultación de vecinos (`noOcclusion`), conservando
+colisión sólida, clasificación de sellado, inventarios y procesos industriales.
+La prueba de recursos compara todas las caras con la misma orientación y plano
+y rechaza áreas superpuestas; también verifica límites del modelo y un cuerpo
+con seis caras. Una prueba con estados reales verifica que las máquinas no
+oculten a sus vecinas y mantengan la colisión completa. Estas comprobaciones
+no sustituyen una inspección visual en Minecraft, que sigue pendiente.
+
+## Regolito, minimapa y nuevos diseños (0.54.4)
+
+Se restaura la referencia original de `iron_oxide_regolith`, presente antes del
+lote 0.54.0. El minimapa conserva 76 unidades de tamaño y queda anclado arriba
+a la derecha, con título por encima y coordenadas por debajo.
+
+Los cuatro JAR aportados se tratan como archivos de recursos. Bauxita y Ares
+usan exactamente las imágenes referenciadas por sus modelos fuente, reubicadas
+en el atlas de bloques propio. El traje nivel 1 sustituye al traje de vacío;
+el traje venusiano sustituye a Venus y a sus iconos reforzados, que ya compartían
+apariencia. Se copian sin cambios las capas e iconos referenciados y se mantiene
+el forro sellado. Las referencias relativas del equipamiento venusiano se
+resuelven durante la importación, sin conservar rutas `../` en los recursos finales.
+
+Las comprobaciones verifican los bytes frente a los recursos fuente, referencias
+PNG, codecs de equipamiento y cobertura de casco, torso y extremidades. Sigue
+pendiente la inspección visual dentro de una partida.
+
+## Chat y atlas subterráneo (0.55.0)
+
+Se compilan las APIs nativas de captura de pantalla, la transferencia de imágenes
+al portapapeles y los eventos de pantalla de Fabric. Los botones interceptan sus
+propios clics para evitar activar enlaces del chat que queden detrás. La lista
+de copia respeta el filtro de mensajes visible y permite copiar mensajes enteros
+o el historial en orden cronológico.
+
+Seis pruebas nuevas comprueban búsqueda acotada de suelos de cueva con dos
+bloques de espacio, paredes, cavidades de un bloque, límites de altura, bandas
+negativas, separación persistente de superficie/altura/dimensión y transferencia
+del PNG como imagen sin depender de un escritorio y las firmas de los campos
+vanilla usados por los accessors del chat. La captura real y el acceso
+al portapapeles del sistema requieren comprobación en el cliente del usuario.
+
+El atlas usa estratos de renderizado explícitos: terreno, marcadores, jugador
+y contorno/relleno. Las capas de cueva se almacenan aparte y se muestrean solo
+en chunks cliente existentes, con dos chunks por tick y búsqueda vertical acotada.
+El aspecto final y la interacción con otros mods de renderizado quedan pendientes
+de inspección dentro de Minecraft.
+
+## Copia directa y silueta estable (0.55.1)
+
+Se elimina `ChatCopyScreen`. Al pasar el mouse sobre una línea nativa del chat,
+un icono de dos hojas permite copiar su mensaje padre completo con un clic.
+Se usan `trimmedMessages`, el desplazamiento y la altura de línea reales; el
+cálculo reproduce la línea base escalada de Minecraft 26.1. No se cambia de
+pantalla ni se altera el borrador. El botón de captura ocupa el extremo del
+campo de entrada, cuyo ancho se ajusta para evitar solapamientos.
+
+La flecha ya no se reconstruye redondeando coordenadas en cada ángulo. Una
+silueta fija de franjas y contorno se transforma como una pieza completa con
+una matriz uniforme. Las pruebas recorren todos los grados entre -720 y 720,
+comprobando longitudes y perpendicularidad de los polígonos reales dibujados;
+la cobertura de la silueta y su contorno se comprueban píxel a píxel.
+
+Seis pruebas adicionales cubren esa geometría y la selección del mensaje por
+coordenadas con escalas, espaciados, desplazamiento, historial vacío, límites
+y líneas partidas. El renderizado final y la interacción con el portapapeles
+del sistema siguen pendientes de inspección dentro del juego.
+
+## Copia de PNG desde el aviso de F2 (0.55.2)
+
+El icono del jugador pasa de escala uniforme 0,80 a 0,65, manteniendo su
+rotación rígida, silueta y contorno. Se conservan las pruebas geométricas.
+
+La acción de copia reconoce el componente nativo `screenshot.success`, localiza
+el enlace `ClickEvent.OpenFile` de su argumento y carga ese PNG como imagen.
+No depende del texto traducido ni del idioma. Los mensajes normales conservan
+la copia de texto; una captura ausente o un error del portapapeles no se
+convierten en texto ni ruta copiada. El botón de captura usa el mismo lector
+y tampoco sustituye una imagen fallida por una cadena de texto.
+
+Cuatro pruebas nuevas construyen el aviso nativo de F2 con un PNG temporal
+y comprueban sus píxeles y tipo de transferencia, componentes con prefijos,
+selección de archivos dentro de screenshots y fallos de imágenes ausentes o
+inválidas. El renderizado y el portapapeles nativo del escritorio aún requieren
+comprobación dentro del cliente del usuario.
+
+## Portapapeles nativo de imágenes (0.55.3)
+
+El bytecode real de `net.minecraft.client.main.Main` de 26.1 configura
+`java.awt.headless=true`. Por ello el Toolkit de AWT usado anteriormente
+no puede abrir el portapapeles, aunque `BufferedImage` e ImageIO sí funcionen.
+En Windows se usa JNA, ya incluido con Minecraft, para abrir el portapapeles
+con el HWND de GLFW del juego y publicar CF_DIB y el PNG original. El DIB usa
+BITMAPINFOHEADER, píxeles BGRA y filas de abajo arriba.
+
+Las asignaciones se desbloquean antes de publicarlas; solo Windows libera la
+memoria aceptada por SetClipboardData. Las asignaciones rechazadas se recuperan
+y el portapapeles se cierra también tras un fallo. Se reintenta brevemente una
+apertura ocupada. Una publicación válida de CF_DIB se conserva aunque falle
+el formato PNG adicional. Nunca se copia texto como sustituto de una imagen.
+
+Cinco pruebas nuevas verifican bytes del formato, reintentos, transferencia de
+propiedad y limpieza usando una API Win32 simulada con memoria nativa de JNA.
+No se ha ejecutado esta llamada al portapapeles real de Windows en este entorno
+Linux. macOS usa osascript; Linux puede usar wl-copy o xclip si están disponibles;
+esas rutas también requieren comprobación en su escritorio correspondiente.
+
+## Hielo glaciar sin tierra (0.55.4)
+
+El modelo de `martian_glacier_ice` usa en sus seis caras el PNG inferior
+original de Frostglass, que muestra hielo azul sin la franja marrón ni la
+cubierta de tierra del modelo fuente. No se repintan imágenes ni se cambian
+bloques, posiciones, cubiertas blancas de CO₂, alturas o generación. El cambio
+se aplica también a los bloques ya colocados al cargar los recursos nuevos.
+El importador conserva esta asignación en posteriores regeneraciones.
+
+Se ejecutan las comprobaciones existentes de referencias, texturas y modelos,
+además de la compilación completa. La inspección visual dentro del cliente
+sigue pendiente.
+
+## Cubierta física del casquete marciano (0.56.0)
+
+`MarsIceCover` sustituye únicamente hielo glaciar azul expuesto por CO₂ blanco
+en biomas polares de Marte. Se consideran las seis direcciones y vecinos con
+colisión parcial o vacíos; el interior azul y otros materiales se conservan.
+No se añade volumen ni se desplaza el relieve.
+
+El acabado se ejecuta después de la generación, al cargar chunks de servidor,
+y también actualiza terreno ya explorado. Procesa como máximo dos entradas de
+cola por tick del nivel y omite secciones sin hielo. Solo se consultan vecinos
+que ya están cargados. Una attachment persistente por chunk registra el interior
+y cada borde atendido; los bordes pendientes se revisan al cargarse el vecino.
+Esto evita recubrir nuevamente un frente excavado tras completar su acabado.
+El recubrimiento no es una actualización continua ni una capa regenerable.
+
+Cinco pruebas adicionales ejecutan el algoritmo real en un volumen de bloques:
+la piel completa de un cubo tiene 1.352 bloques blancos y conserva el interior
+azul y todas las posiciones; romper un bloque blanco da acceso al azul. También
+se prueban hielo ya cubierto, vecinos de chunk pendientes, ausencia de regeneración
+y exclusión de materiales ajenos y posiciones fuera del bioma permitido.
+La persistencia de attachments usa la API de Fabric; el recorrido visual por
+un mundo guardado y el comportamiento multijugador siguen pendientes.
+
+## Planeta esférico experimental (0.57.0)
+
+Dimensión, tipo, bioma, configured feature y placed feature se cargan con los
+codecs reales de 26.1. El generador orbital existente decora únicamente una
+esfera de radio 24, centrada en (0,5; 96,5; 0,5). La prueba ejecuta la feature
+en los 16 chunks del planeta y compara cada posición con el volumen analítico,
+rechazando escrituras fuera de cada chunk y generación en regiones lejanas.
+
+La locomoción usa un arnés invisible basado en una entidad pasajera controlada
+por el servidor. El desplazamiento es geodésico, la orientación se transporta
+entre posiciones sin singularidad polar, y el salto tiene aceleración radial.
+La altura se ajusta a la intersección real con los bloques del modelo generado.
+La cámara usa una orientación local y evita el overlay de asfixia vertical.
+
+Se comprueban una vuelta completa por ambos polos, velocidad diagonal, superficie
+voxel en todas las direcciones, quaternions de cámara incluso con mirada vertical,
+generación real, codecs y persistencia del punto de regreso. La cámara inyecta
+el método nativo anterior al cálculo del frustum; se verifican sus firmas reales.
+La ejecución gráfica y los controles dentro de un cliente quedan pendientes.
+
+El prototipo es de locomoción en primera persona; no implementa colisiones
+radiales generales, construcción, líquidos ni gravedad para mobs. Bloquear
+rotura/colocación y uso de objetos conserva la esfera de prueba. El jugador
+recibe protección contra daño dentro de esta dimensión, sin cambiar su modo
+de juego. El minimapa plano se oculta en la prueba.
+
+## Primera expedición de Marte (0.58.0)
+
+Se añade la llegada física al final del descenso del cohete, la selección de un
+controlador existente y una guía transparente con cuatro comprobaciones. La
+validación usa el recinto real del controlador, su estado operativo, sus reservas
+y el agua almacenada en ese controlador o depósitos interiores. El objetivo final
+requiere todas las condiciones simultáneas y al jugador dentro de la sala.
+
+Las 14 pruebas nuevas comprueban:
+
+- La regla de llegada distingue descenso con colisión de ascenso, crucero,
+  dimensión incorrecta y retorno por despegue abortado en Marte.
+- Un UUID sin llegada o sin controlador elegido no progresa. Dos jugadores y dos
+  bases mantienen estados independientes; la unión de hitos históricos no basta.
+- Sellado mediante `SealScanner` y estados nativos: paredes completas, fuga,
+  losas, toma obstruida y zona descargada; el jugador exterior no finaliza.
+- Conversión real de bombonas y baterías en el controlador, presurización con
+  `LifeSupport`, venteo, máquina detenida y umbrales de cinco minutos/dos ocupantes.
+- Agua en la tercera casilla, depósitos interiores con `processContainer`,
+  rechazo de tanques exteriores y refrigerante; guardado nativo de máquinas.
+- Electrólisis real y recetas disponibles sin materiales de Venus.
+- Guardado y lectura de progreso parcial/completo como NBT comprimido en disco,
+  repeticiones sin nuevo desbloqueo, paquetes acotados y caducidad del HUD.
+- Ambos avances se decodifican con Minecraft, requieren criterio del servidor
+  y carecen de recompensas de objetos, experiencia o funciones.
+
+No se ha ejecutado un cliente gráfico, un vuelo completo ni un reinicio de servidor
+de juego para esta entrega. La validación automática de las reglas y del NBT es
+distinta de observar su integración durante una partida. El procedimiento manual
+está en [Primera expedición de Marte](mars-first-expedition.md).
+
+Resultado de esta entrega: **749 pruebas JUnit aprobadas**, cero fallos, errores
+o pruebas omitidas; **13 comprobaciones de render/modelos por CPU**, **1344 JSON**
+y compilación `./gradlew build` correctos. Se verificaron integridad ZIP, versión
+0.58.0 y coincidencia de los 2432 recursos empaquetados (excluyendo el descriptor
+con versión expandida). JAR instalable en `dist/space-fabric-0.58.0.jar`, con SHA-256.
+
+## Guía visual animada de Marte (0.59.0)
+
+`/marte guia` abre una pantalla de ocho pasos mediante un paquete exclusivo del
+servidor. El inventario incluye el mismo acceso y `/marte texto` conserva la
+consulta escrita. El tutorial utiliza cuboides proyectados, objetos nativos y
+las recetas del visor existente, con una secuencia de solicitudes compartida
+para descartar respuestas antiguas. No añade operaciones de inventario ni
+mensajes de progreso del cliente al servidor.
+
+Las nuevas pruebas verifican pausa, reproducción, búsqueda temporal, repetición,
+límites de navegación, alternancia de esclusas, ajuste desde 320×240 y geometría
+de las caras sin redondear sus vértices. También comprueban que el techo elevado
+cabe en el marco durante todos los fotogramas. El cerramiento de 7×7×5 empleado
+por el dibujo se prueba con `SealScanner` y bloques nativos: contiene 74 celdas
+de aire tras colocar el controlador, mantiene libre la toma y pierde el sellado
+al abrir la puerta. Sus reservas iniciales coinciden con las del ejemplo animado.
+El paquete de apertura conserva el estado del servidor y rechaza flags inválidos.
+
+Se inspeccionó una representación de la geometría calculada por CPU. No se ha
+abierto esta pantalla dentro de un cliente Minecraft: quedan pendientes el
+aspecto nativo, los clics/teclado, el ajuste del texto con los paquetes de fuentes
+del usuario y la consulta de recetas durante una partida local o multijugador.
+
+Resultado 0.59.0: **757 pruebas JUnit aprobadas**, cero fallos, errores u omisiones;
+13 comprobaciones de modelos/render por CPU y 1344 JSON correctos. Compilación
+`./gradlew build` correcta. JAR verificado como ZIP, versión y 2432 recursos
+coincidentes con el código fuente, con descriptor de versión expandido.

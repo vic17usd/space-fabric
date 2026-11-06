@@ -1,1 +1,567 @@
-# space-fabric
+# Space Fabric — Minecraft Java 26.1
+
+La versión **0.61.0** hace jugable la segunda expedición marciana: investigar un
+pueblo natural, encargar un análisis real y registrar el resultado para recibir
+una recompensa única. Incluye instrucciones, progreso guardado y una sección
+**Expedición II** dentro de la guía. [Recorrido en supervivencia](docs/mars-settlement-expedition.md).
+[Descargar 0.61.0](dist/space-fabric-0.61.0.jar) · [SHA-256](dist/space-fabric-0.61.0.jar.sha256) ·
+[Captura real](docs/assets/mars-settlement-0.61.0.png).
+
+La versión **0.60.0** rediseña la guía como una consola de entrenamiento marciano:
+maqueta 3D con modelos reales, profundidad y cámara suave, ocho capítulos con
+pausas de lectura y composición adaptable hasta 320×240. Conserva las recetas del
+servidor, `/marte guia`, el acceso desde el inventario y `/marte texto`.
+[Guía y controles](docs/mars-first-expedition.md) · [Diseño y validación visual](docs/mars-guide-design.md).
+[Descargar 0.60.0](dist/space-fabric-0.60.0.jar) ·
+[SHA-256](dist/space-fabric-0.60.0.jar.sha256) ·
+[Vídeo grabado en Minecraft](docs/assets/mars-guide-0.60.0.mp4).
+
+La versión **0.59.0** transforma `/marte guia` en un tutorial visual con ocho pasos:
+montaje animado del refugio, toma de aire, esclusas, suministros, reserva de agua
+y cuadrículas de recetas del servidor. Incluye pausa, repetición y navegación con
+el ratón o teclado. También se abre con **Guía de Marte** en el inventario;
+`/marte texto` conserva la consulta escrita. [Uso](docs/mars-first-expedition.md).
+
+La versión **0.58.0** añade la primera expedición de Marte: aterrizaje real,
+selección de refugio, sellado, oxígeno, energía y reserva de agua. La guía
+transparente y `/marte guia` usan comprobaciones del servidor y progreso personal
+guardado. Completarla desbloquea el objetivo narrativo de investigar un asentamiento.
+[Preparación, recetas, cantidades y prueba en supervivencia](docs/mars-first-expedition.md).
+
+La versión 0.57.0 incorpora un planeta esférico experimental de 49 bloques
+de diámetro, con locomoción radial asistida y cámara local en primera persona.
+Entra con `/planetaprueba entrar`; vuelve con `/planetaprueba salir` o Mayús.
+[Controles, alcance y validación](docs/sphere-demo.md).
+
+La versión 0.56.0 recubre físicamente el hielo glaciar expuesto de Marte
+con CO₂ blanco, también en paredes y techos. Se aplica una vez por zona
+al cargarla y conserva las excavaciones posteriores.
+
+La versión 0.55.4 usa hielo azul limpio en todas las caras del hielo glaciar
+marciano, conservando sus posiciones y la cubierta blanca de CO₂.
+
+La versión 0.55.3 corrige la copia de capturas en Windows usando su
+portapapeles nativo, compatible con el modo Java sin escritorio de Minecraft.
+
+La versión 0.55.2 reduce el indicador del jugador y permite copiar la imagen
+desde el aviso de captura de F2 usando el mismo icono del chat.
+
+La versión 0.55.1 sustituye la selección de mensajes por copia con un clic junto
+a cada línea del chat y gira la flecha del mapa sin deformar su silueta.
+
+La versión 0.55.0 añade botones de copia de mensajes y capturas al chat, y
+capas subterráneas automáticas al atlas. El indicador del jugador se dibuja
+sobre el terreno y los marcadores. [Uso y comprobaciones](docs/chat-and-cave-map.md).
+
+La versión 0.54.4 restaura el regolito de óxido de hierro y sitúa el minimapa
+arriba a la derecha. Actualiza bauxita, Ares y los trajes de vacío y Venus con
+los diseños aportados, incluyendo iconos de inventario y capas equipadas.
+[Asignación de los cuatro archivos](docs/asset-refresh.md).
+
+La versión 0.54.3 corrige las caras superpuestas y la ocultación de bloques
+vecinos en el horno y la unidad de refrigeración venusianos.
+
+La versión 0.54.2 corrige las referencias de cuarzo y basalto de la unidad de
+refrigeración y el horno cerámico venusianos, también presentes en sus ítems.
+
+La versión 0.54.1 corrige las texturas rosa y negro de diez bloques importados.
+Incluye sus imágenes de origen y corrige las referencias al atlas de bloques.
+
+La versión 0.54.0 incorpora los diseños aportados para 30 bloques, 21 objetos
+y dos máquinas venusianas. Conserva sus funciones y recetas existentes.
+[Asignación y validación de los recursos](docs/mod-batch-replacements.md).
+
+La versión 0.53.0 organiza el **inventario creativo en ocho categorías por utilidad**:
+bloques, materiales, herramientas y armas, trajes, vehículos, máquinas, suministros
+y criaturas. Conserva todos los objetos y los iconos nuevos de los trajes.
+[Categorías y actualización del cliente](docs/creative-categories.md).
+
+La versión 0.52.1 actualiza los **veinte iconos de inventario de los trajes**
+para corresponder a los diseños equipados nuevos, incluyendo Venus reforzado.
+[Arte, piezas y comprobaciones](docs/suit-inventory-icons.md).
+
+La versión 0.52.0 retira la dimensión Earth adicional: **el Overworld es la única
+Tierra**. Actualiza destinos, atlas y guardados antiguos de cohetes y jugadores.
+[Compatibilidad y actualización](docs/overworld-only.md).
+
+La versión 0.51.0 añade **casquetes polares a Marte**, con hielo glaciar, CO₂
+congelado, cámaras heladas, cristales y mena subglacial. Los recursos aportados
+se adaptan a su generación y permiten obtener agua y gas en recipientes sellados.
+[Geografía, recursos y visita](docs/mars-polar.md). Diseño original:
+[Glacial Frontier — CreativeMode.net](https://creativemode.net/mod/glacial-frontier-kzj32637).
+
+La versión 0.50.1 aplica los **cuatro rediseños de trajes aportados**: venusiano,
+de vacío, abisal y criogénico. Conserva las capas originales de los ZIP y añade
+un forro interior donde hay transparencia. [Asignación y comprobaciones](docs/suit-redesigns.md).
+
+La versión 0.50.0 añade **La señal del Coloso**: una expedición con archivos en
+la Fundición Abandonada y el Puesto de Ceniza, examen del Nido de Azufre y
+coordenadas verificadas del búnker. Usa el diario y la guía transparente existentes,
+con progreso personal guardado. [Recorrido y controles](docs/colossus-expedition.md).
+
+La versión 0.49.0 integra el **Coloso de Azufre** en un nuevo **Búnker del Coloso**
+subterráneo de Venus y añade el **Nido de Azufre** sobre el terreno. Conserva los
+modelos originales, adapta materiales, inmunidades y ataques, y permite localizar
+ambos sitios con nombres en español. [Guía y comprobaciones](docs/venus-colossus.md).
+
+Diseños originales: CreativeMode.net — [Basalt Lifebunker](https://creativemode.net/mod/basalt-lifebunker-f2yaojrq),
+[Sulfurfire Broodlands](https://creativemode.net/mod/sulfurfire-broodlands-wrlm5742) y
+[Sulfur Colossus](https://creativemode.net/mod/sulfur-colossus-3bbkryhu).
+
+La versión 0.48.0 añade **tres biomas nuevos de Venus** adaptados de los diseños
+aportados para 1.21.5: Grietas de obsidiana, Mesetas de azufre y Yermos de ceniza
+basáltica, con nueve bloques y dos materiales. Venus cuenta ahora con seis biomas.
+[Adaptación, recursos y generación](docs/venus-imported-regions.md).
+
+Diseños originales: CreativeMode.net — [Obsidian Riftlands](https://creativemode.net/mod/obsidian-riftlands-fu2ghb3x),
+[Sulfur Shardlands](https://creativemode.net/mod/sulfur-shardlands-36x5fjm7) y
+[Basalt Ashlands](https://creativemode.net/mod/basalt-ashlands-iktgmxrq).
+
+La versión 0.47.0 activa **fumarolas y microerupciones en Venus**, con avisos,
+humo, ceniza, calor local y ciclos de enfriamiento. Respeta paredes, cabinas y
+hábitats; no destruye construcciones ni extiende lava.
+[Comportamiento y configuración](docs/venus-volcanism.md).
+
+La versión 0.46.0 incorpora **Proyecto Aurora**, una cadena de expediciones
+para recuperar archivos, restaurar un laboratorio, sondear la estación atmosférica
+y calibrar sus equipos. Desbloquea mejoras del rover y el escáner; el diario y el
+HUD muestran el objetivo. [Guía de la cadena](docs/venus-research.md).
+
+La versión 0.45.1 reúne las ocho asignaciones del mod en **Space Fabric —
+Controles**, dentro de las opciones de teclado. Incluye los atajos de recetas
+y usos; conserva las asignaciones anteriores. [Cómo cambiarlas](docs/controls.md).
+
+La versión 0.45.0 añade **prospección y minería industrial de Venus**: escáner
+geológico con puntos importables al atlas y perforadora de sondeo que extrae
+menas reales con broca, energía y refrigerante. Se integra con redes, calor y
+mantenimiento. [Montaje y funcionamiento](docs/venus-mining.md).
+
+La versión 0.44.2 reduce el minimapa circular a **76 píxeles** y lo acerca
+al borde inferior derecho. La flecha del personaje también es más pequeña.
+
+La versión 0.44.1 adapta el minimapa a un **diseño circular con borde dorado**,
+flecha de orientación y estrella para el destino. Conserva las localizaciones
+y los mapas guardados. [Diseño y controles](docs/planetary-atlas.md).
+
+La versión 0.44.0 añade **minimapa y mapa grande independientes por planeta**,
+con terreno explorado, zoom, desplazamiento, marcadores personales editables e
+importación del navegador. **M** abre el atlas, **B** guarda una localización y
+**N** alterna el minimapa. [Controles y guardado](docs/planetary-atlas.md).
+
+La versión 0.43.0 integra **las estructuras superficiales de Marte en el terreno**:
+evita elevar toda la parcela hasta un pico, descarta pendientes fuertes y suaviza
+los bordes con suelo marciano. Conserva el santuario subterráneo. Se aplica a
+generaciones nuevas. [Detalles](docs/martian-surface-plots.md).
+
+La versión 0.42.1 adapta **el indicador de misiones a la referencia visual**:
+título blanco, línea fina y círculo cian junto a un único objetivo breve,
+con fondo transparente. Las instrucciones completas siguen en `/venus guia`.
+
+La versión 0.42.0 muestra **la guía de Venus como misiones en pantalla**, en la
+esquina superior izquierda con fondo completamente transparente. Indica qué
+hacer ahora, el paso siguiente y el progreso guardado por jugador.
+[Uso de la guía](docs/venus-progression.md#misiones-en-pantalla--0420).
+
+La versión 0.41.0 desarrolla **la progresión de Venus**: circuito geotérmico con
+agua recirculada, placas con hierro común, guía `/venus`, cálculo de reservas y
+tres interiores de expedición con esclusas, mobiliario y almacenes limitados.
+[Balance, guía e interiores](docs/venus-progression.md).
+
+La versión 0.40.0 añade **navegación y operaciones de Venus**: diario de destinos
+descubiertos, panel de diagnóstico de la colonia, recuperación de cajas negras,
+muestras, indicadores del aerostato y actividad ambiental. [Guía](docs/venus-operations.md).
+
+La versión 0.39.0 amplía **la colonia de Venus** con invernadero, recuperación de
+soporte vital, estación de servicio, tres expediciones y un aerostato con cabina
+para explorar una atmósfera variable por altura. [Guía de uso](docs/venus-colony-expansion.md).
+
+La versión 0.38.0 completa la **refrigeración industrial de Venus**: intercambiador
+térmico, calor de máquinas y salas, circuito de agua/refrigerante, avisos y parada
+con recuperación automática. [Montaje y balance](docs/industrial-cooling.md).
+
+La versión 0.37.0 añade **automatización industrial**: tuberías de líquidos y
+gases, cables, depósitos, acumuladores e interfaces que reciclan envases. Los
+pasamuros sustituyen paneles sin abrir una fuga y mantienen el cierre al usar
+válvulas o redstone. [Montaje y funcionamiento](docs/industrial-automation.md).
+
+La versión 0.36.0 integra **la consola 3D y el rover presurizado de Venus**:
+recuperación de fundiciones con recompensa única, refrigeración industrial,
+conducción, cabina con visor, seis ruedas animadas y carga persistente.
+[Cómo recuperar la instalación y utilizar el rover](docs/venus-rover-and-recovery.md).
+
+La versión 0.35.0 incorpora **cuatro construcciones nuevas en Venus**: puesto de
+ceniza, bóveda de azufre, refugio de basalto y fundición abandonada. Se retiran
+sus basamentos, se apoyan en parcelas de suelo y se distribuyen por bioma.
+[Diseños seleccionados, generación y comandos](docs/venus-ruins.md).
+
+La versión 0.34.0 añade **industria exclusiva de Venus**: captación y separación
+de gases, refinado de azufre, cerámicas y compuestos. Sus productos refuerzan
+máquinas, paneles y trajes, y permiten fabricar la mejora del cohete venusiano.
+[Cadena de producción, montaje y recetas](docs/venus-industry.md).
+
+La versión 0.33.0 añade **corrosión y mantenimiento de máquinas en Venus**:
+filtros reemplazables, revestimiento, kits de reparación, desgaste persistente
+y avisos de avería en los paneles. [Uso y balance](docs/venus-maintenance.md).
+
+La versión 0.32.0 amplía **los paisajes de Venus** con campos de fumarolas,
+cuencas de obsidiana, lagunas corrosivas, grietas de lava y una gran caldera de
+azufre basada en el diseño aportado. [Regiones, bloques y comandos](docs/venus-landscapes.md).
+
+La versión 0.31.0 añade **interiores despejados y diagnóstico de hábitats**:
+panel del controlador, indicador de presión/temperatura y reservas, avisos de
+fuga o suministros y niebla ajustada a la cámara dentro de una sala protegida.
+[Guía del interior y soporte vital](docs/habitat-interiors.md).
+
+La versión 0.30.1 da nombres sencillos en español a las estructuras de Marte y
+Venus. Usa `/estructuras` para verlas y preparar su búsqueda.
+[Lista y alias en español](docs/structure-names.md).
+
+La versión 0.30.0 incorpora **los cuatro diseños nuevos de suelo de Venus**:
+basalto, roca caliente y depósitos de azufre con texturas originales, además de
+afloramientos 3D apoyados en terreno plano. [Asignación y generación](docs/venus-ground.md).
+
+La versión 0.29.0 inicia las **colonias de Marte y Venus**: habitaciones selladas,
+oxígeno, refrigeración, hielo subterráneo, electrólisis, baterías solares/geotérmicas
+e informes de investigación. Incluye cinco máquinas, recetas y primeros avances.
+[Guía para construir la primera base](docs/colonies.md) ·
+[Plan de las siguientes entregas y modelo del rover](docs/planet-development-roadmap.md).
+
+La versión 0.28.0 corrige **las estructuras flotantes y los grandes pedestales
+de Venus**. Retira los basamentos del modelo, baja sus edificios a una misma cota
+y elige terreno suave, con una transición gradual hacia el paisaje.
+Se aplica a construcciones nuevas; las ya guardadas conservan su generación anterior.
+[Detalles, límites y comprobación](docs/venus-expansion.md#integración-con-el-suelo--0280).
+
+La versión 0.27.0 hace que el cohete **aterrice directamente en el terreno** del
+Overworld, Mercurio, Venus, Luna y Marte. Busca suelo seco y plano durante
+el crucero y desciende hasta apoyar el modelo, sin crear plataformas flotantes.
+Los gigantes conservan su llegada orbital porque no tienen superficie rocosa.
+[Aterrizaje, búsqueda de terreno y límites](docs/rocket-journey.md#aterrizaje-sobre-el-terreno).
+
+La versión 0.26.0 incorpora **Copper Acidstinger Drone, Sulfurwing Copperstinger,
+Copper Crown Village y Sunstone Pyramid Bazaar en Venus**. Limita las nuevas
+apariciones naturales pacíficas a dos por chunk y favorece las hostiles de noche.
+[Guía de Venus, densidad, estructuras y comandos](docs/venus-expansion.md).
+
+La versión 0.25.0 usa **solo los modelos originales de los cohetes**, sin módulos,
+collares, antenas ni colores añadidos. Asigna `venus-vertical-landing-rocket` a
+Júpiter y `mars-landing-rocket` a Saturno.
+[Asignación y vista previa actualizada](docs/rocket-fleet.md).
+
+La versión 0.24.0 añade **viajes visibles de lanzamiento a aterrizaje**: ascenso
+en el mundo, estrellas y planetas en 3D durante el crucero, fundidos y descenso
+automático. Se mantiene la vista desde la cabina y con F5.
+[Guía y vista previa animada](docs/rocket-journey.md).
+
+La versión 0.23.0 asigna **seis modelos Blockbench a diez diseños de cohete**,
+incluido el heavy-lift para Marte y el lander para Venus. Añade progresión por
+niveles, depósitos diferentes y combustible basado en presupuestos orbitales
+ajustados al juego. [Modelos, niveles, consumos y vista previa](docs/rocket-fleet.md).
+
+La versión 0.22.0 integra **cuatro casillas de traje dentro del inventario de
+supervivencia**, en una columna junto al personaje. La armadura conserva sus
+espacios propios. [Guía de espacios del traje](docs/suit-slots.md).
+
+La versión 0.21.2 hace **transparente el fondo del visor de recetas** y elimina
+el desenfoque del mundo al abrirlo. Las casillas conservan un sombreado tenue.
+
+La versión 0.21.1 corrige la **identificación, el combustible y los bloqueos del
+mapa estelar**: muestra cantidad/máximo y coste por separado, explica cada bloqueo
+y permite elegir destino antes de subir. [Guía de controles y caso Marte](docs/rocket-controls.md).
+La versión 0.21.0 añade **cuatro espacios independientes para el traje espacial**,
+para llevarlo junto con la armadura. Ábrelos con **J** o **Traje espacial** en el
+inventario. Incluye guardado, sincronización, migración del conjunto anterior y
+reglas de muerte según `keepInventory`. [Guía de espacios del traje](docs/suit-slots.md).
+La versión 0.20.0 incorpora **texturas propias para los nueve kits de mejora y
+los cuatro trajes**, tanto en inventario como equipados.
+[Vista previa, colores y archivos](docs/equipment-textures.md).
+La versión 0.19.0 añade un **visor de recetas y usos tipo JEI**, incluido en el JAR.
+Ábrelo con **K** o con **Recetas** en el inventario: búsqueda por nombre/ID/mod,
+crafteos, fundición y fórmulas de la refinería obtenidas del servidor.
+[Guía del visor y controles](docs/recipe-viewer.md).
+La versión 0.18.2 adapta las ocho menas terrestres al estilo de las tres referencias
+aportadas, con **31 texturas de 128px** para menas, materias primas y productos.
+[Vista previa y asignación de minerales](docs/earth-geology.md).
+La versión 0.18.1 corrige los cohetes rosas y negros del inventario: las nueve
+variantes usan ahora un único atlas de texturas, como exige Minecraft 26.1.
+La versión 0.18.0 añade **ocho minerales terrestres al Overworld**: bauxita,
+casiterita, esfalerita, galena, argentita, pentlandita, ilmenita y fluorita, con
+texturas originales, refinado, bloques de almacenamiento y vetas naturales.
+[Guía, alturas y vista previa de las texturas](docs/earth-geology.md).
+La versión 0.17.0 añade **nueve cohetes planetarios** basados en el modelo 3D actual,
+con módulos exteriores distintos, kits de conversión y protección ambiental por
+capacidades. Consulta la [guía de cohetes planetarios, recetas y destinos](docs/planet-rockets.md).
+La versión 0.16.0 añade presión y composición atmosférica de referencia, exposición
+muy rápida a escala 1:72 y cuatro conjuntos de traje con límites distintos.
+**El hierro común ya no protege.** Consulta la [guía de presión, tiempos y trajes](docs/pressure-and-suits.md)
+antes de actualizar una partida con el personaje en otro planeta.
+La versión 0.15.0 integra cuatro habitantes de Venus adaptados al ambiente y su
+gravedad: Acidstone Slime, Obsidian Lavafang, Ashplume Emberwalker y Sulfurwing
+Copper Harbinger, que patrulla volando. [Guía de fauna venusiana](docs/venus-fauna.md).
+La versión 0.14.0 añade una cabina 3D para el piloto, con paneles, consola,
+mandos y un visor circular abierto al mundo. Conserva el exterior y la ocultación
+del ocupante en tercera persona.
+La versión 0.13.0 añade **Soulfire Netherite Sanctum** bajo Marte: Basalt Ember
+Golem en el altar y cuatro Basalt Bosswarden, con una estructura por región de
+20.000 × 20.000 bloques y centros separados 20.000 bloques. Incluye la corrección
+de UV del cohete para instalaciones con optimizadores gráficos.
+Consulta la [guía del santuario, jefe y distribución](docs/martian-sanctum.md).
+La fauna de superficie de 0.11.0 y las parcelas sin pedestal se conservan.
+Consulta la [tabla de aparición, IA y archivos de la fauna marciana](docs/martian-fauna.md).
+El comerciante conserva el modelo, saludo e intercambios de `Aldeano Marciano.jar`.
+Consulta la [guía de parcelas de Marte](docs/martian-surface-plots.md), la
+[guía del asentamiento](docs/martian-haven.md) y la [guía de Breathforge](docs/martian-breathforge.md).
+Incluye cohetes pilotables, refinerías de combustible y un mapa estelar
+para viajar entre el Overworld y los nueve cuerpos celestes.
+Consulta la [guía de cohetes, recetas y viajes](docs/space-travel.md).
+Consulta la [guía de geología y refinado](docs/geology.md) y la [guía de ambientes](docs/environments.md).
+Consulta la [guía completa de bloques y materiales](docs/materials.md).
+Consulta la [guía de terreno y registro de biomas](docs/terrain.md).
+Consulta la [tabla de dimensiones y claves Java](docs/dimensions.md).
+
+Descarga del prototipo compilado: [space-fabric-0.48.0.jar](dist/space-fabric-0.48.0.jar)
+(en GitHub, pulsa **Download raw file**).
+[Checksum SHA-256](dist/space-fabric-0.48.0.jar.sha256).
+Fauna original: **17usdd using [CreativeMode.net](https://creativemode.net)**;
+[páginas oficiales y atribución](third_party/martian_fauna/README.md),
+[licencia de sus recursos](https://creativemode.net/mod-license).
+[Procedencia de los cuatro habitantes de Venus](third_party/venus_fauna/README.md).
+Santuario y jefe: [procedencia de los tres JAR originales](third_party/martian_sanctum/README.md).
+Requiere Minecraft **26.1**, Java **25**, Fabric Loader y Fabric API **0.145.1+26.1**.
+Coloca el JAR y Fabric API en la carpeta `mods/`. Es el prototipo descrito abajo;
+todavía falta su validación dentro del juego.
+
+Base modular en Java 25 para ocho dimensiones adicionales: Mercurio, Venus,
+Luna, Marte, Júpiter, Saturno, Urano y Neptuno. La Tierra es el Overworld. Usa los nombres oficiales de
+Minecraft 26.1, sin Yarn ni remapeo de versiones anteriores.
+
+Implementa dimensiones por datos, gravedad para entidades vivas y daño atmosférico
+para jugadores. El terreno tiene biomas propios y rasgos planetarios; los viajes
+usan un cohete con un ocupante, tanque e inventario persistentes. La Luna se incluye como satélite explorable.
+
+## Versiones y uso
+
+| Componente | Versión fijada |
+| --- | --- |
+| Minecraft Java | 26.1 exacta |
+| Java | JDK 25 |
+| Gradle Wrapper | 9.8.2, distribución verificada con SHA-256 |
+| Fabric Loom | 1.19.3 |
+| Fabric Loader | 0.20.1 |
+| Fabric API | 0.145.1+26.1 |
+
+Con `JAVA_HOME` apuntando al JDK 25, desde la raíz del repositorio:
+
+```sh
+./gradlew build
+python3 tools/validate_resources.py
+./gradlew runClient
+```
+
+El artefacto será `build/libs/space-fabric-0.16.0.jar`. Instala el mod y Fabric API
+en cliente y servidor. No se declara compatibilidad con 1.21.x ni con otras
+revisiones de 26.1 sin validarlas por separado.
+
+`./gradlew runServer` arranca el servidor de desarrollo. El primer arranque pide
+aceptar la EULA de Minecraft en `run/eula.txt`: revísala y acéptala solo si estás
+de acuerdo. El proyecto no la acepta automáticamente. Usa un mundo de pruebas nuevo.
+
+## Arquitectura
+
+```text
+src/main/java/dev/vic17usd/spacefabric/
+├── SpaceFabric.java                 # Entrada común y registro de sistemas
+├── planet/
+│   ├── Planet.java                  # Nueve perfiles, independientes de Minecraft
+│   ├── Atmosphere.java              # Respirabilidad y categoría de presión
+│   └── PlanetDimensions.java        # Claves y comprobación de mundos al arrancar
+├── gravity/
+│   └── PlanetGravity.java           # Modificador sincronizado de gravedad
+├── equipment/
+│   └── SuitProtection.java          # Sellado mediante cuatro tags de ítems
+├── environment/                     # Relojes, clima, corrosión y meteoritos
+├── mixin/                           # Clima separado y renderizado de cielo/niebla
+├── atmosphere/
+│   ├── Exposure.java                # Regla pura de exposición, probada con JUnit
+│   ├── AtmosphereSystem.java        # Tick de servidor y aplicación de daño
+│   └── PlanetDamageTypes.java       # Claves de los DamageType del datapack
+├── block/                           # Regolito, roca caliente, menas y hielo de metano
+├── item/                            # Materiales, botas térmicas y pestaña creativa
+├── worldgen/                        # Biomas, registro de features y cráteres
+├── fluid/                           # Lava viscosa, bloque y cubo
+├── space/                           # Cohete, destinos, reglas y llegada segura
+├── entity/                          # Comerciantes y fauna marciana: IA, combate y soporte vital
+├── machine/                         # Refinería, BlockEntity y motor de procesamiento
+├── menu/                            # Menús de servidor e inventarios sincronizados
+├── client/                          # Modelos animados, pantallas, fluido y atmósferas
+└── command/
+    └── PlanetCommands.java          # /planetinfo, diagnóstico de lectura
+
+src/main/resources/
+├── fabric.mod.json
+├── data/space_fabric/
+│   ├── dimension/{mercury,...,neptune}.json
+│   ├── dimension_type/{mercury,...,neptune}.json
+│   ├── damage_type/{decompression,crushing_pressure,hypoxia}.json
+│   └── tags/item/space_suit/{helmets,chestplates,leggings,boots}.json
+├── data/minecraft/tags/damage_type/{bypasses_armor,bypasses_shield}.json
+└── assets/space_fabric/lang/{es_es,en_us}.json
+```
+
+`fabric.mod.json` declara `SpaceFabric` como entrada `main` y `environment: "*"`.
+La entrada de cliente registra el renderizado de lava viscosa, el modelo del cohete
+y sus pantallas. Los Mixins separan
+el clima y ajustan cielo/niebla; los eventos gestionan el resto. Minecraft sincroniza
+el atributo vanilla de gravedad. Las
+decisiones de daño se toman exclusivamente en el servidor.
+
+## Registro de dimensiones
+
+Fabric monta los recursos `data/` del mod como un datapack integrado. Por ejemplo,
+`data/space_fabric/dimension/mars.json` contiene:
+
+```json
+{
+  "type": "space_fabric:mars",
+  "generator": {
+    "type": "minecraft:noise",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "space_fabric:mars"
+    },
+    "settings": "space_fabric:mars"
+  }
+}
+```
+
+El tipo apunta a `data/space_fabric/dimension_type/mars.json`, que define alturas,
+luz, cielo, niebla y reglas ambientales. En 26.1 varias reglas usan `attributes`,
+como `minecraft:gameplay/bed_rule`; no copies sin revisar los campos `bed_works` o
+`effects` de tutoriales antiguos. El formato de datapacks de 26.1 es **101.1**.
+Si extraes los datos a un datapack externo, añade su `pack.mcmeta`. Fabric monta
+los recursos incluidos en el mod sin requerir ese archivo en este proyecto.
+
+Java obtiene referencias a los mundos así:
+
+```java
+ResourceKey<Level> mars = ResourceKey.create(
+        Registries.DIMENSION, SpaceFabric.id("mars"));
+ServerLevel marsLevel = server.getLevel(mars);
+```
+
+Crear el `ResourceKey` **no registra ni crea un mundo**. Estos registros son
+dinámicos: Minecraft carga sus JSON al abrir el mundo. No uses `Registry.register`
+para añadir dimensiones en el inicializador. El servidor comprueba que las ocho dimensiones adicionales
+existan al arrancar y falla con un mensaje concreto si falta alguna.
+
+Tras cambiar worldgen, cierra y vuelve a abrir el mundo; `/reload` no garantiza
+crear dimensiones nuevas ni regenera chunks existentes. Usa un mundo nuevo para
+pruebas de generación. Tierra corresponde a `minecraft:overworld`. La dimensión
+adicional `space_fabric:earth` se retiró en 0.52.0; sus archivos se conservan como archivo.
+
+Son terrenos abiertos que se generan al explorar dentro de los límites normales
+de Minecraft. No son esferas ni réplicas geográficas. Comparten semilla y algunos
+generadores vanilla, pero sus chunks y modificaciones se guardan por separado.
+Mercurio, Venus, Luna y Marte usan biomas y ajustes de ruido propios, sin océanos
+de agua ni estructuras vanilla. Tierra conserva el Overworld. Los gigantes usan
+un generador vacío, niebla densa y presión que aumenta al descender. Un traje
+solo protege dentro de sus límites de presión y temperatura. No generan una superficie sólida. Al llegar en cohete se
+prepara una plataforma a Y=239; hay pequeños depósitos de hielo y meteoritos
+entre 512 y 768 bloques del origen.
+
+## Gravedad con eventos
+
+| Planeta | Gravedad relativa | Atmósfera del prototipo |
+| --- | ---: | --- |
+| Mercurio | 0.38 | Vacío, no respirable |
+| Venus | 0.90 | Presión extrema, no respirable |
+| Tierra (Overworld) | 1.00 | Normal, respirable |
+| Luna | 0.165 | Vacío, no respirable |
+| Marte | 0.38 | Tenue, no respirable |
+| Júpiter | 2.53 | H₂/He, presión variable, no respirable |
+| Saturno | 1.07 | H₂/He, presión variable, no respirable |
+| Urano | 0.89 | H₂/He/CH₄, presión variable, no respirable |
+| Neptuno | 1.14 | H₂/He/CH₄, presión variable, no respirable |
+
+Las razones de gravedad son aproximadas. Los gigantes usan el nivel de 1 bar a
+Y=240 como referencia; sus capas inferiores siguen una aproximación barométrica.
+
+`PlanetGravity` usa el atributo vanilla `Attributes.GRAVITY`:
+
+```java
+gravity.addTransientModifier(new AttributeModifier(
+        SpaceFabric.id("planet_gravity"),
+        planet.gravityScale() - 1.0,
+        AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+```
+
+En Marte, `0.08` pasa a `0.0304`. El modificador transitorio tiene un identificador
+estable: no se acumula, no se guarda en NBT ni reemplaza el valor base. Se aplica
+en carga de entidad, viaje entre dimensiones y respawn. Al volver al Overworld o
+entrar en Tierra se retira solo nuestro modificador, conservando los de otros mods.
+
+Minecraft sincroniza el atributo con el cliente, necesario para predecir el
+movimiento del jugador. El impulso vanilla de salto permanece y produce saltos
+más altos con baja gravedad. El daño de caída conserva las reglas vanilla.
+Afecta a jugadores y mobs vivos que tengan el atributo; proyectiles, objetos
+caídos, vehículos y bloques en caída requieren tratamiento adicional.
+
+Un Mixin sería útil para esos otros tipos de entidad o para cambiar la dirección
+de gravedad. No hace falta para la gravedad vertical de estas entidades vivas.
+
+## Atmósfera y escafandra
+
+El servidor evalúa la exposición cada tick con `AtmosphereProfile` y `PressureExposure`.
+A escala 1:72, un presupuesto nominal de 120 segundos se convierte en 34 ticks de
+juego (~1,7 s); Venus o una presión excesiva pueden matar en tres ticks (~0,15 s).
+Son tiempos calibrados de juego, no tiempos médicos de supervivencia real.
+
+Los conjuntos `vacuum_suit_*`, `venus_suit_*`, `cryo_suit_*` y `abyssal_suit_*`
+requieren sus cuatro piezas correspondientes y tienen límites de presión y temperatura.
+La armadura común y los conjuntos mezclados no protegen. Los trajes llevan soporte
+de O₂ ilimitado y tienen recetas; el de vacío se fabrica con recursos del Overworld.
+La cabina del cohete protege hasta 100 bar. Creativo y espectador están exentos.
+
+La [guía de presión y trajes](docs/pressure-and-suits.md) incluye los valores de todos
+los planetas, composición, recetas, etiquetas, límites, configuración y actualización.
+Venus deja de tener lluvia ácida a nivel del suelo; sus nubes y depósitos conservan
+el carácter químico del entorno. Los trajes venusiano y abisal resisten la corrosión.
+
+## Validación y prueba manual
+
+`./gradlew test` prueba Tierra segura, planetas hostiles, protección del traje,
+inmunidad, prioridad de presión e hipoxia a presión normal.
+También usa Fabric Loader JUnit y los codecs reales de Minecraft para interpretar
+las ocho dimensiones planetarias, el Overworld y los cuatro tipos de daño; también
+comprueba refinería, persistencia del combustible, recetas, llegadas, estructuras, comerciantes, fauna, industria, rover, redes y atlas: **701 casos**
+en total. `tools/validate_resources.py` comprueba además JSON y referencias internas.
+Estas pruebas no arrancan un mundo ni comprueban la sincronización del cliente.
+
+En un mundo nuevo con comandos habilitados:
+
+1. Arranca el cliente y confirma en el log que se cargaron las ocho dimensiones adicionales.
+2. Usa `/gamemode spectator` y
+   `/execute in space_fabric:mars run tp @s 0 180 0`. Inspecciona el terreno antes
+   de salir de espectador. `/planetinfo` muestra el perfil y el atributo de gravedad.
+3. En suelo seguro o una plataforma creada en creativo, pasa a supervivencia sin
+   equipo: debe llegar un golpe por intervalo. Evita agua, mobs y caídas al probar.
+4. Equipa el conjunto de vacío para Marte o el venusiano para Venus antes de pasar
+   a supervivencia. Retirar una pieza inicia inmediatamente la exposición.
+5. Repite en Venus para presión extrema y en Tierra para ausencia de daño. Prueba
+   cambios de dimensión, muerte/respawn y reconexión.
+6. Compara saltos en Marte y Tierra. Al regresar a `minecraft:overworld`, verifica
+   con `/planetinfo` que se retiró nuestro modificador.
+7. Visita los nueve destinos, incluido el Overworld, en espectador. En los gigantes construye una plataforma
+   a Y=240 antes de dejar el vuelo y lleva el traje completo adecuado para la profundidad.
+
+Los comandos vanilla de viaje requieren permisos de operador. `/planetinfo` es
+de lectura y está disponible para jugadores normales. Consulta
+[docs/validation.md](docs/validation.md) para los resultados reales del entorno;
+este procedimiento manual no implica que esas pruebas ya se hayan ejecutado.
+
+## Referencias
+
+- [Plantilla oficial Fabric para 26.1](https://github.com/FabricMC/fabric-example-mod/tree/26.1)
+- [Fabric API 26.1](https://github.com/FabricMC/fabric/tree/26.1)
+- [Atributos en Fabric](https://docs.fabricmc.net/develop/entities/attributes)
+- [Datos vanilla de 26.1 para contrastar esquemas](https://github.com/misode/mcmeta/tree/26.1-data)

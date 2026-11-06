@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "id": "obsidian-riftlands-fu2ghb3x",
+  "version": "1.0.0",
+  "name": "Obsidian Riftlands",
+  "description": "Explore scorching Obsidian Riftlands, hunt Cinderminers, and survive the deadly heat.",
+  "authors": [
+    "holasoynuevo using CreativeMode.net"
+  ],
+  "contact": {
+    "homepage": "https://creativemode.net",
+    "sources": "https://creativemode.net/mod/obsidian-riftlands-fu2ghb3x"
+  },
+  "license": "ARR - CreativeMode.net/mod-license",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "obsidian_riftlands_fu2ghb3x.ObsidianRiftlands"
+    ],
+    "client": [
+      "obsidian_riftlands_fu2ghb3x.ObsidianRiftlandsClient"
+    ],
+    "terrablender": [
+      "obsidian_riftlands_fu2ghb3x.world.RiftlandsTerraBlender"
+    ]
+  },
+  "mixins": [
+    "obsidian_riftlands_fu2ghb3x.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.16.14",
+    "minecraft": "~1.21.5",
+    "java": ">=21",
+    "fabric-api": "*",
+    "terrablender": ">=5.0.0.1"
+  },
+  "suggests": {
+    "another-mod": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/creativemode"
+      }
+    },
+    "creativemode:mod": {
+      "schemaVersion": 1,
+      "modId": "33044112-6eb8-4b56-9f05-3824dd765976",
+      "modSlug": "obsidian-riftlands-fu2ghb3x",
+      "modVersion": 1
+    }
+  },
+  "jars": [
+    {
+      "file": "META-INF/jars/creativemode-telemetry.jar"
+    }
+  ]
+}

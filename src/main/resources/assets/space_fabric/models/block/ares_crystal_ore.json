@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "space_fabric:block/asset_refresh/ares_crystal_ore/gui/block/ares_ore_dkkx3duu"
+  }
+}

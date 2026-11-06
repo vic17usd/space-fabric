@@ -1,0 +1,15 @@
+{
+  "original_blocks": 101793,
+  "removed_detached_sparks": 413,
+  "added_ties": 100,
+  "max_tie_height": 9,
+  "root_blocks": 29256,
+  "blocks": 130736,
+  "dimensions": [
+    113,
+    87,
+    112
+  ],
+  "tiles": 50,
+  "residents": []
+}

@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "id": "sulfur-colossus-3bbkryhu",
+  "version": "1",
+  "name": "Sulfur Colossus",
+  "description": "Battle the Coloso de Azufre, a towering crystal-armored volcanic boss, and claim its crystals.",
+  "authors": [
+    "holasoynuevo using CreativeMode.net"
+  ],
+  "contact": {
+    "homepage": "https://creativemode.net",
+    "sources": "https://creativemode.net/mod/sulfur-colossus-3bbkryhu"
+  },
+  "license": "ARR - CreativeMode.net/mod-license",
+  "icon": "assets/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "sulfur_colossus_3bbkryhu.SulfurColossus"
+    ],
+    "client": [
+      "sulfur_colossus_3bbkryhu.SulfurColossusClient"
+    ],
+    "fabric-datagen": [
+      "sulfur_colossus_3bbkryhu.SulfurColossusDataGenerator"
+    ]
+  },
+  "mixins": [
+    "sulfur_colossus_3bbkryhu.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.18.4",
+    "minecraft": "~26.1",
+    "java": ">=25",
+    "fabric-api": "*"
+  },
+  "suggests": {
+    "another-mod": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/creativemode"
+      }
+    },
+    "creativemode:mod": {
+      "schemaVersion": 1,
+      "modId": "d379fa9c-103f-4997-b85a-3b234d59208d",
+      "modSlug": "sulfur-colossus-3bbkryhu",
+      "modVersion": 1
+    }
+  },
+  "jars": [
+    {
+      "file": "META-INF/jars/creativemode-telemetry.jar"
+    }
+  ]
+}

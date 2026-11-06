@@ -1,0 +1,42 @@
+{
+  "animation_names": [
+    "heavy_idle",
+    "basalt_walk",
+    "claw_sweep",
+    "ground_slam",
+    "venting",
+    "volcanic_burst",
+    "stagger",
+    "cooling_death"
+  ],
+  "asset_id": "sulfur-colossus-3bbkryhu",
+  "outputs": {
+    "sulfur-colossus-3bbkryhu.bbmodel": {
+      "bytes": 1133114,
+      "sha256": "5fbdf3928de5a9845502a01cea874eac0b6cc8c43546b97ce9a15c8b9d5e9af8"
+    },
+    "sulfur-colossus-3bbkryhu.mob.json": {
+      "bytes": 1345642,
+      "sha256": "995d469681fa9e759b54a99c155fe883cacdee4980cc41a0ad28900711aa0b71"
+    },
+    "sulfur-colossus-3bbkryhu.png": {
+      "bytes": 556919,
+      "sha256": "3341faf51d437060e09aeb7dd48a24607d4a8778771c5358cf940c46bba82c2f"
+    },
+    "sulfur-colossus-3bbkryhu.preview.png": {
+      "bytes": 988465,
+      "sha256": "928903acb94e880611cf828b1112faba9108355525014cfb0f351a1a551f6207"
+    },
+    "sulfur-colossus-3bbkryhu.render.png": {
+      "bytes": 570288,
+      "sha256": "19f88aef3504224172a59584768fdefba4d6e122a2bd522c6aaefbc406a7f99d"
+    }
+  },
+  "schema_version": 1,
+  "source": {
+    "kind": "reference_image",
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "reference_sha256": "0905ec320dd2f706770cc0a3e87e86830eef13b09c2dbd348dde7d14ad9092c8"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "space_fabric:item/chilled_coolant_canister"
+  }
+}

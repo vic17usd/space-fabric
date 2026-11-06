@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "space_fabric:block/asset_refresh/bauxite_ore/gui/venusian_bauxite_ore"
+  }
+}

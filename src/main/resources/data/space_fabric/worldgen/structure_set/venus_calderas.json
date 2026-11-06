@@ -1,0 +1,18 @@
+{
+  "structures": [
+    {
+      "structure": "space_fabric:venus_sulfur_caldera",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 96,
+    "separation": 64,
+    "salt": 80321947,
+    "exclusion_zone": {
+      "other_set": "space_fabric:venus_settlements",
+      "chunk_count": 16
+    }
+  }
+}

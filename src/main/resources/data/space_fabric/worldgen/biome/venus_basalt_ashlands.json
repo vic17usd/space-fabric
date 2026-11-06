@@ -1,0 +1,90 @@
+{
+  "has_precipitation": false,
+  "temperature": 2.0,
+  "downfall": 0.0,
+  "attributes": {
+    "minecraft:visual/sky_color": "#686868",
+    "minecraft:visual/fog_color": "#4e4e4e",
+    "minecraft:visual/fog_start_distance": 0,
+    "minecraft:visual/fog_end_distance": 24,
+    "minecraft:visual/water_fog_color": "#333333",
+    "minecraft:visual/ambient_particles": [
+      {
+        "particle": {
+          "type": "minecraft:ash"
+        },
+        "probability": 0.025
+      }
+    ],
+    "minecraft:audio/ambient_sounds": {
+      "mood": {
+        "sound": "minecraft:ambient.cave",
+        "tick_delay": 6000,
+        "block_search_extent": 8,
+        "offset": 2.0
+      }
+    }
+  },
+  "effects": {
+    "water_color": "#646464"
+  },
+  "spawners": {
+    "creature": [
+      {
+        "type": "space_fabric:acidstone_slime",
+        "weight": 4,
+        "minCount": 1,
+        "maxCount": 2
+      },
+      {
+        "type": "space_fabric:ashplume_emberwalker",
+        "weight": 4,
+        "minCount": 1,
+        "maxCount": 2
+      }
+    ],
+    "monster": [
+      {
+        "type": "space_fabric:obsidian_lavafang",
+        "weight": 8,
+        "minCount": 1,
+        "maxCount": 2
+      },
+      {
+        "type": "space_fabric:sulfurwing_copper_harbinger",
+        "weight": 2,
+        "minCount": 1,
+        "maxCount": 1
+      },
+      {
+        "type": "space_fabric:copper_acidstinger_drone",
+        "weight": 5,
+        "minCount": 1,
+        "maxCount": 2
+      },
+      {
+        "type": "space_fabric:sulfurwing_copperstinger",
+        "weight": 1,
+        "minCount": 1,
+        "maxCount": 1
+      }
+    ]
+  },
+  "spawn_costs": {},
+  "carvers": [],
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "space_fabric:volcanic_magma"
+    ],
+    [],
+    [],
+    [],
+    []
+  ]
+}

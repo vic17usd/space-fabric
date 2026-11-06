@@ -1,0 +1,27 @@
+{
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "space_fabric:block/venus_sulfur_ash",
+    "ash": "space_fabric:block/venus_sulfur_ash"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        1,
+        16
+      ],
+      "faces": {
+        "up": {
+          "texture": "#ash"
+        }
+      }
+    }
+  ],
+  "parent": "minecraft:block/block"
+}

@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "space_fabric:block/replacements/energy_tank/planetary_sample_analyzer_gg3e2hkl_north",
+    "up": "space_fabric:block/replacements/energy_tank/planetary_sample_analyzer_gg3e2hkl_end",
+    "down": "space_fabric:block/replacements/energy_tank/planetary_sample_analyzer_gg3e2hkl_end",
+    "north": "space_fabric:block/replacements/energy_tank/planetary_sample_analyzer_gg3e2hkl_north",
+    "south": "space_fabric:block/replacements/energy_tank/planetary_sample_analyzer_gg3e2hkl_south_east_west",
+    "east": "space_fabric:block/replacements/energy_tank/planetary_sample_analyzer_gg3e2hkl_south_east_west",
+    "west": "space_fabric:block/replacements/energy_tank/planetary_sample_analyzer_gg3e2hkl_south_east_west"
+  }
+}

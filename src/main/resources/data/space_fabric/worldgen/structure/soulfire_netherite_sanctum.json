@@ -1,0 +1,7 @@
+{
+  "type": "space_fabric:martian_sanctum",
+  "biomes": "#space_fabric:has_structure/soulfire_netherite_sanctum",
+  "step": "underground_structures",
+  "spawn_overrides": {},
+  "terrain_adaptation": "none"
+}

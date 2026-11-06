@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:book",
+    "space_fabric:blank_data_card",
+    "minecraft:copper_ingot"
+  ],
+  "result": {
+    "id": "space_fabric:venus_research_log",
+    "count": 1
+  }
+}

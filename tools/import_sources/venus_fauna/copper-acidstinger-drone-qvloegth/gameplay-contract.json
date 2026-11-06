@@ -1,0 +1,22 @@
+{
+  "medium": "airborne",
+  "actions": [
+    {
+      "key": "primary_attack",
+      "description": "A quick darting melee strike: the drone tilts forward and drives its lower crystal stinger into its target before pulling back.",
+      "length": 0.6,
+      "loop": "once",
+      "effect": {
+        "start": 0.2,
+        "end": 0.2
+      }
+    },
+    {
+      "key": "flee",
+      "description": "A sharp, sustained retreating burst with the body angling away from danger.",
+      "length": 0.8,
+      "loop": "once",
+      "effect": null
+    }
+  ]
+}

@@ -1,0 +1,114 @@
+{
+  "type": "space_fabric:venus_surface",
+  "biomes": "#space_fabric:has_structure/venusian_sulfur_vault",
+  "step": "surface_structures",
+  "spawn_overrides": {},
+  "terrain_adaptation": "none",
+  "width": 69,
+  "height": 50,
+  "depth": 80,
+  "padding": 16,
+  "max_terrain_relief": 8,
+  "tiles": [
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_sulfur_vault/tile_0_0",
+      "x": 0,
+      "z": 0
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_sulfur_vault/tile_0_16",
+      "x": 0,
+      "z": 16
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_sulfur_vault/tile_0_48",
+      "x": 0,
+      "z": 48
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_sulfur_vault/tile_0_64",
+      "x": 0,
+      "z": 64
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_sulfur_vault/tile_16_0",
+      "x": 16,
+      "z": 0
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_sulfur_vault/tile_16_16",
+      "x": 16,
+      "z": 16
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_sulfur_vault/tile_16_32",
+      "x": 16,
+      "z": 32
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_sulfur_vault/tile_16_48",
+      "x": 16,
+      "z": 48
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_sulfur_vault/tile_16_64",
+      "x": 16,
+      "z": 64
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_sulfur_vault/tile_32_0",
+      "x": 32,
+      "z": 0
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_sulfur_vault/tile_32_16",
+      "x": 32,
+      "z": 16
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_sulfur_vault/tile_32_32",
+      "x": 32,
+      "z": 32
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_sulfur_vault/tile_32_48",
+      "x": 32,
+      "z": 48
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_sulfur_vault/tile_32_64",
+      "x": 32,
+      "z": 64
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_sulfur_vault/tile_48_0",
+      "x": 48,
+      "z": 0
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_sulfur_vault/tile_48_16",
+      "x": 48,
+      "z": 16
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_sulfur_vault/tile_48_32",
+      "x": 48,
+      "z": 32
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_sulfur_vault/tile_48_48",
+      "x": 48,
+      "z": 48
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_sulfur_vault/tile_48_64",
+      "x": 48,
+      "z": 64
+    },
+    {
+      "template": "space_fabric:venus/ruins_v1/venusian_sulfur_vault/tile_64_48",
+      "x": 64,
+      "z": 48
+    }
+  ]
+}

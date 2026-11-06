@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "space_fabric:item/crystal_hum_crawler_spawn_egg"
+  }
+}

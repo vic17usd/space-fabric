@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "HCH",
+    "SRS",
+    "HFH"
+  ],
+  "key": {
+    "H": "space_fabric:pressure_hull",
+    "C": "minecraft:copper_ingot",
+    "S": "space_fabric:sulfur_crystal",
+    "R": "space_fabric:venus_research_report",
+    "F": "minecraft:furnace"
+  },
+  "result": {
+    "id": "space_fabric:venus_sulfur_processor",
+    "count": 1
+  }
+}

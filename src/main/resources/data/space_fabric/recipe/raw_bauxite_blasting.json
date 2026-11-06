@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "ingredient": "space_fabric:raw_bauxite",
+  "result": {
+    "id": "space_fabric:aluminum_ingot"
+  },
+  "experience": 0.7,
+  "cookingtime": 100
+}

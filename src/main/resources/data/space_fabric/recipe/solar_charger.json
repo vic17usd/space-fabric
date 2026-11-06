@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "GGG",
+    "CRC",
+    "HDH"
+  ],
+  "key": {
+    "G": "minecraft:glass",
+    "C": "minecraft:copper_ingot",
+    "R": "minecraft:redstone",
+    "H": "space_fabric:pressure_hull",
+    "D": "space_fabric:mars_research_report"
+  },
+  "result": {
+    "id": "space_fabric:solar_charger",
+    "count": 1
+  }
+}

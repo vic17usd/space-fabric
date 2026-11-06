@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "sulfur-ventstone-pdsqyse6:gui/sulfur_ventstone"
+  }
+}

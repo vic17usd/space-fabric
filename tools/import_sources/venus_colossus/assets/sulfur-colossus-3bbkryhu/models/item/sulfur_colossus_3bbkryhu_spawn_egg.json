@@ -1,0 +1,6 @@
+{
+    "parent": "minecraft:item/generated",
+    "textures": {
+      "layer0": "sulfur-colossus-3bbkryhu:item/sulfur_colossus_3bbkryhu_spawn_egg"
+    }
+  }

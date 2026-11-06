@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "HPH",
+    "GCG",
+    "HPH"
+  ],
+  "key": {
+    "H": "space_fabric:pressure_hull",
+    "P": "space_fabric:energy_conduit",
+    "G": "minecraft:glass",
+    "C": "space_fabric:venus_composite_plate"
+  },
+  "result": {
+    "id": "space_fabric:energy_tank",
+    "count": 1
+  }
+}

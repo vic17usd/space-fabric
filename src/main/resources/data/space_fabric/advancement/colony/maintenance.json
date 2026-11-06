@@ -1,0 +1,45 @@
+{
+  "parent": "space_fabric:colony/root",
+  "display": {
+    "icon": {
+      "id": "space_fabric:machine_repair_kit"
+    },
+    "title": {
+      "translate": "advancements.space_fabric.maintenance.title"
+    },
+    "description": {
+      "translate": "advancements.space_fabric.maintenance.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "obtained": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "space_fabric:machine_repair_kit"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "obtained"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "space_fabric:acid_filter",
+      "space_fabric:anticorrosive_coating",
+      "space_fabric:machine_repair_kit",
+      "space_fabric:recharge_acid_filter"
+    ]
+  }
+}

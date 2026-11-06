@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    "space_fabric:vacuum_suit_chestplate",
+    "minecraft:netherite_ingot",
+    "minecraft:obsidian",
+    "space_fabric:sulfate_dust"
+  ],
+  "result": {
+    "id": "space_fabric:venus_suit_chestplate",
+    "count": 1
+  }
+}

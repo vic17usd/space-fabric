@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PCP",
+    "NRN",
+    "PFP"
+  ],
+  "key": {
+    "P": "space_fabric:venus_composite_plate",
+    "C": "space_fabric:pyroxene_ceramic",
+    "N": "space_fabric:nitrogen_canister",
+    "R": "space_fabric:venus_research_report",
+    "F": "space_fabric:empty_fuel_cell"
+  },
+  "result": {
+    "id": "space_fabric:venus_rocket_kit",
+    "count": 1
+  }
+}

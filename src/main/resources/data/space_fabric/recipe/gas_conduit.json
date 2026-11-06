@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "ICI",
+    " G ",
+    "ICI"
+  ],
+  "key": {
+    "I": "minecraft:iron_ingot",
+    "C": "minecraft:copper_ingot",
+    "G": "minecraft:quartz"
+  },
+  "result": {
+    "id": "space_fabric:gas_conduit",
+    "count": 8
+  }
+}

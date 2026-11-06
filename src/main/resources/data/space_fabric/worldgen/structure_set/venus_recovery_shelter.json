@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "space_fabric:venus_recovery_shelter",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 80,
+    "separation": 40,
+    "salt": 774293
+  }
+}

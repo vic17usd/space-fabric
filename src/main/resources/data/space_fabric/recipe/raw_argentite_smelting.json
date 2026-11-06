@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "ingredient": "space_fabric:raw_argentite",
+  "result": {
+    "id": "space_fabric:silver_ingot"
+  },
+  "experience": 0.7,
+  "cookingtime": 200
+}

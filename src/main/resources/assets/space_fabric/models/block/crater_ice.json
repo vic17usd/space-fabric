@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "space_fabric:block/replacements/crater_ice/eternal_crater_ice_mk6qzwga"
+  }
+}

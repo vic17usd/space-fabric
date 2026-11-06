@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    "space_fabric:vacuum_suit_boots",
+    "minecraft:packed_ice",
+    "minecraft:diamond",
+    "space_fabric:sulfate_dust"
+  ],
+  "result": {
+    "id": "space_fabric:cryo_suit_boots",
+    "count": 1
+  }
+}

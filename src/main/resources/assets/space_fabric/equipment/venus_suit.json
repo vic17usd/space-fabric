@@ -1,0 +1,20 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "space_fabric:venus_suit_lining"
+      },
+      {
+        "texture": "space_fabric:venus_suit"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "space_fabric:venus_suit_lining"
+      },
+      {
+        "texture": "space_fabric:venus_suit"
+      }
+    ]
+  }
+}

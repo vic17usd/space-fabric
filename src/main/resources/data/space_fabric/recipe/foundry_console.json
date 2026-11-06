@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "GPG",
+    "CRC",
+    "HHH"
+  ],
+  "key": {
+    "G": "minecraft:glass",
+    "P": "space_fabric:venus_composite_plate",
+    "C": "minecraft:copper_ingot",
+    "R": "minecraft:redstone",
+    "H": "space_fabric:pressure_hull"
+  },
+  "result": {
+    "id": "space_fabric:foundry_console",
+    "count": 1
+  }
+}

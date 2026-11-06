@@ -1,0 +1,11 @@
+{
+  "source": "Venus Boss.jar",
+  "sha256": "98e0365ef0e6cec26743b4399b6ae9f8a0857bc890ed73333c5a0d55365bdbcf",
+  "authors": [
+    "holasoynuevo using CreativeMode.net"
+  ],
+  "url": "https://creativemode.net/mod/sulfur-colossus-3bbkryhu",
+  "license": "ARR - CreativeMode.net/mod-license",
+  "target": "space_fabric:sulfur_colossus",
+  "adaptation": "Native rig and original animations; Venus immunities, underground arena, local burst heights and server-controlled rewards."
+}

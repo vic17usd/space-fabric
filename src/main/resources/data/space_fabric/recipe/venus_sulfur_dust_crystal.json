@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "space_fabric:venus_sulfur_dust",
+    "space_fabric:venus_sulfur_dust",
+    "space_fabric:venus_sulfur_dust",
+    "space_fabric:venus_sulfur_dust"
+  ],
+  "result": {
+    "id": "space_fabric:sulfur_crystal",
+    "count": 1
+  }
+}

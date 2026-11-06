@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    "minecraft:netherite_boots",
+    "space_fabric:ares_crystal",
+    "minecraft:magma_cream"
+  ],
+  "result": {
+    "id": "space_fabric:thermal_boots",
+    "count": 1
+  }
+}

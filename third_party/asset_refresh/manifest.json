@@ -1,0 +1,54 @@
+{
+  "bauxite_ore": {
+    "file": "Mena de bauxita.jar",
+    "sha256": "5cebb3d136272d892f71066439a6c9e317dc23fba8308647c9ae84535baa12be",
+    "source_id": "venusian-bauxite-ore-lw544ngr",
+    "authors": [
+      "holasoynuevo using CreativeMode.net"
+    ],
+    "license": "ARR - CreativeMode.net/mod-license",
+    "contact": {
+      "homepage": "https://creativemode.net",
+      "sources": "https://creativemode.net/mod/venusian-bauxite-ore-lw544ngr"
+    }
+  },
+  "ares_crystal_ore": {
+    "file": "Mena de ares.jar",
+    "sha256": "a7b4eea632c540523eae81437d4dac03193e07b86327851451f4b75769850b8e",
+    "source_id": "ares-ore-dkkx3duu",
+    "authors": [
+      "holasoynuevo using CreativeMode.net"
+    ],
+    "license": "ARR - CreativeMode.net/mod-license",
+    "contact": {
+      "homepage": "https://creativemode.net",
+      "sources": "https://creativemode.net/mod/ares-ore-dkkx3duu"
+    }
+  },
+  "venus": {
+    "file": "Traje espacial para venus.jar",
+    "sha256": "eacb490811fc74ebd2eba9c67eab4344e9f78727b18d872d0f39be3ab479950d",
+    "source_id": "venus-hazard-suit-ap3udnif",
+    "authors": [
+      "holasoynuevo using CreativeMode.net"
+    ],
+    "license": "ARR - CreativeMode.net/mod-license",
+    "contact": {
+      "homepage": "https://creativemode.net",
+      "sources": "https://creativemode.net/mod/venus-hazard-suit-ap3udnif"
+    }
+  },
+  "vacuum": {
+    "file": "Traje espacial nivel 1.jar",
+    "sha256": "724a6ebd30b13117a762d879d6e4e1bd085e11cd8839318583a53d6110fc8621",
+    "source_id": "cosmic-sentinel-armor-cgo46mi7",
+    "authors": [
+      "holasoynuevo using CreativeMode.net"
+    ],
+    "license": "ARR - CreativeMode.net/mod-license",
+    "contact": {
+      "homepage": "https://creativemode.net",
+      "sources": "https://creativemode.net/mod/cosmic-sentinel-armor-cgo46mi7"
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "space_fabric:block/energy_bulkhead",
+    "down": "space_fabric:block/energy_bulkhead",
+    "up": "space_fabric:block/energy_bulkhead",
+    "north": "space_fabric:block/energy_bulkhead_open",
+    "south": "space_fabric:block/energy_bulkhead_open",
+    "east": "space_fabric:block/energy_bulkhead",
+    "west": "space_fabric:block/energy_bulkhead"
+  }
+}

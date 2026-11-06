@@ -1,0 +1,46 @@
+{
+  "has_precipitation": false,
+  "temperature": 1.6,
+  "downfall": 0.0,
+  "effects": {
+    "foliage_color": "#4a5148",
+    "grass_color": "#4a5148",
+    "water_color": "#40634d"
+  },
+  "attributes": {
+    "minecraft:visual/sky_color": "#777b73",
+    "minecraft:visual/fog_color": "#58615b",
+    "minecraft:visual/fog_start_distance": 1.0,
+    "minecraft:visual/fog_end_distance": 42.0,
+    "minecraft:visual/sky_fog_end_distance": 42.0,
+    "minecraft:visual/water_fog_color": "#193d2b",
+    "minecraft:audio/background_music": {
+      "default": {
+        "sound": "minecraft:music.nether.basalt_deltas",
+        "min_delay": 12000,
+        "max_delay": 24000,
+        "replace_current_music": false
+      }
+    }
+  },
+  "carvers": [
+    "minecraft:cave",
+    "minecraft:cave_extra_underground",
+    "minecraft:canyon"
+  ],
+  "features": [
+    ["obsidian-sulfur-wastes-wcwkrsde:waste_terrain"],
+    [], [], [], [], [], [], [], [], [], []
+  ],
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "spawn_costs": {}
+}

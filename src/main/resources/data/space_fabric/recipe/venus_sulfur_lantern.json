@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "TRT",
+    "RCR",
+    "TRT"
+  ],
+  "key": {
+    "T": "space_fabric:venus_tessera_rock",
+    "R": "space_fabric:venus_ember_fissure",
+    "C": "space_fabric:sulfur_core"
+  },
+  "result": {
+    "id": "space_fabric:venus_sulfur_lantern",
+    "count": 1
+  }
+}

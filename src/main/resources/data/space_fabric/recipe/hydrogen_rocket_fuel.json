@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "space_fabric:hydrogen_canister",
+    "space_fabric:sulfate_dust",
+    "space_fabric:empty_fuel_cell"
+  ],
+  "result": {
+    "id": "space_fabric:rocket_fuel_cell",
+    "count": 1
+  }
+}

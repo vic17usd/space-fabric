@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "space_fabric:venus",
+    "space_fabric:venus_fumaroles",
+    "space_fabric:venus_obsidian_basins",
+    "space_fabric:venus_obsidian_riftlands",
+    "space_fabric:venus_sulfur_shardlands",
+    "space_fabric:venus_basalt_ashlands"
+  ]
+}

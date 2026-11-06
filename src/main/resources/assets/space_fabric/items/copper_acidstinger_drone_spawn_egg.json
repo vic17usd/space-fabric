@@ -1,0 +1,9 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "space_fabric:item/copper_acidstinger_drone_spawn_egg"
+  },
+  "egg": {
+    "spawn": "space_fabric:copper_acidstinger_drone"
+  }
+}

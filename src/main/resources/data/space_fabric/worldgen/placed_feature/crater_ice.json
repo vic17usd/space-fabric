@@ -1,0 +1,12 @@
+{
+  "feature": "space_fabric:crater_ice",
+  "placement": [
+    {
+      "type": "minecraft:rarity_filter",
+      "chance": 16
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

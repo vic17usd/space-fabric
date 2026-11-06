@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "phobosite-moonstone-ore-xulj7sbi:gui/phobosite_ore_face"
+  }
+}

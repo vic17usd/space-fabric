@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "sulfur-veinstone-r7gz6mnf:block/sulfur_veinstone_r7gz6mnf"
+  }
+}

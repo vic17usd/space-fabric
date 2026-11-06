@@ -1,0 +1,51 @@
+{
+  "parent": "space_fabric:industry/composite",
+  "display": {
+    "icon": {
+      "id": "space_fabric:machine_interface"
+    },
+    "title": {
+      "translate": "advancements.space_fabric.transport.title"
+    },
+    "description": {
+      "translate": "advancements.space_fabric.transport.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "obtained": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "space_fabric:machine_interface"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "obtained"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "space_fabric:liquid_conduit",
+      "space_fabric:liquid_bulkhead",
+      "space_fabric:liquid_tank",
+      "space_fabric:gas_conduit",
+      "space_fabric:gas_bulkhead",
+      "space_fabric:gas_tank",
+      "space_fabric:energy_conduit",
+      "space_fabric:energy_bulkhead",
+      "space_fabric:energy_tank",
+      "space_fabric:machine_interface"
+    ]
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "parent": "space_fabric:industry/gases",
+  "display": {
+    "icon": {
+      "id": "space_fabric:refined_sulfur"
+    },
+    "title": {
+      "translate": "advancements.space_fabric.industry.sulfur.title"
+    },
+    "description": {
+      "translate": "advancements.space_fabric.industry.sulfur.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "obtained": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "space_fabric:refined_sulfur"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "obtained"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "space_fabric:recharge_acid_filter_industry"
+    ]
+  }
+}

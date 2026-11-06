@@ -1,0 +1,67 @@
+{
+  "variants": {
+    "piece=0": {
+      "model": "space_fabric:block/sulfur_cluster_0"
+    },
+    "piece=1": {
+      "model": "space_fabric:block/sulfur_cluster_1"
+    },
+    "piece=2": {
+      "model": "space_fabric:block/sulfur_cluster_2"
+    },
+    "piece=3": {
+      "model": "space_fabric:block/sulfur_cluster_3"
+    },
+    "piece=4": {
+      "model": "space_fabric:block/sulfur_cluster_4"
+    },
+    "piece=5": {
+      "model": "space_fabric:block/sulfur_cluster_5"
+    },
+    "piece=6": {
+      "model": "space_fabric:block/sulfur_cluster_6"
+    },
+    "piece=7": {
+      "model": "space_fabric:block/sulfur_cluster_7"
+    },
+    "piece=8": {
+      "model": "space_fabric:block/sulfur_cluster_8"
+    },
+    "piece=9": {
+      "model": "space_fabric:block/sulfur_cluster_9"
+    },
+    "piece=10": {
+      "model": "space_fabric:block/sulfur_cluster_10"
+    },
+    "piece=11": {
+      "model": "space_fabric:block/sulfur_cluster_11"
+    },
+    "piece=12": {
+      "model": "space_fabric:block/sulfur_cluster_12"
+    },
+    "piece=13": {
+      "model": "space_fabric:block/sulfur_cluster_13"
+    },
+    "piece=14": {
+      "model": "space_fabric:block/sulfur_cluster_14"
+    },
+    "piece=15": {
+      "model": "space_fabric:block/sulfur_cluster_15"
+    },
+    "piece=16": {
+      "model": "space_fabric:block/sulfur_cluster_16"
+    },
+    "piece=17": {
+      "model": "space_fabric:block/sulfur_cluster_17"
+    },
+    "piece=18": {
+      "model": "space_fabric:block/sulfur_cluster_18"
+    },
+    "piece=19": {
+      "model": "space_fabric:block/sulfur_cluster_19"
+    },
+    "piece=20": {
+      "model": "space_fabric:block/sulfur_cluster_20"
+    }
+  }
+}

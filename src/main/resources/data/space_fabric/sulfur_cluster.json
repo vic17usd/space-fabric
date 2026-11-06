@@ -1,0 +1,2002 @@
+{
+  "blocks": [
+    {
+      "block_id": "sulfurstone-cluster-spcbdqbx:sulfurstone_cluster_spcbdqbx_0_0_0",
+      "bounds": {
+        "maxX": 16.0,
+        "maxY": 16.0,
+        "maxZ": 16.0,
+        "minX": 2.0,
+        "minY": 0.0,
+        "minZ": 6.0
+      },
+      "offset": [
+        0,
+        0,
+        0
+      ],
+      "shape_boxes": [
+        {
+          "maxX": 16.0,
+          "maxY": 10.0,
+          "maxZ": 16.0,
+          "minX": 5.0,
+          "minY": 0.0,
+          "minZ": 6.0
+        },
+        {
+          "maxX": 16.0,
+          "maxY": 16.0,
+          "maxZ": 16.0,
+          "minX": 7.0,
+          "minY": 10.0,
+          "minZ": 8.0
+        },
+        {
+          "maxX": 7.0,
+          "maxY": 14.0,
+          "maxZ": 16.0,
+          "minX": 5.0,
+          "minY": 10.0,
+          "minZ": 14.0
+        },
+        {
+          "maxX": 5.0,
+          "maxY": 14.0,
+          "maxZ": 16.0,
+          "minX": 2.0,
+          "minY": 4.0,
+          "minZ": 14.0
+        },
+        {
+          "maxX": 16.0,
+          "maxY": 16.0,
+          "maxZ": 16.0,
+          "minX": 15.5,
+          "minY": 14.0,
+          "minZ": 11.75
+        }
+      ]
+    },
+    {
+      "block_id": "sulfurstone-cluster-spcbdqbx:sulfurstone_cluster_spcbdqbx_0_0_1",
+      "bounds": {
+        "maxX": 16.0,
+        "maxY": 16.0,
+        "maxZ": 16.0,
+        "minX": 2.0,
+        "minY": 0.0,
+        "minZ": 0.0
+      },
+      "offset": [
+        0,
+        0,
+        1
+      ],
+      "shape_boxes": [
+        {
+          "maxX": 16.0,
+          "maxY": 10.0,
+          "maxZ": 16.0,
+          "minX": 5.0,
+          "minY": 0.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 16.0,
+          "maxY": 16.0,
+          "maxZ": 16.0,
+          "minX": 7.0,
+          "minY": 10.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 9.0,
+          "maxY": 12.0,
+          "maxZ": 14.0,
+          "minX": 7.0,
+          "minY": 10.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 9.0,
+          "maxY": 13.0,
+          "maxZ": 14.0,
+          "minX": 6.0,
+          "minY": 11.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 10.0,
+          "maxY": 13.0,
+          "maxZ": 14.0,
+          "minX": 8.0,
+          "minY": 11.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 10.0,
+          "maxY": 13.0,
+          "maxZ": 14.0,
+          "minX": 7.0,
+          "minY": 11.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 8.0,
+          "maxY": 14.0,
+          "maxZ": 14.0,
+          "minX": 6.0,
+          "minY": 12.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 9.0,
+          "maxY": 14.0,
+          "maxZ": 14.0,
+          "minX": 7.0,
+          "minY": 12.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 9.0,
+          "maxY": 15.0,
+          "maxZ": 14.0,
+          "minX": 7.0,
+          "minY": 13.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 11.0,
+          "maxY": 13.0,
+          "maxZ": 14.0,
+          "minX": 9.0,
+          "minY": 11.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 10.0,
+          "maxY": 14.0,
+          "maxZ": 14.0,
+          "minX": 8.0,
+          "minY": 12.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 12.0,
+          "maxY": 14.0,
+          "maxZ": 14.0,
+          "minX": 9.0,
+          "minY": 12.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 11.0,
+          "maxY": 14.0,
+          "maxZ": 14.0,
+          "minX": 9.0,
+          "minY": 12.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 10.0,
+          "maxY": 15.0,
+          "maxZ": 14.0,
+          "minX": 8.0,
+          "minY": 12.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 10.0,
+          "maxY": 15.0,
+          "maxZ": 14.0,
+          "minX": 8.0,
+          "minY": 13.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 11.0,
+          "maxY": 15.0,
+          "maxZ": 14.0,
+          "minX": 9.0,
+          "minY": 13.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 11.0,
+          "maxY": 16.0,
+          "maxZ": 14.0,
+          "minX": 9.0,
+          "minY": 14.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 16.0,
+          "maxY": 11.0,
+          "maxZ": 16.0,
+          "minX": 10.0,
+          "minY": 6.0,
+          "minZ": 12.0
+        },
+        {
+          "maxX": 16.0,
+          "maxY": 16.0,
+          "maxZ": 16.0,
+          "minX": 11.0,
+          "minY": 11.0,
+          "minZ": 12.0
+        },
+        {
+          "maxX": 7.0,
+          "maxY": 14.0,
+          "maxZ": 16.0,
+          "minX": 5.0,
+          "minY": 10.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 16.0,
+          "maxY": 14.0,
+          "maxZ": 8.0,
+          "minX": 8.0,
+          "minY": 9.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 16.0,
+          "maxY": 16.0,
+          "maxZ": 8.0,
+          "minX": 8.0,
+          "minY": 14.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 5.0,
+          "maxY": 14.0,
+          "maxZ": 16.0,
+          "minX": 2.0,
+          "minY": 4.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 16.0,
+          "maxY": 16.0,
+          "maxZ": 3.0,
+          "minX": 15.0,
+          "minY": 14.0,
+          "minZ": 0.0
+        }
+      ]
+    },
+    {
+      "block_id": "sulfurstone-cluster-spcbdqbx:sulfurstone_cluster_spcbdqbx_0_0_2",
+      "bounds": {
+        "maxX": 16.0,
+        "maxY": 16.0,
+        "maxZ": 13.0,
+        "minX": 2.0,
+        "minY": 0.0,
+        "minZ": 0.0
+      },
+      "offset": [
+        0,
+        0,
+        2
+      ],
+      "shape_boxes": [
+        {
+          "maxX": 16.0,
+          "maxY": 10.0,
+          "maxZ": 10.0,
+          "minX": 5.0,
+          "minY": 0.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 16.0,
+          "maxY": 16.0,
+          "maxZ": 8.0,
+          "minX": 7.0,
+          "minY": 10.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 16.0,
+          "maxY": 9.0,
+          "maxZ": 13.0,
+          "minX": 11.0,
+          "minY": 2.0,
+          "minZ": 8.0
+        },
+        {
+          "maxX": 16.0,
+          "maxY": 11.0,
+          "maxZ": 1.75,
+          "minX": 10.925,
+          "minY": 6.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 16.0,
+          "maxY": 16.0,
+          "maxZ": 1.7,
+          "minX": 11.0,
+          "minY": 11.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 7.0,
+          "maxY": 14.0,
+          "maxZ": 1.0,
+          "minX": 5.0,
+          "minY": 10.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 5.0,
+          "maxY": 14.0,
+          "maxZ": 1.0,
+          "minX": 2.0,
+          "minY": 4.0,
+          "minZ": 0.0
+        }
+      ]
+    },
+    {
+      "block_id": "sulfurstone-cluster-spcbdqbx:sulfurstone_cluster_spcbdqbx_1_0_0",
+      "bounds": {
+        "maxX": 16.0,
+        "maxY": 16.0,
+        "maxZ": 16.0,
+        "minX": 0.0,
+        "minY": 0.0,
+        "minZ": 6.0
+      },
+      "offset": [
+        1,
+        0,
+        0
+      ],
+      "shape_boxes": [
+        {
+          "maxX": 16.0,
+          "maxY": 10.0,
+          "maxZ": 16.0,
+          "minX": 0.0,
+          "minY": 0.0,
+          "minZ": 6.0
+        },
+        {
+          "maxX": 16.0,
+          "maxY": 16.0,
+          "maxZ": 16.0,
+          "minX": 0.0,
+          "minY": 10.0,
+          "minZ": 8.0
+        },
+        {
+          "maxX": 14.25,
+          "maxY": 16.0,
+          "maxZ": 16.0,
+          "minX": 7.75,
+          "minY": 12.0,
+          "minZ": 15.75
+        },
+        {
+          "maxX": 6.5,
+          "maxY": 16.0,
+          "maxZ": 16.0,
+          "minX": 0.0,
+          "minY": 14.0,
+          "minZ": 11.75
+        }
+      ]
+    },
+    {
+      "block_id": "sulfurstone-cluster-spcbdqbx:sulfurstone_cluster_spcbdqbx_1_0_1",
+      "bounds": {
+        "maxX": 16.0,
+        "maxY": 16.0,
+        "maxZ": 16.0,
+        "minX": 0.0,
+        "minY": 0.0,
+        "minZ": 0.0
+      },
+      "offset": [
+        1,
+        0,
+        1
+      ],
+      "shape_boxes": [
+        {
+          "maxX": 16.0,
+          "maxY": 10.0,
+          "maxZ": 16.0,
+          "minX": 0.0,
+          "minY": 0.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 16.0,
+          "maxY": 16.0,
+          "maxZ": 16.0,
+          "minX": 0.0,
+          "minY": 10.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 14.25,
+          "maxY": 16.0,
+          "maxZ": 6.25,
+          "minX": 7.75,
+          "minY": 12.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 13.075,
+          "maxY": 13.0,
+          "maxZ": 16.0,
+          "minX": 6.925,
+          "minY": 8.0,
+          "minZ": 14.0
+        },
+        {
+          "maxX": 13.025,
+          "maxY": 16.0,
+          "maxZ": 16.0,
+          "minX": 6.975,
+          "minY": 13.0,
+          "minZ": 14.0875
+        },
+        {
+          "maxX": 1.075,
+          "maxY": 11.0,
+          "maxZ": 16.0,
+          "minX": 0.0,
+          "minY": 6.0,
+          "minZ": 12.25
+        },
+        {
+          "maxX": 1.0,
+          "maxY": 16.0,
+          "maxZ": 16.0,
+          "minX": 0.0,
+          "minY": 11.0,
+          "minZ": 12.3
+        },
+        {
+          "maxX": 16.0,
+          "maxY": 14.0,
+          "maxZ": 14.25,
+          "minX": 14.625,
+          "minY": 9.0,
+          "minZ": 7.75
+        },
+        {
+          "maxX": 16.0,
+          "maxY": 16.0,
+          "maxZ": 14.125,
+          "minX": 14.6875,
+          "minY": 14.0,
+          "minZ": 7.875
+        },
+        {
+          "maxX": 6.5,
+          "maxY": 16.0,
+          "maxZ": 2.25,
+          "minX": 0.0,
+          "minY": 14.0,
+          "minZ": 0.0
+        }
+      ]
+    },
+    {
+      "block_id": "sulfurstone-cluster-spcbdqbx:sulfurstone_cluster_spcbdqbx_1_0_2",
+      "bounds": {
+        "maxX": 16.0,
+        "maxY": 16.0,
+        "maxZ": 13.0,
+        "minX": 0.0,
+        "minY": 0.0,
+        "minZ": 0.0
+      },
+      "offset": [
+        1,
+        0,
+        2
+      ],
+      "shape_boxes": [
+        {
+          "maxX": 16.0,
+          "maxY": 10.0,
+          "maxZ": 10.0,
+          "minX": 0.0,
+          "minY": 0.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 16.0,
+          "maxY": 16.0,
+          "maxZ": 8.0,
+          "minX": 0.0,
+          "minY": 10.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 13.075,
+          "maxY": 13.0,
+          "maxZ": 4.0,
+          "minX": 6.925,
+          "minY": 8.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 13.025,
+          "maxY": 16.0,
+          "maxZ": 3.9125,
+          "minX": 6.975,
+          "minY": 13.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 16.0,
+          "maxY": 9.0,
+          "maxZ": 13.0,
+          "minX": 0.0,
+          "minY": 2.0,
+          "minZ": 8.0
+        },
+        {
+          "maxX": 1.075,
+          "maxY": 11.0,
+          "maxZ": 1.75,
+          "minX": 0.0,
+          "minY": 6.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 1.0,
+          "maxY": 16.0,
+          "maxZ": 1.7,
+          "minX": 0.0,
+          "minY": 11.0,
+          "minZ": 0.0
+        }
+      ]
+    },
+    {
+      "block_id": "sulfurstone-cluster-spcbdqbx:sulfurstone_cluster_spcbdqbx_2_0_0",
+      "bounds": {
+        "maxX": 14.0,
+        "maxY": 16.0,
+        "maxZ": 16.0,
+        "minX": 0.0,
+        "minY": 0.0,
+        "minZ": 6.0
+      },
+      "offset": [
+        2,
+        0,
+        0
+      ],
+      "shape_boxes": [
+        {
+          "maxX": 11.0,
+          "maxY": 10.0,
+          "maxZ": 16.0,
+          "minX": 0.0,
+          "minY": 0.0,
+          "minZ": 6.0
+        },
+        {
+          "maxX": 9.0,
+          "maxY": 16.0,
+          "maxZ": 16.0,
+          "minX": 0.0,
+          "minY": 10.0,
+          "minZ": 8.0
+        },
+        {
+          "maxX": 11.0,
+          "maxY": 15.0,
+          "maxZ": 16.0,
+          "minX": 9.0,
+          "minY": 10.0,
+          "minZ": 11.0
+        },
+        {
+          "maxX": 14.0,
+          "maxY": 15.0,
+          "maxZ": 16.0,
+          "minX": 11.0,
+          "minY": 4.0,
+          "minZ": 11.0
+        }
+      ]
+    },
+    {
+      "block_id": "sulfurstone-cluster-spcbdqbx:sulfurstone_cluster_spcbdqbx_2_0_1",
+      "bounds": {
+        "maxX": 14.0,
+        "maxY": 16.0,
+        "maxZ": 16.0,
+        "minX": 0.0,
+        "minY": 0.0,
+        "minZ": 0.0
+      },
+      "offset": [
+        2,
+        0,
+        1
+      ],
+      "shape_boxes": [
+        {
+          "maxX": 11.0,
+          "maxY": 10.0,
+          "maxZ": 16.0,
+          "minX": 0.0,
+          "minY": 0.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 9.0,
+          "maxY": 16.0,
+          "maxZ": 16.0,
+          "minX": 0.0,
+          "minY": 10.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 11.0,
+          "maxY": 15.0,
+          "maxZ": 16.0,
+          "minX": 9.0,
+          "minY": 10.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 14.0,
+          "maxY": 15.0,
+          "maxZ": 16.0,
+          "minX": 11.0,
+          "minY": 4.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 5.375,
+          "maxY": 14.0,
+          "maxZ": 14.25,
+          "minX": 0.0,
+          "minY": 9.0,
+          "minZ": 7.75
+        },
+        {
+          "maxX": 5.3125,
+          "maxY": 16.0,
+          "maxZ": 14.125,
+          "minX": 0.0,
+          "minY": 14.0,
+          "minZ": 7.875
+        }
+      ]
+    },
+    {
+      "block_id": "sulfurstone-cluster-spcbdqbx:sulfurstone_cluster_spcbdqbx_2_0_2",
+      "bounds": {
+        "maxX": 14.0,
+        "maxY": 16.0,
+        "maxZ": 13.0,
+        "minX": 0.0,
+        "minY": 0.0,
+        "minZ": 0.0
+      },
+      "offset": [
+        2,
+        0,
+        2
+      ],
+      "shape_boxes": [
+        {
+          "maxX": 11.0,
+          "maxY": 10.0,
+          "maxZ": 10.0,
+          "minX": 0.0,
+          "minY": 0.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 9.0,
+          "maxY": 16.0,
+          "maxZ": 8.0,
+          "minX": 0.0,
+          "minY": 10.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 3.0,
+          "maxY": 9.0,
+          "maxZ": 13.0,
+          "minX": 0.0,
+          "minY": 2.0,
+          "minZ": 8.0
+        },
+        {
+          "maxX": 11.0,
+          "maxY": 15.0,
+          "maxZ": 1.0,
+          "minX": 9.0,
+          "minY": 10.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 14.0,
+          "maxY": 15.0,
+          "maxZ": 1.0,
+          "minX": 11.0,
+          "minY": 4.0,
+          "minZ": 0.0
+        }
+      ]
+    },
+    {
+      "block_id": "sulfurstone-cluster-spcbdqbx:sulfurstone_cluster_spcbdqbx_0_1_0",
+      "bounds": {
+        "maxX": 16.0,
+        "maxY": 10.0,
+        "maxZ": 16.0,
+        "minX": 7.0,
+        "minY": 0.0,
+        "minZ": 8.0
+      },
+      "offset": [
+        0,
+        1,
+        0
+      ],
+      "shape_boxes": [
+        {
+          "maxX": 16.0,
+          "maxY": 4.0,
+          "maxZ": 16.0,
+          "minX": 7.0,
+          "minY": 0.0,
+          "minZ": 8.0
+        },
+        {
+          "maxX": 16.0,
+          "maxY": 10.0,
+          "maxZ": 16.0,
+          "minX": 10.0,
+          "minY": 4.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 16.0,
+          "maxY": 3.0,
+          "maxZ": 16.0,
+          "minX": 15.5,
+          "minY": 0.0,
+          "minZ": 11.75
+        },
+        {
+          "maxX": 16.0,
+          "maxY": 8.0,
+          "maxZ": 16.0,
+          "minX": 15.675,
+          "minY": 3.0,
+          "minZ": 11.875
+        }
+      ]
+    },
+    {
+      "block_id": "sulfurstone-cluster-spcbdqbx:sulfurstone_cluster_spcbdqbx_0_1_1",
+      "bounds": {
+        "maxX": 16.0,
+        "maxY": 16.0,
+        "maxZ": 16.0,
+        "minX": 3.7295,
+        "minY": -2.9774,
+        "minZ": 0.0
+      },
+      "offset": [
+        0,
+        1,
+        1
+      ],
+      "shape_boxes": [
+        {
+          "maxX": 16.0,
+          "maxY": 4.0,
+          "maxZ": 16.0,
+          "minX": 7.0,
+          "minY": 0.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 8.0,
+          "maxY": -1.0,
+          "maxZ": 14.0,
+          "minX": 6.0,
+          "minY": -2.9774,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 9.0,
+          "maxY": -1.0,
+          "maxZ": 14.0,
+          "minX": 7.0,
+          "minY": -2.9774,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 9.0,
+          "maxY": -1.0,
+          "maxZ": 14.0,
+          "minX": 7.0,
+          "minY": -2.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 8.0,
+          "maxY": 0.0,
+          "maxZ": 14.0,
+          "minX": 6.0,
+          "minY": -2.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 9.0,
+          "maxY": 0.0,
+          "maxZ": 14.0,
+          "minX": 7.0,
+          "minY": -2.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 8.0,
+          "maxY": 1.0,
+          "maxZ": 14.0,
+          "minX": 6.0,
+          "minY": -1.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 10.0,
+          "maxY": -1.0,
+          "maxZ": 14.0,
+          "minX": 8.0,
+          "minY": -2.9774,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 10.0,
+          "maxY": 0.0,
+          "maxZ": 14.0,
+          "minX": 8.0,
+          "minY": -2.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 11.0,
+          "maxY": 0.0,
+          "maxZ": 14.0,
+          "minX": 9.0,
+          "minY": -2.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 11.0,
+          "maxY": 0.0,
+          "maxZ": 14.0,
+          "minX": 8.0,
+          "minY": -2.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 9.0,
+          "maxY": 1.0,
+          "maxZ": 14.0,
+          "minX": 7.0,
+          "minY": -1.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 10.0,
+          "maxY": 1.0,
+          "maxZ": 14.0,
+          "minX": 8.0,
+          "minY": -1.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 8.0,
+          "maxY": 1.0,
+          "maxZ": 14.0,
+          "minX": 6.0,
+          "minY": 0.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 7.0,
+          "maxY": 2.0,
+          "maxZ": 14.0,
+          "minX": 5.0,
+          "minY": 0.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 7.0,
+          "maxY": 2.0,
+          "maxZ": 14.0,
+          "minX": 5.0,
+          "minY": 1.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 8.0,
+          "maxY": 2.0,
+          "maxZ": 14.0,
+          "minX": 6.0,
+          "minY": 0.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 8.0,
+          "maxY": 3.0,
+          "maxZ": 14.0,
+          "minX": 6.0,
+          "minY": 1.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 9.0,
+          "maxY": 2.0,
+          "maxZ": 14.0,
+          "minX": 7.0,
+          "minY": 0.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 10.0,
+          "maxY": 2.0,
+          "maxZ": 14.0,
+          "minX": 8.0,
+          "minY": 0.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 9.0,
+          "maxY": 3.0,
+          "maxZ": 14.0,
+          "minX": 7.0,
+          "minY": 1.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 10.0,
+          "maxY": 3.0,
+          "maxZ": 14.0,
+          "minX": 8.0,
+          "minY": 1.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 7.0,
+          "maxY": 3.0,
+          "maxZ": 14.0,
+          "minX": 6.0,
+          "minY": 1.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 7.0,
+          "maxY": 3.0,
+          "maxZ": 14.0,
+          "minX": 5.0,
+          "minY": 1.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 8.0,
+          "maxY": 3.0,
+          "maxZ": 14.0,
+          "minX": 6.0,
+          "minY": 2.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 8.0,
+          "maxY": 4.0,
+          "maxZ": 14.0,
+          "minX": 7.0,
+          "minY": 2.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 9.0,
+          "maxY": 4.0,
+          "maxZ": 14.0,
+          "minX": 7.0,
+          "minY": 2.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 7.0,
+          "maxY": 4.0,
+          "maxZ": 14.0,
+          "minX": 5.0,
+          "minY": 2.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 8.0,
+          "maxY": 4.0,
+          "maxZ": 14.0,
+          "minX": 6.0,
+          "minY": 2.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 7.0,
+          "maxY": 4.0,
+          "maxZ": 14.0,
+          "minX": 5.0,
+          "minY": 3.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 7.0,
+          "maxY": 5.0,
+          "maxZ": 14.0,
+          "minX": 5.0,
+          "minY": 3.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 9.0,
+          "maxY": 5.0,
+          "maxZ": 14.0,
+          "minX": 7.0,
+          "minY": 3.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 8.0,
+          "maxY": 5.0,
+          "maxZ": 14.0,
+          "minX": 6.0,
+          "minY": 3.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 7.0,
+          "maxY": 5.0,
+          "maxZ": 14.0,
+          "minX": 6.0,
+          "minY": 3.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 7.0,
+          "maxY": 5.0,
+          "maxZ": 14.0,
+          "minX": 5.0,
+          "minY": 4.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 8.0,
+          "maxY": 6.0,
+          "maxZ": 14.0,
+          "minX": 6.0,
+          "minY": 4.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 6.0,
+          "maxY": 6.0,
+          "maxZ": 14.0,
+          "minX": 5.0,
+          "minY": 4.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 7.0,
+          "maxY": 6.0,
+          "maxZ": 14.0,
+          "minX": 5.0,
+          "minY": 4.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 6.0,
+          "maxY": 6.0,
+          "maxZ": 14.0,
+          "minX": 4.0,
+          "minY": 5.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 7.0,
+          "maxY": 7.0,
+          "maxZ": 14.0,
+          "minX": 5.0,
+          "minY": 5.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 7.0,
+          "maxY": 6.0,
+          "maxZ": 14.0,
+          "minX": 6.0,
+          "minY": 4.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 8.0,
+          "maxY": 7.0,
+          "maxZ": 14.0,
+          "minX": 6.0,
+          "minY": 5.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 6.0,
+          "maxY": 7.0,
+          "maxZ": 14.0,
+          "minX": 5.0,
+          "minY": 5.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 6.0,
+          "maxY": 7.0,
+          "maxZ": 14.0,
+          "minX": 4.0,
+          "minY": 5.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 7.0,
+          "maxY": 7.0,
+          "maxZ": 14.0,
+          "minX": 5.0,
+          "minY": 6.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 7.0,
+          "maxY": 7.0,
+          "maxZ": 14.0,
+          "minX": 6.0,
+          "minY": 5.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 7.0,
+          "maxY": 8.0,
+          "maxZ": 14.0,
+          "minX": 5.0,
+          "minY": 6.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 8.0,
+          "maxY": 8.0,
+          "maxZ": 14.0,
+          "minX": 6.0,
+          "minY": 6.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 6.0,
+          "maxY": 8.0,
+          "maxZ": 14.0,
+          "minX": 4.0,
+          "minY": 6.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 6.0,
+          "maxY": 8.0,
+          "maxZ": 14.0,
+          "minX": 5.0,
+          "minY": 6.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 6.0,
+          "maxY": 9.0,
+          "maxZ": 14.0,
+          "minX": 4.0,
+          "minY": 7.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 7.0,
+          "maxY": 8.0,
+          "maxZ": 14.0,
+          "minX": 6.0,
+          "minY": 7.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 7.0,
+          "maxY": 9.0,
+          "maxZ": 14.0,
+          "minX": 5.0,
+          "minY": 7.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 7.0,
+          "maxY": 10.0,
+          "maxZ": 14.0,
+          "minX": 5.0,
+          "minY": 8.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 6.0,
+          "maxY": 10.0,
+          "maxZ": 14.0,
+          "minX": 4.0,
+          "minY": 8.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 6.0,
+          "maxY": 11.0,
+          "maxZ": 14.0,
+          "minX": 4.0,
+          "minY": 9.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 6.0,
+          "maxY": 11.0,
+          "maxZ": 14.0,
+          "minX": 4.0,
+          "minY": 10.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 6.0,
+          "maxY": 11.0,
+          "maxZ": 14.0,
+          "minX": 5.0,
+          "minY": 9.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 6.0,
+          "maxY": 12.0,
+          "maxZ": 14.0,
+          "minX": 4.0,
+          "minY": 10.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 5.0,
+          "maxY": 12.0,
+          "maxZ": 14.0,
+          "minX": 3.7295,
+          "minY": 10.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 5.0,
+          "maxY": 13.0,
+          "maxZ": 14.0,
+          "minX": 3.7295,
+          "minY": 11.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 6.0,
+          "maxY": 13.0,
+          "maxZ": 14.0,
+          "minX": 4.0,
+          "minY": 11.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 5.0,
+          "maxY": 15.0,
+          "maxZ": 14.0,
+          "minX": 3.7295,
+          "minY": 11.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 5.0,
+          "maxY": 16.0,
+          "maxZ": 14.0,
+          "minX": 3.7295,
+          "minY": 13.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 16.0,
+          "maxY": 5.0,
+          "maxZ": 16.0,
+          "minX": 11.0,
+          "minY": 0.0,
+          "minZ": 12.0
+        },
+        {
+          "maxX": 16.0,
+          "maxY": 10.0,
+          "maxZ": 16.0,
+          "minX": 12.0,
+          "minY": 5.0,
+          "minZ": 13.0
+        },
+        {
+          "maxX": 16.0,
+          "maxY": 3.0,
+          "maxZ": 8.0,
+          "minX": 8.0,
+          "minY": 0.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 15.0,
+          "maxY": 8.0,
+          "maxZ": 7.0,
+          "minX": 9.0,
+          "minY": 3.0,
+          "minZ": 1.0
+        },
+        {
+          "maxX": 14.0,
+          "maxY": 13.0,
+          "maxZ": 6.0,
+          "minX": 10.0,
+          "minY": 8.0,
+          "minZ": 2.0
+        },
+        {
+          "maxX": 16.0,
+          "maxY": 10.0,
+          "maxZ": 12.0,
+          "minX": 10.0,
+          "minY": 4.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 16.0,
+          "maxY": 3.0,
+          "maxZ": 3.0,
+          "minX": 15.0,
+          "minY": 0.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 16.0,
+          "maxY": 8.0,
+          "maxZ": 3.0,
+          "minX": 15.0,
+          "minY": 3.0,
+          "minZ": 0.0
+        }
+      ]
+    },
+    {
+      "block_id": "sulfurstone-cluster-spcbdqbx:sulfurstone_cluster_spcbdqbx_0_1_2",
+      "bounds": {
+        "maxX": 16.0,
+        "maxY": 10.0,
+        "maxZ": 8.0,
+        "minX": 7.0,
+        "minY": 0.0,
+        "minZ": 0.0
+      },
+      "offset": [
+        0,
+        1,
+        2
+      ],
+      "shape_boxes": [
+        {
+          "maxX": 16.0,
+          "maxY": 4.0,
+          "maxZ": 8.0,
+          "minX": 7.0,
+          "minY": 0.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 16.0,
+          "maxY": 5.0,
+          "maxZ": 1.1,
+          "minX": 11.8,
+          "minY": 0.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 15.05,
+          "maxY": 10.0,
+          "maxZ": 0.05,
+          "minX": 12.95,
+          "minY": 5.0,
+          "minZ": 0.0
+        }
+      ]
+    },
+    {
+      "block_id": "sulfurstone-cluster-spcbdqbx:sulfurstone_cluster_spcbdqbx_1_1_0",
+      "bounds": {
+        "maxX": 16.0,
+        "maxY": 16.0,
+        "maxZ": 16.0,
+        "minX": 0.0,
+        "minY": 0.0,
+        "minZ": 3.0
+      },
+      "offset": [
+        1,
+        1,
+        0
+      ],
+      "shape_boxes": [
+        {
+          "maxX": 16.0,
+          "maxY": 4.0,
+          "maxZ": 16.0,
+          "minX": 0.0,
+          "minY": 0.0,
+          "minZ": 8.0
+        },
+        {
+          "maxX": 14.25,
+          "maxY": 1.0,
+          "maxZ": 16.0,
+          "minX": 7.75,
+          "minY": 0.0,
+          "minZ": 15.75
+        },
+        {
+          "maxX": 14.125,
+          "maxY": 6.0,
+          "maxZ": 16.0,
+          "minX": 7.875,
+          "minY": 1.0,
+          "minZ": 15.875
+        },
+        {
+          "maxX": 12.0,
+          "maxY": 10.0,
+          "maxZ": 16.0,
+          "minX": 1.0,
+          "minY": 4.0,
+          "minZ": 12.0
+        },
+        {
+          "maxX": 1.0,
+          "maxY": 10.0,
+          "maxZ": 16.0,
+          "minX": 0.0,
+          "minY": 4.0,
+          "minZ": 10.0
+        },
+        {
+          "maxX": 16.0,
+          "maxY": 8.0,
+          "maxZ": 16.0,
+          "minX": 11.0,
+          "minY": 4.0,
+          "minZ": 12.0
+        },
+        {
+          "maxX": 16.0,
+          "maxY": 11.0,
+          "maxZ": 12.0,
+          "minX": 1.0,
+          "minY": 4.0,
+          "minZ": 3.0
+        },
+        {
+          "maxX": 6.5,
+          "maxY": 3.0,
+          "maxZ": 16.0,
+          "minX": 0.0,
+          "minY": 0.0,
+          "minZ": 11.75
+        },
+        {
+          "maxX": 6.325,
+          "maxY": 8.0,
+          "maxZ": 16.0,
+          "minX": 0.0,
+          "minY": 3.0,
+          "minZ": 11.875
+        },
+        {
+          "maxX": 5.475,
+          "maxY": 13.0,
+          "maxZ": 16.0,
+          "minX": 0.525,
+          "minY": 8.0,
+          "minZ": 12.625
+        },
+        {
+          "maxX": 4.1875,
+          "maxY": 16.0,
+          "maxZ": 16.0,
+          "minX": 1.8125,
+          "minY": 13.0,
+          "minZ": 13.8375
+        }
+      ]
+    },
+    {
+      "block_id": "sulfurstone-cluster-spcbdqbx:sulfurstone_cluster_spcbdqbx_1_1_1",
+      "bounds": {
+        "maxX": 16.0,
+        "maxY": 16.0,
+        "maxZ": 16.0,
+        "minX": 0.0,
+        "minY": 0.0,
+        "minZ": 0.0
+      },
+      "offset": [
+        1,
+        1,
+        1
+      ],
+      "shape_boxes": [
+        {
+          "maxX": 16.0,
+          "maxY": 4.0,
+          "maxZ": 16.0,
+          "minX": 0.0,
+          "minY": 0.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 15.0,
+          "maxY": 1.0,
+          "maxZ": 7.0,
+          "minX": 7.0,
+          "minY": 0.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 15.0,
+          "maxY": 6.0,
+          "maxZ": 7.0,
+          "minX": 7.0,
+          "minY": 1.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 14.0,
+          "maxY": 11.0,
+          "maxZ": 6.0,
+          "minX": 8.0,
+          "minY": 6.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 13.0,
+          "maxY": 16.0,
+          "maxZ": 5.0,
+          "minX": 9.0,
+          "minY": 11.0,
+          "minZ": 1.0
+        },
+        {
+          "maxX": 14.0,
+          "maxY": 2.0,
+          "maxZ": 16.0,
+          "minX": 6.0,
+          "minY": 0.0,
+          "minZ": 14.0
+        },
+        {
+          "maxX": 13.0,
+          "maxY": 7.0,
+          "maxZ": 16.0,
+          "minX": 7.0,
+          "minY": 2.0,
+          "minZ": 14.0
+        },
+        {
+          "maxX": 12.0,
+          "maxY": 12.0,
+          "maxZ": 16.0,
+          "minX": 8.0,
+          "minY": 7.0,
+          "minZ": 15.0
+        },
+        {
+          "maxX": 1.0,
+          "maxY": 5.0,
+          "maxZ": 16.0,
+          "minX": 0.0,
+          "minY": 0.0,
+          "minZ": 12.0
+        },
+        {
+          "maxX": 12.0,
+          "maxY": 10.0,
+          "maxZ": 12.0,
+          "minX": 1.0,
+          "minY": 4.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 1.0,
+          "maxY": 10.0,
+          "maxZ": 12.0,
+          "minX": 0.0,
+          "minY": 4.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 16.0,
+          "maxY": 8.0,
+          "maxZ": 13.0,
+          "minX": 11.0,
+          "minY": 4.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 16.0,
+          "maxY": 3.0,
+          "maxZ": 15.0,
+          "minX": 14.0,
+          "minY": 0.0,
+          "minZ": 7.0
+        },
+        {
+          "maxX": 16.0,
+          "maxY": 8.0,
+          "maxZ": 14.0,
+          "minX": 15.0,
+          "minY": 3.0,
+          "minZ": 8.0
+        },
+        {
+          "maxX": 7.0,
+          "maxY": 3.0,
+          "maxZ": 3.0,
+          "minX": 0.0,
+          "minY": 0.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 7.0,
+          "maxY": 8.0,
+          "maxZ": 3.0,
+          "minX": 0.0,
+          "minY": 3.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 6.0,
+          "maxY": 13.0,
+          "maxZ": 2.0,
+          "minX": 0.0,
+          "minY": 8.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 5.0,
+          "maxY": 16.0,
+          "maxZ": 1.0,
+          "minX": 1.0,
+          "minY": 13.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 12.0,
+          "maxY": 13.0,
+          "maxZ": 16.0,
+          "minX": 4.0,
+          "minY": 10.0,
+          "minZ": 11.0
+        },
+        {
+          "maxX": 15.0,
+          "maxY": 13.0,
+          "maxZ": 16.0,
+          "minX": 12.0,
+          "minY": 8.0,
+          "minZ": 13.0
+        },
+        {
+          "maxX": 12.0,
+          "maxY": 10.0,
+          "maxZ": 16.0,
+          "minX": 4.0,
+          "minY": 5.0,
+          "minZ": 11.0
+        }
+      ]
+    },
+    {
+      "block_id": "sulfurstone-cluster-spcbdqbx:sulfurstone_cluster_spcbdqbx_1_1_2",
+      "bounds": {
+        "maxX": 16.0,
+        "maxY": 13.0,
+        "maxZ": 8.0,
+        "minX": 0.0,
+        "minY": 0.0,
+        "minZ": 0.0
+      },
+      "offset": [
+        1,
+        1,
+        2
+      ],
+      "shape_boxes": [
+        {
+          "maxX": 16.0,
+          "maxY": 4.0,
+          "maxZ": 8.0,
+          "minX": 0.0,
+          "minY": 0.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 13.025,
+          "maxY": 2.0,
+          "maxZ": 3.9125,
+          "minX": 6.975,
+          "minY": 0.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 12.275,
+          "maxY": 7.0,
+          "maxZ": 3.2375,
+          "minX": 7.725,
+          "minY": 2.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 11.1,
+          "maxY": 12.0,
+          "maxZ": 2.1,
+          "minX": 8.9,
+          "minY": 7.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 0.2,
+          "maxY": 5.0,
+          "maxZ": 1.1,
+          "minX": 0.0,
+          "minY": 0.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 12.0,
+          "maxY": 13.0,
+          "maxZ": 4.0,
+          "minX": 4.0,
+          "minY": 10.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 15.0,
+          "maxY": 13.0,
+          "maxZ": 4.0,
+          "minX": 12.0,
+          "minY": 8.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 12.0,
+          "maxY": 10.0,
+          "maxZ": 4.0,
+          "minX": 4.0,
+          "minY": 5.0,
+          "minZ": 0.0
+        }
+      ]
+    },
+    {
+      "block_id": "sulfurstone-cluster-spcbdqbx:sulfurstone_cluster_spcbdqbx_2_1_0",
+      "bounds": {
+        "maxX": 9.0,
+        "maxY": 8.0,
+        "maxZ": 16.0,
+        "minX": 0.0,
+        "minY": 0.0,
+        "minZ": 8.0
+      },
+      "offset": [
+        2,
+        1,
+        0
+      ],
+      "shape_boxes": [
+        {
+          "maxX": 9.0,
+          "maxY": 4.0,
+          "maxZ": 16.0,
+          "minX": 0.0,
+          "minY": 0.0,
+          "minZ": 8.0
+        },
+        {
+          "maxX": 7.0,
+          "maxY": 8.0,
+          "maxZ": 16.0,
+          "minX": 0.0,
+          "minY": 4.0,
+          "minZ": 12.0
+        }
+      ]
+    },
+    {
+      "block_id": "sulfurstone-cluster-spcbdqbx:sulfurstone_cluster_spcbdqbx_2_1_1",
+      "bounds": {
+        "maxX": 9.0,
+        "maxY": 13.0,
+        "maxZ": 16.0,
+        "minX": 0.0,
+        "minY": 0.0,
+        "minZ": 0.0
+      },
+      "offset": [
+        2,
+        1,
+        1
+      ],
+      "shape_boxes": [
+        {
+          "maxX": 9.0,
+          "maxY": 4.0,
+          "maxZ": 16.0,
+          "minX": 0.0,
+          "minY": 0.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 7.0,
+          "maxY": 8.0,
+          "maxZ": 13.0,
+          "minX": 0.0,
+          "minY": 4.0,
+          "minZ": 0.0
+        },
+        {
+          "maxX": 5.3125,
+          "maxY": 3.0,
+          "maxZ": 14.125,
+          "minX": 0.0,
+          "minY": 0.0,
+          "minZ": 7.875
+        },
+        {
+          "maxX": 4.4375,
+          "maxY": 8.0,
+          "maxZ": 13.375,
+          "minX": 0.0,
+          "minY": 3.0,
+          "minZ": 8.625
+        },
+        {
+          "maxX": 3.1625,
+          "maxY": 13.0,
+          "maxZ": 12.1625,
+          "minX": 0.8375,
+          "minY": 8.0,
+          "minZ": 9.8375
+        }
+      ]
+    },
+    {
+      "block_id": "sulfurstone-cluster-spcbdqbx:sulfurstone_cluster_spcbdqbx_2_1_2",
+      "bounds": {
+        "maxX": 9.0,
+        "maxY": 4.0,
+        "maxZ": 8.0,
+        "minX": 0.0,
+        "minY": 0.0,
+        "minZ": 0.0
+      },
+      "offset": [
+        2,
+        1,
+        2
+      ],
+      "shape_boxes": [
+        {
+          "maxX": 9.0,
+          "maxY": 4.0,
+          "maxZ": 8.0,
+          "minX": 0.0,
+          "minY": 0.0,
+          "minZ": 0.0
+        }
+      ]
+    },
+    {
+      "block_id": "sulfurstone-cluster-spcbdqbx:sulfurstone_cluster_spcbdqbx_0_2_1",
+      "bounds": {
+        "maxX": 4.4629,
+        "maxY": 0.1257,
+        "maxZ": 13.75,
+        "minX": 3.7879,
+        "minY": 0.0,
+        "minZ": 10.25
+      },
+      "offset": [
+        0,
+        2,
+        1
+      ],
+      "shape_boxes": [
+        {
+          "maxX": 4.4629,
+          "maxY": 0.1257,
+          "maxZ": 13.75,
+          "minX": 3.7879,
+          "minY": 0.0,
+          "minZ": 10.25
+        }
+      ]
+    },
+    {
+      "block_id": "sulfurstone-cluster-spcbdqbx:sulfurstone_cluster_spcbdqbx_1_2_0",
+      "bounds": {
+        "maxX": 4.1875,
+        "maxY": 2.0,
+        "maxZ": 16.0,
+        "minX": 1.8125,
+        "minY": 0.0,
+        "minZ": 13.8375
+      },
+      "offset": [
+        1,
+        2,
+        0
+      ],
+      "shape_boxes": [
+        {
+          "maxX": 4.1875,
+          "maxY": 2.0,
+          "maxZ": 16.0,
+          "minX": 1.8125,
+          "minY": 0.0,
+          "minZ": 13.8375
+        }
+      ]
+    },
+    {
+      "block_id": "sulfurstone-cluster-spcbdqbx:sulfurstone_cluster_spcbdqbx_1_2_1",
+      "bounds": {
+        "maxX": 4.1875,
+        "maxY": 2.0,
+        "maxZ": 0.1625,
+        "minX": 1.8125,
+        "minY": 0.0,
+        "minZ": 0.0
+      },
+      "offset": [
+        1,
+        2,
+        1
+      ],
+      "shape_boxes": [
+        {
+          "maxX": 4.1875,
+          "maxY": 2.0,
+          "maxZ": 0.1625,
+          "minX": 1.8125,
+          "minY": 0.0,
+          "minZ": 0.0
+        }
+      ]
+    }
+  ],
+  "grid_size": 3,
+  "main_block": "sulfurstone-cluster-spcbdqbx:sulfurstone_cluster_spcbdqbx_0_0_0",
+  "model_name": "sulfurstone_cluster_spcbdqbx",
+  "render_layer": "solid"
+}

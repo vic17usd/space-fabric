@@ -1,0 +1,1 @@
+{"ambientocclusion":false,"textures":{"particle":"basalt-ashlands-iktgmxrq:block/sulfur_ash","ash":"basalt-ashlands-iktgmxrq:block/sulfur_ash"},"elements":[{"from":[0,0,0],"to":[16,1,16],"faces":{"up":{"texture":"#ash"}}}]}

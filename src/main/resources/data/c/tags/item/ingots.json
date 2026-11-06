@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "space_fabric:aluminum_ingot",
+    "space_fabric:tin_ingot",
+    "space_fabric:zinc_ingot",
+    "space_fabric:lead_ingot",
+    "space_fabric:silver_ingot",
+    "space_fabric:nickel_ingot",
+    "space_fabric:titanium_ingot"
+  ]
+}

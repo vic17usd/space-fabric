@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "id": "sulfur-veinstone-r7gz6mnf",
+  "version": "1",
+  "name": "Sulfur Veinstone",
+  "description": "Add rugged, gold-veined Sulfur Veinstone to your builds, and mine it with a sturdy pickaxe.",
+  "authors": [
+    "vic17usd using CreativeMode.net"
+  ],
+  "contact": {
+    "homepage": "https://creativemode.net",
+    "sources": "https://creativemode.net/mod/sulfur-veinstone-r7gz6mnf"
+  },
+  "license": "ARR - CreativeMode.net/mod-license",
+  "icon": "assets/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "sulfur_veinstone_r7gz6mnf.SulfurVeinstone"
+    ],
+    "client": [
+      "sulfur_veinstone_r7gz6mnf.SulfurVeinstoneClient"
+    ],
+    "fabric-datagen": [
+      "sulfur_veinstone_r7gz6mnf.SulfurVeinstoneDataGenerator"
+    ]
+  },
+  "mixins": [
+    "sulfur_veinstone_r7gz6mnf.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.18.4",
+    "minecraft": "~26.1",
+    "java": ">=25",
+    "fabric-api": "*"
+  },
+  "suggests": {
+    "another-mod": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/creativemode"
+      }
+    },
+    "creativemode:mod": {
+      "schemaVersion": 1,
+      "modId": "0f4d2952-0dd9-4a26-81f4-197c5aeefe89",
+      "modSlug": "sulfur-veinstone-r7gz6mnf",
+      "modVersion": 1
+    }
+  },
+  "jars": [
+    {
+      "file": "META-INF/jars/creativemode-telemetry.jar"
+    }
+  ]
+}

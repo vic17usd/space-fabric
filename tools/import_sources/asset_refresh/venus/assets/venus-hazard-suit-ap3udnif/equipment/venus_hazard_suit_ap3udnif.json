@@ -1,0 +1,14 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "venus-hazard-suit-ap3udnif:../../../gui/layer_1"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "venus-hazard-suit-ap3udnif:../../../gui/layer_2"
+      }
+    ]
+  }
+}

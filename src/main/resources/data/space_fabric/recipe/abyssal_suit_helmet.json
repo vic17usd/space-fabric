@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    "space_fabric:cryo_suit_helmet",
+    "space_fabric:obsidian_core",
+    "minecraft:netherite_ingot"
+  ],
+  "result": {
+    "id": "space_fabric:abyssal_suit_helmet",
+    "count": 1
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "ares-ember-ore-letdlqhf:gui/ares_ember_ore_letdlqhf"
+  }
+}

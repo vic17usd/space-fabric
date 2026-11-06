@@ -1,0 +1,22 @@
+{
+  "source": "Aldeano Marciano.jar",
+  "sha256": "5cefcc80ca87342cd489da31f08693d8837d49aaedc13421057f212e2eb8b585",
+  "files": {
+    "src/main/resources/assets/space_fabric/textures/entity/martian_copper_trader.png": {
+      "source": "assets/martian-copper-trader-envsqju5/textures/entity/martian_copper_trader_envsqju5.png",
+      "sha256": "1667ea7db3b8ed4c6aee6a1b2ba92b728ef3f7fe039c79512c10676c85337987"
+    },
+    "src/main/resources/assets/space_fabric/textures/item/martian_copper_trader_spawn_egg.png": {
+      "source": "assets/martian-copper-trader-envsqju5/textures/item/martian_copper_trader_envsqju5_spawn_egg.png",
+      "sha256": "673a00eb41ed7eb81e347e1ccdcc1ecbfc40654cc23a11dcb8911056733f148f"
+    },
+    "src/main/resources/assets/space_fabric/sounds/alien_greeting.ogg": {
+      "source": "assets/martian-copper-trader-envsqju5/sounds/alien_greeting.ogg",
+      "sha256": "88623ccbbfa5f252d8eff1672bc489aeff6874039fef1d0bfcae74097bb319fd"
+    },
+    "third_party/martian_copper_trader/LICENSE.txt": {
+      "source": "LICENSE_martian_copper_trader_envsqju5",
+      "sha256": "7d637ad5bbc0aac2c6a495c934200ffef397623795272a9adcd76c4fb8420fd8"
+    }
+  }
+}

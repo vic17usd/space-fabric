@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "space_fabric:spent_acid_filter",
+    "minecraft:charcoal",
+    "minecraft:paper"
+  ],
+  "result": {
+    "id": "space_fabric:acid_filter",
+    "count": 1
+  }
+}

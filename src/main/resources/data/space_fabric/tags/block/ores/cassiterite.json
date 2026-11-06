@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "space_fabric:cassiterite_ore",
+    "space_fabric:deepslate_cassiterite_ore"
+  ]
+}

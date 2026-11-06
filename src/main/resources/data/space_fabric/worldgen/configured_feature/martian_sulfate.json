@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:ore",
+  "config": {
+    "size": 10,
+    "discard_chance_on_air_exposure": 0.0,
+    "targets": [
+      {
+        "target": {
+          "predicate_type": "minecraft:tag_match",
+          "tag": "space_fabric:mars_host_rocks"
+        },
+        "state": {
+          "Name": "space_fabric:martian_sulfate_deposit"
+        }
+      }
+    ]
+  }
+}

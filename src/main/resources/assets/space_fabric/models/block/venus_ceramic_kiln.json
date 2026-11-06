@@ -1,0 +1,345 @@
+{
+  "textures": {
+    "basalt": "minecraft:block/polished_basalt_side",
+    "dark": "minecraft:block/deepslate_tiles",
+    "metal": "minecraft:block/iron_block",
+    "trim": "minecraft:block/cut_copper",
+    "portal": "minecraft:block/polished_blackstone",
+    "violet": "minecraft:block/amethyst_block",
+    "screen": "minecraft:block/purple_concrete",
+    "hot": "minecraft:block/magma",
+    "particle": "#basalt",
+    "basalt_end": "minecraft:block/polished_basalt_top"
+  },
+  "elements": [
+    {
+      "from": [
+        0.059553,
+        0.0,
+        1.221675
+      ],
+      "to": [
+        14.947891,
+        14.94396,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#basalt"
+        },
+        "south": {
+          "texture": "#basalt"
+        },
+        "east": {
+          "texture": "#basalt"
+        },
+        "west": {
+          "texture": "#basalt"
+        },
+        "up": {
+          "texture": "#dark"
+        },
+        "down": {
+          "texture": "#dark"
+        }
+      }
+    },
+    {
+      "from": [
+        1.052109,
+        0.996264,
+        0.236453
+      ],
+      "to": [
+        13.955335,
+        13.947696,
+        1.221675
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dark"
+        },
+        "south": {
+          "texture": "#dark"
+        },
+        "east": {
+          "texture": "#dark"
+        },
+        "west": {
+          "texture": "#dark"
+        },
+        "up": {
+          "texture": "#dark"
+        },
+        "down": {
+          "texture": "#dark"
+        }
+      }
+    },
+    {
+      "from": [
+        3.037221,
+        2.988792,
+        0.17734
+      ],
+      "to": [
+        5.022333,
+        12.951432,
+        1.221675
+      ],
+      "faces": {
+        "north": {
+          "texture": "#metal"
+        }
+      }
+    },
+    {
+      "from": [
+        9.985112,
+        2.988792,
+        0.17734
+      ],
+      "to": [
+        11.970223,
+        12.951432,
+        1.221675
+      ],
+      "faces": {
+        "north": {
+          "texture": "#metal"
+        }
+      }
+    },
+    {
+      "from": [
+        5.022333,
+        2.988792,
+        0.17734
+      ],
+      "to": [
+        9.985112,
+        4.98132,
+        1.221675
+      ],
+      "faces": {
+        "north": {
+          "texture": "#metal"
+        }
+      }
+    },
+    {
+      "from": [
+        5.022333,
+        10.958904,
+        0.17734
+      ],
+      "to": [
+        9.985112,
+        12.951432,
+        1.221675
+      ],
+      "faces": {
+        "north": {
+          "texture": "#metal"
+        }
+      }
+    },
+    {
+      "from": [
+        5.022333,
+        4.98132,
+        0.118227
+      ],
+      "to": [
+        9.985112,
+        10.958904,
+        1.221675
+      ],
+      "faces": {
+        "north": {
+          "texture": "#portal"
+        }
+      }
+    },
+    {
+      "from": [
+        6.014888,
+        5.977584,
+        0.059113
+      ],
+      "to": [
+        8.992556,
+        9.96264,
+        1.221675
+      ],
+      "faces": {
+        "north": {
+          "texture": "#violet"
+        }
+      }
+    },
+    {
+      "from": [
+        7.007444,
+        6.973848,
+        0.0
+      ],
+      "to": [
+        8.0,
+        8.966376,
+        1.221675
+      ],
+      "faces": {
+        "north": {
+          "texture": "#screen"
+        }
+      }
+    },
+    {
+      "from": [
+        0.0,
+        13.947696,
+        2.206897
+      ],
+      "to": [
+        15.007444,
+        15.940224,
+        14.029557
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dark"
+        },
+        "south": {
+          "texture": "#dark"
+        },
+        "east": {
+          "texture": "#dark"
+        },
+        "west": {
+          "texture": "#dark"
+        },
+        "up": {
+          "texture": "#metal"
+        },
+        "down": {
+          "texture": "#dark"
+        }
+      }
+    },
+    {
+      "from": [
+        2.044665,
+        14.94396,
+        4.17734
+      ],
+      "to": [
+        4.029777,
+        16.0,
+        12.059113
+      ],
+      "faces": {
+        "north": {
+          "texture": "#metal"
+        },
+        "south": {
+          "texture": "#metal"
+        },
+        "east": {
+          "texture": "#metal"
+        },
+        "west": {
+          "texture": "#metal"
+        },
+        "up": {
+          "texture": "#metal"
+        },
+        "down": {
+          "texture": "#metal"
+        }
+      }
+    },
+    {
+      "from": [
+        10.977667,
+        14.94396,
+        4.17734
+      ],
+      "to": [
+        12.962779,
+        16.0,
+        12.059113
+      ],
+      "faces": {
+        "north": {
+          "texture": "#metal"
+        },
+        "south": {
+          "texture": "#metal"
+        },
+        "east": {
+          "texture": "#metal"
+        },
+        "west": {
+          "texture": "#metal"
+        },
+        "up": {
+          "texture": "#metal"
+        },
+        "down": {
+          "texture": "#metal"
+        }
+      }
+    },
+    {
+      "from": [
+        14.947891,
+        4.98132,
+        5.162562
+      ],
+      "to": [
+        15.940447,
+        10.958904,
+        11.073892
+      ],
+      "faces": {
+        "north": {
+          "texture": "#metal"
+        },
+        "south": {
+          "texture": "#metal"
+        },
+        "east": {
+          "texture": "#metal"
+        },
+        "west": {
+          "texture": "#metal"
+        },
+        "up": {
+          "texture": "#metal"
+        },
+        "down": {
+          "texture": "#metal"
+        }
+      }
+    },
+    {
+      "from": [
+        14.947891,
+        5.977584,
+        6.147783
+      ],
+      "to": [
+        16.0,
+        9.96264,
+        10.08867
+      ],
+      "faces": {
+        "east": {
+          "texture": "#screen"
+        }
+      }
+    }
+  ],
+  "parent": "minecraft:block/block"
+}

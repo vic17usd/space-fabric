@@ -1,0 +1,86 @@
+[
+  {
+    "jar": "Venus Volcan.jar",
+    "source_id": "sulfur-crown-caldera-dpjre4dw",
+    "sha256": "86094d2959491def119ab0bdeb4d5d584e0a90110d09f878cd193bb819c9019b",
+    "selected": false
+  },
+  {
+    "jar": "Venus acido.jar",
+    "source_id": "ashen-acid-vents-j6czsz6r",
+    "sha256": "c4cfa6832d1f958af162dd6b0ac909b6a8d639a644ff600cee104c7e9c95c3c7",
+    "selected": false
+  },
+  {
+    "jar": "Venus build 2.jar",
+    "source_id": "copper-crown-village-zvhfngoo",
+    "sha256": "0da7396f959beb1c1274a8fa2db0f77f97f1222b45de20f42749faaffa157629",
+    "selected": false
+  },
+  {
+    "jar": "Venus build.jar",
+    "source_id": "sunstone-pyramid-bazaar-m4ezrsqc",
+    "sha256": "144f57a837fcc34531f4a7bbf031cd3baedbaf63439236ae7629a325e4e49334",
+    "selected": false
+  },
+  {
+    "jar": "Venus estructura 2.jar",
+    "source_id": "rustbound-redstone-spire-r7egtun3",
+    "sha256": "ebd1ce09a2bf23f9539ce7279b51907db465b905bd13f065def44519112f3449",
+    "selected": false
+  },
+  {
+    "jar": "Venus estructura 3.jar",
+    "source_id": "venusian-sulfur-vault-cjsj7wrf",
+    "sha256": "e71b9a4833767c39799d9bfd550d38df08fe6594a70049277976c9696af54ca2",
+    "selected": true
+  },
+  {
+    "jar": "Venus estructura 4.jar",
+    "source_id": "venus-basalt-haven-5mh45nk7",
+    "sha256": "be862f543fa817d89d2cde6043192326d0883e42016e8917967fd381ca0b4864",
+    "selected": true
+  },
+  {
+    "jar": "Venus estructura 5.jar",
+    "source_id": "basalt-signal-outpost-bcmksoxj",
+    "sha256": "00127ebca755dab3b167347a0075d0656cdc4a4f149f90f2f75bbfad5c0afec8",
+    "selected": false
+  },
+  {
+    "jar": "Venus estructura.jar",
+    "source_id": "venusian-ash-outpost-z5zevd3e",
+    "sha256": "1928bb4b1040cb8ab34ade7505a632db9807af98b95c61380a21f2304395f3fd",
+    "selected": true
+  },
+  {
+    "jar": "Venus instalaciones averiadas.jar",
+    "source_id": "rustfall-foundry-hxuphupq",
+    "sha256": "aadcd913ee7326500d7a77dc98ef1c445b4c556cf72793797d978a427d77f400",
+    "selected": true
+  },
+  {
+    "jar": "Venus lagos.jar",
+    "source_id": "obsidian-sulfur-wastes-wcwkrsde",
+    "sha256": "605acd738c8dfdb1b210b662598c0e544b9e09493ca549072d2e703c670c0f6f",
+    "selected": false
+  },
+  {
+    "jar": "Venus suelo 1.jar",
+    "source_id": "sulfur-veinstone-r7gz6mnf",
+    "sha256": "39fb48282c364a3834898bb848b8b13b03eb7bf58e2eadc1537075b6ae74ea12",
+    "selected": false
+  },
+  {
+    "jar": "venus suelo 2.jar",
+    "source_id": "sulfur-veinstone-r7gz6mnf",
+    "sha256": "dcb135b52838ac588918d8ad47286f67d49eda2af017c7ccec0226d083572eab",
+    "selected": false
+  },
+  {
+    "jar": "venus suelo 4.jar",
+    "source_id": "sulfurstone-cluster-spcbdqbx",
+    "sha256": "6353a11dd89138556a1a4b0cdad87f8e0d109ee54c43ddf2e1ab6023b291e875",
+    "selected": false
+  }
+]

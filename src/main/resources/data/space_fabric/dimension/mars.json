@@ -1,0 +1,13 @@
+{
+  "type": "space_fabric:mars",
+  "generator": {
+    "type": "minecraft:noise",
+    "biome_source": {
+      "type": "space_fabric:mars_polar",
+      "temperate": "space_fabric:mars",
+      "polar": "space_fabric:mars_polar_ice_cap",
+      "polar_start": 8192
+    },
+    "settings": "space_fabric:mars"
+  }
+}

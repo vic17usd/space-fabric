@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PCP",
+    "LFL",
+    "HBH"
+  ],
+  "key": {
+    "P": "space_fabric:venus_composite_plate",
+    "C": "minecraft:copper_ingot",
+    "L": "space_fabric:liquid_conduit",
+    "F": "space_fabric:acid_filter",
+    "H": "space_fabric:pressure_hull",
+    "B": "space_fabric:empty_power_cell"
+  },
+  "result": {
+    "id": "space_fabric:venus_life_reclaimer",
+    "count": 1
+  }
+}

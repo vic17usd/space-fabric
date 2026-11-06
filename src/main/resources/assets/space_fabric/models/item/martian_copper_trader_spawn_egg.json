@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "space_fabric:item/martian_copper_trader_spawn_egg"
+  }
+}

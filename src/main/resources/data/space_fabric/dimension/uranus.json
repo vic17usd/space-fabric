@@ -1,0 +1,13 @@
+{
+  "type": "space_fabric:uranus",
+  "generator": {
+    "type": "space_fabric:orbital",
+    "settings": {
+      "biome": "space_fabric:uranus",
+      "layers": [],
+      "lakes": false,
+      "features": true,
+      "structure_overrides": []
+    }
+  }
+}

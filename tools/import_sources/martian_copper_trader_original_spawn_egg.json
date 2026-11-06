@@ -1,0 +1,6 @@
+{
+    "parent": "minecraft:item/generated",
+    "textures": {
+      "layer0": "martian-copper-trader-envsqju5:item/martian_copper_trader_envsqju5_spawn_egg"
+    }
+  }

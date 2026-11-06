@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "id": "venus-sulfurstone-gtdukli6",
+  "version": "1",
+  "name": "Venus Sulfurstone",
+  "description": "Mine glowing Venus Sulfurstone—but watch your step, its heat can burn.",
+  "authors": [
+    "vic17usd using CreativeMode.net"
+  ],
+  "contact": {
+    "homepage": "https://creativemode.net",
+    "sources": "https://creativemode.net/mod/venus-sulfurstone-gtdukli6"
+  },
+  "license": "ARR - CreativeMode.net/mod-license",
+  "icon": "assets/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "venus_sulfurstone_gtdukli6.VenusSulfurstone"
+    ],
+    "client": [
+      "venus_sulfurstone_gtdukli6.VenusSulfurstoneClient"
+    ],
+    "fabric-datagen": [
+      "venus_sulfurstone_gtdukli6.VenusSulfurstoneDataGenerator"
+    ]
+  },
+  "mixins": [
+    "venus_sulfurstone_gtdukli6.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.16.14",
+    "minecraft": "~1.21.5",
+    "java": ">=21",
+    "fabric-api": "*"
+  },
+  "suggests": {
+    "another-mod": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/creativemode"
+      }
+    },
+    "creativemode:mod": {
+      "schemaVersion": 1,
+      "modId": "2e14ebac-28f4-4613-a613-4be5b17986da",
+      "modSlug": "venus-sulfurstone-gtdukli6",
+      "modVersion": 1
+    }
+  },
+  "jars": [
+    {
+      "file": "META-INF/jars/creativemode-telemetry.jar"
+    }
+  ]
+}

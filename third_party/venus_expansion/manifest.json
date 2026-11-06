@@ -1,0 +1,26 @@
+{
+  "copper-acidstinger-drone-qvloegth": {
+    "filename": "Venus mob.jar",
+    "sha256": "e7ef38f83b056e1ee7dc51e68d1960f6c8366788e94984f0cc58df9a574c7b54",
+    "source_page": "https://creativemode.net/mod/copper-acidstinger-drone-qvloegth",
+    "authors": [
+      "vic17usd using CreativeMode.net"
+    ],
+    "files": {
+      "src/main/resources/assets/space_fabric/textures/entity/copper_acidstinger_drone.png": "8d099ff60bde095366d53f30d9a40a393be3fcd9d48d6c1ef2f1e53929d71f1c",
+      "src/main/resources/assets/space_fabric/textures/item/copper_acidstinger_drone_spawn_egg.png": "a3ca24d266cafdefcf4470c82740fcf9347dd88564bff8f1adb9c4190093c9a8"
+    }
+  },
+  "sulfurwing-copperstinger-qxq3li2s": {
+    "filename": "Venus mob 2.jar",
+    "sha256": "5f280db67ec71d269762e4e753ed10d5fbb603aa85e32c75a78980606a61409e",
+    "source_page": "https://creativemode.net/mod/sulfurwing-copperstinger-qxq3li2s",
+    "authors": [
+      "vic17usd using CreativeMode.net"
+    ],
+    "files": {
+      "src/main/resources/assets/space_fabric/textures/entity/sulfurwing_copperstinger.png": "2bcc58ce6af37376643968c1c6c73ca0b9910312ed7a76ec4f56b3e895fe9e9e",
+      "src/main/resources/assets/space_fabric/textures/item/sulfurwing_copperstinger_spawn_egg.png": "b152cce27df48bbb8d563b2bca1bef81da834749d431bb6abf62d2446c7482d4"
+    }
+  }
+}

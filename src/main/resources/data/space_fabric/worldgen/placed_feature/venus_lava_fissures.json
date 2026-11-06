@@ -1,0 +1,12 @@
+{
+  "feature": "space_fabric:venus_lava_fissures",
+  "placement": [
+    {
+      "type": "minecraft:rarity_filter",
+      "chance": 12
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

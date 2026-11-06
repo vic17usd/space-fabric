@@ -1,0 +1,37 @@
+{
+  "display": {
+    "icon": {
+      "id": "space_fabric:habitat_controller"
+    },
+    "title": {
+      "translate": "advancements.space_fabric.colony.root.title"
+    },
+    "description": {
+      "translate": "advancements.space_fabric.colony.root.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false,
+    "background": "minecraft:gui/advancements/backgrounds/stone"
+  },
+  "criteria": {
+    "obtained": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "space_fabric:habitat_controller"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "obtained"
+    ]
+  ]
+}

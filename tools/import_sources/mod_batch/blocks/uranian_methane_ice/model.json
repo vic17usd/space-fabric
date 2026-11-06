@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+      "all": "uranian-methane-frost-block-nmopsgxz:gui/uranian_methane_frost_block_nmopsgxz"
+  }
+}

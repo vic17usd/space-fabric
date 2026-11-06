@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "HGH",
+    "CRC",
+    "HPH"
+  ],
+  "key": {
+    "H": "space_fabric:pressure_hull",
+    "G": "minecraft:glass",
+    "C": "minecraft:copper_ingot",
+    "R": "space_fabric:venus_research_report",
+    "P": "minecraft:hopper"
+  },
+  "result": {
+    "id": "space_fabric:venus_atmospheric_collector",
+    "count": 1
+  }
+}

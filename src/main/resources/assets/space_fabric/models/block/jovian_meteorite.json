@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "space_fabric:block/replacements/jovian_meteorite/jovian_emberstone_32evpnw5"
+  }
+}

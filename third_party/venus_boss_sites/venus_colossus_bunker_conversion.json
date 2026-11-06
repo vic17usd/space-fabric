@@ -1,0 +1,30 @@
+{
+  "original_blocks": 97881,
+  "explicit_blocks": 648788,
+  "arena_center": [
+    58,
+    5,
+    59
+  ],
+  "arena_clear_size": [
+    45,
+    22,
+    45
+  ],
+  "dimensions": [
+    116,
+    47,
+    119
+  ],
+  "tiles": 64,
+  "residents": [
+    {
+      "id": "space_fabric:sulfur_colossus",
+      "position": [
+        58,
+        5,
+        59
+      ]
+    }
+  ]
+}
