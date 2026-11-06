@@ -1088,5 +1088,9 @@
   "mars.autonomy.reserves.insufficient": "Reservas insuficientes o información no disponible; revisa las cifras y conexiones.",
   "mars.autonomy.reserves.shared": "Las reservas de red son compartidas y pueden cambiar si otros consumidores las utilizan.",
   "mars.autonomy.reserves.not_operating": "El controlador no está funcionando y presurizado.",
-  "mars.autonomy.reserves.startup_capacity": "La presurización y respiración inicial superan la capacidad del controlador."
+  "mars.autonomy.reserves.startup_capacity": "La presurización y respiración inicial superan la capacidad del controlador.",
+  "mars.night.requirements": "Primero acepta autonomía, selecciona un refugio y acredita agua del hielo, electrólisis y carga solar. Debes estar vivo en Marte y poder interactuar.",
+  "mars.night.permission": "No tienes permiso para iniciar la preparación de este refugio.",
+  "mars.night.not_ready": "Solicitud rechazada: el refugio no cumple las condiciones actuales de preparación.",
+  "mars.night.requested": "Solicitud nocturna guardada. La observación de la noche todavía no está conectada: no hay prueba en curso ni progreso nocturno acreditado."
 }

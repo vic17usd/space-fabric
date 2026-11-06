@@ -1088,5 +1088,9 @@
   "mars.autonomy.reserves.insufficient": "Reserves insufficient or information unavailable; check quantities and connections.",
   "mars.autonomy.reserves.shared": "Network reserves are shared and may change when other machines consume them.",
   "mars.autonomy.reserves.not_operating": "The controller is not operating and pressurized.",
-  "mars.autonomy.reserves.startup_capacity": "Initial pressurization and breathing exceed controller capacity."
+  "mars.autonomy.reserves.startup_capacity": "Initial pressurization and breathing exceed controller capacity.",
+  "mars.night.requirements": "First accept self-sufficiency, select a shelter and credit ice water, electrolysis and solar charging. You must be alive on Mars and allowed to interact.",
+  "mars.night.permission": "You do not have permission to prepare this shelter.",
+  "mars.night.not_ready": "Request rejected: the shelter does not meet current preparation conditions.",
+  "mars.night.requested": "Night request saved. Night monitoring is not connected yet: no trial is running or credited."
 }

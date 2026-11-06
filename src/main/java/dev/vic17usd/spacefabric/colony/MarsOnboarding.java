@@ -110,7 +110,7 @@ public final class MarsOnboarding {
         if (accept) progress.acceptAutonomy(player.getUUID());
         var status = progress.autonomyStatus(player.getUUID());
         player.sendSystemMessage(Component.translatable("mars.autonomy." + status.name().toLowerCase(java.util.Locale.ROOT)));
-        if (status == MarsProgress.AutonomyStatus.ACCEPTED) { MarsAutonomyRefuge.show(player, progress); MarsAutonomyProduction.show(player, progress); }
+        if (status == MarsProgress.AutonomyStatus.ACCEPTED) { MarsAutonomyRefuge.show(player, progress); MarsAutonomyProduction.show(player, progress); if (progress.nightRequested(player.getUUID())) player.sendSystemMessage(Component.translatable("mars.night.requested")); }
         return status == MarsProgress.AutonomyStatus.LOCKED && accept ? 0 : 1;
     }
 
@@ -140,6 +140,8 @@ public final class MarsOnboarding {
                         }))
                         .then(Commands.literal("autonomia").executes(c -> autonomy(c.getSource().getPlayerOrException(), false))
                                 .then(Commands.literal("iniciar").executes(c -> autonomy(c.getSource().getPlayerOrException(), true)))
+                                .then(Commands.literal("noche").executes(c -> autonomy(c.getSource().getPlayerOrException(), false))
+                                    .then(Commands.literal("iniciar").executes(c -> MarsNightPreparation.request(c.getSource().getPlayerOrException()))))
                                 .then(Commands.literal("produccion").executes(c -> autonomy(c.getSource().getPlayerOrException(), false))
                                     .then(Commands.literal("agua").executes(c -> MarsAutonomyProduction.select(c.getSource().getPlayerOrException(), "agua")))
                                     .then(Commands.literal("oxigeno").executes(c -> MarsAutonomyProduction.select(c.getSource().getPlayerOrException(), "oxigeno")))

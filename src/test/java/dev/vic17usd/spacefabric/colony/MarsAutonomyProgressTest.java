@@ -67,4 +67,21 @@ class MarsAutonomyProgressTest {
         assertFalse(p.recordProduction(player,pos,machine,ticket,"solar",12));
         p.bindAutonomyRefuge(player,pos,UUID.randomUUID()); assertEquals(0,p.production(player).flags());
     }
+    @Test void nightRequestRequiresAllProductionIsIdempotentAndBoundToRefuge() {
+        var player=UUID.randomUUID(); var other=UUID.randomUUID(); var p=load(player,5);
+        assertFalse(p.requestNight(player)); p.acceptAutonomy(player);
+        var pos=net.minecraft.core.BlockPos.ZERO; p.bindAutonomyRefuge(player,pos,UUID.randomUUID());
+        assertFalse(p.requestNight(player));
+        for (String kind:java.util.List.of("agua","oxigeno","solar")) {
+            var machine=UUID.randomUUID(); var ticket=UUID.randomUUID();
+            assertTrue(p.commissionProduction(player,pos,machine,ticket,kind,0));
+            assertTrue(p.recordProduction(player,pos,machine,ticket,kind,1));
+        }
+        assertFalse(p.nightRequested(player)); assertTrue(p.requestNight(player)); assertFalse(p.requestNight(player));
+        p=MarsProgress.CODEC.parse(JsonOps.INSTANCE,MarsProgress.CODEC.encodeStart(JsonOps.INSTANCE,p).getOrThrow()).getOrThrow();
+        assertTrue(p.nightRequested(player)); assertFalse(p.nightRequested(other)); assertFalse(p.requestNight(other));
+        var binding=p.autonomyRefuge(player).orElseThrow();
+        assertFalse(p.bindAutonomyRefuge(player,binding.pos(),binding.controller())); assertTrue(p.nightRequested(player));
+        assertTrue(p.bindAutonomyRefuge(player,pos,UUID.randomUUID())); assertFalse(p.nightRequested(player));
+    }
 }

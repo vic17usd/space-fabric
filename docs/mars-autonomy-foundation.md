@@ -109,3 +109,17 @@ La suficiencia es una instantánea: requiere controlador operativo, recinto sell
 datos completos y reservas suficientes. No garantiza una noche de funcionamiento:
 otros consumidores, cambios de ocupantes o averías pueden alterar el resultado. La
 prueba nocturna y la recompensa permanecen pendientes.
+
+### Solicitud explícita de la prueba nocturna
+
+`/marte autonomia noche iniciar` comprueba en el servidor la aceptación, las tres
+producciones acreditadas, los permisos y el estado actual del refugio seleccionado
+(incluidas sus reservas reales). Si todo cumple, guarda una solicitud personal
+vinculada a la identidad del controlador. Repetirla no duplica progreso; consultar
+`/marte autonomia` no la activa. Cambiar el refugio elimina la solicitud anterior.
+
+Esta entrega registra la preparación explícita, **no observa todavía una noche**.
+La solicitud sobrevive a un guardado normal, pero no asegura que el refugio siga
+válido tras reconectar: el futuro observador deberá volver a comprobar las
+condiciones antes del inicio real. No se conecta MarsNightTrial, no se cambia el
+reloj y no hay recompensas. El comando lo indica expresamente.

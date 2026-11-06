@@ -37,22 +37,22 @@ final class MarsAutonomyRefuge {
     private static int message(ServerPlayer player, String key) {
         player.sendSystemMessage(Component.translatable("mars.autonomy.refuge." + key)); return 0;
     }
-    static void show(ServerPlayer player, MarsProgress progress) {
+    static boolean show(ServerPlayer player, MarsProgress progress) {
         var binding = progress.autonomyRefuge(player.getUUID());
-        if (binding.isEmpty()) { message(player, "none"); return; }
+        if (binding.isEmpty()) { message(player, "none"); return false; }
         var selected = binding.get(); var pos = selected.pos();
         player.sendSystemMessage(Component.translatable("mars.autonomy.refuge.coordinates", pos.toShortString()));
         ServerLevel level = player.level().getServer().getLevel(PlanetDimensions.key(Planet.MARS));
-        if (level == null) { message(player, "unloaded"); return; }
+        if (level == null) { message(player, "unloaded"); return false; }
         var chunk = level.getChunkSource().getChunkNow(pos.getX() >> 4, pos.getZ() >> 4);
-        if (chunk == null) { message(player, "unloaded"); return; }
+        if (chunk == null) { message(player, "unloaded"); return false; }
         if (!(chunk.getBlockEntity(pos) instanceof ColonyMachineBlockEntity machine) || machine.isRemoved()
-                || machine.kind() != ColonyContent.Machine.HABITAT) { message(player, "missing"); return; }
-        if (!machine.controllerIdentity().equals(selected.controller())) { message(player, "replaced"); return; }
+                || machine.kind() != ColonyContent.Machine.HABITAT) { message(player, "missing"); return false; }
+        if (!machine.controllerIdentity().equals(selected.controller())) { message(player, "replaced"); return false; }
         if (machine.maintenance().failed()) player.sendSystemMessage(Component.translatable("mars.autonomy.refuge.damaged"));
         var world = HabitatSystem.world(level);
         var status = inspect(machine.scannedRoom(), world, pos.above());
-        if (status != null) { message(player, status); return; }
+        if (status != null) { message(player, status); return false; }
         var room = machine.scannedRoom();
         int occupants = ColonyMachineBlockEntity.occupants(level, room);
         player.sendSystemMessage(Component.translatable("mars.autonomy.refuge.sealed", room.air().size(), occupants));
@@ -82,6 +82,7 @@ final class MarsAutonomyRefuge {
                 && energy >= required.energy() && water >= required.water();
         player.sendSystemMessage(Component.translatable(enough ? "mars.autonomy.reserves.enough" : "mars.autonomy.reserves.insufficient"));
         player.sendSystemMessage(Component.translatable("mars.autonomy.reserves.shared"));
+        return enough;
     }
     private static int returnCapacity(net.minecraft.world.item.ItemStack stack, net.minecraft.world.item.Item item) {
         return stack.isEmpty() ? item.getDefaultInstance().getMaxStackSize()

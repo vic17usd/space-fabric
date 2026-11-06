@@ -58,7 +58,8 @@ public final class MarsProgress extends SavedData {
             Codec.unboundedMap(Codec.STRING, Settlement.CODEC).optionalFieldOf("settlements", Map.of()).forGetter(p -> Map.copyOf(p.settlements)),
             Codec.unboundedMap(Codec.STRING, Codec.BOOL).optionalFieldOf("autonomy", Map.of()).forGetter(p -> Map.copyOf(p.autonomy)),
             Codec.unboundedMap(Codec.STRING, AutonomyRefuge.CODEC).optionalFieldOf("autonomy_refuges", Map.of()).forGetter(p -> Map.copyOf(p.autonomyRefuges)),
-            Codec.unboundedMap(Codec.STRING, Production.CODEC).optionalFieldOf("autonomy_production", Map.of()).forGetter(p -> Map.copyOf(p.production))
+            Codec.unboundedMap(Codec.STRING, Production.CODEC).optionalFieldOf("autonomy_production", Map.of()).forGetter(p -> Map.copyOf(p.production)),
+            Codec.unboundedMap(Codec.STRING, AutonomyRefuge.CODEC).optionalFieldOf("night_requests", Map.of()).forGetter(p -> Map.copyOf(p.nightRequests))
     ).apply(i, MarsProgress::new));
     public static final SavedDataType<MarsProgress> TYPE = new SavedDataType<>(
             SpaceFabric.id("mars_expedition"), MarsProgress::new, CODEC, DataFixTypes.LEVEL);
@@ -68,6 +69,7 @@ public final class MarsProgress extends SavedData {
     private final Map<String, Boolean> autonomy = new LinkedHashMap<>();
     private final Map<String, AutonomyRefuge> autonomyRefuges = new LinkedHashMap<>();
     private final Map<String, Production> production = new LinkedHashMap<>();
+    private final Map<String, AutonomyRefuge> nightRequests = new LinkedHashMap<>();
     public enum AutonomyStatus { LOCKED, AVAILABLE, ACCEPTED }
     public AutonomyStatus autonomyStatus(UUID player) {
         if (!entry(player).complete() || settlement(player).stage() != 5) return AutonomyStatus.LOCKED;
@@ -82,7 +84,7 @@ public final class MarsProgress extends SavedData {
         if (autonomyStatus(player) != AutonomyStatus.ACCEPTED) return false;
         var binding = new AutonomyRefuge(pos.immutable(), controller);
         if (autonomyRefuge(player).filter(binding::equals).isPresent()) return false;
-        autonomyRefuges.put(player.toString(), binding); production.remove(player.toString()); setDirty(); return true;
+        autonomyRefuges.put(player.toString(), binding); production.remove(player.toString()); nightRequests.remove(player.toString()); setDirty(); return true;
     }
     public Production production(UUID player) { return production.getOrDefault(player.toString(), Production.EMPTY); }
     public boolean commissionProduction(UUID player, BlockPos pos, UUID identity, UUID ticket, String kind, int baseline) {
@@ -103,9 +105,18 @@ public final class MarsProgress extends SavedData {
                 || !old.ticket().filter(ticket::equals).isPresent() || !old.kind().equals(kind) || batches<=old.baseline()) return false;
         production.put(player.toString(),new Production(old.flags()|productionBit(kind),Optional.empty(),Optional.empty(),Optional.empty(),"",0)); setDirty(); return true;
     }
+    public boolean nightRequested(UUID player) {
+        return autonomyRefuge(player).filter(r -> r.equals(nightRequests.get(player.toString()))).isPresent();
+    }
+    /** Server caller must check live habitat readiness before recording this preparation request. */
+    public boolean requestNight(UUID player) {
+        if (autonomyStatus(player) != AutonomyStatus.ACCEPTED || production(player).flags() != 7
+                || autonomyRefuge(player).isEmpty() || nightRequested(player)) return false;
+        nightRequests.put(player.toString(), autonomyRefuge(player).orElseThrow()); setDirty(); return true;
+    }
     public MarsProgress() { }
-    private MarsProgress(Map<String, Entry> saved, Map<String, Settlement> savedSettlements, Map<String, Boolean> savedAutonomy, Map<String, AutonomyRefuge> savedRefuges, Map<String, Production> savedProduction) {
-        players.putAll(saved); settlements.putAll(savedSettlements); autonomy.putAll(savedAutonomy); autonomyRefuges.putAll(savedRefuges); production.putAll(savedProduction);
+    private MarsProgress(Map<String, Entry> saved, Map<String, Settlement> savedSettlements, Map<String, Boolean> savedAutonomy, Map<String, AutonomyRefuge> savedRefuges, Map<String, Production> savedProduction, Map<String, AutonomyRefuge> savedRequests) {
+        players.putAll(saved); settlements.putAll(savedSettlements); autonomy.putAll(savedAutonomy); autonomyRefuges.putAll(savedRefuges); production.putAll(savedProduction); nightRequests.putAll(savedRequests);
     }
     public Settlement settlement(UUID player) { return settlements.getOrDefault(player.toString(), Settlement.EMPTY); }
     private boolean updateSettlement(UUID player, Settlement value) {
