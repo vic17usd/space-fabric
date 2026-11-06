@@ -1049,7 +1049,7 @@
   "mars.settlement.search_wait": "Espera cinco segundos de tiempo de juego antes de repetir la búsqueda.",
   "mars.autonomy.locked": "Autonomía bloqueada: termina y registra la investigación del asentamiento.",
   "mars.autonomy.available": "Autonomía disponible: usa /marte autonomia iniciar para aceptarla.",
-  "mars.autonomy.accepted": "Autonomía aceptada. Mira un controlador cercano en Marte y usa /marte autonomia refugio para seleccionarlo o cambiarlo. Producción, reservas y prueba nocturna quedan pendientes.",
+  "mars.autonomy.accepted": "Autonomía aceptada. Mira un controlador cercano en Marte y usa /marte autonomia refugio para seleccionarlo o cambiarlo. Consulta los encargos con /marte autonomia produccion. Reservas y prueba nocturna pendientes.",
   "mars.autonomy.refuge.accept_first": "Primero acepta la expedición con /marte autonomia iniciar.",
   "mars.autonomy.refuge.on_mars": "Debes estar vivo en Marte, sin montar y fuera del modo espectador.",
   "mars.autonomy.refuge.look": "Mira un controlador de hábitat a cinco bloques o menos.",
@@ -1067,5 +1067,16 @@
   "mars.autonomy.refuge.too_large": "El recinto supera el límite del escáner (512 celdas de aire).",
   "mars.autonomy.refuge.weak_wall": "Las paredes no son aptas para presión.",
   "mars.autonomy.refuge.sealed": "Refugio sellado: volumen %s bloques de aire; ocupantes actuales %s.",
-  "mars.autonomy.refuge.damaged": "El controlador está averiado y necesita reparación; el sellado físico no demuestra que funcione."
+  "mars.autonomy.refuge.damaged": "El controlador está averiado y necesita reparación; el sellado físico no demuestra que funcione.",
+  "mars.production.locked": "Acepta autonomía y selecciona un refugio antes de encargar producción.",
+  "mars.production.look": "En Marte, mira de cerca el electrolizador (agua/oxigeno) o cargador solar (solar) con permiso para interactuar.",
+  "mars.production.active": "Ya tienes un encargo activo. Usa /marte autonomia produccion cancelar antes de cambiarlo.",
+  "mars.production.done": "Esta producción ya está acreditada.",
+  "mars.production.busy": "Esta máquina tiene un encargo activo de otro jugador o expedición.",
+  "mars.production.empty": "Vacía las tres entradas y espera a que el progreso sea cero; repara la máquina si está averiada.",
+  "mars.production.bound": "Encargo %s en %s. Introduce los ingredientes después de registrarlo.",
+  "mars.production.cancelled": "Encargo cancelado; las producciones ya acreditadas se conservan.",
+  "mars.production.status": "Producción local: %s agua del hielo | %s oxígeno | %s energía solar.",
+  "mars.production.help": "Mira la máquina vacía y usa /marte autonomia produccion agua, oxigeno o solar. Una tanda nueva acredita cada proceso. Reservas y noche pendientes.",
+  "mars.production.credited": "Producción real acreditada."
 }

@@ -41,11 +41,24 @@ public final class MarsProgress extends SavedData {
                 net.minecraft.core.UUIDUtil.STRING_CODEC.fieldOf("controller").forGetter(AutonomyRefuge::controller)
         ).apply(i, AutonomyRefuge::new));
     }
+    public record Production(int flags, Optional<BlockPos> machine, Optional<UUID> identity,
+                             Optional<UUID> ticket, String kind, int baseline) {
+        public static final Production EMPTY = new Production(0, Optional.empty(), Optional.empty(), Optional.empty(), "", 0);
+        public static final Codec<Production> CODEC = RecordCodecBuilder.create(i -> i.group(
+            Codec.intRange(0,7).optionalFieldOf("flags",0).forGetter(Production::flags),
+            BlockPos.CODEC.optionalFieldOf("machine").forGetter(Production::machine),
+            net.minecraft.core.UUIDUtil.STRING_CODEC.optionalFieldOf("identity").forGetter(Production::identity),
+            net.minecraft.core.UUIDUtil.STRING_CODEC.optionalFieldOf("ticket").forGetter(Production::ticket),
+            Codec.STRING.optionalFieldOf("kind", "").forGetter(Production::kind),
+            Codec.intRange(0,Integer.MAX_VALUE).optionalFieldOf("baseline",0).forGetter(Production::baseline)
+        ).apply(i, Production::new));
+    }
     public static final Codec<MarsProgress> CODEC = RecordCodecBuilder.create(i -> i.group(
             Codec.unboundedMap(Codec.STRING, Entry.CODEC).optionalFieldOf("players", Map.of()).forGetter(p -> Map.copyOf(p.players)),
             Codec.unboundedMap(Codec.STRING, Settlement.CODEC).optionalFieldOf("settlements", Map.of()).forGetter(p -> Map.copyOf(p.settlements)),
             Codec.unboundedMap(Codec.STRING, Codec.BOOL).optionalFieldOf("autonomy", Map.of()).forGetter(p -> Map.copyOf(p.autonomy)),
-            Codec.unboundedMap(Codec.STRING, AutonomyRefuge.CODEC).optionalFieldOf("autonomy_refuges", Map.of()).forGetter(p -> Map.copyOf(p.autonomyRefuges))
+            Codec.unboundedMap(Codec.STRING, AutonomyRefuge.CODEC).optionalFieldOf("autonomy_refuges", Map.of()).forGetter(p -> Map.copyOf(p.autonomyRefuges)),
+            Codec.unboundedMap(Codec.STRING, Production.CODEC).optionalFieldOf("autonomy_production", Map.of()).forGetter(p -> Map.copyOf(p.production))
     ).apply(i, MarsProgress::new));
     public static final SavedDataType<MarsProgress> TYPE = new SavedDataType<>(
             SpaceFabric.id("mars_expedition"), MarsProgress::new, CODEC, DataFixTypes.LEVEL);
@@ -54,6 +67,7 @@ public final class MarsProgress extends SavedData {
     private final Map<String, Settlement> settlements = new LinkedHashMap<>();
     private final Map<String, Boolean> autonomy = new LinkedHashMap<>();
     private final Map<String, AutonomyRefuge> autonomyRefuges = new LinkedHashMap<>();
+    private final Map<String, Production> production = new LinkedHashMap<>();
     public enum AutonomyStatus { LOCKED, AVAILABLE, ACCEPTED }
     public AutonomyStatus autonomyStatus(UUID player) {
         if (!entry(player).complete() || settlement(player).stage() != 5) return AutonomyStatus.LOCKED;
@@ -68,11 +82,30 @@ public final class MarsProgress extends SavedData {
         if (autonomyStatus(player) != AutonomyStatus.ACCEPTED) return false;
         var binding = new AutonomyRefuge(pos.immutable(), controller);
         if (autonomyRefuge(player).filter(binding::equals).isPresent()) return false;
-        autonomyRefuges.put(player.toString(), binding); setDirty(); return true;
+        autonomyRefuges.put(player.toString(), binding); production.remove(player.toString()); setDirty(); return true;
+    }
+    public Production production(UUID player) { return production.getOrDefault(player.toString(), Production.EMPTY); }
+    public boolean commissionProduction(UUID player, BlockPos pos, UUID identity, UUID ticket, String kind, int baseline) {
+        if (autonomyStatus(player) != AutonomyStatus.ACCEPTED || autonomyRefuge(player).isEmpty()
+                || production(player).ticket().isPresent() || productionBit(kind)==0 || baseline<0) return false;
+        production.put(player.toString(), new Production(production(player).flags(), Optional.of(pos.immutable()), Optional.of(identity), Optional.of(ticket), kind, baseline));
+        setDirty(); return true;
+    }
+    public static int productionBit(String kind) { return switch(kind) {case "agua" -> 1; case "oxigeno" -> 2; case "solar" -> 4; default -> 0;}; }
+    public boolean cancelProduction(UUID player) {
+        var old=production(player); if (old.ticket().isEmpty()) return false;
+        production.put(player.toString(),new Production(old.flags(),Optional.empty(),Optional.empty(),Optional.empty(),"",0)); setDirty(); return true;
+    }
+    public boolean recordProduction(UUID player, BlockPos pos, UUID identity, UUID ticket, String kind, int batches) {
+        var old=production(player);
+        if (autonomyStatus(player)!=AutonomyStatus.ACCEPTED || autonomyRefuge(player).isEmpty()
+                || !old.machine().filter(pos::equals).isPresent() || !old.identity().filter(identity::equals).isPresent()
+                || !old.ticket().filter(ticket::equals).isPresent() || !old.kind().equals(kind) || batches<=old.baseline()) return false;
+        production.put(player.toString(),new Production(old.flags()|productionBit(kind),Optional.empty(),Optional.empty(),Optional.empty(),"",0)); setDirty(); return true;
     }
     public MarsProgress() { }
-    private MarsProgress(Map<String, Entry> saved, Map<String, Settlement> savedSettlements, Map<String, Boolean> savedAutonomy, Map<String, AutonomyRefuge> savedRefuges) {
-        players.putAll(saved); settlements.putAll(savedSettlements); autonomy.putAll(savedAutonomy); autonomyRefuges.putAll(savedRefuges);
+    private MarsProgress(Map<String, Entry> saved, Map<String, Settlement> savedSettlements, Map<String, Boolean> savedAutonomy, Map<String, AutonomyRefuge> savedRefuges, Map<String, Production> savedProduction) {
+        players.putAll(saved); settlements.putAll(savedSettlements); autonomy.putAll(savedAutonomy); autonomyRefuges.putAll(savedRefuges); production.putAll(savedProduction);
     }
     public Settlement settlement(UUID player) { return settlements.getOrDefault(player.toString(), Settlement.EMPTY); }
     private boolean updateSettlement(UUID player, Settlement value) {

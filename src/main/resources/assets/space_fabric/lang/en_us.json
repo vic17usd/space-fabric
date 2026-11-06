@@ -1049,7 +1049,7 @@
   "mars.settlement.search_wait": "Wait five seconds of game time before searching again.",
   "mars.autonomy.locked": "Self-sufficiency locked: finish and register the settlement investigation.",
   "mars.autonomy.available": "Self-sufficiency available: use /marte autonomia iniciar to accept.",
-  "mars.autonomy.accepted": "Self-sufficiency accepted. Look at a nearby controller on Mars and use /marte autonomia refugio to select or change it. Production, reserves and the night trial are pending.",
+  "mars.autonomy.accepted": "Self-sufficiency accepted. Look at a nearby controller on Mars and use /marte autonomia refugio to select or change it. See /marte autonomia produccion for production commissions. Reserves and the night trial are pending.",
   "mars.autonomy.refuge.accept_first": "First accept the expedition with /marte autonomia iniciar.",
   "mars.autonomy.refuge.on_mars": "You must be alive on Mars, unmounted and not a spectator.",
   "mars.autonomy.refuge.look": "Look at a habitat controller within five blocks.",
@@ -1067,5 +1067,16 @@
   "mars.autonomy.refuge.too_large": "The room exceeds the scanner limit (512 air cells).",
   "mars.autonomy.refuge.weak_wall": "The walls are not pressure rated.",
   "mars.autonomy.refuge.sealed": "Shelter sealed: volume %s air blocks; current occupants %s.",
-  "mars.autonomy.refuge.damaged": "The controller is damaged and needs repair; a sealed room does not prove it is operating."
+  "mars.autonomy.refuge.damaged": "The controller is damaged and needs repair; a sealed room does not prove it is operating.",
+  "mars.production.locked": "Accept self-sufficiency and select a shelter first.",
+  "mars.production.look": "On Mars, look at a nearby electrolyzer (agua/oxigeno) or solar charger (solar) with interaction permission.",
+  "mars.production.active": "You have an active commission. Use /marte autonomia produccion cancelar before changing it.",
+  "mars.production.done": "This production is already credited.",
+  "mars.production.busy": "This machine already has an active expedition commission.",
+  "mars.production.empty": "Empty all three input slots and wait for zero progress; repair the machine if damaged.",
+  "mars.production.bound": "Commission %s at %s. Insert ingredients after commissioning.",
+  "mars.production.cancelled": "Commission cancelled; credited production is retained.",
+  "mars.production.status": "Local production: %s ice water | %s oxygen | %s solar power.",
+  "mars.production.help": "Look at an empty machine and use /marte autonomia produccion agua, oxigeno or solar. One new batch credits each process. Reserves and night trial pending.",
+  "mars.production.credited": "Actual production credited."
 }

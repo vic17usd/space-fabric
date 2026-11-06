@@ -206,7 +206,7 @@ public final class ColonyMachineBlockEntity extends BaseContainerBlockEntity imp
         if(!blocker.isEmpty()){status=blocker;return;}
         status="processing";workedSinceThermal=true;progress++;setChanged();
         if(progress>=formula.duration()&&(kind()!=ColonyContent.Machine.RECLAIMER||environment.recovery()!=null&&environment.recovery().respired()>=4800)&&formula.commit(this)){if(kind()==ColonyContent.Machine.RECLAIMER)environment.recovery().reclaim();if(kind()==ColonyContent.Machine.EXCHANGER)coolingCharge=ThermalSystem.CHARGE;lastCompletedRecipe=formula.id();progress=0;completedBatches=Math.min(Integer.MAX_VALUE-1,completedBatches)+1;
-            if(level instanceof ServerLevel server) MarsSettlementExpedition.processed(server,this,formula);}
+            if(level instanceof ServerLevel server) { MarsSettlementExpedition.processed(server,this,formula); MarsAutonomyProduction.processed(server,this,formula); }}
     }
     @Override public void setRemoved(){HabitatSystem.remove(this);ThermalSystem.remove(this);thermalOwner=null;active=false;super.setRemoved();}
     @Override public int getContainerSize(){return 9;}

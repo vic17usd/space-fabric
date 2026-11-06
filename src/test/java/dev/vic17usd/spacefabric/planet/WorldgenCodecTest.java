@@ -4191,4 +4191,29 @@ class WorldgenCodecTest {
         var replacement=new dev.vic17usd.spacefabric.colony.ColonyMachineBlockEntity(pos,state);
         assertFalse(original.controllerIdentity().equals(replacement.controllerIdentity()));
     }
+    @Test void autonomyProductionCreditsOnlyActualNewNativeProcessorBatches() {
+        var player=java.util.UUID.randomUUID();
+        var data=com.google.gson.JsonParser.parseString("{\"players\":{\""+player+"\":{\"milestones\":63}},\"settlements\":{\""+player+"\":{\"stage\":5}}}");
+        var p=dev.vic17usd.spacefabric.colony.MarsProgress.CODEC.parse(com.mojang.serialization.JsonOps.INSTANCE,data).getOrThrow();
+        p.acceptAutonomy(player); p.bindAutonomyRefuge(player,net.minecraft.core.BlockPos.ZERO,java.util.UUID.randomUUID());
+        for (var recipe:java.util.List.of("melt_0","electrolysis","solar")) {
+            var machine=industryMachine(recipe);
+            var formula=dev.vic17usd.spacefabric.colony.ColonyRecipes.ALL.stream().filter(f->f.id().equals(recipe)).findFirst().orElseThrow();
+            var kind=dev.vic17usd.spacefabric.colony.MarsAutonomyProduction.kind(formula);
+            var ticket=java.util.UUID.randomUUID();
+            assertTrue(p.commissionProduction(player,machine.getBlockPos(),machine.controllerIdentity(),ticket,kind,machine.completedBatches()));
+            machine.marsCommission(new dev.vic17usd.spacefabric.colony.ColonyMachineBlockEntity.MarsCommission(player,ticket));
+            assertFalse(dev.vic17usd.spacefabric.colony.MarsAutonomyProduction.creditCycle(p,machine,formula));
+            var blocked=new dev.vic17usd.spacefabric.colony.ColonyEnvironment(false,false,false,false);
+            if (recipe.equals("solar")) {
+                for(int tick=0;tick<500;tick++) machine.processTick(blocked);
+                assertEquals(0,machine.completedBatches());
+            }
+            var environment=new dev.vic17usd.spacefabric.colony.ColonyEnvironment(false,false,true,false);
+            for(int tick=0;tick<formula.duration();tick++) machine.processTick(environment);
+            assertTrue(dev.vic17usd.spacefabric.colony.MarsAutonomyProduction.creditCycle(p,machine,formula));
+            assertFalse(dev.vic17usd.spacefabric.colony.MarsAutonomyProduction.creditCycle(p,machine,formula));
+        }
+        assertEquals(7,p.production(player).flags());
+    }
 }

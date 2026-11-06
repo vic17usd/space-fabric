@@ -49,4 +49,22 @@ class MarsAutonomyProgressTest {
         changed.clear(); changed.put(vent.above(),SealScanner.Cell.UNLOADED); assertEquals("unloaded",MarsAutonomyRefuge.inspect(room,world,vent));
         assertEquals("too_large",MarsAutonomyRefuge.inspect(new SealScanner.Room(SealScanner.Status.TOO_LARGE,java.util.Set.of(),java.util.Map.of()),world,vent));
     }
+    @Test void productionRejectsOldWrongAndReplayedWorkAndPersists() {
+        var player=UUID.randomUUID(); var p=load(player,5); var pos=net.minecraft.core.BlockPos.ZERO;
+        var machine=UUID.randomUUID(); var ticket=UUID.randomUUID();
+        assertFalse(p.commissionProduction(player,pos,machine,ticket,"agua",10));
+        p.acceptAutonomy(player); p.bindAutonomyRefuge(player,pos,UUID.randomUUID());
+        assertTrue(p.commissionProduction(player,pos,machine,ticket,"agua",10));
+        assertFalse(p.recordProduction(player,pos,machine,ticket,"agua",10));
+        assertFalse(p.recordProduction(player,pos,UUID.randomUUID(),ticket,"agua",11));
+        assertFalse(p.recordProduction(player,pos,machine,UUID.randomUUID(),"agua",11));
+        assertFalse(p.recordProduction(player,pos,machine,ticket,"oxigeno",11));
+        p=MarsProgress.CODEC.parse(JsonOps.INSTANCE,MarsProgress.CODEC.encodeStart(JsonOps.INSTANCE,p).getOrThrow()).getOrThrow();
+        assertTrue(p.recordProduction(player,pos,machine,ticket,"agua",11));
+        assertFalse(p.recordProduction(player,pos,machine,ticket,"agua",12)); assertEquals(1,p.production(player).flags());
+        assertTrue(p.commissionProduction(player,pos,machine,UUID.randomUUID(),"solar",11));
+        assertTrue(p.cancelProduction(player)); assertEquals(1,p.production(player).flags());
+        assertFalse(p.recordProduction(player,pos,machine,ticket,"solar",12));
+        p.bindAutonomyRefuge(player,pos,UUID.randomUUID()); assertEquals(0,p.production(player).flags());
+    }
 }
