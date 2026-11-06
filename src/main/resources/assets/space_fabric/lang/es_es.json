@@ -1080,5 +1080,13 @@
   "mars.production.help": "Mira la máquina vacía y usa /marte autonomia produccion agua, oxigeno o solar. Una tanda nueva acredita cada proceso. Reservas y noche pendientes.",
   "mars.production.credited": "Producción real acreditada.",
   "mars.autonomy.reserves.controller": "Controlador (interior y entradas utilizables): O2 %s/%s, energía %s/%s, agua %s/%s. Previsión conservadora con presurización.",
-  "mars.autonomy.reserves.pending": "Cifras parciales: redes y depósitos externos aún no evaluados. La preparación y la prueba nocturna siguen pendientes."
+  "mars.autonomy.reserves.pending": "Cifras parciales: redes y depósitos externos aún no evaluados. La preparación y la prueba nocturna siguen pendientes.",
+  "mars.autonomy.reserves.network": "Red conectada: %s interfaces, %s depósitos de oxígeno o energía; O2 utilizable %s, energía %s. Agua almacenada %s/%s (manual).",
+  "mars.autonomy.reserves.incomplete": "No disponible: hay partes de la red descargadas o se superó su límite.",
+  "mars.autonomy.reserves.blocked": "Alguna interfaz o red está bloqueada o carece de envases; sus recursos no se cuentan.",
+  "mars.autonomy.reserves.enough": "Reservas suficientes en esta observación; prueba nocturna pendiente.",
+  "mars.autonomy.reserves.insufficient": "Reservas insuficientes o información no disponible; revisa las cifras y conexiones.",
+  "mars.autonomy.reserves.shared": "Las reservas de red son compartidas y pueden cambiar si otros consumidores las utilizan.",
+  "mars.autonomy.reserves.not_operating": "El controlador no está funcionando y presurizado.",
+  "mars.autonomy.reserves.startup_capacity": "La presurización y respiración inicial superan la capacidad del controlador."
 }

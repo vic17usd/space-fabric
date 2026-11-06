@@ -65,7 +65,23 @@ final class MarsAutonomyRefuge {
                 returnCapacity(machine.getItem(6), ColonyContent.EMPTY_CANISTER),
                 returnCapacity(machine.getItem(5), ColonyContent.EMPTY_POWER_CELL));
         player.sendSystemMessage(Component.translatable("mars.autonomy.reserves.controller", stock.oxygen(), required.oxygen(), stock.energy(), required.energy(), stock.water(), required.water()));
-        player.sendSystemMessage(Component.translatable("mars.autonomy.reserves.pending"));
+        var network = MarsReserveNetwork.inspect(level, machine);
+        long oxygen = stock.oxygen() + network.oxygen(), energy = stock.energy() + network.energy();
+        int water = MarsExpeditionChecks.storedWater(machine, room, world, p -> {
+            var loaded = level.getChunkSource().getChunkNow(p.getX() >> 4, p.getZ() >> 4);
+            return loaded == null ? null : loaded.getBlockEntity(p);
+        });
+        player.sendSystemMessage(Component.translatable("mars.autonomy.reserves.network", network.ports(), network.tanks(), network.oxygen(), network.energy(), water, required.water()));
+        if (network.incomplete()) player.sendSystemMessage(Component.translatable("mars.autonomy.reserves.incomplete"));
+        if (network.blocked()) player.sendSystemMessage(Component.translatable("mars.autonomy.reserves.blocked"));
+        boolean operational = machine.operating() && machine.support().pressurized();
+        if (!operational) player.sendSystemMessage(Component.translatable("mars.autonomy.reserves.not_operating"));
+        boolean fitsStartup = 2L * room.air().size() + occupants <= LifeSupport.CAPACITY;
+        if (!fitsStartup) player.sendSystemMessage(Component.translatable("mars.autonomy.reserves.startup_capacity"));
+        boolean enough = operational && fitsStartup && !network.incomplete() && oxygen >= required.oxygen()
+                && energy >= required.energy() && water >= required.water();
+        player.sendSystemMessage(Component.translatable(enough ? "mars.autonomy.reserves.enough" : "mars.autonomy.reserves.insufficient"));
+        player.sendSystemMessage(Component.translatable("mars.autonomy.reserves.shared"));
     }
     private static int returnCapacity(net.minecraft.world.item.ItemStack stack, net.minecraft.world.item.Item item) {
         return stack.isEmpty() ? item.getDefaultInstance().getMaxStackSize()

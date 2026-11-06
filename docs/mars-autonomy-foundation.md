@@ -72,18 +72,40 @@ una sesión multijugador; deben comprobarse los comandos, las reconexiones y el
 recorrido anterior dentro de Minecraft. No se han modificado las recetas ni las
 capacidades para esta demostración.
 
-### Lectura preliminar de reservas del controlador
+### Reservas de la base
 
-`/marte autonomia` muestra una estimación parcial del propio controlador cuando el
-recinto seleccionado está sellado y disponible. Incluye presupuestos internos y
-bombonas o baterías en las entradas cuyo envase de retorno cabe en la salida. El
-agua de la tercera entrada se muestra como almacenamiento, no como consumo del
-soporte vital. Se presupuesta una presurización completa de 2 unidades por bloque
-de aire y un margen del 25 % sobre 600 ciclos de soporte vital para una noche de
-12.000 ticks. La cifra es conservadora y no equivale a una prueba de autonomía.
+`/marte autonomia` consulta sin transferir recursos. Las entradas del controlador
+cuentan solo si hay sitio para los envases de retorno. La red se descubre a través
+de interfaces adyacentes dirigidas al controlador: no hace falta vincular depósitos
+por coordenadas. Al desconectar, cerrar o sustituir tuberías e instalaciones se
+recalcula la conexión real. Las interfaces deshabilitadas y redes mezcladas no
+aportan reservas; faltas de chunks o redes mayores de 128 nodos se informan como
+datos incompletos. No se cargan chunks ni se reservan recursos de la red.
 
-**Pendiente:** esta lectura no inspecciona depósitos ni redes externas, no vincula
-instalaciones y no declara que el refugio esté preparado. La comprobación real deberá
-verificar las interfaces, envases, recursos compartidos, topología y disponibilidad
-antes de incluirlos. Unidades de red de oxígeno (1.000 por bombona) y unidades del
-soporte vital (2.400 por bombona consumida) no son intercambiables directamente.
+La interfaz necesita una bombona o batería vacía y espacio en la salida del
+controlador. El cálculo cuenta únicamente redes con envases y la entrada correspondiente vacía o con una sola unidad;
+es conservador cuando un envase podría llegar más tarde. Deduplica depósitos por
+posición y calcula bombonas completas para cada conjunto de redes alcanzables por
+una interfaz. Una bombona representa 1.000 unidades de oxígeno en la red y 2.400
+en el soporte vital; una batería representa 2.400 unidades en ambos. Otros
+consumidores pueden reducir los suministros compartidos tras la consulta.
+
+El agua de la tercera entrada y depósitos de agua integrados en la habitación sigue
+la misma regla de la primera expedición: hasta dos bombonas (2.000 unidades). Es
+almacenamiento accesible manualmente, no un consumo del soporte vital en Marte.
+No se cuenta agua de redes sin esa pertenencia. Los objetos en el inventario del
+jugador no cuentan. Las acreditaciones de producción son independientes.
+
+Se calcula una noche de 12.000 ticks, 600 ciclos de soporte vital, 25 % de margen
+sobre el consumo y una presurización conservadora de 2 unidades por bloque de aire.
+Cada ocupante consume una unidad de oxígeno por ciclo y la energía consume cinco.
+Ejemplo: un recinto de 100 bloques y dos ocupantes requiere 1.700 unidades de
+oxígeno, 3.750 de energía y 2.000 de agua almacenada; sin ocupantes requiere 200,
+3.750 y 2.000 respectivamente. La capacidad interna de 9.600 admite estos ejemplos;
+para grupos mayores pueden requerirse entradas o redes adicionales. Una demanda
+inicial que supera la capacidad impide marcar reservas suficientes.
+
+La suficiencia es una instantánea: requiere controlador operativo, recinto sellado,
+datos completos y reservas suficientes. No garantiza una noche de funcionamiento:
+otros consumidores, cambios de ocupantes o averías pueden alterar el resultado. La
+prueba nocturna y la recompensa permanecen pendientes.

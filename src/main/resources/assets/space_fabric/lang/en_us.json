@@ -1080,5 +1080,13 @@
   "mars.production.help": "Look at an empty machine and use /marte autonomia produccion agua, oxigeno or solar. One new batch credits each process. Reserves and night trial pending.",
   "mars.production.credited": "Actual production credited.",
   "mars.autonomy.reserves.controller": "Controller (internal and usable inputs): O2 %s/%s, energy %s/%s, water %s/%s. Conservative estimate includes pressurization.",
-  "mars.autonomy.reserves.pending": "Partial figures: external networks and tanks are not yet evaluated. Readiness and the night trial remain pending."
+  "mars.autonomy.reserves.pending": "Partial figures: external networks and tanks are not yet evaluated. Readiness and the night trial remain pending.",
+  "mars.autonomy.reserves.network": "Connected network: %s interfaces, %s oxygen or energy tanks; usable O2 %s, energy %s. Stored water %s/%s (manual).",
+  "mars.autonomy.reserves.incomplete": "Unavailable: network data is unloaded or exceeds the scan limit.",
+  "mars.autonomy.reserves.blocked": "An interface or network is blocked or lacks empty containers; its resources are excluded.",
+  "mars.autonomy.reserves.enough": "Reserves sufficient in this observation; night trial pending.",
+  "mars.autonomy.reserves.insufficient": "Reserves insufficient or information unavailable; check quantities and connections.",
+  "mars.autonomy.reserves.shared": "Network reserves are shared and may change when other machines consume them.",
+  "mars.autonomy.reserves.not_operating": "The controller is not operating and pressurized.",
+  "mars.autonomy.reserves.startup_capacity": "Initial pressurization and breathing exceed controller capacity."
 }
