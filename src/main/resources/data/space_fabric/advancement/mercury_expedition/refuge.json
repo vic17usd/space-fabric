@@ -1,0 +1,13 @@
+{
+  "parent": "minecraft:adventure/root",
+  "display": {
+    "icon": { "id": "space_fabric:mercury_regolith" },
+    "title": { "translate": "advancement.space_fabric.mercury_refuge.title" },
+    "description": { "translate": "advancement.space_fabric.mercury_refuge.description" },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": { "verified": { "trigger": "minecraft:impossible" } }
+}

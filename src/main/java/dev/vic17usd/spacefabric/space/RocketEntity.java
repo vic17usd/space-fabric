@@ -263,6 +263,7 @@ public final class RocketEntity extends Entity implements ExtendedMenuProvider<I
 
     public void finishLanding() {
         dev.vic17usd.spacefabric.colony.MarsOnboarding.landed(this);
+        dev.vic17usd.spacefabric.colony.MercuryExpedition.landed(this);
         abort(); resetFallDistance(); getPassengers().forEach(Entity::resetFallDistance);
     }
     private void abort() {clearLandingSearch();setFlightPhase(RocketRules.IDLE);setDeltaMovement(Vec3.ZERO);}
