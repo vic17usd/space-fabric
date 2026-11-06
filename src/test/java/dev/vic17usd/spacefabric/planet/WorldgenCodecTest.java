@@ -4066,7 +4066,9 @@ class WorldgenCodecTest {
     }
 
     @Test void marsHudExpiresDisconnectsAndCanDisplayCurrentFailuresWithoutDeletingHistory() {
-        var tracker = new MarsMissionTracker(); assertFalse(tracker.ready());
+        var tracker = new MarsMissionTracker(); assertFalse(tracker.ready()); assertFalse(tracker.available());
+        tracker.accept(MarsGuideNetwork.State.EMPTY); assertTrue(tracker.available()); assertFalse(tracker.ready());
+        for (int tick = 0; tick < 61; tick++) tracker.tick(); assertFalse(tracker.available());
         tracker.accept(new MarsGuideNetwork.State(31, Optional.of(MARS_CONTROLLER), true, 600, 1500, 2000)); assertTrue(tracker.ready());
         tracker.accept(new MarsGuideNetwork.State(3, Optional.of(MARS_CONTROLLER), false, 0, 1500, 0));
         assertFalse(tracker.state().has(MarsProgress.SEALED));

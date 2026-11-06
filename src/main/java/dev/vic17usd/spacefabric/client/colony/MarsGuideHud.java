@@ -59,7 +59,7 @@ public final class MarsGuideHud {
     }
     private static void draw(GuiGraphicsExtractor gui) {
         var client = Minecraft.getInstance();
-        if (!STATE.ready() || client.level == null || client.player == null || !client.player.isAlive()
+        if (!STATE.available() || client.level == null || client.player == null || !client.player.isAlive()
                 || client.player.isSpectator() || client.options.hideGui || client.screen != null
                 || PlanetDimensions.find(client.level).orElse(null) != Planet.MARS
                 || client.player.getVehicle() instanceof RocketEntity rocket && rocket.isFlying()) return;
@@ -78,12 +78,15 @@ public final class MarsGuideHud {
                 text(gui, Component.literal("/marte expedicion"), y + 3, width, 0xFF65D9ED);
                 return;
             }
+            if (!state.has(MarsProgress.ARRIVAL))
+                y = text(gui, Component.translatable("mars.guide.arrival.detail"), y, width, 0xFF65D9ED) + 3;
             String[] steps = {"refuge", "sealed", "supplies", "water"};
             for (int i = 0; i < steps.length; i++) {
                 boolean done = state.has(2 << i);
                 var line = Component.literal(done ? "✓ " : "○ ").append(Component.translatable("mars.guide." + steps[i]));
                 y = text(gui, line, y, width, done ? 0xFF8DE9BE : 0xFFE0E7EB) + 2;
             }
+            if (!state.has(MarsProgress.ARRIVAL)) return;
             String hint = !state.has(MarsProgress.REFUGE) ? "select" : !state.has(MarsProgress.SEALED) ? "seal_hint"
                     : !state.has(MarsProgress.SUPPLIES) ? "supply_hint" : !state.has(MarsProgress.WATER) ? "water_hint" : "inside";
             y = text(gui, Component.translatable("mars.guide." + hint), y + 2, width, 0xFF65D9ED);

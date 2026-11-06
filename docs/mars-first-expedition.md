@@ -223,3 +223,9 @@ del HUD en pantalla. La lista de comprobación manual es:
 Desde 0.61.0 puedes [investigar un asentamiento marciano](mars-settlement-expedition.md)
 tras completar el refugio. Usa `/marte expedicion` o el botón **Expedición II**
 en la consola de entrenamiento.
+
+La lista de objetivos en la esquina también se muestra cuando el servidor informa
+que el jugador está en Marte pero todavía no tiene registrado un aterrizaje. En ese
+caso explica cómo iniciar la misión y no marca la llegada ni concede progreso;
+el aterrizaje real sigue siendo necesario. El estado visual caduca si dejan de
+llegar actualizaciones del servidor.
