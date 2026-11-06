@@ -57,7 +57,8 @@ no quedan chunks forzados permanentemente. Guardar o desconectar reconstruye la
 búsqueda al reanudar, conservando combustible, carga y destino.
 
 Antes de transferir se vuelven a comprobar suelo, obstáculos, entidades y borde
-del mundo. Si no hay terreno seguro, se vuelve al punto de lanzamiento sin
+del mundo. Si el punto elegido quedó obstruido, la búsqueda continúa con otro
+chunk dentro de su presupuesto original, manteniendo el crucero. Si no hay terreno seguro, se vuelve al punto de lanzamiento sin
 crear un suelo flotante de emergencia. Las plataformas de versiones anteriores
 **no se borran** de las partidas existentes.
 
@@ -144,3 +145,19 @@ con las clases nativas de vértices, verificando límites, luz y geometría sin 
 La vista previa se reproduce con `./gradlew exportRocketJourneyPreview` seguido
 de `python3 tools/preview_rocket_journey.py` (Pillow y NumPy). Instala
 **space-fabric-0.27.0.jar en cliente y servidor**; no hace falta regenerar terreno.
+
+### Comprobación de regreso inesperado (0.61.4)
+
+Si una zona elegida deja de ser segura antes de la transferencia, se descarta y
+la búsqueda continúa con el siguiente chunk, respetando los límites ya existentes.
+Si se agotan los candidatos o el presupuesto, el vuelo sigue regresando con el
+aviso de que no se encontró un aterrizaje seguro. El cambio no crea plataformas ni
+altera el terreno de juego.
+
+Se comprobó el caso con el cliente y servidor integrados de Minecraft 26.1 en una
+copia desechable de un mundo: un fixture en creativo despegó con el cohete de Marte,
+bloqueó deliberadamente el primer punto y confirmó la llegada del piloto y el
+aterrizaje en otro punto de Marte. Las pruebas automáticas también cubren el
+reintento limitado. Es un fixture preparado, no una partida completa en
+supervivencia; tampoco reproduce necesariamente todas las causas posibles de un
+regreso inesperado.

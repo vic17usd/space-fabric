@@ -1,5 +1,8 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión **0.61.4** continúa buscando si la zona de aterrizaje elegida se vuelve
+insegura antes de llegar.
+
 La versión **0.61.3** inclina suavemente el cohete hacia su destino durante la
 travesía espacial en tercera persona.
 
@@ -13,6 +16,8 @@ cambios de expediciones y hábitats integrados en la rama de desarrollo.
 > número (por ejemplo, 0.61.0 → 0.61.1). Las actualizaciones que incorporan varios
 > cambios incrementan el número intermedio y reinician el último (0.61.x → 0.62.0).
 > Cada versión instalable se conserva con su propio JAR y SHA-256 en `dist/`.
+>
+> [Descargar 0.61.4](dist/space-fabric-0.61.4.jar) · [SHA-256](dist/space-fabric-0.61.4.jar.sha256)
 >
 > [Descargar 0.61.3](dist/space-fabric-0.61.3.jar) · [SHA-256](dist/space-fabric-0.61.3.jar.sha256)
 >

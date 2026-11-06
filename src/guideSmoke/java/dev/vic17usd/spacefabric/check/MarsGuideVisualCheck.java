@@ -12,9 +12,15 @@ public final class MarsGuideVisualCheck implements ClientModInitializer {
     private boolean opened;
     @Override public void onInitializeClient() {
         if (MarsSettlementPlayCheck.enabled()) MarsSettlementPlayCheck.register();
+        if (MarsRocketPlayCheck.enabled()) MarsRocketPlayCheck.register();
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (!opened && client.player != null && client.level != null && client.screen == null && client.getOverlay() == null) {
                 opened = true;
+                if (MarsRocketPlayCheck.enabled()) {
+                    var server=client.getSingleplayerServer(); var id=client.player.getUUID();
+                    if(server!=null)server.execute(()->MarsRocketPlayCheck.start(server,id));
+                    return;
+                }
                 if (MarsSettlementPlayCheck.enabled()) {
                     var server = client.getSingleplayerServer();
                     var id = client.player.getUUID();

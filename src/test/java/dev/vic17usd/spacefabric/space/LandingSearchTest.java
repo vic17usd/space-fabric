@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class LandingSearchTest {
+    @org.junit.jupiter.api.BeforeAll static void bootstrap(){net.minecraft.SharedConstants.tryDetectVersion();net.minecraft.server.Bootstrap.bootStrap();}
     private static class Chunks implements LandingSearch.Chunks {
         final ArrayList<ChunkPos> requests = new ArrayList<>();
         CompletableFuture<LandingPlanner.World> future = new CompletableFuture<>();
@@ -67,5 +68,14 @@ class LandingSearchTest {
         var chunks = new Chunks();chunks.future.complete(new LandingPlannerTest.World());
         var search = new LandingSearch(chunks,true,0);search.tick();
         assertTrue(search.done());assertEquals(239,search.floor().getY());assertTrue(search.orbital());
+    }
+    @Test void occupiedSiteIsRejectedAndSearchContinuesWithinOriginalBudget() {
+        var chunks=new Chunks(); var world=new LandingPlannerTest.World(); chunks.future.complete(world);
+        var search=new LandingSearch(chunks,false,0);search.tick();assertTrue(search.done());
+        var original=search.floor(); world.available=false;
+        assertTrue(search.retryIfObstructed());assertFalse(search.done());assertNull(search.floor());
+        assertEquals(1,chunks.requests.size());world.available=true;search.tick();
+        assertTrue(search.done());assertNotNull(search.floor());assertNotEquals(original,search.floor());
+        assertEquals(2,chunks.requests.size());assertFalse(search.retryIfObstructed());
     }
 }

@@ -64,6 +64,11 @@ public final class LandingSearch implements AutoCloseable {
 
     private void next() { index++; pending = null; }
     private void fail() { done = true; world = null; floor = null; pending = null; }
+    /** A chosen site can become obstructed before transfer. Keep the original bounded search budget. */
+    public boolean retryIfObstructed() {
+        if (closed || !done || floor == null || world == null || LandingPlanner.suitable(world, floor, orbital)) return false;
+        done=false; floor=null; world=null; next(); return true;
+    }
     public boolean done() { return done; }
     public BlockPos floor() { return floor; }
     public LandingPlanner.World world() { return world; }

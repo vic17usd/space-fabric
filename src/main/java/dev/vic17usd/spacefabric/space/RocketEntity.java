@@ -210,6 +210,11 @@ public final class RocketEntity extends Entity implements ExtendedMenuProvider<I
             // Keep the last second's fade until terrain is ready, instead of flashing black and reopening space.
             entityData.set(JOURNEY_TICKS,RocketJourney.cruiseClock(journeyTicks(),journeyDuration(),waiting));
             if(journeyTicks()>=journeyDuration() && (landingSearch==null || landingSearch.done())) {
+                if (landingSearch!=null && landingSearch.retryIfObstructed()) {
+                    entityData.set(LANDING_WAIT,true);
+                    entityData.set(JOURNEY_TICKS,Math.max(0,journeyDuration()-21));
+                    return;
+                }
                 setFlightPhase(RocketRules.TRANSFERRING);
                 boolean transferred=SpaceTravel.transfer(this,landingSearch);
                 clearLandingSearch();
