@@ -14,7 +14,8 @@
     "SuitRendererMixin",
     "ChatMessagesAccessor",
     "ChatDraftAccessor",
-    "SphereCameraMixin"
+    "SphereCameraMixin",
+    "GuideGuiStateAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

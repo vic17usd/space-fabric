@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "id": "space_guide_smoke",
+  "version": "1.0.0",
+  "name": "Mars guide visual development check",
+  "environment": "client",
+  "entrypoints": {"client": ["dev.vic17usd.spacefabric.check.MarsGuideVisualCheck"]},
+  "depends": {"space_fabric": "*"}
+}

@@ -16,6 +16,7 @@ public final class MarsGuideHud {
     private static final MarsMissionTracker STATE = new MarsMissionTracker();
     private MarsGuideHud() { }
     public static void initialize() {
+        MarsGuideScene.initialize();
         ClientPlayNetworking.registerGlobalReceiver(MarsGuideNetwork.State.TYPE, (payload, context) -> {
             STATE.accept(payload);
             if (context.client().screen instanceof MarsGuideScreen guide) guide.accept(payload);

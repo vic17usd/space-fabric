@@ -167,3 +167,26 @@ tasks.register('verifyModBatchAssets', JavaExec) {
     mainClass = 'dev.vic17usd.spacefabric.client.imports.ModBatchCheck'
 }
 tasks.named('check') { dependsOn tasks.named('verifyModBatchAssets') }
+
+// Optional real-client visual fixture. Never packaged in the production JAR or enabled in normal launches.
+if (providers.gradleProperty('marsGuideSmoke').isPresent()) {
+    sourceSets {
+        guideSmoke {
+            compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
+            runtimeClasspath += output + sourceSets.main.runtimeClasspath
+        }
+    }
+    loom.mods {
+        space_fabric { sourceSet sourceSets.main }
+        space_guide_smoke { sourceSet sourceSets.guideSmoke }
+    }
+    loom.runs.client { source sourceSets.guideSmoke }
+    tasks.named('compileGuideSmokeJava') { dependsOn tasks.named('classes') }
+    tasks.named('runClient') { dependsOn tasks.named('guideSmokeClasses') }
+}
+tasks.register('verifyMarsGuide', JavaExec) {
+    dependsOn tasks.named('renderCheckClasses')
+    classpath = sourceSets.renderCheck.runtimeClasspath
+    mainClass = 'dev.vic17usd.spacefabric.client.colony.MarsGuideRenderCheck'
+}
+tasks.named('check') { dependsOn tasks.named('verifyMarsGuide') }

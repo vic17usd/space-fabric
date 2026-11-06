@@ -1,9 +1,48 @@
 # Resultado de validación de esta base
 
-Última entrega: **0.57.0**, 735 pruebas JUnit aprobadas, trece comprobaciones por
-CPU y 1.342 JSON válidos. Los recursos nuevos se comprueban mediante
-`verifyModBatchAssets`; queda pendiente su inspección visual en un cliente. Los apartados siguientes conservan el historial de
-la base y sus ampliaciones; la validación de las categorías creativas está al final del documento.
+Última entrega: **0.60.0**. Compilación completa correcta: **760 pruebas JUnit**,
+**14 comprobaciones de render/recursos por CPU** y **1.344 JSON** válidos.
+La guía de Marte también se inspeccionó en un cliente real de Minecraft 26.1.
+Los apartados posteriores conservan el historial de validación de la base.
+
+## Guía de Marte 0.60.0
+
+**Automático:** `./gradlew build --console=plain` completado; 760 pruebas, cero
+fallos, errores u omisiones. `python3 tools/validate_resources.py` correcto.
+La cronología comprueba pausa y subticks, repetición, final de escena, selección,
+interpolación suave, envolvente completa antes del corte y paso por las puertas
+solo cuando están abiertas. El gestor de recetas descarta respuestas antiguas,
+duplicadas y posteriores al plazo, incluso antes del siguiente tick.
+
+`verifyMarsGuide` comprueba el accessor nativo de 26.1, los encuadres de todos los
+fotogramas, el centro de cámara y la orientación de caras exigida por PiP. Una
+reflexión de un solo eje expondría caras traseras: la cámara conserva la rotación
+nativa de inventario. Los tests del escáner, soporte vital, aterrizaje, guardado y
+recompensas existentes siguen pasando. El JAR se verifica por ZIP, versión y
+coincidencia con las clases compiladas y los recursos; el fixture visual queda
+fuera del instalable.
+
+**Cliente real:** Minecraft 26.1 + Fabric, mundo de supervivencia desechable,
+Xorg virtual y Mesa llvmpipe (OpenGL por software). Se comprobó `/marte guia`, el
+botón del inventario, selección de capítulos, repetición, pausa y búsqueda en la
+barra; las recetas reales de mesa y electrolizador y el cambio rápido de objeto.
+Se revisaron encuadres, cortes, materiales, toma de aire, personaje, casillas y
+orden de dibujo. Distribuciones verificadas: 854×480 GUI a escala 1, 640×360 GUI
+a escala 2 y **320×240 GUI a escala 2**. Dos capturas separadas un segundo
+mantienen idénticos los píxeles de la maqueta pausada.
+
+**Capturas y vídeo:** [maqueta](assets/mars-guide-0.60.0.png),
+[recetas en 320×240 GUI](assets/mars-guide-0.60.0-compact.png) y
+[construcción animada, 17 segundos](assets/mars-guide-0.60.0.mp4).
+Proceden del cliente real; no son maquetas externas ni imágenes generadas. El
+vídeo se decodificó completo para verificar su integridad. Las capturas muestran
+la demostración dentro de una partida nueva y el estado real pendiente de llegada.
+
+**Límites:** no se repitió una expedición completa de supervivencia hasta Marte,
+ni se midió rendimiento en GPU física. La latencia y las respuestas fuera de
+orden se verificaron automáticamente, sin una sesión de multijugador remoto.
+La recarga manual de recursos y los packs de terceros quedan para revisión en
+el equipo del jugador. No se cambian requisitos, recetas ni formato de guardado.
 
 Verificado con JDK 25, Gradle 9.8.2, Loom 1.19.3, Minecraft 26.1,
 Fabric Loader 0.20.1 y Fabric API 0.145.1+26.1.

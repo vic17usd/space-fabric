@@ -1,5 +1,14 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión **0.60.0** rediseña la guía como una consola de entrenamiento marciano:
+maqueta 3D con modelos reales, profundidad y cámara suave, ocho capítulos con
+pausas de lectura y composición adaptable hasta 320×240. Conserva las recetas del
+servidor, `/marte guia`, el acceso desde el inventario y `/marte texto`.
+[Guía y controles](docs/mars-first-expedition.md) · [Diseño y validación visual](docs/mars-guide-design.md).
+[Descargar 0.60.0](dist/space-fabric-0.60.0.jar) ·
+[SHA-256](dist/space-fabric-0.60.0.jar.sha256) ·
+[Vídeo grabado en Minecraft](docs/assets/mars-guide-0.60.0.mp4).
+
 La versión **0.59.0** transforma `/marte guia` en un tutorial visual con ocho pasos:
 montaje animado del refugio, toma de aire, esclusas, suministros, reserva de agua
 y cuadrículas de recetas del servidor. Incluye pausa, repetición y navegación con
