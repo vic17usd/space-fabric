@@ -24,4 +24,29 @@ class MarsAutonomyProgressTest {
         var player=UUID.randomUUID(); var p=MarsProgress.CODEC.parse(JsonOps.INSTANCE,JsonParser.parseString("{\"settlements\":{\""+player+"\":{\"stage\":5}}}")).getOrThrow();
         assertEquals(MarsProgress.AutonomyStatus.LOCKED,p.autonomyStatus(player)); assertFalse(p.acceptAutonomy(player));
     }
+    @Test void bindingRequiresAcceptanceIsPersonalAndSurvivesRoundTrip() {
+        var a=UUID.randomUUID(); var b=UUID.randomUUID(); var id=UUID.randomUUID();
+        var p=MarsProgress.CODEC.parse(JsonOps.INSTANCE,JsonParser.parseString("{\"players\":{\""+a+"\":{\"milestones\":63},\""+b+"\":{\"milestones\":63}},\"settlements\":{\""+a+"\":{\"stage\":5},\""+b+"\":{\"stage\":5}}}")).getOrThrow();
+        var pos=new net.minecraft.core.BlockPos(1,70,2); var second=new net.minecraft.core.BlockPos(4,70,5);
+        assertFalse(p.bindAutonomyRefuge(a,pos,id)); assertTrue(p.acceptAutonomy(a)); assertTrue(p.acceptAutonomy(b));
+        assertTrue(p.bindAutonomyRefuge(a,pos,id)); assertFalse(p.bindAutonomyRefuge(a,pos,id));
+        assertTrue(p.bindAutonomyRefuge(b,pos,id)); assertTrue(p.bindAutonomyRefuge(a,second,id));
+        p=MarsProgress.CODEC.parse(JsonOps.INSTANCE,MarsProgress.CODEC.encodeStart(JsonOps.INSTANCE,p).getOrThrow()).getOrThrow();
+        assertEquals(second,p.autonomyRefuge(a).orElseThrow().pos()); assertEquals(pos,p.autonomyRefuge(b).orElseThrow().pos());
+        assertEquals(id,p.autonomyRefuge(b).orElseThrow().controller());
+        assertTrue(p.bindAutonomyRefuge(b,pos,UUID.randomUUID()));
+    }
+    @Test void cachedRoomMustStillBeSealedAndLoaded() {
+        var vent=new net.minecraft.core.BlockPos(0,0,0);
+        var changed=new java.util.HashMap<net.minecraft.core.BlockPos,SealScanner.Cell>();
+        SealScanner.World world=pos -> changed.getOrDefault(pos, pos.equals(vent)?SealScanner.Cell.OPEN:SealScanner.Cell.SOLID);
+        var room=SealScanner.scan(world,vent,false);
+        assertNull(MarsAutonomyRefuge.inspect(room,world,vent)); assertEquals(1,room.air().size());
+        changed.put(vent.above(),SealScanner.Cell.OPEN); assertEquals("leak",MarsAutonomyRefuge.inspect(room,world,vent));
+        changed.clear(); assertNull(MarsAutonomyRefuge.inspect(room,world,vent));
+        changed.put(vent,SealScanner.Cell.SOLID); assertEquals("blocked_vent",MarsAutonomyRefuge.inspect(room,world,vent));
+        changed.put(vent,SealScanner.Cell.UNLOADED); assertEquals("unloaded",MarsAutonomyRefuge.inspect(room,world,vent));
+        changed.clear(); changed.put(vent.above(),SealScanner.Cell.UNLOADED); assertEquals("unloaded",MarsAutonomyRefuge.inspect(room,world,vent));
+        assertEquals("too_large",MarsAutonomyRefuge.inspect(new SealScanner.Room(SealScanner.Status.TOO_LARGE,java.util.Set.of(),java.util.Map.of()),world,vent));
+    }
 }

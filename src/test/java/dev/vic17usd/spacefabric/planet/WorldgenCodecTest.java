@@ -4181,4 +4181,14 @@ class WorldgenCodecTest {
             assertThrows(IllegalArgumentException.class,()->new MarsSettlementNetwork.State(false,false,3,Optional.empty(),Optional.empty(),Optional.empty()));
         } finally {b.release();}
     }
+    @Test void habitatControllerIdentitySurvivesSaveAndChangesOnReplacement() {
+        var state=dev.vic17usd.spacefabric.colony.ColonyContent.block(dev.vic17usd.spacefabric.colony.ColonyContent.Machine.HABITAT).defaultBlockState();
+        var pos=net.minecraft.core.BlockPos.ZERO;
+        var original=new dev.vic17usd.spacefabric.colony.ColonyMachineBlockEntity(pos,state);
+        var restored=assertInstanceOf(dev.vic17usd.spacefabric.colony.ColonyMachineBlockEntity.class,
+                net.minecraft.world.level.block.entity.BlockEntity.loadStatic(pos,state,original.saveWithFullMetadata(registries),registries));
+        assertEquals(original.controllerIdentity(),restored.controllerIdentity());
+        var replacement=new dev.vic17usd.spacefabric.colony.ColonyMachineBlockEntity(pos,state);
+        assertFalse(original.controllerIdentity().equals(replacement.controllerIdentity()));
+    }
 }

@@ -35,10 +35,17 @@ public final class MarsProgress extends SavedData {
                 net.minecraft.core.UUIDUtil.STRING_CODEC.optionalFieldOf("ticket").forGetter(Settlement::ticket)
         ).apply(i, Settlement::new));
     }
+    public record AutonomyRefuge(BlockPos pos, UUID controller) {
+        public static final Codec<AutonomyRefuge> CODEC = RecordCodecBuilder.create(i -> i.group(
+                BlockPos.CODEC.fieldOf("pos").forGetter(AutonomyRefuge::pos),
+                net.minecraft.core.UUIDUtil.STRING_CODEC.fieldOf("controller").forGetter(AutonomyRefuge::controller)
+        ).apply(i, AutonomyRefuge::new));
+    }
     public static final Codec<MarsProgress> CODEC = RecordCodecBuilder.create(i -> i.group(
             Codec.unboundedMap(Codec.STRING, Entry.CODEC).optionalFieldOf("players", Map.of()).forGetter(p -> Map.copyOf(p.players)),
             Codec.unboundedMap(Codec.STRING, Settlement.CODEC).optionalFieldOf("settlements", Map.of()).forGetter(p -> Map.copyOf(p.settlements)),
-            Codec.unboundedMap(Codec.STRING, Codec.BOOL).optionalFieldOf("autonomy", Map.of()).forGetter(p -> Map.copyOf(p.autonomy))
+            Codec.unboundedMap(Codec.STRING, Codec.BOOL).optionalFieldOf("autonomy", Map.of()).forGetter(p -> Map.copyOf(p.autonomy)),
+            Codec.unboundedMap(Codec.STRING, AutonomyRefuge.CODEC).optionalFieldOf("autonomy_refuges", Map.of()).forGetter(p -> Map.copyOf(p.autonomyRefuges))
     ).apply(i, MarsProgress::new));
     public static final SavedDataType<MarsProgress> TYPE = new SavedDataType<>(
             SpaceFabric.id("mars_expedition"), MarsProgress::new, CODEC, DataFixTypes.LEVEL);
@@ -46,6 +53,7 @@ public final class MarsProgress extends SavedData {
 
     private final Map<String, Settlement> settlements = new LinkedHashMap<>();
     private final Map<String, Boolean> autonomy = new LinkedHashMap<>();
+    private final Map<String, AutonomyRefuge> autonomyRefuges = new LinkedHashMap<>();
     public enum AutonomyStatus { LOCKED, AVAILABLE, ACCEPTED }
     public AutonomyStatus autonomyStatus(UUID player) {
         if (!entry(player).complete() || settlement(player).stage() != 5) return AutonomyStatus.LOCKED;
@@ -55,9 +63,16 @@ public final class MarsProgress extends SavedData {
         if (autonomyStatus(player) != AutonomyStatus.AVAILABLE) return false;
         autonomy.put(player.toString(), true); setDirty(); return true;
     }
+    public Optional<AutonomyRefuge> autonomyRefuge(UUID player) { return Optional.ofNullable(autonomyRefuges.get(player.toString())); }
+    public boolean bindAutonomyRefuge(UUID player, BlockPos pos, UUID controller) {
+        if (autonomyStatus(player) != AutonomyStatus.ACCEPTED) return false;
+        var binding = new AutonomyRefuge(pos.immutable(), controller);
+        if (autonomyRefuge(player).filter(binding::equals).isPresent()) return false;
+        autonomyRefuges.put(player.toString(), binding); setDirty(); return true;
+    }
     public MarsProgress() { }
-    private MarsProgress(Map<String, Entry> saved, Map<String, Settlement> savedSettlements, Map<String, Boolean> savedAutonomy) {
-        players.putAll(saved); settlements.putAll(savedSettlements); autonomy.putAll(savedAutonomy);
+    private MarsProgress(Map<String, Entry> saved, Map<String, Settlement> savedSettlements, Map<String, Boolean> savedAutonomy, Map<String, AutonomyRefuge> savedRefuges) {
+        players.putAll(saved); settlements.putAll(savedSettlements); autonomy.putAll(savedAutonomy); autonomyRefuges.putAll(savedRefuges);
     }
     public Settlement settlement(UUID player) { return settlements.getOrDefault(player.toString(), Settlement.EMPTY); }
     private boolean updateSettlement(UUID player, Settlement value) {

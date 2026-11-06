@@ -55,6 +55,14 @@ public final class ColonyMachineBlockEntity extends BaseContainerBlockEntity imp
         var tag=data.copyTag();restoreThermal(tag.getIntOr("IndustrialHeat",0),tag.getBooleanOr("ThermalTrip",false),tag.getIntOr("CoolingCharge",0));
     }
     public void restoreThermal(int heat,boolean trip,int charge){thermal.restore(heat,trip);coolingCharge=Math.clamp(charge,0,ThermalSystem.CHARGE);setChanged();}
+    private java.util.UUID controllerIdentity = java.util.UUID.randomUUID();
+    private boolean identityNeedsSave = true;
+    public java.util.UUID controllerIdentity() { return controllerIdentity; }
+    public void persistControllerIdentity() { if (identityNeedsSave) { identityNeedsSave = false; setChanged(); } }
+    SealScanner.Room scannedRoom() { return room; }
+    static int occupants(ServerLevel level, SealScanner.Room room) {
+        return (int)level.players().stream().filter(p->p.isAlive()&&!p.isSpectator()&&room.air().contains(BlockPos.containing(p.getEyePosition()))).count();
+    }
     private SealScanner.Room room;
     private SealScanner.Room lastEnclosure;
     private int progress;
@@ -162,7 +170,7 @@ public final class ColonyMachineBlockEntity extends BaseContainerBlockEntity imp
         if(room==null||!room.sealed()){active=false;support.vent();status=room==null?"idle":room.status().name().toLowerCase(java.util.Locale.ROOT);return;}
         lastEnclosure=room;
         refillFromItems(venus);
-        int occupants=(int)level.players().stream().filter(p->p.isAlive()&&!p.isSpectator()&&room.air().contains(BlockPos.containing(p.getEyePosition()))).count();
+        int occupants=occupants(level,room);
         active=support.tick(room.air().size(),occupants,venus);status=active?"pressurized":"supplies";
     }
     private void refill(int input,Item full,Item empty,int output,int kind) {
@@ -213,7 +221,7 @@ public final class ColonyMachineBlockEntity extends BaseContainerBlockEntity imp
     @Override public boolean canPlaceItemThroughFace(int slot,ItemStack stack,Direction face){return canPlaceItem(slot,stack);}
     @Override public boolean canTakeItemThroughFace(int slot,ItemStack stack,Direction face){return slot>=3&&(kind()!=ColonyContent.Machine.DOCK||slot!=8);}
     @Override protected void loadAdditional(ValueInput input) {
-        super.loadAdditional(input);marsCommission=input.read("MarsCommission",MarsCommission.CODEC).orElse(null);drill.load(input);items=NonNullList.withSize(9,ItemStack.EMPTY);ContainerHelper.loadAllItems(input,items);
+        super.loadAdditional(input);var savedIdentity=input.read("ControllerIdentity",net.minecraft.core.UUIDUtil.STRING_CODEC); controllerIdentity=savedIdentity.orElseGet(java.util.UUID::randomUUID); identityNeedsSave=savedIdentity.isEmpty();marsCommission=input.read("MarsCommission",MarsCommission.CODEC).orElse(null);drill.load(input);items=NonNullList.withSize(9,ItemStack.EMPTY);ContainerHelper.loadAllItems(input,items);
         progress=Math.clamp(input.getIntOr("Progress",0),0,400);recipe=input.getStringOr("Recipe","");
         completedBatches=Math.max(0,input.getIntOr("CompletedBatches",0));
         lastCompletedRecipe=input.getStringOr("LastCompletedRecipe","");
@@ -224,7 +232,7 @@ public final class ColonyMachineBlockEntity extends BaseContainerBlockEntity imp
         active=false;room=null;lastEnclosure=null;lastWork=lastValidation=lastSealScan=Long.MIN_VALUE;
     }
     @Override protected void saveAdditional(ValueOutput output) {
-        super.saveAdditional(output);if(marsCommission!=null)output.store("MarsCommission",MarsCommission.CODEC,marsCommission);drill.save(output);output.putInt("Respired",support.respired());output.putBoolean("DockEnabled",dockEnabled);output.putInt("NaturalMission",naturalMission);output.putInt("IndustrialHeat",thermal.heat());output.putBoolean("ThermalTrip",thermal.tripped());output.putInt("CoolingCharge",coolingCharge);output.store("Maintenance",dev.vic17usd.spacefabric.maintenance.MachineWear.State.CODEC,maintenance.state());ContainerHelper.saveAllItems(output,items);output.putInt("Progress",progress);output.putString("Recipe",recipe);
+        super.saveAdditional(output);output.store("ControllerIdentity",net.minecraft.core.UUIDUtil.STRING_CODEC,controllerIdentity);if(marsCommission!=null)output.store("MarsCommission",MarsCommission.CODEC,marsCommission);drill.save(output);output.putInt("Respired",support.respired());output.putBoolean("DockEnabled",dockEnabled);output.putInt("NaturalMission",naturalMission);output.putInt("IndustrialHeat",thermal.heat());output.putBoolean("ThermalTrip",thermal.tripped());output.putInt("CoolingCharge",coolingCharge);output.store("Maintenance",dev.vic17usd.spacefabric.maintenance.MachineWear.State.CODEC,maintenance.state());ContainerHelper.saveAllItems(output,items);output.putInt("Progress",progress);output.putString("Recipe",recipe);
         output.putString("LastCompletedRecipe",lastCompletedRecipe);
         output.putInt("CompletedBatches",completedBatches);output.putInt("Oxygen",support.oxygen());output.putInt("Energy",support.energy());output.putInt("Coolant",support.coolant());
         output.putInt("Volume",room!=null&&room.sealed()?room.air().size():0);output.putBoolean("Pressurized",support.pressurized());
