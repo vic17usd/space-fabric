@@ -1046,5 +1046,8 @@
   "mars.settlement.found": "Natural village confirmed in loaded terrain: %s.",
   "mars.settlement.potential": "UNCONFIRMED potential region: X %s, Z %s. It may lack a village; explore and repeat /marte buscar. No chunks were loaded or generated.",
   "mars.settlement.not_found": "No confirmed villages nearby. Explore another area of Mars and use /marte buscar again.",
-  "mars.settlement.search_wait": "Wait five seconds of game time before searching again."
+  "mars.settlement.search_wait": "Wait five seconds of game time before searching again.",
+  "mars.autonomy.locked": "Self-sufficiency locked: finish and register the settlement investigation.",
+  "mars.autonomy.available": "Self-sufficiency available: use /marte autonomia iniciar to accept.",
+  "mars.autonomy.accepted": "Self-sufficiency accepted. Selecting a shelter is the next step and will arrive in a later release."
 }

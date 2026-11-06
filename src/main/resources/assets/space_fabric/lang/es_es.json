@@ -1046,5 +1046,8 @@
   "mars.settlement.found": "Pueblo natural confirmado en una zona cargada: %s.",
   "mars.settlement.potential": "Zona POTENCIAL sin confirmar: X %s, Z %s. Puede no contener un pueblo; explora y repite /marte buscar. No se han cargado ni generado chunks.",
   "mars.settlement.not_found": "No hay pueblos confirmados cerca. Explora otras zonas de Marte y vuelve a usar /marte buscar.",
-  "mars.settlement.search_wait": "Espera cinco segundos de tiempo de juego antes de repetir la búsqueda."
+  "mars.settlement.search_wait": "Espera cinco segundos de tiempo de juego antes de repetir la búsqueda.",
+  "mars.autonomy.locked": "Autonomía bloqueada: termina y registra la investigación del asentamiento.",
+  "mars.autonomy.available": "Autonomía disponible: usa /marte autonomia iniciar para aceptarla.",
+  "mars.autonomy.accepted": "Autonomía aceptada. El próximo paso será seleccionar un refugio; esa función llegará en la siguiente entrega."
 }

@@ -105,6 +105,14 @@ public final class MarsOnboarding {
         return 1;
     }
 
+    private static int autonomy(ServerPlayer player, boolean accept) {
+        var progress = MarsProgress.get(player.level());
+        if (accept) progress.acceptAutonomy(player.getUUID());
+        var status = progress.autonomyStatus(player.getUUID());
+        player.sendSystemMessage(Component.translatable("mars.autonomy." + status.name().toLowerCase(java.util.Locale.ROOT)));
+        return status == MarsProgress.AutonomyStatus.LOCKED && accept ? 0 : 1;
+    }
+
     public static void initialize() {
         MarsGuideNetwork.initialize();
         MarsSettlementNetwork.initialize();
@@ -129,6 +137,8 @@ public final class MarsOnboarding {
                             }
                             return 1;
                         }))
+                        .then(Commands.literal("autonomia").executes(c -> autonomy(c.getSource().getPlayerOrException(), false))
+                                .then(Commands.literal("iniciar").executes(c -> autonomy(c.getSource().getPlayerOrException(), true))))
                         .then(Commands.literal("expedicion").executes(c -> { MarsSettlementNetwork.send(c.getSource().getPlayerOrException(), true); return 1; }))
                         .then(Commands.literal("buscar").executes(c -> MarsSettlementExpedition.search(c.getSource().getPlayerOrException())))
                         .then(Commands.literal("investigar").executes(c -> MarsSettlementExpedition.investigate(c.getSource().getPlayerOrException())))
