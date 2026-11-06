@@ -20,7 +20,9 @@ public final class SealScanner {
     private SealScanner() { }
     public static Room scan(World world,BlockPos vent,boolean highPressure) {
         var air=new HashSet<BlockPos>();var boundary=new HashMap<BlockPos,Cell>();var queue=new ArrayDeque<BlockPos>();
-        if(world.cell(vent)!=Cell.OPEN)return fail(Status.BLOCKED_VENT);
+        var intake=world.cell(vent);
+        if(intake==Cell.UNLOADED)return fail(Status.UNLOADED);
+        if(intake!=Cell.OPEN)return fail(Status.BLOCKED_VENT);
         air.add(vent.immutable());queue.add(vent.immutable());
         while(!queue.isEmpty()) {
             var pos=queue.removeFirst();

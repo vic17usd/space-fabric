@@ -17,9 +17,14 @@ public final class HabitatSystem {
     public static void initialize(){ServerLifecycleEvents.SERVER_STOPPED.register(server->ACTIVE.clear());}
     static void register(ServerLevel level,ColonyMachineBlockEntity machine){ACTIVE.computeIfAbsent(level,k->new HashMap<>()).put(machine.getBlockPos(),machine);}
     static void remove(ColonyMachineBlockEntity machine){if(machine.getLevel() instanceof ServerLevel level){var map=ACTIVE.get(level);if(map!=null)map.remove(machine.getBlockPos(),machine);}}
+    /** Explicitly supported destinations; does not enable other planetary dimensions. */
+    public static boolean supports(dev.vic17usd.spacefabric.planet.Planet planet) {
+        return planet==dev.vic17usd.spacefabric.planet.Planet.EARTH || planet==dev.vic17usd.spacefabric.planet.Planet.MARS
+                || planet==dev.vic17usd.spacefabric.planet.Planet.VENUS || planet==dev.vic17usd.spacefabric.planet.Planet.MERCURY;
+    }
     public static boolean protects(ServerPlayer player) {
         var planet=dev.vic17usd.spacefabric.planet.PlanetDimensions.find(player.level()).orElse(dev.vic17usd.spacefabric.planet.Planet.EARTH);
-        if(planet!=dev.vic17usd.spacefabric.planet.Planet.EARTH&&planet!=dev.vic17usd.spacefabric.planet.Planet.MARS&&planet!=dev.vic17usd.spacefabric.planet.Planet.VENUS)return false;
+        if(!supports(planet))return false;
         var map=ACTIVE.get(player.level());if(map==null)return false;
         var head=BlockPos.containing(player.getEyePosition());
         for(var machine:map.values())if(!machine.isRemoved()&&machine.getBlockPos().distManhattan(head)<=3*SealScanner.MAX_RADIUS+1&&machine.protects(head))return true;

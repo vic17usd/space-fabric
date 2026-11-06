@@ -84,7 +84,6 @@ public final class ColonyMachineBlockEntity extends BaseContainerBlockEntity imp
         return room!=null&&room.air().contains(head) || lastEnclosure!=null&&lastEnclosure.air().contains(head);
     }
     public HabitatReadings readings() {
-        if(level instanceof ServerLevel server)validate(server);
         var condition=switch(status) {
             case "pressurized" -> active?HabitatReadings.Condition.PRESSURIZED:HabitatReadings.Condition.IDLE;
             case "leak" -> HabitatReadings.Condition.LEAK;
@@ -102,6 +101,14 @@ public final class ColonyMachineBlockEntity extends BaseContainerBlockEntity imp
             };
             default -> HabitatReadings.Condition.IDLE;
         };
+        if (room!=null && room.sealed() && level instanceof ServerLevel server) {
+            var world=HabitatSystem.world(server);
+            if (!room.unchanged(world)) {
+                boolean unloaded=room.air().stream().anyMatch(p->world.cell(p)==SealScanner.Cell.UNLOADED)
+                        || room.boundary().keySet().stream().anyMatch(p->world.cell(p)==SealScanner.Cell.UNLOADED);
+                condition=unloaded?HabitatReadings.Condition.UNLOADED:HabitatReadings.Condition.LEAK;
+            }
+        }
         boolean venus=level!=null&&PlanetDimensions.find(level).orElse(null)==Planet.VENUS;
         return new HabitatReadings(condition,support.oxygen(),support.energy(),support.coolant(),room!=null&&room.sealed()?room.air().size():0,venus,maintenance.integrity(),maintenance.state().coating(),maintenance.state().filter(),thermal().heat(),thermal().tripped());
     }
@@ -155,7 +162,7 @@ public final class ColonyMachineBlockEntity extends BaseContainerBlockEntity imp
     }
     private void refreshSeal(ServerLevel level) {
         var planet=PlanetDimensions.find(level).orElse(Planet.EARTH);
-        if(planet!=Planet.EARTH&&planet!=Planet.MARS&&planet!=Planet.VENUS)return;
+        if(!HabitatSystem.supports(planet))return;
         if(validate(level))return;
         if(lastSealScan!=Long.MIN_VALUE&&level.getGameTime()-lastSealScan<20)return;
         lastSealScan=level.getGameTime();room=SealScanner.scan(HabitatSystem.world(level),worldPosition.above(),planet==Planet.VENUS);
@@ -164,7 +171,7 @@ public final class ColonyMachineBlockEntity extends BaseContainerBlockEntity imp
     @Override public void resumeAfterRepair(){lastWork=Long.MIN_VALUE;}
     private void tickHabitat(ServerLevel level) {
         var planet=PlanetDimensions.find(level).orElse(Planet.EARTH);
-        if(planet!=Planet.EARTH&&planet!=Planet.MARS&&planet!=Planet.VENUS){active=false;status="unsupported";return;}
+        if(!HabitatSystem.supports(planet)){active=false;status="unsupported";return;}
         boolean venus=planet==Planet.VENUS;
         refreshSeal(level);
         if(room==null||!room.sealed()){active=false;support.vent();status=room==null?"idle":room.status().name().toLowerCase(java.util.Locale.ROOT);return;}

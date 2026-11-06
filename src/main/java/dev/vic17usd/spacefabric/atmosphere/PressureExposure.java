@@ -19,6 +19,12 @@ public final class PressureExposure {
             return Optional.of(new Danger(Exposure.Hazard.THERMAL_EXPOSURE,planet==Planet.VENUS?10:60));
         return Optional.empty();
     }
+    /** A Mercury habitat supplies pressure and breathable air, but does not model thermal regulation. */
+    public static Optional<Danger> mercuryShelterDanger(double y, SuitTier suit) {
+        var profile=AtmosphereProfile.of(Planet.MERCURY);
+        return profile.minTemperatureAt(y)<suit.minCelsius || profile.maxTemperatureAt(y)>suit.maxCelsius
+                ? Optional.of(new Danger(Exposure.Hazard.THERMAL_EXPOSURE,60)) : Optional.empty();
+    }
     public static int lethalTicks(Danger danger,double realSecondsPerGameSecond) {
         return Math.max(1,(int)Math.ceil(danger.referenceSeconds()*20/realSecondsPerGameSecond));
     }

@@ -18,13 +18,15 @@ public record ColonyEnvironment(boolean venus,boolean intakeOpen,boolean directS
                     &&level.getHeight(Heightmap.Types.WORLD_SURFACE,pos.getX(),pos.getZ())==pos.getY()+1;
         }
         if(kind==ColonyContent.Machine.SOLAR) {
-            long phase=Math.floorMod(level.getDefaultClockTime(),24000);
-            sun=!venus&&phase<12000&&level.canSeeSky(pos.above())&&!level.isRainingAt(pos.above());
+            sun=solarAvailable(venus,level.getDefaultClockTime(),level.canSeeSky(pos.above()),level.isRainingAt(pos.above()));
         }
         if(kind==ColonyContent.Machine.GEOTHERMAL||kind==ColonyContent.Machine.CERAMIC_KILN)
             heat=level.getFluidState(pos.below()).is(FluidTags.LAVA);
         var controller=kind==ColonyContent.Machine.GREENHOUSE||kind==ColonyContent.Machine.RECLAIMER?HabitatSystem.machineController(level,pos):null;
         return new ColonyEnvironment(venus,intake,sun,heat,controller!=null&&controller.operating(),kind==ColonyContent.Machine.GREENHOUSE&&level.getMaxLocalRawBrightness(pos.above())>=9,controller==null?null:controller.support());
+    }
+    public static boolean solarAvailable(boolean venus,long clock,boolean sky,boolean raining) {
+        return !venus && Math.floorMod(clock,24000)<12000 && sky && !raining;
     }
     public String blocker(ColonyContent.Machine kind) {
         return switch(kind) {

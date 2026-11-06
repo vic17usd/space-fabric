@@ -35,11 +35,13 @@ public final class AtmosphereSystem {
     private static void tick(ServerLevel level,ServerPlayer player,Planet planet,dev.vic17usd.spacefabric.equipment.SuitTier suit) {
         var data=(AttachmentTarget)player;
         if(level.getGameTime()%20==0)VenusAcidSystem.tick(level,player,planet);
-        if(!player.isAlive()||player.isCreative()||player.isSpectator()||dev.vic17usd.spacefabric.space.RocketCabin.protects(player)
-                || dev.vic17usd.spacefabric.colony.HabitatSystem.protects(player)) {
+        if(!player.isAlive()||player.isCreative()||player.isSpectator()||dev.vic17usd.spacefabric.space.RocketCabin.protects(player)) {
             data.removeAttached(DOSE);return;
         }
-        var danger=PressureExposure.danger(planet,player.getY(),suit);
+        boolean sheltered=dev.vic17usd.spacefabric.colony.HabitatSystem.protects(player);
+        if(sheltered && planet!=Planet.MERCURY) { data.removeAttached(DOSE); return; }
+        var danger=sheltered && planet==Planet.MERCURY ? PressureExposure.mercuryShelterDanger(player.getY(),suit)
+                : PressureExposure.danger(planet,player.getY(),suit);
         if(danger.isEmpty()){data.removeAttached(DOSE);return;}
         double dose=PressureExposure.advance(data.getAttachedOrCreate(DOSE),danger.get(),AtmosphereConfig.scale());
         data.setAttached(DOSE,dose);
