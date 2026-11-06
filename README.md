@@ -1,5 +1,17 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión **0.61.1** ajusta la cámara del cohete también en tierra e incluye los
+cambios de expediciones y hábitats integrados en la rama de desarrollo.
+
+> **Versionado:** las correcciones y actualizaciones leves incrementan el último
+> número (por ejemplo, 0.61.0 → 0.61.1). Las actualizaciones que incorporan varios
+> cambios incrementan el número intermedio y reinician el último (0.61.x → 0.62.0).
+> Cada versión instalable se conserva con su propio JAR y SHA-256 en `dist/`.
+>
+> [Descargar 0.61.1](dist/space-fabric-0.61.1.jar) · [SHA-256](dist/space-fabric-0.61.1.jar.sha256)
+
+
+
 La versión **0.61.0** hace jugable la segunda expedición marciana: investigar un
 pueblo natural, encargar un análisis real y registrar el resultado para recibir
 una recompensa única. Incluye instrucciones, progreso guardado y una sección
