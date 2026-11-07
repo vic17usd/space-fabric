@@ -37,9 +37,18 @@ public final class RocketFlightScene {
             var c=new Vector3f(center).add(right).add(up);var d=new Vector3f(center).sub(right).add(up);
             quad(pose,out,i%5==0?0xFF93B9E8:0xFFE5E7DF,new float[][]{xyz(a),xyz(b),xyz(c),xyz(d)});
         }
-        sphere(pose,out,origin,-7-p*8,-2,15,3.6F*(1-p)+.15F,p*.4F);
+        var departure=departurePosition(progress);
+        sphere(pose,out,origin,departure.x,departure.y,departure.z,departureRadius(progress),p*.4F);
         var target=RocketCruiseOrientation.destination(progress);
         sphere(pose,out,destination,target.x,target.y,target.z,.3F+p*5.3F,p*.4F);
+    }
+    /** Depart below the ship, then pass behind the camera as the cruise progresses. */
+    public static Vector3f departurePosition(float progress) {
+        float p=RocketJourney.smooth(progress);
+        return new Vector3f(0,-3.5F-5F*p,8F-30F*p);
+    }
+    public static float departureRadius(float progress) {
+        return 3.6F*(1F-RocketJourney.smooth(progress))+.15F;
     }
     private static float[] xyz(Vector3f v){return new float[]{v.x,v.y,v.z};}
     private static void sphere(Pose pose,VertexConsumer out,Planet planet,float cx,float cy,float cz,float radius,float rotation) {

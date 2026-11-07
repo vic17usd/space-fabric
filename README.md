@@ -1,5 +1,8 @@
 # Space Fabric — Minecraft Java 26.1
 
+La versión **0.61.5** hace que el planeta de partida quede detrás de la nave y
+se aleje durante la travesía. [Captura del inicio en Minecraft](docs/assets/rocket-departure-0.61.5.png).
+
 La versión **0.61.4** continúa buscando si la zona de aterrizaje elegida se vuelve
 insegura antes de llegar.
 
@@ -16,6 +19,8 @@ cambios de expediciones y hábitats integrados en la rama de desarrollo.
 > número (por ejemplo, 0.61.0 → 0.61.1). Las actualizaciones que incorporan varios
 > cambios incrementan el número intermedio y reinician el último (0.61.x → 0.62.0).
 > Cada versión instalable se conserva con su propio JAR y SHA-256 en `dist/`.
+>
+> [Descargar 0.61.5](dist/space-fabric-0.61.5.jar) · [SHA-256](dist/space-fabric-0.61.5.jar.sha256)
 >
 > [Descargar 0.61.4](dist/space-fabric-0.61.4.jar) · [SHA-256](dist/space-fabric-0.61.4.jar.sha256)
 >
